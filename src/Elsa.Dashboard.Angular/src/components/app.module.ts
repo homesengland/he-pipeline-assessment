@@ -11,7 +11,7 @@ import { WorkflowInstanceListScreen } from './screens/workflow-instance-list/wor
 import { routing } from '../workflow-routes.module';
 import { AppStateModule } from './state/app.state.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgStyle } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { WorkflowPager } from './controls/workflow-pager/workflow-pager';
 import { WorkflowDropdownButton } from './controls/workflow-dropdown-button/workflow-dropdown-button';
@@ -22,6 +22,9 @@ import { WorkflowInstancesView } from './dashboard/pages/workflow-instances-view
 import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
 import { WorkflowPerformanceInformation } from './shared/workflow-performance-information/workflow-performance-information';
 import { WorkflowFaultInformation } from './shared/workflow-fault-information/workflow-fault-information';
+import { DesignerTree } from './designers/tree/designer-tree/designer-tree';
+import { ActivityIconProvider } from 'src/services/activity-icon-provider';
+import { ActivityIconProviderPlugin } from 'src/plugins/activity-icon-provider-plugin';
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
 import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
@@ -44,14 +47,17 @@ import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-vi
     WorkflowDefinitionsView,
     WorkflowPerformanceInformation,
     WorkflowFaultInformation,
+    DesignerTree,
     WorkflowInstancesView,
     WorkflowInstanceViewerScreen,
     WorkflowInstanceJournalComponent,
   ],
 
-  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule],
-  providers: [],
+  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle],
+  providers: [ActivityIconProvider, ActivityIconProviderPlugin],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private activityIconProviderPlugin: ActivityIconProviderPlugin) {}
+}

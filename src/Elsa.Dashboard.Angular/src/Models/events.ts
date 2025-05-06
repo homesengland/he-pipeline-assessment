@@ -1,21 +1,22 @@
-import { ActivityModel } from "./view";
-import { ActivityDescriptor } from "./domain";
-import { ViewContainerRef } from "@angular/core";
+import { ActivityModel } from './view';
+import { ActivityDescriptor } from './domain';
+import { ViewContainerRef } from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
 
 export const EventTypes = {
   Root: {
     Initializing: 'root.initializing',
-    Initialized: 'root.initialized'
+    Initialized: 'root.initialized',
   },
   ActivityEditor: {
     Show: 'show-activity-editor',
     Rendering: 'activity-editor-rendering',
     Rendered: 'activity-editor-rendered',
     Appearing: 'activity-editor-appearing',
-    Disappearing: 'activity-editor-disappearing'
+    Disappearing: 'activity-editor-disappearing',
   },
   Dashboard: {
-    Appearing: 'dashboard.appearing'
+    Appearing: 'dashboard.appearing',
   },
   ShowActivityPicker: 'show-activity-picker',
   ShowWorkflowSettings: 'show-workflow-settings',
@@ -59,7 +60,7 @@ export const EventTypes = {
   HubConnectionStarted: 'hubconnection-started',
   HubConnectionConnected: 'hubconnection-connected',
   HubConnectionFailed: 'hubconnection-failed',
-  HubConnectionClosed: 'hubconnection-closed'
+  HubConnectionClosed: 'hubconnection-closed',
 };
 
 export interface AddActivityEventArgs {
@@ -73,7 +74,8 @@ export interface ActivityPickedEventArgs {
 export interface ActivityDesignDisplayContext {
   activityModel: ActivityModel;
   activityDescriptor: ActivityDescriptor;
-  activityIcon?: ViewContainerRef;
+  activityIcon?: SafeHtml;
+  activityIconColour?: string;
   displayName?: string;
   bodyDisplay?: string;
   outcomes: Array<string>;
@@ -81,22 +83,23 @@ export interface ActivityDesignDisplayContext {
 }
 
 export interface ActivityUpdatedContext {
-  activityModel: ActivityModel,
-  data?: string
+  activityModel: ActivityModel;
+  data?: string;
 }
 
 export interface ActivityValidatingContext {
-  activityType: string
-  prop: string,
-  value?: string,
-  isValidated: boolean,
-  data: any,
-  isValid: boolean
+  activityType: string;
+  prop: string;
+  value?: string;
+  isValidated: boolean;
+  data: any;
+  isValid: boolean;
 }
 
 export interface ActivityDescriptorDisplayContext {
   activityDescriptor: ActivityDescriptor;
-  activityIcon: ViewContainerRef;
+  activityIcon: SafeHtml;
+  activityIconColour?: string;
 }
 
 export interface ConfigureDashboardMenuContext {

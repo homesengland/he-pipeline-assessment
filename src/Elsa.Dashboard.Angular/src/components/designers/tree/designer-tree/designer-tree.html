@@ -1,0 +1,10 @@
+<div *ngIf="mode== this.testWorkflowDesignerMode">
+  <div id="left" style="border: 4px solid orange; position: fixed; height: calc(100vh - 64px); width: 4px; top: 64; bottom: 0; left: 0"></div>
+  <div id="right" style="border: 4px solid orange; position: fixed; height: calc(100vh - 64px); width: 4px; top: 64; bottom: 0; right: 0"></div>
+  <div id="top" style="border: 4px solid orange; position: fixed; height: 4px; left: 0; right: 0; top: 30"></div>
+  <div id="bottom" style="border: 4px solid orange; position: fixed; height: 4px; left: 0; right: 0; bottom: 0"></div>
+</div>
+
+<svg #svgSvgElement id="svg" [ngStyle]="{'height': 'calc(100vh - 64px)', 'width': '100%', 'pointerEvents': this.activityContextMenuState.shown ? 'none' : ''}">
+  <g #svgGElement />
+</svg>
