@@ -1,4 +1,3 @@
-import { HTMLStencilElement } from '@stencil/core/internal';
 import { Map } from '../utils/utils'
 //import { x } from '@elsa-workflows/elsa-workflows-studio';
 //Not In Use.  Using as a placeholder to prompt developers to draw, and copy any interfaces they need from Elsa directly.
@@ -67,7 +66,7 @@ export interface ConfirmDialog {
   "show": (caption: string, message: string) => Promise<boolean>;
 }
 
-export interface HTMLElsaExpressionEditorElement extends ElsaExpressionEditor, HTMLStencilElement {
+export interface HTMLElsaExpressionEditorElement extends ElsaExpressionEditor, HTMLElement {
 }
 var HTMLElsaExpressionEditorElement: {
   prototype: HTMLElsaExpressionEditorElement;
@@ -133,7 +132,7 @@ export interface CustomMonacoElement {
   "value": string;
 }
 
-export interface HTMLElsaMonacoElement extends CustomMonacoElement, HTMLStencilElement {
+export interface HTMLElsaMonacoElement extends CustomMonacoElement, HTMLElement {
 }
 var HTMLElsaMonacoElement: {
   prototype: HTMLElsaMonacoElement;
