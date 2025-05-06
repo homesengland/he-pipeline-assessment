@@ -63,7 +63,7 @@ namespace Elsa.Server.Tests.Features.Activities.DataDictionaryProvider
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);
-
+            
             //Assert
             Assert.Empty(result);
         }
