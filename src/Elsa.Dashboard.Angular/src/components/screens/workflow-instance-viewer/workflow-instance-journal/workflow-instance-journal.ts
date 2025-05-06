@@ -11,7 +11,6 @@ import {
   WorkflowModel,
   WorkflowStatus,
 } from '../../../../models';
-import { activityIconProvider } from '../../../../services/activity-icon-provider';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
 import { clip, durationToString } from '../../../../utils/utils';
 import { FlyoutPanelComponent } from '../../../shared/flyout-panel/flyout-panel.component';
@@ -20,6 +19,7 @@ import { CopyButtonComponent } from '../../../shared/copy-button/copy-button.com
 import { WorkflowEditorNotificationsComponent } from '../../workflow-definition-editor/workflow-definition-editor-notifications/workflow-editor-notifications';
 import { TabHeaderComponent } from '../../../shared/tab-header/tab-header.component';
 import { TabContentComponent } from '../../../shared/tab-content/tab-content.component';
+import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 
 interface Tab {
   id: string;
@@ -53,8 +53,10 @@ export class WorkflowInstanceJournalComponent implements OnInit {
 
   el: ElementRef;
   moment = moment;
+  activityIconProvider: any;
 
-  constructor(private elementRef: ElementRef, private elsaClientService: ElsaClientService) {
+  constructor(private elementRef: ElementRef, private elsaClientService: ElsaClientService, activityIconProvider: ActivityIconProvider) {
+    this.activityIconProvider = activityIconProvider;
     this.el = elementRef;
   }
 
@@ -197,7 +199,7 @@ export class WorkflowInstanceJournalComponent implements OnInit {
 
   renderIcon(activityType: string) {
     if (this.iconContainer) {
-      activityIconProvider.getIcon(activityType, this.iconContainer);
+      this.activityIconProvider.getIcon(activityType, 'grey');
     } else {
       console.warn('Icon container is not available.');
     }
@@ -205,9 +207,6 @@ export class WorkflowInstanceJournalComponent implements OnInit {
 
   // For JSON stringification in template
   JSON = JSON;
-
-  // For accessing activity icons in template
-  activityIconProvider = activityIconProvider;
 
   // For filtering record data in template
   getFilteredRecordDataKeys(recordData: any): string[] {

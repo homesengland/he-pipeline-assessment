@@ -5,8 +5,7 @@ import { TabContentComponent } from '../tab-content/tab-content.component';
 
 @Component({
   selector: 'elsa-flyout-panel',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   templateUrl: 'flyout-panel.component.html',
 })
 export class FlyoutPanelComponent implements AfterContentInit {

@@ -28,6 +28,7 @@ import { ActivityIconProviderPlugin } from 'src/plugins/activity-icon-provider-p
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
 import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
+import { FlyoutPanelComponent } from './shared/flyout-panel/flyout-panel.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-vi
     WorkflowInstancesView,
     WorkflowInstanceViewerScreen,
     WorkflowInstanceJournalComponent,
+    FlyoutPanelComponent,
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle],
