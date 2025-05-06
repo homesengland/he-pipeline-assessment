@@ -1,19 +1,18 @@
 <div class="elsa-flex-1 elsa-flex">
-  <!-- <elsa-designer-tree
-  model={this.workflowModel}
-  class="elsa-flex-1"
-  ref={el => (this.designer = el)}
-  layoutDirection={this.layoutDirection}
-  mode={WorkflowDesignerMode.Instance}
-  activityContextMenuButton={this.renderActivityStatsButton}
-  activityBorderColor={this.getActivityBorderColor}
-  activityContextMenu={this.activityContextMenuState}
-  selectedActivityIds={[this.selectedActivityId]}
-  onActivitySelected={e => this.onActivitySelected(e)}
-  onActivityDeselected={e => this.onActivityDeselected(e)}
-  onActivityContextMenuButtonClicked={e => this.onActivityContextMenuButtonClicked(e)}
-/> -->
-
+  <designer-tree
+    #designerTree
+    [model]="this.workflowModel"
+    class="elsa-flex-1"
+    [layoutDirection]="this.layoutDirection"
+    [mode]="this.workflowDesignerModeInstance"
+    [activityContextMenuButton]="this.renderActivityStatsButton"
+    [activityBorderColor]="this.getActivityBorderColor"
+    [activityContextMenu]="this.activityContextMenuState"
+    [selectedActivityIds]="[this.selectedActivityId]"
+    (onActivitySelected)="onActivitySelected($event)"
+    (onActivityDeselected)="onActivityDeselected($event)"
+    (activityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
+  />
   @let hiddenClass = this.activityContextMenuState.shown ? "" : "hidden"; @let leftPx = this.activityContextMenuState.x + 64; @let topPx = this.activityContextMenuState.y - 256;
   @let contextMenuLeftStyle = leftPx + "px"; @let contextMenuTopStyle = topPx + "px";
   <div
@@ -62,4 +61,5 @@
       <div *ngIf="activityStats == null" class="elsa-p-6 elsa-bg-white">Loading...</div>
     </div>
   </div>
+  
 </div>

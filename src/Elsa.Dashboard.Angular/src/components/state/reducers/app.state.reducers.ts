@@ -2,6 +2,7 @@ import { createReducer, on, StoreModule } from '@ngrx/store';
 import { AppStateActionGroup } from '../actions/app.state.actions';
 import { StoreConfig } from '../../../models/storeConfig';
 import { DataDictionaryGroup } from '../../../models/custom-component-models';
+import { ActivityDescriptor } from 'src/models/domain';
 
 export class AppState {
   storeConfig: StoreConfig;
@@ -10,6 +11,7 @@ export class AppState {
   javaScriptTypeDefinitionsFetchStatus: string;
   javaScriptTypeDefinitions: string;
   dataDictionaryIntellisense: string;
+  activityDefinitions: Array<ActivityDescriptor>;
 }
 export const initialState: AppState = {
   storeConfig: null,
@@ -18,6 +20,7 @@ export const initialState: AppState = {
   javaScriptTypeDefinitionsFetchStatus: '',
   javaScriptTypeDefinitions: '',
   dataDictionaryIntellisense: '',
+  activityDefinitions: new Array<ActivityDescriptor>(),
 };
 
 export const appStateReducer = createReducer(
@@ -31,4 +34,5 @@ export const appStateReducer = createReducer(
   })),
   on(AppStateActionGroup.setJavaScriptTypeDefinitions, (_state, { javaScriptTypeDefinitions }) => ({ ..._state, javaScriptTypeDefinitions: javaScriptTypeDefinitions })),
   on(AppStateActionGroup.setDataDictionaryIntellisense, (_state, { dataDictionaryIntellisense }) => ({ ..._state, dataDictionaryIntellisense: dataDictionaryIntellisense })),
+  on(AppStateActionGroup.setActivityDefinitions, (_state, { activityDefinitions }) => ({ ..._state, activityDefinitions: activityDefinitions })),
 );

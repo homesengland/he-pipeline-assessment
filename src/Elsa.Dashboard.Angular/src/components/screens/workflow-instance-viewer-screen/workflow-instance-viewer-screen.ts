@@ -1,4 +1,4 @@
-import { Component, computed, effect, ElementRef, HostListener, Input, input, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, HostListener, Input, input, OnDestroy, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
 import { selectServerUrl } from '../../state/selectors/app.state.selectors';
@@ -21,10 +21,11 @@ import {
   WorkflowStorageDescriptor,
 } from 'src/models';
 import { ActivityStats, ActivityEventCount } from 'src/services/workflow-client';
-import { ActivityContextMenuState, LayoutDirection } from 'src/components/designers/tree/models';
+import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from 'src/components/designers/tree/models';
 import { ElsaClientService } from 'src/services/elsa-client';
 import * as collection from 'lodash/collection';
 import { featuresDataManager } from 'src/services/features-data-manager';
+import { AppStateActionGroup } from 'src/components/state/actions/app.state.actions';
 
 @Component({
   selector: 'workflow-instance-viewer-screen',
@@ -42,9 +43,8 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   workflowBlueprint: WorkflowBlueprint;
   workflowModel: WorkflowModel;
   selectedActivityId?: string;
-
+  workflowDesignerModeInstance: WorkflowDesignerMode = WorkflowDesignerMode.Instance;
   activityStats?: ActivityStats;
-
   activityContextMenuState: ActivityContextMenuState = {
     shown: false,
     x: 0,
@@ -52,7 +52,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     activity: null,
   };
 
-  // designer: HTMLElsaDesignerTreeElement;
+  readonly designerTree = viewChild.required<ElementRef>('designerTree');
   // journal: HTMLElsaWorkflowInstanceJournalElement;
   readonly contextMenu = viewChild.required<ElementRef>('contextMenu');
   layoutDirection = LayoutDirection.TopBottom;
@@ -87,18 +87,6 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     if (layoutFeature && layoutFeature.enabled) {
       this.layoutDirection = layoutFeature.value as LayoutDirection;
     }
-  }
-
-  @HostListener('document:click', ['$event'])
-  onWindowClicked(event: Event): void {
-    const target = event.target as HTMLElement;
-    if (!this.contextMenu().nativeElement.contains(target)) this.handleContextMenuChange(0, 0, false, null);
-  }
-
-  private setVariablesFromAppState(): void {
-    this.store.select(selectServerUrl).subscribe(data => {
-      this.serverUrl = data;
-    });
   }
 
   async workflowInstanceIdChangedHandler(newValue: string) {
@@ -153,37 +141,55 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   async serverUrlChangedHandler(newValue: string) {
     if (newValue && newValue.length > 0) {
       await this.loadActivityDescriptors();
-      await this.loadWorkflowStorageDescriptors();
     }
   }
 
+  @HostListener('document:click', ['$event'])
+  onWindowClicked(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!this.contextMenu().nativeElement.contains(target)) this.handleContextMenuChange(0, 0, false, null);
+  }
+
+  private setVariablesFromAppState(): void {
+    this.store.select(selectServerUrl).subscribe(data => {
+      this.serverUrl = data;
+    });
+  }
+
   ngAfterViewChecked() {
-    // if (this.el && this.contextMenu) {
-    //   let modalX = this.activityContextMenuState.x + 64;
-    //   let modalY = this.activityContextMenuState.y - 256;
-    //  // Fit the modal to the canvas bounds
-    //   const canvasBounds = this.el?.getBoundingClientRect();
-    //   const modalBounds = this.contextMenu.getBoundingClientRect();
-    //   const modalWidth = modalBounds?.width;
-    //   const modalHeight = modalBounds?.height;
-    //   modalX = Math.min(canvasBounds.width, modalX + modalWidth + 32) - modalWidth - 32;
-    //   modalY = Math.min(canvasBounds.height, modalY + modalHeight) - modalHeight - 32;
-    //   modalY = Math.max(0, modalY);
-    //   this.contextMenu.style.left = `${modalX}px`;
-    //   this.contextMenu.style.top = `${modalY}px`;
-    // }
+    if (this.el && this.contextMenu) {
+      let modalX = this.activityContextMenuState.x + 64;
+      let modalY = this.activityContextMenuState.y - 256;
+      // Fit the modal to the canvas bounds
+      const canvasBounds = this.el?.nativeElement.getBoundingClientRect();
+      const modalBounds = this.contextMenu().nativeElement.getBoundingClientRect();
+      const modalWidth = modalBounds?.width;
+      const modalHeight = modalBounds?.height;
+      modalX = Math.min(canvasBounds.width, modalX + modalWidth + 32) - modalWidth - 32;
+      modalY = Math.min(canvasBounds.height, modalY + modalHeight) - modalHeight - 32;
+      modalY = Math.max(0, modalY);
+      this.contextMenu().nativeElement.style.left = `${modalX}px`;
+      this.contextMenu().nativeElement.style.top = `${modalY}px`;
+    }
   }
 
   ngAfterViewInit() {
-    //     if (!this.designer) {
-    //       this.designer = this.el.querySelector('elsa-designer-tree') as HTMLElsaDesignerTreeElement;
-    //       this.designer.model = this.workflowModel;
-    //     }
+    if (!this.designerTree) {
+      const designerTreeElement = this.designerTree().nativeElement;
+      if (designerTreeElement) {
+        designerTreeElement.model = this.workflowModel;
+      }
+    }
   }
 
-  async loadWorkflowStorageDescriptors() {
+  async loadActivityDescriptors() {
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
-    this.workflowStorageDescriptors = await client.workflowStorageProvidersApi.list();
+    this.activityDescriptors = await client.activitiesApi.list();
+    this.store.dispatch(
+      AppStateActionGroup.setActivityDefinitions({
+        activityDefinitions: this.activityDescriptors,
+      }),
+    );
   }
 
   updateModels(workflowInstance: WorkflowInstance, workflowBlueprint: WorkflowBlueprint) {
@@ -247,11 +253,6 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     };
   }
 
-  async loadActivityDescriptors() {
-    const client = await this.elsaClientService.createElsaClient(this.serverUrl);
-    this.activityDescriptors = await client.activitiesApi.list();
-  }
-
   handleContextMenuChange(x: number, y: number, shown: boolean, activity: ActivityModel) {
     this.activityContextMenuState = {
       shown,
@@ -261,33 +262,39 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     };
   }
 
+  // onShowWorkflowSettingsClick() {
+  //   eventBus.emit(EventTypes.ShowWorkflowSettings);
+  // }
+
   onRecordSelected(e: CustomEvent<WorkflowExecutionLogRecord>) {
     const record = e.detail;
     const activity = !!record ? this.workflowBlueprint.activities.find(x => x.id === record.activityId) : null;
     this.selectedActivityId = activity != null ? (activity.parentId != null ? activity.parentId : activity.id) : null;
   }
 
-  async onActivitySelected(e: CustomEvent<ActivityModel>) {
-    this.selectedActivityId = e.detail.activityId;
+  async onActivitySelected(e: Event) {
+    const customEvent = e as CustomEvent<ActivityModel>;
+    this.selectedActivityId = customEvent.detail.activityId;
     // await this.journal.selectActivityRecord(this.selectedActivityId);
   }
 
-  async onActivityDeselected(e: CustomEvent<ActivityModel>) {
-    if (this.selectedActivityId == e.detail.activityId) this.selectedActivityId = null;
+  async onActivityDeselected(e: Event) {
+    const customEvent = e as CustomEvent<ActivityModel>;
+    if (this.selectedActivityId == customEvent.detail.activityId) this.selectedActivityId = null;
 
     // await this.journal.selectActivityRecord(this.selectedActivityId);
   }
 
-  async onActivityContextMenuButtonClicked(e: CustomEvent<ActivityContextMenuState>) {
-    this.activityContextMenuState = e.detail;
+  async onActivityContextMenuButtonClicked(e: ActivityContextMenuState) {
+    this.activityContextMenuState = e;
     this.activityStats = null;
 
-    if (!e.detail.shown) {
+    if (!e.shown) {
       return;
     }
 
     const elsaClient = await this.elsaClientService.createElsaClient(this.serverUrl);
-    this.activityStats = await elsaClient.activityStatsApi.get(this.workflowInstanceId, e.detail.activity.activityId);
+    this.activityStats = await elsaClient.activityStatsApi.get(this.workflowInstanceId, e.activity.activityId);
   }
 
   getActivityBorderColor = (activity: ActivityModel): string => {

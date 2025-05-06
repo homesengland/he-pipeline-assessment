@@ -15,7 +15,7 @@ import { AxiosInstance } from 'axios';
 import { confirmDialogService } from 'src/services/confirm-dialog-service';
 import { getOrCreateProperty, htmlToElement } from 'src/utils/utils';
 import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
-import { activityIconProvider } from 'src/services/activity-icon-provider';
+import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { propertyDisplayManager } from 'src/services/property-display-manager';
 import { toastNotificationService } from 'src/services/toast-notification-service';
 import { featuresDataManager } from 'src/services/features-data-manager';
@@ -37,7 +37,8 @@ export class WorkflowRoot implements OnInit {
   private modalHiddenListener: () => void;
   readonly confirmDialog = viewChild.required<HTMLElsaConfirmDialogElement>('confirmDialog');
 
-  constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2) {
+  constructor(private http: HttpClient, el: ElementRef, private store: Store, renderer2: Renderer2, private activityIconProvider: ActivityIconProvider) {
+    this.activityIconProvider = activityIconProvider;
     this.renderer2 = renderer2;
     this.dataDictionaryJson = el.nativeElement.getAttribute('dataDictionaryJson');
     this.storeConfigJson = el.nativeElement.getAttribute('storeConfigJson');
@@ -67,7 +68,7 @@ export class WorkflowRoot implements OnInit {
       htmlToElement,
       features: [],
       propertyDisplayManager,
-      activityIconProvider,
+      activityIconProvider: this.activityIconProvider,
       toastNotificationService,
     };
 

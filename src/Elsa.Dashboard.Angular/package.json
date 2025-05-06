@@ -51,6 +51,8 @@
     "concat": "^1.0.3",
     "construe": "^0.4.1",
     "cronstrue": "^1.125.0",
+    "d3": "^7.9.0",
+    "dagre-d3": "^0.6.4",
     "el-transition": "^0.0.7",
     "json-to-json-schema": "^0.0.4",
     "lodash": "^4.17.21",
