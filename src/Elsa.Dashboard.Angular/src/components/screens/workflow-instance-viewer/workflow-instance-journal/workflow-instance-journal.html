@@ -1,55 +1,55 @@
 <div>
-  <elsa-flyout-panel #flyoutPanel>
+  <elsa-flyout-panel #flyoutPanel *ngIf="workflowInstance && workflowBlueprint && workflowModel">
     <!-- General Tab -->
     <elsa-tab-header tab="general" slot="header">General</elsa-tab-header>
     <elsa-tab-content tab="general" slot="content">
       <dl class="elsa-border-b elsa-border-gray-200 elsa-divide-y elsa-divide-gray-200">
-        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+        <div *ngIf="workflowBlueprint" class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Workflow Name</dt>
-          <dd class="elsa-text-gray-900">{{workflowBlueprint.name}}</dd>
+          <dd class="elsa-text-gray-900">{{workflowBlueprint?.name}}</dd>
         </div>
-        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+        <div *ngIf="workflowInstance" class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Instance Name</dt>
-          <dd class="elsa-text-gray-900">{{workflowInstance.name || '-'}}</dd>
+          <dd class="elsa-text-gray-900">{{workflowInstance?.name || '-'}}</dd>
         </div>
-        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+        <div *ngIf="workflowInstance" class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Id</dt>
-          <dd class="elsa-text-gray-900">{{workflowInstance.id}}</dd>
+          <dd class="elsa-text-gray-900">{{workflowInstance?.id}}</dd>
         </div>
-        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+        <div *ngIf="workflowInstance" class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Correlation id</dt>
-          <dd class="elsa-text-gray-900">{{workflowInstance.correlationId}}</dd>
+          <dd class="elsa-text-gray-900">{{workflowInstance?.correlationId}}</dd>
         </div>
-        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+        <div *ngIf="workflowInstance" class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Version</dt>
-          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance.version || '-'}}</dd>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance?.version || '-'}}</dd>
         </div>
-        <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
+        <div *ngIf="workflowInstance" class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Workflow Status</dt>
           <dd class="elsa-text-gray-900 elsa-break-all">
             <span class="elsa-relative elsa-inline-flex elsa-items-center elsa-rounded-full">
               <span class="elsa-flex-shrink-0 elsa-flex elsa-items-center elsa-justify-center">
-                <span [class]="'elsa-w-2-5 elsa-h-2-5 elsa-rounded-full ' + getStatusColor(workflowInstance.workflowStatus)" aria-hidden="true"></span>
+                <span [class]="'elsa-w-2-5 elsa-h-2-5 elsa-rounded-full ' + getStatusColor(workflowInstance?.workflowStatus)" aria-hidden="true"></span>
               </span>
-              <span class="elsa-ml-3.5">{{workflowInstance.workflowStatus || '-'}}</span>
+              <span class="elsa-ml-3.5">{{workflowInstance?.workflowStatus || '-'}}</span>
             </span>
           </dd>
         </div>
         <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Created</dt>
-          <dd class="elsa-text-gray-900 elsa-break-all">{{moment(workflowInstance.createdAt).format('DD-MM-YYYY HH:mm:ss') || '-'}}</dd>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{moment(workflowInstance?.createdAt).format('DD-MM-YYYY HH:mm:ss') || '-'}}</dd>
         </div>
         <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Finished</dt>
-          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance.finishedAt ? moment(workflowInstance.finishedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance?.finishedAt ? moment(workflowInstance?.finishedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
         </div>
         <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Last Executed</dt>
-          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance.lastExecutedAt ? moment(workflowInstance.lastExecutedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance?.lastExecutedAt ? moment(workflowInstance?.lastExecutedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
         </div>
         <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
           <dt class="elsa-text-gray-500">Faulted</dt>
-          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance.faultedAt ? moment(workflowInstance.faultedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
+          <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance?.faultedAt ? moment(workflowInstance?.faultedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
         </div>
       </dl>
     </elsa-tab-content>
