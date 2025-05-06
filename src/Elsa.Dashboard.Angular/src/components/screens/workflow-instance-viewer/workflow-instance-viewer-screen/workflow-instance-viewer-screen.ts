@@ -1,7 +1,7 @@
 import { Component, computed, effect, ElementRef, HostListener, Input, input, OnDestroy, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { selectServerUrl } from '../../state/selectors/app.state.selectors';
+import { selectServerUrl } from '../../../state/selectors/app.state.selectors';
 import { Location } from '@angular/common';
 import {
   ActivityBlueprint,

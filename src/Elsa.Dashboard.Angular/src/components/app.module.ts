@@ -19,7 +19,7 @@ import { WorkflowContextMenu } from './controls/workflow-context-menu/workflow-c
 import { ConfirmDialog } from './shared/confirm-dialog/confirm-dialog';
 import { ModalDialog } from './shared/modal-dialog/modal-dialog';
 import { WorkflowInstancesView } from './dashboard/pages/workflow-instances-view/workflow-instances-view';
-import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
+import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
 import { WorkflowPerformanceInformation } from './shared/workflow-performance-information/workflow-performance-information';
 import { WorkflowFaultInformation } from './shared/workflow-fault-information/workflow-fault-information';
 import { DesignerTree } from './designers/tree/designer-tree/designer-tree';
