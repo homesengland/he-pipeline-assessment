@@ -3,13 +3,15 @@ import { DesignerTree } from '../designer-tree';
 import { ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { WorkflowPersistenceBehavior, ActivityDescriptor, ActivityTraits } from '../../../../../models';
-import { initial } from 'lodash';
+import { WorkflowPersistenceBehavior, ActivityDescriptor, ActivityTraits, WorkflowModel } from '../../../../../models';
 import { eventBus } from '../../../../../services/event-bus';
 import { Store } from '@ngrx/store';
 import { selectActivityDefinitions } from '../../../../state/selectors/app.state.selectors';
-import { DataDictionary } from '../../../../../models/custom-component-models';
-import { ɵNgNoValidate } from '@angular/forms';
+import { ActivityModel } from '../../../../../models/elsa-interfaces';
+import { Map } from '../../../../../utils/utils';
+import { method } from 'lodash';
+
+const eventListeners = new Map();
 // Mock external dependencies
 jest.mock('d3', () => ({
   select: jest.fn(() => ({
@@ -117,6 +119,27 @@ describe('DesignerTree', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    // Explicitly destroy the component
+    if (component && component.ngOnDestroy) {
+      component.ngOnDestroy();
+    }
+
+    // Clean up spies and mocks
+    jest.clearAllMocks();
+
+    // Clean up any remaining event bus listeners
+    const eventBusInstance = eventBus as any;
+    if (eventBusInstance.detachAll) {
+      eventBusInstance.detachAll();
+    }
+
+    // Dispose of fixture
+    if (fixture) {
+      fixture.destroy();
+    }
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -196,9 +219,9 @@ describe('DesignerTree', () => {
 
     const mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(selectActivityDefinitions, activityDescriptors);
-
     component.ngOnInit();
     expect(component.activityDescriptors).toEqual(activityDescriptors);
+    component.ngOnDestroy();
   });
 
   it('should subscribe to events when initialising the component', () => {
@@ -209,5 +232,36 @@ describe('DesignerTree', () => {
     expect(eventBusInstance.on).toHaveBeenCalledWith('update-activity', expect.any(Function));
     expect(eventBusInstance.on).toHaveBeenCalledWith('workflow-executed', expect.any(Function));
     expect(onActivityPickedSpy).toHaveBeenCalledTimes(3);
+    component.ngOnDestroy();
+  });
+
+  // it('should unsubscribe from events when destroying the component', () => {
+  //   const eventBusInstance = eventBus as any;
+  //   const offSpy = jest.spyOn(eventBusInstance, 'detach');
+  //   component.ngOnDestroy();
+  //   expect(offSpy).toHaveBeenCalledTimes(3);
+  //   expect(eventBusInstance.detach).toHaveBeenCalledWith('activity-picked', expect.any(Function));
+  //   expect(eventBusInstance.detach).toHaveBeenCalledWith('update-activity', expect.any(Function));
+  //   expect(eventBusInstance.detach).toHaveBeenCalledWith('workflow-executed', expect.any(Function));
+  // });
+
+  it('should remove selected activities', () => {
+    const activity1 = { type: 'TestActivity', activityId: '1' } as ActivityModel;
+    const map: Map<ActivityModel> = {};
+
+    map[activity1.activityId] = activity1;
+    component.selectedActivities = map;
+    console.log(component.selectedActivities);
+    const removeActivitySpy = jest.spyOn(component, 'removeActivityInternal').mockImplementation(() => {
+      return { activities: [], connections: [] }; // Return a valid WorkflowModel
+    });
+    jest.spyOn(component, 'renderTree').mockImplementation(() => {});
+    jest.spyOn(component, 'safeRender').mockImplementation(() => {});
+
+    const updateWorkflowModelSpy = jest.spyOn(component, 'updateWorkflowModel').mockImplementation((model: WorkflowModel, emitEvent?: boolean) => model);
+    component.removeSelectedActivities();
+
+    expect(removeActivitySpy).toHaveBeenCalledTimes(1);
+    expect(updateWorkflowModelSpy).toHaveBeenCalledTimes(1);
   });
 });

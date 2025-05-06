@@ -10,7 +10,7 @@ import {
   EventTypes,
   WorkflowModel,
   WorkflowPersistenceBehavior,
-} from 'src/models';
+} from '../../../../models';
 import { eventBus } from '../../../../services/event-bus';
 import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
