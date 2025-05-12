@@ -1,10 +1,9 @@
-<!-- Tab navigation -->
 <button
   type="button"
   (click)="toggle()"
   [ngClass]="{ 'elsa-hidden': hidden || expanded }"
   [style.right.px]="16 * (expandButtonPosition - 1) + 12"
-  class="workflow-settings-button elsa-fixed elsa-top-20 elsa-inline-flex elsa-items-center elsa-p-2 elsa-rounded-full elsa-border elsa-border-transparent elsa-bg-white shadow elsa-text-gray-400 hover:elsa-text-blue-500 focus:elsa-text-blue-500 hover:elsa-ring-2 hover:elsa-ring-offset-2 hover:elsa-ring-blue-500 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-z-10"
+  class="workflow-settings-button elsa-fixed elsa-top-20 elsa-inline-flex elsa-items-center elsa-p-2 elsa-rounded-full elsa-border elsa-border-transparent elsa-bg-white shadow elsa-text-gray-400 hover:elsa-text-blue-500 focus:elsa-text-blue-500 hover:elsa-ring-offset-2 hover:elsa-ring-blue-500 focus:elsa-outline-none focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-z-10"
 >
   <svg xmlns="http://www.w3.org/2000/svg" class="elsa-h-8 elsa-w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
@@ -34,7 +33,7 @@
           type="button"
           (click)="toggle()"
           [ngClass]="{ 'elsa-hidden': autoExpand }"
-          class="workflow-settings-button elsa-absolute elsa-left-2 elsa-inline-flex elsa-items-center elsa-p-2 elsa-rounded-full elsa-border elsa-border-transparent elsa-bg-white shadow elsa-text-gray-400 hover:elsa-text-blue-500 focus:elsa-text-blue-500 hover:elsa-ring-2 hover:elsa-ring-offset-2 hover:elsa-ring-blue-500 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-z-10"
+          class="workflow-settings-button elsa-absolute elsa-left-2 elsa-inline-flex elsa-items-center elsa-p-2 elsa-rounded-full elsa-border elsa-border-transparent elsa-bg-white shadow elsa-text-gray-400 hover:elsa-text-blue-500 focus:elsa-text-blue-500 hover:elsa-ring-offset-2 hover:elsa-ring-blue-500 focus:elsa-outline-none focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-z-10"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="elsa-h-8 elsa-w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
@@ -45,30 +44,12 @@
             <div class="elsa-border-b elsa-border-gray-200">
               <nav class="elsa-flex elsa-space-x-4" aria-label="Tabs">
                 <ng-content select="elsa-tab-header"></ng-content>
-                <!-- <ng-container *ngFor="let tab of tabs">
-                  <button
-                    (click)="selectTab(tab.id)"
-                    [attr.data-tab-id]="tab.id"
-                    [class.elsa-border-indigo-500]="isTabActive(tab.id)"
-                    [class.elsa-text-indigo-600]="isTabActive(tab.id)"
-                    [class.elsa-border-transparent]="!isTabActive(tab.id)"
-                    [class.elsa-text-gray-500]="!isTabActive(tab.id)"
-                    class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm"
-                  >
-                    <ng-container *ngTemplateOutlet="tab.header['templateRef']"></ng-container>
-                  </button>
-                </ng-container> -->
               </nav>
             </div>
 
             <!-- Tab contents -->
             <div class="elsa-overflow-auto elsa-h-full">
               <ng-content select="elsa-tab-content"></ng-content>
-              <!-- <ng-container *ngFor="let tab of tabs">
-                <div [hidden]="!isTabActive(tab.id)">
-                  <ng-container *ngTemplateOutlet="tab.content['templateRef']"></ng-container>
-                </div>
-              </ng-container> -->
             </div>
           </div>
         </div>

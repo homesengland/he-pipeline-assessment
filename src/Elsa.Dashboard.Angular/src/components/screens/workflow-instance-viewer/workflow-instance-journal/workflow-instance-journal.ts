@@ -252,4 +252,12 @@ export class WorkflowInstanceJournalComponent implements OnInit {
 
     return JSON.stringify(model, null, 2);
   }
+
+  onTabClick(tabId: string) {
+    this.selectedTabId = tabId;
+
+    if (this.flyoutPanel) {
+      this.flyoutPanel.selectTab(tabId);
+    }
+  }
 }

@@ -1,7 +1,21 @@
-import { Component, ContentChildren, QueryList, AfterContentInit, Input, ViewChild, ElementRef, viewChild } from '@angular/core';
+import {
+  Component,
+  ContentChildren,
+  QueryList,
+  AfterContentInit,
+  Input,
+  ViewChild,
+  ElementRef,
+  viewChild,
+  provideExperimentalZonelessChangeDetection,
+  AfterViewInit,
+  AfterViewChecked,
+} from '@angular/core';
 import { TabHeaderComponent } from '../tab-header/tab-header.component';
 import { TabContentComponent } from '../tab-content/tab-content.component';
 import { enter, leave } from 'el-transition';
+import { eventBus } from 'src/services/event-bus';
+import { EventTypes } from 'src/models';
 
 @Component({
   selector: 'elsa-flyout-panel',
@@ -9,31 +23,49 @@ import { enter, leave } from 'el-transition';
   templateUrl: 'flyout-panel.component.html',
 })
 export class FlyoutPanelComponent implements AfterContentInit {
-  @ContentChildren(TabHeaderComponent) tabHeaders: QueryList<TabHeaderComponent>;
-  @ContentChildren(TabContentComponent) tabContents: QueryList<TabContentComponent>;
   @Input() expandButtonPosition = 1;
   @Input() autoExpand = false;
   @Input() hidden = false;
   @Input() silent = false;
   @ViewChild('el') el!: ElementRef;
 
+  @ContentChildren(TabHeaderComponent) tabHeaders!: QueryList<TabHeaderComponent>;
+  @ContentChildren(TabContentComponent) tabContents!: QueryList<TabContentComponent>;
+
   activeTab: string = '';
   tabs: Array<{ id: string; header: TabHeaderComponent; content: TabContentComponent }> = [];
   expanded: boolean = false;
+  currentTab: string;
 
   ngAfterContentInit() {
-    this.updateTabs();
+    console.log('ngAfterContentInit - tabHeaders count:', this.tabHeaders?.length);
+    this.setupTabsFromContentChildren();
 
-    if (this.tabs.length > 0) {
-      this.activeTab = this.tabs[0].id;
-    }
+    this.tabHeaders.changes.subscribe(() => {
+      console.log('Tab headers changed, updating tabs');
+      this.setupTabsFromContentChildren();
+    });
 
-    // Re-check tabs when content changes
-    this.tabHeaders.changes.subscribe(() => this.updateTabs());
-    this.tabContents.changes.subscribe(() => this.updateTabs());
+    this.tabContents.changes.subscribe(() => {
+      console.log('Tab contents changed, updating tabs');
+      this.setupTabsFromContentChildren();
+    });
   }
 
-  updateTabs() {
+  ngAfterViewInit() {
+    if (this.autoExpand && this.el?.nativeElement) {
+      setTimeout(() => {
+        this.expanded = true;
+        try {
+          enter(this.el.nativeElement);
+        } catch (err) {
+          console.error('Error auto-expanding panel:', err);
+        }
+      });
+    }
+  }
+
+  private setupTabsFromContentChildren() {
     this.tabs = [];
 
     const headers = this.tabHeaders.toArray();
@@ -49,24 +81,31 @@ export class FlyoutPanelComponent implements AfterContentInit {
         });
       }
     }
-  }
 
-  selectTab(tabId: string, focus: boolean = false) {
-    this.activeTab = tabId;
-
-    if (focus) {
-      // You would typically use ViewChild and ElementRef here to focus the tab
-      setTimeout(() => {
-        const tabElement = document.querySelector(`[data-tab-id="${tabId}"]`) as HTMLElement;
-        if (tabElement) {
-          tabElement.focus();
-        }
-      });
+    if (this.tabs.length > 0 && !this.activeTab) {
+      this.selectTab(this.tabs[0].id);
     }
   }
 
-  isTabActive(tabId: string): boolean {
-    return this.activeTab === tabId;
+  selectTab(tabId: string, expand = false): void {
+    console.log('Selecting tab:', tabId);
+    this.activeTab = tabId;
+
+    this.tabs.forEach(tab => {
+      tab.header.active = tab.id === tabId;
+      tab.content.active = tab.id === tabId;
+    });
+
+    if (expand && !this.expanded) {
+      this.expanded = true;
+      if (this.el?.nativeElement) {
+        try {
+          enter(this.el.nativeElement);
+        } catch (err) {
+          console.error('Error during enter transition:', err);
+        }
+      }
+    }
   }
 
   toggle = () => {

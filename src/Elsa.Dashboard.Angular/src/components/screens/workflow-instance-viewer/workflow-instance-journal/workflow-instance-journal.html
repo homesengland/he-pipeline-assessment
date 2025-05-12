@@ -1,7 +1,7 @@
 <elsa-flyout-panel #flyoutPanel>
   <!-- General Tab -->
-  <elsa-tab-header tab="general" slot="header">General</elsa-tab-header>
-  <elsa-tab-content tab="general" slot="content">
+  <elsa-tab-header tab="general" (tabClick)="onTabClick($event)">General</elsa-tab-header>
+  <elsa-tab-content tab="general">
     <dl class="elsa-border-b elsa-border-gray-200 elsa-divide-y elsa-divide-gray-200">
       <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
         <dt class="elsa-text-gray-500">Workflow Name</dt>
@@ -54,8 +54,8 @@
   </elsa-tab-content>
 
   <!-- Journal Tab -->
-  <elsa-tab-header tab="journal" slot="header">Journal</elsa-tab-header>
-  <elsa-tab-content tab="journal" slot="content">
+  <elsa-tab-header tab="journal" (tabClick)="onTabClick($event)">Journal</elsa-tab-header>
+  <elsa-tab-content tab="journal">
     <div class="flow-root elsa-mt-4">
       <ul class="-elsa-mb-8">
         <li *ngFor="let record of filteredRecords; let index = index">
@@ -86,7 +86,12 @@
                 </div>
                 <div class="elsa-min-w-0 elsa-flex-1 elsa-pt-1.5 elsa-flex elsa-justify-between elsa-space-x-4">
                   <div>
-                    <h3 class="elsa-text-lg elsa-leading-6 elsa-font-medium elsa-text-gray-900">{{ getActivityDisplayName(record.activityId, record.activityType) }}</h3>
+                    <h3 class="elsa-text-lg elsa-leading-6 elsa-font-medium elsa-text-gray-900">
+                      <ng-container *ngIf="workflowBlueprint; else loadingActivityName"> {{ getActivityDisplayName(record.activityId, record.activityType) }} </ng-container>
+                      <ng-template #loadingActivityName>
+                        <span class="elsa-italic elsa-text-gray-500">{{ record.activityType.split('.').pop() || 'Loading...' }}</span>
+                      </ng-template>
+                    </h3>
                   </div>
                   <div>
                     <span class="elsa-relative elsa-inline-flex elsa-items-center elsa-rounded-full elsa-border elsa-border-gray-300 elsa-px-3 elsa-py-0.5 elsa-text-sm">
@@ -195,8 +200,8 @@
   </elsa-tab-content>
 
   <!-- Activity State Tab -->
-  <elsa-tab-header tab="activityState" slot="header">Activity State</elsa-tab-header>
-  <elsa-tab-content tab="activityState" slot="content">
+  <elsa-tab-header tab="activityState" (tabClick)="onTabClick($event)">Activity State</elsa-tab-header>
+  <elsa-tab-content tab="activityState">
     <div class="elsa-mt-4">
       <p *ngIf="!workflowModel || !selectedActivityId">No activity selected</p>
       <pre *ngIf="workflowModel && selectedActivityId">{{ getActivityStateJSON() }}</pre>
@@ -204,8 +209,8 @@
   </elsa-tab-content>
 
   <!-- Variables Tab -->
-  <elsa-tab-header tab="variables" slot="header">Variables</elsa-tab-header>
-  <elsa-tab-content tab="variables" slot="content">
+  <elsa-tab-header tab="variables" (tabClick)="onTabClick($event)">Variables</elsa-tab-header>
+  <elsa-tab-content tab="variables">
     <dl class="elsa-border-b elsa-border-gray-200 elsa-divide-y elsa-divide-gray-200">
       <div class="elsa-py-3 elsa-text-sm elsa-font-medium">
         <pre *ngIf="workflowInstance?.variables?.data">{{JSON.stringify(workflowInstance?.variables?.data, null, 2)}}</pre>
