@@ -12,6 +12,7 @@ import { routing } from '../workflow-routes.module';
 import { AppStateModule } from './state/app.state.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgStyle } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { WorkflowPager } from './controls/workflow-pager/workflow-pager';
 import { WorkflowDropdownButton } from './controls/workflow-dropdown-button/workflow-dropdown-button';
@@ -29,6 +30,8 @@ import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list
 import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
 import { FlyoutPanelComponent } from './shared/flyout-panel/flyout-panel.component';
+import { TabHeaderComponent } from './shared/tab-header/tab-header.component';
+import { TabContentComponent } from './shared/tab-content/tab-content.component';
 
 @NgModule({
   declarations: [
@@ -53,9 +56,11 @@ import { FlyoutPanelComponent } from './shared/flyout-panel/flyout-panel.compone
     WorkflowInstanceViewerScreen,
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,
+    TabHeaderComponent,
+    TabContentComponent,
   ],
 
-  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle],
+  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle, BrowserAnimationsModule],
   providers: [ActivityIconProvider, ActivityIconProviderPlugin],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

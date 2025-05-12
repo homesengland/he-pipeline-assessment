@@ -1,7 +1,7 @@
-import { Component, ContentChildren, QueryList, AfterContentInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ContentChildren, QueryList, AfterContentInit, Input, ViewChild, ElementRef, viewChild } from '@angular/core';
 import { TabHeaderComponent } from '../tab-header/tab-header.component';
 import { TabContentComponent } from '../tab-content/tab-content.component';
+import { enter, leave } from 'el-transition';
 
 @Component({
   selector: 'elsa-flyout-panel',
@@ -11,9 +11,15 @@ import { TabContentComponent } from '../tab-content/tab-content.component';
 export class FlyoutPanelComponent implements AfterContentInit {
   @ContentChildren(TabHeaderComponent) tabHeaders: QueryList<TabHeaderComponent>;
   @ContentChildren(TabContentComponent) tabContents: QueryList<TabContentComponent>;
+  @Input() expandButtonPosition = 1;
+  @Input() autoExpand = false;
+  @Input() hidden = false;
+  @Input() silent = false;
+  @ViewChild('el') el!: ElementRef;
 
   activeTab: string = '';
   tabs: Array<{ id: string; header: TabHeaderComponent; content: TabContentComponent }> = [];
+  expanded: boolean = false;
 
   ngAfterContentInit() {
     this.updateTabs();
@@ -62,4 +68,13 @@ export class FlyoutPanelComponent implements AfterContentInit {
   isTabActive(tabId: string): boolean {
     return this.activeTab === tabId;
   }
+
+  toggle = () => {
+    if (this.expanded) {
+      leave(this.el.nativeElement).then(() => (this.expanded = false));
+    } else {
+      this.expanded = true;
+      enter(this.el.nativeElement);
+    }
+  };
 }

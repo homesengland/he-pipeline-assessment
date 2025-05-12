@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'elsa-tab-content',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   template: '<ng-content></ng-content>',
 })
 export class TabContentComponent {
   @Input() tab: string;
+  @Input() active: boolean = false;
+
+  
 }
