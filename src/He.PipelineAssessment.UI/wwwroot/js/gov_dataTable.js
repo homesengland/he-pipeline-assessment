@@ -143,6 +143,7 @@ function initInterventionDataTable(tableId, columnNumberToSort, searchElementId)
                                 option.value = d;
                                 option.textContent = d;
                             }
+                            select.append(option);
 
                         });
                 });
