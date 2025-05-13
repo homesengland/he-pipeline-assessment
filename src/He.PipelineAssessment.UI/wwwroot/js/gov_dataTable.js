@@ -46,8 +46,10 @@
                         .unique()
                         .sort()
                         .each(function (d, j) {
+                            console.log("J", j)
                             var dom_nodes = $($.parseHTML(d));
                             var node = dom_nodes[0];
+                            console.log("Node", node);
                             var option = document.createElement('option');
                             if (node?.innerText != null) {
                                 option.value = node.innerText;
@@ -57,7 +59,7 @@
                                 option.value = d;
                                 option.textContent = d;
                             }
-
+                            select.append(option);
                         });
                 });
         },
