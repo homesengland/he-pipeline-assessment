@@ -26,7 +26,8 @@ import { DesignerTree } from './designers/tree/designer-tree/designer-tree';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { ActivityIconProviderPlugin } from 'src/plugins/activity-icon-provider-plugin';
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
-import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
+import { WorkflowDefinitionEdit } from './dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
+import { WorkflowDefinitionEditorScreen } from './screens/workflow-definition-editor/workflow-definition-editor-screen';
 
 @NgModule({
   declarations: [
@@ -43,12 +44,14 @@ import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-
     WorkflowContextMenu,
     ConfirmDialog,
     ModalDialog,
-    WorkflowDefinitionsView,
+    WorkflowDefinitionsList,
     WorkflowPerformanceInformation,
     WorkflowFaultInformation,
     DesignerTree,
     WorkflowInstancesView,
     WorkflowInstanceViewerScreen,
+    WorkflowDefinitionEdit,
+    WorkflowDefinitionEditorScreen,
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle],
