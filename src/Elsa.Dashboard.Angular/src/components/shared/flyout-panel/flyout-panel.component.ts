@@ -1,24 +1,10 @@
-import {
-  Component,
-  ContentChildren,
-  QueryList,
-  AfterContentInit,
-  Input,
-  ViewChild,
-  ElementRef,
-  viewChild,
-  provideExperimentalZonelessChangeDetection,
-  AfterViewInit,
-  AfterViewChecked,
-} from '@angular/core';
+import { Component, ContentChildren, QueryList, AfterContentInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { TabHeaderComponent } from '../tab-header/tab-header.component';
 import { TabContentComponent } from '../tab-content/tab-content.component';
 import { enter, leave } from 'el-transition';
-import { eventBus } from 'src/services/event-bus';
-import { EventTypes } from 'src/models';
 
 @Component({
-  selector: 'elsa-flyout-panel',
+  selector: 'flyout-panel',
   standalone: false,
   templateUrl: 'flyout-panel.component.html',
 })
@@ -38,16 +24,13 @@ export class FlyoutPanelComponent implements AfterContentInit {
   currentTab: string;
 
   ngAfterContentInit() {
-    console.log('ngAfterContentInit - tabHeaders count:', this.tabHeaders?.length);
     this.setupTabsFromContentChildren();
 
     this.tabHeaders.changes.subscribe(() => {
-      console.log('Tab headers changed, updating tabs');
       this.setupTabsFromContentChildren();
     });
 
     this.tabContents.changes.subscribe(() => {
-      console.log('Tab contents changed, updating tabs');
       this.setupTabsFromContentChildren();
     });
   }
@@ -88,7 +71,6 @@ export class FlyoutPanelComponent implements AfterContentInit {
   }
 
   selectTab(tabId: string, expand = false): void {
-    console.log('Selecting tab:', tabId);
     this.activeTab = tabId;
 
     this.tabs.forEach(tab => {

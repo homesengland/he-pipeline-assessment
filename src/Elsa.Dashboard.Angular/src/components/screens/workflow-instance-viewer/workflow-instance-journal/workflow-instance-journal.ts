@@ -1,24 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
-import * as collection from 'lodash/collection';
 import moment from 'moment';
-import {
-  ActivityBlueprint,
-  ActivityDescriptor,
-  PagedList,
-  WorkflowBlueprint,
-  WorkflowExecutionLogRecord,
-  WorkflowInstance,
-  WorkflowModel,
-  WorkflowStatus,
-} from '../../../../models';
+import { ActivityDescriptor, PagedList, WorkflowBlueprint, WorkflowExecutionLogRecord, WorkflowInstance, WorkflowModel, WorkflowStatus } from '../../../../models';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
 import { clip, durationToString } from '../../../../utils/utils';
 import { FlyoutPanelComponent } from '../../../shared/flyout-panel/flyout-panel.component';
-import { CommonModule } from '@angular/common';
-import { CopyButtonComponent } from '../../../shared/copy-button/copy-button.component';
-import { WorkflowEditorNotificationsComponent } from '../../workflow-definition-editor/workflow-definition-editor-notifications/workflow-editor-notifications';
-import { TabHeaderComponent } from '../../../shared/tab-header/tab-header.component';
-import { TabContentComponent } from '../../../shared/tab-content/tab-content.component';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 
 interface Tab {
@@ -150,21 +135,7 @@ export class WorkflowInstanceJournalComponent implements OnInit {
     clip(element);
   }
 
-  renderGeneralTab() {
-    return;
-  }
 
-  renderJournalTab() {
-    return;
-  }
-
-  renderActivityStateTab() {
-    return;
-  }
-
-  renderVariablesTab() {
-    return;
-  }
 
   calculateDuration(record: WorkflowExecutionLogRecord, index: number): string {
     try {

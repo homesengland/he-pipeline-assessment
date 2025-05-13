@@ -1,12 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'elsa-tab-content',
+  selector: 'tab-content',
   standalone: false,
-  template: `<div [class]="getClassNames()">
-    <ng-content></ng-content>
-  </div>`,
+  templateUrl: './tab-content.component.html',
 })
 export class TabContentComponent {
   @Input() tab: string;
