@@ -6,5 +6,5 @@
         [value]="expression()"
         [editorHeight]="editorHeight()"
         [singleLineMode]="singleLineMode()"
-        (propagateChange)="onMonacoValueChanged($event)"
+        (propagateChange)="onMonacoValueChanged($any($event))"
         #monacoContainer></monaco-editor>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule, makeEnvironmentProviders } from '@angular/core';
+import { InjectionToken, ModuleWithProviders, NgModule, makeEnvironmentProviders } from '@angular/core';
 
 import { MONACO_EDITOR_CONFIG, MonacoEditorConfig } from './config';
 import { DiffEditorComponent } from './diff-editor.component';

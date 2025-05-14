@@ -63,7 +63,7 @@
     "gulp": "5.0.0",
     "gulp-concat": "2.6.1",
     "json-to-json-schema": "^0.0.4",
-    "lodash": "^4.17.21",
+    "lodash": "4.17.21",
     "minimatch": "10.0.1",
     "moment": "2.30.1",
     "monaco-editor": "^0.52.2",
