@@ -20,9 +20,7 @@
             "outputPath": "dist/workflow",
             "index": "src/index.html",
             "main": "src/main.tsx",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -31,11 +29,8 @@
                 "output": ""
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ],
-            "scripts": [
-            ]
+            "styles": ["src/styles.css"],
+            "scripts": []
           },
           "configurations": {
             "production": {
