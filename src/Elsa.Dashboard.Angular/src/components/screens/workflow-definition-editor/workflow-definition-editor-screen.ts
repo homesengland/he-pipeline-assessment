@@ -36,7 +36,7 @@ import { selectServerUrl } from 'src/components/state/selectors/app.state.select
   templateUrl: './workflow-definition-editor-screen.html',
   styleUrls: ['./workflow-definition-editor-screen.css'],
   standalone: false,
-  host: { class: 'elsa-flex elsa-flex-col elsa-w-full' },
+  host: { class: 'elsa-flex elsa-flex-col elsa-w-full elsa-relative' },
 })
 export class WorkflowDefinitionEditorScreen implements OnInit {
   @Output() workflowSaved: EventEmitter<WorkflowDefinition>;

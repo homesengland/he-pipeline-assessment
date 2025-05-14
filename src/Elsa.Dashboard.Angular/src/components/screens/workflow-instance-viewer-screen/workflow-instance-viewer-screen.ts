@@ -174,7 +174,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (!this.designerTree) {
+    if (this.designerTree) {
       const designerTreeElement = this.designerTree().nativeElement;
       if (designerTreeElement) {
         designerTreeElement.model = this.workflowModel;

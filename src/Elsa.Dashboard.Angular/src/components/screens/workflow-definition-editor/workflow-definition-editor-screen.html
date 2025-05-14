@@ -1,38 +1,36 @@
-<div #el>
-  <div class="elsa-flex-1 elsa-flex elsa-relative">
-    <designer-tree
-      *ngIf="this.workflowDesignerMode === this.editWorkflowDesignerMode"
-      #designerTree
-      [model]="this.workflowModel"
-      [mode]="this.workflowDesignerMode"
-      [layoutDirection]="this.layoutDirection"
-      [activityContextMenuButton]="this.renderActivityContextMenuButton"
-      (onActivityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
-      [activityContextMenu]="this.activityContextMenuState"
-      [enableMultipleConnectionsFromSingleSource]="false"
-      [selectedActivityIds]="[this.selectedActivityId]"
-      (onActivityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
-      (onActivityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
-      (onActivitySelected)="onActivitySelected($event)"
-      (onActivityDeselected)="onActivityDeselected($event)"
-      class="elsa-flex-1"
-    ></designer-tree>
-    <designer-tree
-      *ngIf="this.workflowDesignerMode !== this.editWorkflowDesignerMode"
-      #designerTree
-      [model]="this.workflowModel"
-      [mode]="this.workflowDesignerMode"
-      [layoutDirection]="this.layoutDirection"
-      [activityContextMenuButton]="this.renderActivityStatsButton"
-      (onActivityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
-      [activityContextMenu]="this.activityContextMenuTestState"
-      [enableMultipleConnectionsFromSingleSource]="false"
-      [selectedActivityIds]="[this.selectedActivityId]"
-      (onActivityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
-      (onActivityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
-      (onActivitySelected)="onActivitySelected($event)"
-      (onActivityDeselected)="onActivityDeselected($event)"
-      class="elsa-flex-1"
-    ></designer-tree>
-  </div>
+<div #el class="elsa-flex-1 elsa-flex">
+  <designer-tree
+    *ngIf="this.workflowDesignerMode === this.editWorkflowDesignerMode"
+    #designerTree
+    [model]="this.workflowModel"
+    [mode]="this.workflowDesignerMode"
+    [layoutDirection]="this.layoutDirection"
+    [activityContextMenuButton]="this.renderActivityContextMenuButton"
+    (onActivityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
+    [activityContextMenu]="this.activityContextMenuState"
+    [enableMultipleConnectionsFromSingleSource]="false"
+    [selectedActivityIds]="[this.selectedActivityId]"
+    (onActivityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
+    (onActivityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
+    (onActivitySelected)="onActivitySelected($event)"
+    (onActivityDeselected)="onActivityDeselected($event)"
+    class="elsa-flex-1"
+  ></designer-tree>
+  <designer-tree
+    *ngIf="this.workflowDesignerMode !== this.editWorkflowDesignerMode"
+    #designerTree
+    [model]="this.workflowModel"
+    [mode]="this.workflowDesignerMode"
+    [layoutDirection]="this.layoutDirection"
+    [activityContextMenuButton]="this.renderActivityStatsButton"
+    (onActivityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
+    [activityContextMenu]="this.activityContextMenuTestState"
+    [enableMultipleConnectionsFromSingleSource]="false"
+    [selectedActivityIds]="[this.selectedActivityId]"
+    (onActivityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
+    (onActivityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
+    (onActivitySelected)="onActivitySelected($event)"
+    (onActivityDeselected)="onActivityDeselected($event)"
+    class="elsa-flex-1"
+  ></designer-tree>
 </div>
