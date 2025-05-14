@@ -8,12 +8,12 @@ import { EditorComponent } from './editor.component';
 @NgModule({
   imports: [
     CommonModule,
-    EditorComponent,
-    DiffEditorComponent
+    //EditorComponent,
+    //DiffEditorComponent
   ],
   exports: [
-    EditorComponent,
-    DiffEditorComponent
+    //EditorComponent,
+    //DiffEditorComponent
   ]
 })
 export class MonacoEditorModule {

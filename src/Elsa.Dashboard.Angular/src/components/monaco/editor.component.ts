@@ -10,7 +10,7 @@ import { EditorVariables } from './monaco-utils';
 declare var monaco: any;
 
 @Component({
-  standalone: true,
+  standalone: false,
   selector: 'monaco-editor',
   templateUrl: './editor.html',
   host:{

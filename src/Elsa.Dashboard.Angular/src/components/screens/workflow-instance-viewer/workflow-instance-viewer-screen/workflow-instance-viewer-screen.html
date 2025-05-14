@@ -11,7 +11,7 @@
     [selectedActivityIds]="[this.selectedActivityId]"
     (onActivitySelected)="onActivitySelected($event)"
     (onActivityDeselected)="onActivityDeselected($event)"
-    (activityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
+    (activityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($any($event))"
   />
   @let hiddenClass = this.activityContextMenuState.shown ? "" : "hidden"; @let leftPx = this.activityContextMenuState.x + 64; @let topPx = this.activityContextMenuState.y - 256;
   @let contextMenuLeftStyle = leftPx + "px"; @let contextMenuTopStyle = topPx + "px";
@@ -61,5 +61,5 @@
       <div *ngIf="activityStats == null" class="elsa-p-6 elsa-bg-white">Loading...</div>
     </div>
   </div>
-  
+
 </div>

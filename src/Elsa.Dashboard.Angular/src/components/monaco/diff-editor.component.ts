@@ -7,7 +7,7 @@ import { DiffEditorModel } from './types';
 declare var monaco: any;
 
 @Component({
-  standalone: true,
+  standalone: false,
   selector: 'ngx-monaco-diff-editor',
   templateUrl: './diff-editor.html',
   styles: [`

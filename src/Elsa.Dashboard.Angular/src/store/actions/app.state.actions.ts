@@ -1,7 +1,7 @@
 import { createActionGroup, props } from '@ngrx/store';
-import { StoreConfig } from '../../../models/storeConfig';
-import { DataDictionaryGroup } from '../../../models/custom-component-models';
-import { ActivityDefinition, ActivityDescriptor } from '../../../models/domain';
+import { StoreConfig } from '../../models/store-config';
+import { DataDictionaryGroup } from '../../models/custom-component-models';
+import { ActivityDefinition, ActivityDescriptor } from '../../models/domain';
 
 export const AppStateActionGroup = createActionGroup({
   events: {

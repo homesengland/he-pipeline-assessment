@@ -30,13 +30,22 @@ import { createWorkflowClient, WorkflowClient } from './services/workflow-client
 import { MonacoEditorModule, provideMonacoEditor } from './components/monaco/editor-module';
 import { ToastNotification } from './components/shared/toast-notification/toast-notification';
 import { monacoConfig } from './components/monaco/config';
+import { WorkflowInstanceViewerScreen } from './components/screens/workflow-instance-viewer/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
+import { WorkflowInstancesView } from './components/dashboard/pages/workflow-instances-view/workflow-instances-view';
+import { WorkflowDefinitionListScreen } from './components/screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
+import { EditorComponent } from './components/monaco/editor.component';
+import { DiffEditorComponent } from './components/monaco/diff-editor.component';
 
 @NgModule({
   declarations: [
     WorkflowRoot,
     WorkflowDashboard,
     WorkflowDefinitionsList,
+    WorkflowDefinitionListScreen,
     WorkflowInstancesList,
+    WorkflowInstanceViewerScreen,
+    WorkflowInstancesView,
+    WorkflowContextMenu,
     WorkflowHome,
     WorkflowRegistry,
     WorkflowInstanceListScreen,
@@ -50,7 +59,9 @@ import { monacoConfig } from './components/monaco/config';
     ExpressionEditor,
     PropertyEditor,
     SingleLineProperty,
-    ToastNotification
+    ToastNotification,
+    DiffEditorComponent,
+    EditorComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +72,6 @@ import { monacoConfig } from './components/monaco/config';
     RouterOutlet,
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
-    MonacoEditorModule.forRoot()
   ],
   providers:[
     IntellisenseService,
