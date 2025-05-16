@@ -1,7 +1,7 @@
-<elsa-flyout-panel #flyoutPanel>
+<flyout-panel #flyoutPanel>
   <!-- General Tab -->
-  <elsa-tab-header tab="general" (tabClick)="onTabClick($event)">General</elsa-tab-header>
-  <elsa-tab-content tab="general">
+  <tab-header tab="general" (tabClick)="onTabClick($event)">General</tab-header>
+  <tab-content tab="general">
     <dl class="elsa-border-b elsa-border-gray-200 elsa-divide-y elsa-divide-gray-200">
       <div class="elsa-py-3 elsa-flex elsa-justify-between elsa-text-sm elsa-font-medium">
         <dt class="elsa-text-gray-500">Workflow Name</dt>
@@ -51,11 +51,11 @@
         <dd class="elsa-text-gray-900 elsa-break-all">{{workflowInstance?.faultedAt ? moment(workflowInstance?.faultedAt).format('DD-MM-YYYY HH:mm:ss') : '-'}}</dd>
       </div>
     </dl>
-  </elsa-tab-content>
+  </tab-content>
 
   <!-- Journal Tab -->
-  <elsa-tab-header tab="journal" (tabClick)="onTabClick($event)">Journal</elsa-tab-header>
-  <elsa-tab-content tab="journal">
+  <tab-header tab="journal" (tabClick)="onTabClick($event)">Journal</tab-header>
+  <tab-content tab="journal">
     <div class="flow-root elsa-mt-4">
       <ul class="-elsa-mb-8">
         <li *ngFor="let record of filteredRecords; let index = index">
@@ -197,26 +197,26 @@
         </li>
       </ul>
     </div>
-  </elsa-tab-content>
+  </tab-content>
 
   <!-- Activity State Tab -->
-  <elsa-tab-header tab="activityState" (tabClick)="onTabClick($event)">Activity State</elsa-tab-header>
-  <elsa-tab-content tab="activityState">
+  <tab-header tab="activityState" (tabClick)="onTabClick($event)">Activity State</tab-header>
+  <tab-content tab="activityState">
     <div class="elsa-mt-4">
       <p *ngIf="!workflowModel || !selectedActivityId">No activity selected</p>
       <pre *ngIf="workflowModel && selectedActivityId">{{ getActivityStateJSON() }}</pre>
     </div>
-  </elsa-tab-content>
+  </tab-content>
 
   <!-- Variables Tab -->
-  <elsa-tab-header tab="variables" (tabClick)="onTabClick($event)">Variables</elsa-tab-header>
-  <elsa-tab-content tab="variables">
+  <tab-header tab="variables" (tabClick)="onTabClick($event)">Variables</tab-header>
+  <tab-content tab="variables">
     <dl class="elsa-border-b elsa-border-gray-200 elsa-divide-y elsa-divide-gray-200">
       <div class="elsa-py-3 elsa-text-sm elsa-font-medium">
         <pre *ngIf="workflowInstance?.variables?.data">{{JSON.stringify(workflowInstance?.variables?.data, null, 2)}}</pre>
         <span *ngIf="!workflowInstance?.variables?.data">-</span>
       </div>
     </dl>
-  </elsa-tab-content>
-</elsa-flyout-panel>
+  </tab-content>
+</flyout-panel>
 <!-- <elsa-workflow-definition-editor-notifications></elsa-workflow-definition-editor-notifications> -->

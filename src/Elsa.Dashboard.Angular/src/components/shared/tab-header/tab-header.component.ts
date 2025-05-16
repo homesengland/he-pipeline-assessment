@@ -1,23 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'elsa-tab-header',
+  selector: 'tab-header',
   standalone: false,
-  template: ` <button
-    type="button"
-    [class.elsa-active]="active"
-    (click)="onTabClick()"
-    class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm"
-    [class.elsa-border-blue-500]="active"
-    [class.elsa-text-blue-600]="active"
-    [class.elsa-border-transparent]="!active"
-    [class.elsa-text-gray-500]="!active"
-    [class.hover:elsa-text-gray-700]="!active"
-    [class.hover:elsa-border-gray-300]="!active"
-  >
-    <ng-content></ng-content>
-  </button>`,
+  templateUrl: 'tab-header.component.html',
 })
 export class TabHeaderComponent {
   @Input() tab: string;

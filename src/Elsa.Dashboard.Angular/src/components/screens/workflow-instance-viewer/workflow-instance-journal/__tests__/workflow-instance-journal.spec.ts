@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ElementRef } from '@angular/core';
+import { ElementRef, NgModule } from '@angular/core';
 import { WorkflowInstanceJournalComponent } from '../workflow-instance-journal';
 import { ElsaClientService } from '../../../../../services/elsa-client';
 import { WorkflowStatus } from '../../../../../models';
@@ -37,8 +37,14 @@ describe('WorkflowInstanceJournalComponent', () => {
       },
     } as any);
 
+    @NgModule({
+      declarations: [WorkflowInstanceJournalComponent],
+      exports: [WorkflowInstanceJournalComponent],
+    })
+    class TestModule {}
+
     await TestBed.configureTestingModule({
-      imports: [WorkflowInstanceJournalComponent],
+      imports: [TestModule],
       providers: [
         { provide: ElsaClientService, useValue: mockElsaClientService },
         { provide: ElementRef, useValue: mockElementRef },
