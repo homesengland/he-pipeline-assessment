@@ -1,4 +1,4 @@
-<div class="elsa-flex-1 elsa-flex">
+﻿<div class="elsa-flex-1 elsa-flex">
   <designer-tree
     #designerTree
     [model]="this.workflowModel"
@@ -61,5 +61,13 @@
       <div *ngIf="activityStats == null" class="elsa-p-6 elsa-bg-white">Loading...</div>
     </div>
   </div>
-  
 </div>
+<workflow-instance-journal
+  [workflowInstanceId]="this.workflowInstanceId"
+  [workflowInstance]="this.workflowInstance"
+  [serverUrl]="this.serverUrl"
+  [activityDescriptors]="this.activityDescriptors"
+  [workflowBlueprint]="this.workflowBlueprint"
+  [workflowModel]="this.workflowModel"
+  (onRecordSelected)="onRecordSelected($event)"
+/>
