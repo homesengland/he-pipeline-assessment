@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, input, viewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
@@ -15,12 +15,16 @@ import { MenuItem } from '../../../controls/workflow-context-menu/models';
 import moment from 'moment';
 import * as collection from 'lodash/collection';
 import * as array from 'lodash/array';
+import { WorkflowDropdownButton } from 'src/components/controls/workflow-dropdown-button/workflow-dropdown-button';
+import { WorkflowContextMenu } from 'src/components/controls/workflow-context-menu/workflow-context-menu';
+import { WorkflowPager } from 'src/components/controls/workflow-pager/workflow-pager';
 
 @Component({
   selector: 'workflow-instance-list-screen',
   templateUrl: './workflow-instance-list-screen.html',
   styleUrls: ['./workflow-instance-list-screen.css'],
-  standalone: false,
+  standalone: true,
+  imports: [RouterLink, WorkflowDropdownButton, WorkflowContextMenu, WorkflowPager, ReactiveFormsModule],
 })
 export class WorkflowInstanceListScreen implements OnInit, OnDestroy {
   readonly workflowId = input<string>(undefined);

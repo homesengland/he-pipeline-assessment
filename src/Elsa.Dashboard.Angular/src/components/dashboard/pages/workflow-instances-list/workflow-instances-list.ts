@@ -6,14 +6,11 @@ import { WorkflowInstanceListScreen } from '../../../screens/workflow-instance-l
   selector: 'workflow-instances-list',
   templateUrl: './workflow-instances-list.html',
   styleUrls: ['./workflow-instances-list.css'],
-    standalone: false
+  standalone: true,
+  imports: [WorkflowInstanceListScreen],
 })
 export class WorkflowInstancesList implements OnInit {
-  title = "Workflow Instances";
+  title = 'Workflow Instances';
   constructor(private http: HttpClient) {}
-    ngOnInit(): void {
-
-    }
-
+  ngOnInit(): void {}
 }
-

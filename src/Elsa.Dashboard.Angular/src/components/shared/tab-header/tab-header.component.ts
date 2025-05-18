@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'tab-header',
-  standalone: false,
+  standalone: true,
   templateUrl: 'tab-header.component.html',
 })
 export class TabHeaderComponent {

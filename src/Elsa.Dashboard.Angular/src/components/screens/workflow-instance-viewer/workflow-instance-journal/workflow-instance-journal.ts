@@ -30,7 +30,8 @@ interface Tab {
 @Component({
   selector: 'workflow-instance-journal',
   templateUrl: './workflow-instance-journal.html',
-  standalone: false,
+  standalone: true,
+  imports: [TabHeaderComponent, TabContentComponent, CommonModule, CopyButtonComponent, FlyoutPanelComponent],
 })
 export class WorkflowInstanceJournalComponent implements OnInit {
   @Input() workflowInstanceId: string;

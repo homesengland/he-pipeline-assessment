@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'workflow-definitions-view',
   templateUrl: './workflow-definitions-view.html',
   styleUrls: ['./workflow-definitions-view.css'],
-  standalone: false,
+  standalone: true,
 })
 export class WorkflowDefinitionsView implements OnInit {
   constructor(private http: HttpClient) {}

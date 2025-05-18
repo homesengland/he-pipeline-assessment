@@ -5,14 +5,9 @@ import { Component, OnInit } from '@angular/core';
   selector: 'workflow-registry',
   templateUrl: './workflow-registry.html',
   styleUrls: ['./workflow-registry.css'],
-  standalone: false
+  standalone: true,
 })
 export class WorkflowRegistry implements OnInit {
-
   constructor(private http: HttpClient) {}
-    ngOnInit(): void {
-
-    }
-
+  ngOnInit(): void {}
 }
-

@@ -5,14 +5,9 @@ import { Component, OnInit } from '@angular/core';
   selector: 'workflow-blueprint-view',
   templateUrl: './workflow-blueprint-view.html',
   styleUrls: ['./workflow-blueprint-view.css'],
-  standalone: false
+  standalone: true,
 })
 export class WorkflowBlueprintView implements OnInit {
-
   constructor(private http: HttpClient) {}
-    ngOnInit(): void {
-
-    }
-
+  ngOnInit(): void {}
 }
-

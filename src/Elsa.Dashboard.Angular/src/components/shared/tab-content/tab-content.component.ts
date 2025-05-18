@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'tab-content',
-  standalone: false,
+  standalone: true,
   templateUrl: 'tab-content.component.html',
 })
 export class TabContentComponent {

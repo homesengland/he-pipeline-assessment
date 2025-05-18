@@ -2,7 +2,7 @@ import { Component, computed, effect, ElementRef, HostListener, Input, input, On
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
 import { selectServerUrl } from '../../../state/selectors/app.state.selectors';
-import { Location } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import {
   ActivityBlueprint,
   ActivityDefinitionProperty,
@@ -26,12 +26,17 @@ import { ElsaClientService } from 'src/services/elsa-client';
 import * as collection from 'lodash/collection';
 import { featuresDataManager } from 'src/services/features-data-manager';
 import { AppStateActionGroup } from 'src/components/state/actions/app.state.actions';
+import { DesignerTree } from 'src/components/designers/tree/designer-tree/designer-tree';
+import { WorkflowFaultInformation } from 'src/components/shared/workflow-fault-information/workflow-fault-information';
+import { WorkflowPerformanceInformation } from 'src/components/shared/workflow-performance-information/workflow-performance-information';
+import { WorkflowInstanceJournalComponent } from '../workflow-instance-journal/workflow-instance-journal';
 
 @Component({
   selector: 'workflow-instance-viewer-screen',
   templateUrl: './workflow-instance-viewer-screen.html',
   styleUrls: ['./workflow-instance-viewer-screen.css'],
-  standalone: false,
+  standalone: true,
+  imports: [DesignerTree, WorkflowFaultInformation, WorkflowPerformanceInformation, WorkflowInstanceJournalComponent, NgIf],
   host: {
     class: 'elsa-flex elsa-flex-col elsa-w-full elsa-relative',
   },

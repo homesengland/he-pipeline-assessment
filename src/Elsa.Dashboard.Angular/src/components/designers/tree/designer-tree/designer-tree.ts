@@ -18,14 +18,16 @@ import { selectActivityDefinitions } from '../../../state/selectors/app.state.se
 import { Store } from '@ngrx/store';
 import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NgStyle } from '@angular/common';
 
 @Component({
   selector: 'designer-tree',
   templateUrl: './designer-tree.html',
   styleUrls: ['./designer-tree.css'],
   host: { class: 'workflow-canvas elsa-flex-1 elsa-flex' },
-  standalone: false,
+  standalone: true,
   encapsulation: ViewEncapsulation.None,
+  imports: [NgStyle],
 })
 export class DesignerTree implements OnChanges, OnInit {
   WorkflowDesignerMode: any;

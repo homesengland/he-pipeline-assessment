@@ -8,7 +8,8 @@ import { WorkflowDefinitionListScreen } from '../../../screens/workflow-definiti
   selector: 'workflow-definitions-list',
   templateUrl: './workflow-definitions-list.html',
   styleUrls: ['./workflow-definitions-list.css'],
-  standalone: false,
+  standalone: true,
+  imports: [WorkflowDefinitionListScreen],
 })
 export class WorkflowDefinitionsList implements OnInit {
   serverUrl: string;

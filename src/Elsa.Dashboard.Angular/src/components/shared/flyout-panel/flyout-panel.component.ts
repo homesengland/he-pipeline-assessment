@@ -2,11 +2,13 @@ import { Component, ContentChildren, QueryList, AfterContentInit, Input, ViewChi
 import { TabHeaderComponent } from '../tab-header/tab-header.component';
 import { TabContentComponent } from '../tab-content/tab-content.component';
 import { enter, leave } from 'el-transition';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'flyout-panel',
-  standalone: false,
+  standalone: true,
   templateUrl: 'flyout-panel.component.html',
+  imports: [CommonModule],
 })
 export class FlyoutPanelComponent implements AfterContentInit {
   @Input() expandButtonPosition = 1;

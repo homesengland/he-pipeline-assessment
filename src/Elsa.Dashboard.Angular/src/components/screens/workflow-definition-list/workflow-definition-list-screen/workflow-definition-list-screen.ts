@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, NavigationEnd, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
@@ -9,12 +9,16 @@ import { OrderBy, PagedList, VersionOptions, WorkflowDefinitionSummary } from '.
 import { parseQuery } from '../../../../utils/utils';
 import { selectServerUrl, selectStoreConfig } from '../../../state/selectors/app.state.selectors';
 import { HTMLElsaConfirmDialogElement, MenuItem } from 'src/models/elsa-interfaces';
+import { BrowserModule } from '@angular/platform-browser';
+import { WorkflowContextMenu } from 'src/components/controls/workflow-context-menu/workflow-context-menu';
+import { WorkflowPager } from 'src/components/controls/workflow-pager/workflow-pager';
 
 @Component({
   selector: 'workflow-definition-list-screen',
   templateUrl: './workflow-definition-list-screen.html',
   styleUrls: ['./workflow-definition-list-screen.css'],
-  standalone: false,
+  standalone: true,
+  imports: [WorkflowContextMenu, WorkflowPager, ReactiveFormsModule, RouterLink],
 })
 export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
   static readonly DEFAULT_PAGE_SIZE = 15;

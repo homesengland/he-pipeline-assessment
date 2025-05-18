@@ -7,7 +7,7 @@ import { ActivityStats } from 'src/services/workflow-client';
   selector: 'workflow-performance-information',
   templateUrl: './workflow-performance-information.html',
   styleUrls: ['./workflow-performance-information.css'],
-  standalone: false,
+  standalone: true,
 })
 export class WorkflowPerformanceInformation {
   @Input() activityStats: ActivityStats;

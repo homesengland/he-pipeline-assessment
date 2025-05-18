@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, Renderer2, viewChild, ViewChild } from '@angular/core';
+import { Component, ElementRef, isStandalone, OnInit, Renderer2, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { StoreConfig } from '../../../../models/storeConfig';
 import { AppStateActionGroup } from '../../../state/actions/app.state.actions';
@@ -19,12 +19,15 @@ import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { propertyDisplayManager } from 'src/services/property-display-manager';
 import { toastNotificationService } from 'src/services/toast-notification-service';
 import { featuresDataManager } from 'src/services/features-data-manager';
+import { WorkflowDashboard } from '../workflow-dashboard/workflow-dashboard';
+import { ConfirmDialog } from 'src/components/shared/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'workflow-root',
   templateUrl: './workflow-root.html',
   styleUrls: ['./workflow-root.css'],
-  standalone: false,
+  standalone: true,
+  imports: [WorkflowDashboard, ConfirmDialog],
 })
 export class WorkflowRoot implements OnInit {
   dataDictionary: Array<DataDictionaryGroup>;
