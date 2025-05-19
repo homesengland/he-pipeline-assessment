@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, input, viewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, NgFor } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
 import { EventTypes, OrderBy, PagedList, WorkflowBlueprintSummary, WorkflowInstanceSummary, WorkflowStatus } from '../../../../models';
@@ -24,7 +24,7 @@ import { WorkflowPager } from 'src/components/controls/workflow-pager/workflow-p
   templateUrl: './workflow-instance-list-screen.html',
   styleUrls: ['./workflow-instance-list-screen.css'],
   standalone: true,
-  imports: [RouterLink, WorkflowDropdownButton, WorkflowContextMenu, WorkflowPager, ReactiveFormsModule],
+  imports: [RouterLink, WorkflowDropdownButton, WorkflowContextMenu, WorkflowPager, ReactiveFormsModule, NgFor],
 })
 export class WorkflowInstanceListScreen implements OnInit, OnDestroy {
   readonly workflowId = input<string>(undefined);

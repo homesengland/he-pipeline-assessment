@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output, computed, input } from '@angular/core';
 import { parseQuery, queryToString } from '../../../utils/utils';
-import { Location, NgIf } from '@angular/common';
+import { Location, NgFor, NgIf } from '@angular/common';
 import { selectStoreConfig } from '../../state/selectors/app.state.selectors';
 import * as _ from 'lodash';
 import { Store } from '@ngrx/store';
@@ -18,7 +18,7 @@ export interface PagerData {
   templateUrl: './workflow-pager.html',
   styleUrls: ['./workflow-pager.css'],
   standalone: true,
-  imports: [NgIf],
+  imports: [NgIf, NgFor],
 })
 export class WorkflowPager implements OnInit {
   readonly page = input<number>(undefined);

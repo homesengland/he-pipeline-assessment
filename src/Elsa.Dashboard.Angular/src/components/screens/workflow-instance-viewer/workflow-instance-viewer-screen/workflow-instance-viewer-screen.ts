@@ -2,7 +2,7 @@ import { Component, computed, effect, ElementRef, HostListener, Input, input, On
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
 import { selectServerUrl } from '../../../state/selectors/app.state.selectors';
-import { Location, NgIf } from '@angular/common';
+import { Location, NgFor, NgIf } from '@angular/common';
 import {
   ActivityBlueprint,
   ActivityDefinitionProperty,
@@ -36,7 +36,7 @@ import { WorkflowInstanceJournalComponent } from '../workflow-instance-journal/w
   templateUrl: './workflow-instance-viewer-screen.html',
   styleUrls: ['./workflow-instance-viewer-screen.css'],
   standalone: true,
-  imports: [DesignerTree, WorkflowFaultInformation, WorkflowPerformanceInformation, WorkflowInstanceJournalComponent, NgIf],
+  imports: [DesignerTree, WorkflowFaultInformation, WorkflowPerformanceInformation, WorkflowInstanceJournalComponent, NgIf, NgFor],
   host: {
     class: 'elsa-flex elsa-flex-col elsa-w-full elsa-relative',
   },

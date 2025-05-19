@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, NavigationEnd, RouterLink } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, NgFor } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
 import { OrderBy, PagedList, VersionOptions, WorkflowDefinitionSummary } from '../../../../models';
@@ -18,7 +18,7 @@ import { WorkflowPager } from 'src/components/controls/workflow-pager/workflow-p
   templateUrl: './workflow-definition-list-screen.html',
   styleUrls: ['./workflow-definition-list-screen.css'],
   standalone: true,
-  imports: [WorkflowContextMenu, WorkflowPager, ReactiveFormsModule, RouterLink],
+  imports: [WorkflowContextMenu, WorkflowPager, ReactiveFormsModule, RouterLink, NgFor],
 })
 export class WorkflowDefinitionListScreen implements OnInit, OnDestroy {
   static readonly DEFAULT_PAGE_SIZE = 15;

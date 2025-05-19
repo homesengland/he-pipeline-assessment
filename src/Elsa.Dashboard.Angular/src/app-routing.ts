@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { WorkflowDefinitionsList } from './components/dashboard/pages/workflow-definitions-list/workflow-definitions-list';
 import { WorkflowDashboard } from './components/dashboard/pages/workflow-dashboard/workflow-dashboard';
@@ -9,7 +8,7 @@ import { WorkflowInstancesView } from './components/dashboard/pages/workflow-ins
 import { WorkflowBlueprintView } from './components/dashboard/pages/workflow-blueprint-view/workflow-blueprint-view';
 import { WorkflowDefinitionsView } from './components/dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: WorkflowHome,
@@ -39,5 +38,3 @@ const routes: Routes = [
     component: WorkflowBlueprintView,
   },
 ];
-
-export const routing = RouterModule.forRoot(routes);

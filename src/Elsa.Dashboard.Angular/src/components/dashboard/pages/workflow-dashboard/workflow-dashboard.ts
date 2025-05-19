@@ -1,3 +1,4 @@
+import { NgFor } from '@angular/common';
 import { Input, Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -6,7 +7,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './workflow-dashboard.html',
   styleUrls: ['./workflow-dashboard.css'],
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, NgFor],
 })
 export class WorkflowDashboard implements OnInit {
   @Input() basePath: string = '/';
