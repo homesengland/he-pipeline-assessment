@@ -21,12 +21,13 @@
   "scripts": {
     "ng": "ng",
     "start": "run-script-os",
-    "build-dev": "npm run concat-css && ng build --configuration=development --optimization=false --output-hashing=none  && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css",
-    "build": "npm run concat-css && ng build --output-hashing=none && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css --watch",
+    "build-dev": "npm run concat-css concat-monaco && ng build --configuration=development --optimization=false --output-hashing=none  && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css",
+    "build": "npm run concat-css concat-monaco && ng build --output-hashing=none && npx tailwindcss -i ./src/tailwind.css -o ./dist/workflow/styles.css --watch",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
     "serve": "ng serve --live-reload=false",
-    "concat-css": "gulp concat-css"
+    "concat-css": "gulp concat-css",
+    "concat-monaco": "gulp concat-monaco"
   },
   "dependencies": {
     "@angular-builders/custom-webpack": "19.0.0",

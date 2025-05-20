@@ -7,3 +7,8 @@ gulp.task('concat-css', function () {
         .pipe(concat('monaco-styles.css'))
         .pipe(gulp.dest('src/assets/css')); // Output directory
 });
+
+gulp.task('concat-monaco', function (){
+  return gulp.src('node_modules/monaco-editor/min/**/*.js')
+  .pipe(gulp.dest('src/assets/monaco-editor/min'));
+})

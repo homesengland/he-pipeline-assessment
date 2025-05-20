@@ -55,8 +55,9 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
       loadPromise = new Promise<void>((resolve: any) => {
         let baseUrl = this.config.baseUrl;
         // ensure backward compatibility
-        if (baseUrl === "/assets" || !baseUrl) {
-          baseUrl = "./assets/monaco/min/vs";
+        if (baseUrl === "assets" || !baseUrl) {
+          console.log("Setting BaseUrl to default");
+          baseUrl = "./assets/monaco-editor/min/vs";
         }
         if (typeof ((<any>window).monaco) === 'object') {
           this.initMonaco(this._options, this.insideNg);
