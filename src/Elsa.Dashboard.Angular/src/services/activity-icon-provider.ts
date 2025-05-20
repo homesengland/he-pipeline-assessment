@@ -34,10 +34,12 @@ export class ActivityIconProvider {
     this.registerWriteLineIcons();
   }
 
-
   //#region Register Icon Methods
 
   private registerDefaultIcons(): void {
+    this.register('Default', (colour: string) => {
+      return this.sanitizer.bypassSecurityTrustHtml(this.createDefaultIconHtml(colour));
+    });
     this.register('QuestionScreen', (colour: string) => {
       return this.sanitizer.bypassSecurityTrustHtml(this.createDefaultIconHtml(colour));
     });
@@ -255,7 +257,7 @@ export class ActivityIconProvider {
       <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/>
       <path d="M7 12h14l-3 -3m0 6l3 -3"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createCogIconHtml(colour: string): string {
@@ -264,7 +266,7 @@ export class ActivityIconProvider {
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createCorrelateIconHtml(colour: string): string {
@@ -274,7 +276,7 @@ export class ActivityIconProvider {
         <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"/>
         <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"/>
       </svg>
-    </span>`
+    </span>`;
   }
 
   private createDeleteIconHtml(colour: string): string {
@@ -285,7 +287,7 @@ export class ActivityIconProvider {
       <line x1="14" y1="11" x2="14" y2="17"/>
       <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
       <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
-    </svg>`
+    </svg>`;
   }
 
   private createEraseIconHtml(colour: string): string {
@@ -295,16 +297,16 @@ export class ActivityIconProvider {
       <path d="M19 19h-11l-4 -4a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41l-9 9"/>
       <path d="M18 12.3l-6.3 -6.3"/>
     </svg>
-  </span>`
+  </span>`;
   }
-  
+
   private createFinishIconHtml(colour: string): string {
     return `<span class="${`elsa-rounded-lg elsa-inline-flex elsa-p-3 elsa-bg-${colour}-50 elsa-text-${colour}-700 elsa-ring-4 elsa-ring-white`}">
     <svg class="elsa-h-6 elsa-w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
       <line x1="4" y1="22" x2="4" y2="15"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createForkIconHtml(colour: string): string {
@@ -317,7 +319,7 @@ export class ActivityIconProvider {
       <path d="M7 8v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2 -2v-2"/>
       <line x1="12" y1="12" x2="12" y2="16"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createHttpEndpointIconHtml(colour: string): string {
@@ -325,7 +327,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createIfIconHtml(colour: string): string {
@@ -333,7 +335,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createInterruptTriggerIconHtml(colour: string): string {
@@ -344,7 +346,7 @@ export class ActivityIconProvider {
       <path d="M3 12h1M12 3v1M20 12h1M5.6 5.6l.7 .7M18.4 5.6l-.7 .7"/>
       <rect x="6" y="16" width="12" height="4" rx="1"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createJoinIconHtml(colour: string): string {
@@ -357,7 +359,7 @@ export class ActivityIconProvider {
       <path d="M7 8v2a2 2 0 0 0 2 2h6a2 2 0 0 0 2 -2v-2"/>
       <line x1="12" y1="12" x2="12" y2="16"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createLoopIconHtml(colour: string): string {
@@ -368,9 +370,9 @@ export class ActivityIconProvider {
       <path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3-3l3-3"/>
       <path d="M11 11l1 -1v4"/>
     </svg>
-  </span>`
+  </span>`;
   }
-  
+
   private createReadLineIconHtml(colour: string): string {
     return `<span class="elsa-rounded-lg elsa-inline-flex elsa-p-3 elsa-bg-${colour}-50 elsa-text-${colour}-700 elsa-ring-4 elsa-ring-white">
     <svg class="elsa-h-6 elsa-w-6" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -378,7 +380,7 @@ export class ActivityIconProvider {
       <polyline points="5 7 10 12 5 17"/>
       <line x1="13" y1="17" x2="19" y2="17"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createRedirectIconHtml(colour: string): string {
@@ -389,7 +391,7 @@ export class ActivityIconProvider {
       <circle cx="18" cy="5" r="2"/>
       <path d="M12 19h4.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h3.5"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createRunWorkflowIconHtml(colour: string): string {
@@ -401,7 +403,7 @@ export class ActivityIconProvider {
       <path d="M21 11v-3a2 2 0 0 0 -2 -2h-6l3 3m0 -6l-3 3"/>
       <path d="M3 13v3a2 2 0 0 0 2 2h6l-3 -3m0 6l3 -3"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createScriptIconHtml(colour: string): string {
@@ -412,7 +414,7 @@ export class ActivityIconProvider {
       <line x1="9" y1="7" x2="13" y2="7"/>
       <line x1="9" y1="11" x2="13" y2="11"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createSendEmailIconHtml(colour: string): string {
@@ -420,7 +422,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createSendHttpRequestIconHtml(colour: string): string {
@@ -428,7 +430,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createSendSignalIconHtml(colour: string): string {
@@ -437,7 +439,7 @@ export class ActivityIconProvider {
       <circle cx="12" cy="12" r="2"/>
       <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createSignalReceivedIconHtml(colour: string): string {
@@ -445,7 +447,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createStateIconHtml(colour: string): string {
@@ -453,7 +455,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createSwitchIconHtml(colour: string): string {
@@ -466,7 +468,7 @@ export class ActivityIconProvider {
       <polyline points="15 19 19 19 19 15"/>
       <line x1="5" y1="5" x2="19" y2="19"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createTimerIconHtml(colour: string): string {
@@ -474,7 +476,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createWebhookIconHtml(colour: string): string {
@@ -482,7 +484,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createWriteHttpResponseIconHtml(colour: string): string {
@@ -490,7 +492,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   private createWriteLineIconHtml(colour: string): string {
@@ -498,7 +500,7 @@ export class ActivityIconProvider {
     <svg class="elsa-h-6 elsa-w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
     </svg>
-  </span>`
+  </span>`;
   }
 
   //#endregion
@@ -508,10 +510,10 @@ export class ActivityIconProvider {
   }
 
   getIcon(activityType: string, colour: string): SafeHtml | null {
-    const provider = this.iconMap[activityType];
+    let provider = this.iconMap[activityType];
 
     if (!provider) {
-      return null;
+      provider = this.iconMap['Default'];
     }
 
     return provider.call(this, colour);

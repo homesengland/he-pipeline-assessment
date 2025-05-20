@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, viewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild, viewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from 'src/components/designers/tree/models';
 import {
@@ -68,7 +68,7 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
   layoutDirection: LayoutDirection = LayoutDirection.TopBottom;
 
   //helpDialog: ElementRef;
-  readonly designerTree = viewChild.required<ElementRef>('designerTree');
+  @ViewChild('designerTree') designerTree;
   // readonly helpDialog = viewChild.required<ElementRef>('helpDialog');
   activityContextMenuState: ActivityContextMenuState = {
     shown: false,
@@ -85,11 +85,9 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
     activity: null,
   };
 
-  //i18next: i18n;
   el: HTMLElement;
-  designer: any; // Replace 'any' with the correct type if available or import it if it's missing
   configureComponentCustomButtonContext: ConfigureComponentCustomButtonContext = null;
-  activityContextMenu: HTMLDivElement;
+  @ViewChild('activityContextMenu') activityContextMenu;
   componentCustomButton: HTMLDivElement;
   confirmDialog: HTMLElsaConfirmDialogElement;
   activityDescriptors: ActivityDescriptor[];
@@ -190,9 +188,9 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
   @HostListener('document:click', ['$event'])
   onWindowClicked(event: Event): void {
     const target = event.target as HTMLElement;
-    if (!this.componentCustomButton.contains(target)) this.handleContextMenuTestChange(0, 0, false, null);
+    //if (!this.componentCustomButton.contains(target)) this.handleContextMenuTestChange(0, 0, false, null);
 
-    if (!this.activityContextMenu.contains(target)) this.handleContextMenuChange({ x: 0, y: 0, shown: false, activity: null, selectedActivities: {} });
+    if (!this.activityContextMenu.nativeElement.contains(target)) this.handleContextMenuChange({ x: 0, y: 0, shown: false, activity: null, selectedActivities: {} });
   }
 
   updateWorkflowDefinition(value: WorkflowDefinition) {
@@ -233,7 +231,7 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
 
   ngAfterViewInit() {
     if (!this.designerTree) {
-      const designerTreeElement = this.designerTree().nativeElement;
+      const designerTreeElement = this.designerTree.nativeElement;
       if (designerTreeElement) {
         designerTreeElement.model = this.workflowModel;
       }
@@ -566,52 +564,47 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
     await this.importWorkflow(file);
   }
 
-  async onDeleteActivityClick(e: Event) {
+  onDeleteActivityClick = async (e: Event) => {
     e.preventDefault();
     const { activity, selectedActivities } = this.activityContextMenuState;
 
     if (selectedActivities[activity.activityId]) {
-      await this.designer.removeSelectedActivities();
+      await this.designerTree.removeSelectedActivities();
     } else {
-      await this.designer.removeActivity(activity);
+      await this.designerTree.removeActivity(activity);
     }
 
     this.handleContextMenuChange({ x: 0, y: 0, shown: false, activity: null, selectedActivities: {} });
     await eventBus.emit(EventTypes.HideModalDialog);
-  }
+  };
 
-  async onEditActivityClick(e: Event) {
+  onEditActivityClick = async (e: Event) => {
     e.preventDefault();
-    await this.designer.showActivityEditor(this.activityContextMenuState.activity, true);
+    await this.designerTree.showActivityEditor(this.activityContextMenuState.activity, true);
     this.handleContextMenuChange({ x: 0, y: 0, shown: false, activity: null });
-  }
+  };
 
-  async onActivityContextMenuButtonClicked(e: Event) {
-    const customEvent = e as CustomEvent<ActivityContextMenuState>;
-    this.activityContextMenuState = customEvent.detail;
-  }
+  onActivityContextMenuButtonClicked = async (e: ActivityContextMenuState) => {
+    this.activityContextMenuState = e;
+  };
 
-  async onActivityContextMenuButtonTestClicked(e: Event) {
-    const customEvent = e as CustomEvent<ActivityContextMenuState>;
-    this.activityContextMenuTestState = customEvent.detail;
-    this.selectedActivityId = customEvent.detail.activity.activityId;
+  onActivityContextMenuButtonTestClicked = async (e: ActivityContextMenuState) => {
+    this.selectedActivityId = e.activity.activityId;
 
-    if (!customEvent.detail.shown) {
+    if (!e.shown) {
       return;
     }
 
     await this.tryUpdateActivityInformation(this.selectedActivityId);
-  }
+  };
 
-  async onActivitySelected(e: Event) {
-    const customEvent = e as CustomEvent<ActivityModel>;
-    this.selectedActivityId = customEvent.detail.activityId;
-  }
+  onActivitySelected = async (e: ActivityModel) => {
+    this.selectedActivityId = e.activityId;
+  };
 
-  async onActivityDeselected(e: Event) {
-    const customEvent = e as CustomEvent<ActivityModel>;
-    if (this.selectedActivityId == customEvent.detail.activityId) this.selectedActivityId = null;
-  }
+  onActivityDeselected = async (e: ActivityModel) => {
+    if (this.selectedActivityId == e.activityId) this.selectedActivityId = null;
+  };
 
   async onRestartActivityButtonClick() {
     await eventBus.emit(EventTypes.WorkflowRestarted, this, this.selectedActivityId);
@@ -755,4 +748,8 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
             </button>
           </div>`;
   };
+
+  get selectedActivities(): string[] {
+    return Object.keys(this.activityContextMenuState?.selectedActivities || {});
+  }
 }

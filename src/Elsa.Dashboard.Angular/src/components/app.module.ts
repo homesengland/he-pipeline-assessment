@@ -1,6 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { WorkflowRoot } from './dashboard/pages/workflow-root/workflow-root';
 import { WorkflowDashboard } from './dashboard/pages/workflow-dashboard/workflow-dashboard';
 import { WorkflowDefinitionsList } from './dashboard/pages/workflow-definitions-list/workflow-definitions-list';
@@ -28,12 +27,12 @@ import { ActivityIconProviderPlugin } from 'src/plugins/activity-icon-provider-p
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
 import { WorkflowDefinitionEdit } from './dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
 import { WorkflowDefinitionEditorScreen } from './screens/workflow-definition-editor/workflow-definition-editor-screen';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     WorkflowRoot,
     WorkflowDashboard,
-    WorkflowDefinitionsList,
     WorkflowInstancesList,
     WorkflowHome,
     WorkflowRegistry,
@@ -53,8 +52,7 @@ import { WorkflowDefinitionEditorScreen } from './screens/workflow-definition-ed
     WorkflowDefinitionEdit,
     WorkflowDefinitionEditorScreen,
   ],
-
-  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle],
+  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, CommonModule, NgStyle],
   providers: [ActivityIconProvider, ActivityIconProviderPlugin],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
