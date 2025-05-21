@@ -328,6 +328,7 @@ export class DesignerTree implements OnChanges, OnInit {
   }
 
   async showActivityEditorInternal(activity: ActivityModel, animate: boolean) {
+    console.log('Modal Event Bus Activity Emmited');
     await eventBus.emit(EventTypes.ActivityEditor.Show, this, activity, animate);
   }
 
