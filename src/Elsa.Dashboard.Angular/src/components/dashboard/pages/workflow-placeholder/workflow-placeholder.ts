@@ -5,6 +5,8 @@ import { Store } from '@ngrx/store';
 import { AppStateActionGroup } from '../../../../store/actions/app.state.actions';
 import { SingleLineProperty } from 'src/components/editors/properties/single-line-property/single-line-property';
 import { EditorModel } from 'src/components/monaco/types';
+import { SingleLineDriver } from 'src/drivers/single-line-driver';
+import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 
 @Component({
   selector: 'workflow-placeholder',
@@ -34,15 +36,19 @@ export class WorkflowPlaceholder implements OnInit {
   jsonCode = ['{', '    "p1": "v3",', '    "p2": false', '}'].join('\n');
   model: EditorModel = {
     value: this.jsonCode,
-    language: 'typescript'
+    language: 'typescript',
   };
+  activityProperties: ActivityPropertyDescriptor[] = [];
+  singleLineDriver: SingleLineDriver;
 
-  constructor(store: Store) {
+  constructor(store: Store, singleLineDriver: SingleLineDriver) {
     this.store = store;
+    this.singleLineDriver = singleLineDriver;
     this.intellisenseGatherer = new IntellisenseService(this.store);
     this.activityModel.set(this.getSingleLineModel());
     this.propertyModel.set(this.getSingleLineDefinition());
     this.propertyDescriptor.set(this.getSingleLineDescriptor());
+    this.activityProperties = [this.propertyDescriptor()];
   }
 
   async ngOnInit() {

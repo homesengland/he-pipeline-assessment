@@ -8,7 +8,7 @@ import { WorkflowInstancesList } from './components/dashboard/pages/workflow-ins
 import { WorkflowHome } from './components/dashboard/pages/workflow-home/workflow-home';
 import { WorkflowRegistry } from './components/dashboard/pages/workflow-registry/workflow-registry';
 import { WorkflowInstanceListScreen } from './components/screens/workflow-instance-list/workflow-instance-list-screen/workflow-instance-list-screen';
-import { routing } from './workflow-routes.module'
+import { routing } from './workflow-routes.module';
 import { AppStateModule } from './store/app.state.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -26,8 +26,7 @@ import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-place
 import { StoreModule } from '@ngrx/store';
 import { appStateReducer } from './store/reducers/app.state.reducers';
 import { IntellisenseService } from './services/intellisense-service';
-import { createWorkflowClient, WorkflowClient } from './services/workflow-client';
-import { MonacoEditorModule, provideMonacoEditor } from './components/monaco/editor-module';
+import { provideMonacoEditor } from './components/monaco/editor-module';
 import { ToastNotification } from './components/shared/toast-notification/toast-notification';
 import { monacoConfig } from './components/monaco/config';
 import { WorkflowInstanceViewerScreen } from './components/screens/workflow-instance-viewer/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
@@ -40,6 +39,7 @@ import { FlyoutPanelComponent } from './components/shared/flyout-panel/flyout-pa
 import { TabHeaderComponent } from './components/shared/tab-header/tab-header.component';
 import { TabContentComponent } from './components/shared/tab-content/tab-content.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PropertyRenderer } from './components/controls/property-renderer/property-renderer';
 
 @NgModule({
   declarations: [
@@ -56,7 +56,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     WorkflowInstanceListScreen,
     WorkflowPager,
     WorkflowDropdownButton,
-    WorkflowContextMenu,
     WorkflowPlaceholder,
     ConfirmDialog,
     ModalDialog,
@@ -70,24 +69,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,
     TabHeaderComponent,
-    TabContentComponent
+    TabContentComponent,
+    PropertyRenderer,
+    SingleLineProperty,
   ],
   imports: [
-    BrowserModule,
     routing,
+    BrowserModule,
     AppStateModule,
     ReactiveFormsModule,
     RouterModule,
     RouterOutlet,
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
-  providers:[
-    IntellisenseService,
-    provideHttpClient(),
-    provideMonacoEditor(monacoConfig)
-  ],
+  providers: [IntellisenseService, provideHttpClient(), provideMonacoEditor(monacoConfig)],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -1,10 +1,11 @@
 <monaco-editor
-        [options]= "options",
-        [padding]="padding()"
-        [language]="language()"
-        [theme]="theme"
-        [value]="expression()"
-        [editorHeight]="editorHeight()"
-        [singleLineMode]="singleLineMode()"
-        (propagateChange)="onMonacoValueChanged($any($event))"
-        #monacoContainer></monaco-editor>
+  [options]="options"
+  [padding]="padding()"
+  [language]="language()"
+  [theme]="theme"
+  [value]="expression()"
+  [editorHeight]="editorHeight()"
+  [singleLineMode]="singleLineMode()"
+  (propagateChange)="onMonacoValueChanged($any($event))"
+  #monacoContainer
+></monaco-editor>
