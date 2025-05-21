@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
 import { OrderBy, PagedList, VersionOptions, WorkflowDefinitionSummary } from '../../../../models';
 import { parseQuery } from '../../../../utils/utils';
-import { selectServerUrl, selectStoreConfig } from '../../../state/selectors/app.state.selectors';
+import { selectServerUrl, selectStoreConfig } from '../../../../store/selectors/app.state.selectors';
 import { HTMLElsaConfirmDialogElement, MenuItem } from 'src/models/elsa-interfaces';
 
 @Component({

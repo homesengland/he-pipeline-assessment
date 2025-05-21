@@ -1,7 +1,7 @@
 import { Component, computed, effect, ElementRef, HostListener, Input, input, OnDestroy, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { selectServerUrl } from '../../../state/selectors/app.state.selectors';
+import { selectServerUrl } from '../../../../store/selectors/app.state.selectors';
 import { Location } from '@angular/common';
 import {
   ActivityBlueprint,
@@ -20,12 +20,12 @@ import {
   WorkflowStatus,
   WorkflowStorageDescriptor,
 } from 'src/models';
-import { ActivityStats, ActivityEventCount } from 'src/services/workflow-client';
+import { ActivityStats, ActivityEventCount } from '../../../../services/workflow-client';
 import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from 'src/components/designers/tree/models';
-import { ElsaClientService } from 'src/services/elsa-client';
+import { ElsaClientService } from '../../../..//services/elsa-client';
 import * as collection from 'lodash/collection';
-import { featuresDataManager } from 'src/services/features-data-manager';
-import { AppStateActionGroup } from 'src/components/state/actions/app.state.actions';
+import { featuresDataManager } from '../../../../services/features-data-manager';
+import { AppStateActionGroup } from '../../../../store/actions/app.state.actions';
 
 @Component({
   selector: 'workflow-instance-viewer-screen',
@@ -152,7 +152,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
 
   private setVariablesFromAppState(): void {
     this.store.select(selectServerUrl).subscribe(data => {
-      this.serverUrl = data;
+      this.serverUrl = data as string;
     });
   }
 

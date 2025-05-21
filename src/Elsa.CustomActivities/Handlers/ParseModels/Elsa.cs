@@ -67,7 +67,7 @@ namespace Elsa.CustomActivities.Handlers.Models
                     var syntax = overrideSyntax;
                     if (@this.Expressions != null && @this.Expressions.Count > 0)
                     {
-                        var result = evaluator.TryEvaluateAsync<T>(overrideExpression, overrideSyntax, context, cancellationToken).Result;
+                        var  result = evaluator.TryEvaluateAsync<T>(overrideExpression, overrideSyntax, context, cancellationToken).Result;
                         if (result.Value != null)
                         {
                             return result.Value;

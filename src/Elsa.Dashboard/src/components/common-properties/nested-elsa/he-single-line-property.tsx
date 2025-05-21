@@ -31,6 +31,10 @@ export class HeSingleLineProperty {
   }
 
   componentWillLoad() {
+
+    console.log("sample activity model", JSON.stringify(this.activityModel))
+    console.log("sample property descriptor", JSON.stringify(this.propertyDescriptor))
+    console.log("sample property model", JSON.stringify(this.propertyModel))
     const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
     this.currentValue = this.propertyModel.expressions[defaultSyntax] || undefined;
   }

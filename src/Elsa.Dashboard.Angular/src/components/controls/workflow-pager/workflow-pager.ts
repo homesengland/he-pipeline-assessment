@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output, computed, input } from '@angular/core';
 import { parseQuery, queryToString } from "../../../utils/utils";
 import { Location } from '@angular/common';
-import { selectStoreConfig } from '../../state/selectors/app.state.selectors';
+import { selectStoreConfig } from '../../../store/selectors/app.state.selectors';
 import * as _ from 'lodash';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';

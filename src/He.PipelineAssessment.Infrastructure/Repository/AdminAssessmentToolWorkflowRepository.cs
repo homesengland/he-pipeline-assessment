@@ -53,13 +53,24 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForRollback(int order)
         {
-            return await _context.Set<AssessmentToolWorkflow>()
-                .Where(x => x.Status != AssessmentToolStatus.Deleted && 
+            var assessmentToolWorkflows = await _context.Set<AssessmentToolWorkflow>()
+                .Where(x => x.Status != AssessmentToolStatus.Deleted &&
                     x.AssessmentTool.Order <= order)
-                .OrderBy(x => x.AssessmentTool.Order)
-                .Include(x => x.AssessmentTool)
+                .Include(x=> x.AssessmentTool)
                 .ToListAsync();
-        }
+            
+            var filteredAssessmentToolOrders = assessmentToolWorkflows
+                .Select(x=> x.AssessmentTool)
+                .Distinct()
+                .GroupBy(x => x.Order)
+                .Where(x=> x.Count() ==1)
+                .Select(x=> x.First().Order);
+
+            return assessmentToolWorkflows
+                .Where(x => filteredAssessmentToolOrders.Contains(x.AssessmentTool.Order))
+                .OrderBy(x => x.AssessmentTool.Order)
+                .ToList();
+         }
 
         public async Task<List<AssessmentToolWorkflow>> GetAssessmentToolWorkflowsForVariation()
         {

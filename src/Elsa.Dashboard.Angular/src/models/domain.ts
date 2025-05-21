@@ -194,6 +194,33 @@ export interface ActivityDefinitionProperty {
   syntax?: string;
   expressions: Map<string>;
   value?: any;
+  type?: string;
+}
+
+export interface ActivityPropertyDescriptor {
+    name: string;
+    uiHint: string;
+    label?: string;
+    hint?: string;
+    type?: string;
+    options?: any;
+    category?: string;
+    order?: number;
+    defaultValue?: any;
+    defaultSyntax?: string;
+    supportedSyntaxes: Array<string>;
+    isReadOnly?: boolean;
+    isBrowsable?: boolean;
+    isDesignerCritical?: boolean;
+    defaultWorkflowStorageProvider?: string;
+    disableWorkflowProviderSelection: boolean;
+    considerValuesAsOutcomes?: boolean;
+    displayInDesigner?: boolean;
+    conditionalActivityTypes?: Array<string>;
+    expectedOutputType?: string;
+    hasNestedProperties?: boolean;
+    hasColletedProperties?: boolean;
+    nestedProperties?: Array<ActivityPropertyDescriptor>;
 }
 
 interface BlockingActivity {
@@ -285,23 +312,6 @@ export interface ActivityDescriptor {
   customAttributes: any;
   version?: number;
   isContainer?: boolean;
-}
-
-export interface ActivityPropertyDescriptor {
-  name: string;
-  uiHint: string;
-  label?: string;
-  hint?: string;
-  options?: SelectList | RuntimeSelectListProviderSettings | CodeEditorSettings | PropertySettings | Array<any>;
-  category?: string;
-  defaultValue?: any;
-  defaultSyntax?: string;
-  supportedSyntaxes: Array<string>;
-  isReadOnly?: boolean;
-  defaultWorkflowStorageProvider?: string;
-  disableWorkflowProviderSelection: boolean;
-  considerValuesAsOutcomes?: boolean;
-  type?: string;
 }
 
 export interface WorkflowStorageDescriptor {

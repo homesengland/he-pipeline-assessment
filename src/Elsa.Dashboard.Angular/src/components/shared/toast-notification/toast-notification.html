@@ -1,7 +1,6 @@
-<Host class={{'hidden': !this.isVisible, 'elsa-block': true}}>
+<div [ngClass]="{'hidden': !this.isVisible, 'elsa-block': true}">
   <div class="elsa-fixed elsa-inset-0 elsa-z-20 elsa-flex elsa-items-end elsa-justify-center elsa-px-4 elsa-py-6 elsa-pointer-events-none sm:elsa-p-6 sm:elsa-items-start sm:elsa-justify-end">
-    <div ref={el =>
-      this.toast = el}
+    <div #toast
       data-transition-enter="elsa-transform elsa-ease-out elsa-duration-300 elsa-transition"
       data-transition-enter-start="elsa-translate-y-2 elsa-opacity-0 sm:elsa-translate-y-0 sm:elsa-translate-x-2"
       data-transition-enter-end="elsa-translate-y-0 elsa-opacity-100 sm:elsa-translate-x-0"
@@ -18,10 +17,10 @@
           </div>
           <div class="elsa-ml-3 elsa-w-0 elsa-flex-1 elsa-pt-0.5">
             <p class="elsa-text-sm elsa-font-medium elsa-text-gray-900">
-              {{title}}
+              {{title()}}
             </p>
             <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-500">
-              {{message}}
+              {{message()}}
             </p>
           </div>
           <div class="elsa-ml-4 elsa-flex-shrink-0 elsa-flex">
@@ -38,4 +37,4 @@
       </div>
     </div>
   </div>
-</Host>
+</div>

@@ -1,0 +1,20 @@
+@let showHint = propertyDescriptor().hint != null;
+@let label = showLabel? propertyDescriptor().label : null;
+
+<div>
+  <multi-expression-editor
+    (syntaxChanged)=onSyntaxChanged($event)
+    (expressionChanged)="onExpressionChanged($event)"
+    [propertyName]="propertyDescriptor().name"
+    [label]="label"
+    [syntax]="propertyModel().syntax"
+    [defaultSyntax]="propertyDescriptor().defaultSyntax"
+    [isReadOnly]="propertyDescriptor().isReadOnly"
+    [expressions]="propertyModel().expressions"
+    [supportedSyntaxes]="propertyDescriptor().supportedSyntaxes"
+    [editorHeight]="editorHeight()"
+    [context]="editorContext">
+    <ng-content/>
+  </multi-expression-editor>
+    <p *ngIf="showHint" class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">{{propertyDescriptor().hint}}</p>
+</div>

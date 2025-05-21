@@ -1,4 +1,7 @@
 @inject NonceConfig nonceConfig
+@{
+    var signOutUrl = Url.Action("SignOut", "HeIdentity");
+}
 <!DOCTYPE html>
 <html lang="en" class="govuk-template ">
 
@@ -46,6 +49,9 @@
                         Workflow Tool
                     </span>
                 </a>
+            </div>
+            <div class="govuk-grid-column three-quarters pull-right">
+                <a class="govuk-header__link govuk-link--no-visited-state float-right" href="@signOutUrl">Sign out</a>
             </div>
         </div>
     </header>

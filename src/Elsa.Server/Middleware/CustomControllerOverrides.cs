@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Microsoft.AspNetCore.Http;
+using System.Globalization;
 
 namespace Elsa.Server.Middleware
 {
@@ -31,7 +32,11 @@ namespace Elsa.Server.Middleware
                 context.Request.Path = newRoute;
                 context.Request.RouteValues.Remove("controller");
                 context.Request.RouteValues.Add("controller", "CustomList");
-                context.Response.Redirect(_serverPrefix + newRoute + context.Request.QueryString);
+                var url = new Uri(_serverPrefix + newRoute + context.Request.QueryString, UriKind.RelativeOrAbsolute);
+                if (!url.IsAbsoluteUri)
+                {
+                    context.Response.Redirect(url.ToString());
+                }
                 return;
             }
 
