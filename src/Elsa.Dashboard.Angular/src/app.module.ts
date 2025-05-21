@@ -35,6 +35,11 @@ import { WorkflowInstancesView } from './components/dashboard/pages/workflow-ins
 import { WorkflowDefinitionListScreen } from './components/screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
 import { EditorComponent } from './components/monaco/editor.component';
 import { DiffEditorComponent } from './components/monaco/diff-editor.component';
+import { WorkflowInstanceJournalComponent } from './components/screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
+import { FlyoutPanelComponent } from './components/shared/flyout-panel/flyout-panel.component';
+import { TabHeaderComponent } from './components/shared/tab-header/tab-header.component';
+import { TabContentComponent } from './components/shared/tab-content/tab-content.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -62,6 +67,10 @@ import { DiffEditorComponent } from './components/monaco/diff-editor.component';
     ToastNotification,
     DiffEditorComponent,
     EditorComponent,
+    WorkflowInstanceJournalComponent,
+    FlyoutPanelComponent,
+    TabHeaderComponent,
+    TabContentComponent
   ],
   imports: [
     BrowserModule,
@@ -72,6 +81,7 @@ import { DiffEditorComponent } from './components/monaco/diff-editor.component';
     RouterOutlet,
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
+    BrowserAnimationsModule
   ],
   providers:[
     IntellisenseService,
