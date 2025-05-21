@@ -1,4 +1,3 @@
-@let editorClass = 'editor-container elsa-monaco-editor-container'+ this.padding;
+@let editorClass = 'editor-container elsa-monaco-editor-container' + (this.padding() || '');
 
-<div class={{editorClass}} #editorContainer></div>
-
+<div class="{{editorClass}}" [style.height.%]="'100'" #editorContainer></div>

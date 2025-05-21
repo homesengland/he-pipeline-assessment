@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectMonacoLibPath, selectServerUrl } from '../../../../store/selectors/app.state.selectors';
+import { selectServerUrl } from '../../../../store/selectors/app.state.selectors';
 import { WorkflowDefinitionListScreen } from '../../../screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
 
 @Component({
@@ -12,7 +12,6 @@ import { WorkflowDefinitionListScreen } from '../../../screens/workflow-definiti
 })
 export class WorkflowDefinitionsList implements OnInit {
   serverUrl: string;
-  monacoLibPath: string;
   title = 'Workflow Definitions';
   readonly WorkflowDefinitionListScreen = viewChild('WorkflowDefinitionListScreen');
 
@@ -20,9 +19,6 @@ export class WorkflowDefinitionsList implements OnInit {
   ngOnInit(): void {
     this.store.select(selectServerUrl).subscribe(data => {
       this.serverUrl = data;
-    });
-    this.store.select(selectMonacoLibPath).subscribe(data => {
-      this.monacoLibPath = data;
     });
   }
 }

@@ -27,7 +27,12 @@
                 "glob": "**/*",
                 "input": "src/static",
                 "output": ""
-              }
+              }, 
+    {
+    "glob": "**/*",
+    "input": "src/assets",
+    "output": "assets"
+  }
             ],
             "styles": ["src/styles.css"],
             "scripts": []

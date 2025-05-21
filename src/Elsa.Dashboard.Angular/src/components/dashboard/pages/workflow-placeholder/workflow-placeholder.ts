@@ -31,17 +31,11 @@ export class WorkflowPlaceholder implements OnInit {
   jsCode = `function hello() {
     alert('Hello world!');
  }`;
-  jsonCode = [
-    '{',
-    '    "p1": "v3",',
-    '    "p2": false',
-    '}'
-  ].join('\n');
+  jsonCode = ['{', '    "p1": "v3",', '    "p2": false', '}'].join('\n');
   model: EditorModel = {
     value: this.jsonCode,
     language: 'typescript'
   };
-
 
   constructor(store: Store) {
     this.store = store;
@@ -56,7 +50,6 @@ export class WorkflowPlaceholder implements OnInit {
 
     //some stuff for monaco
 
-
     // back to usual stuff
     await this.store.dispatch(
       AppStateActionGroup.setWorkflowDefinitionId({
@@ -66,7 +59,7 @@ export class WorkflowPlaceholder implements OnInit {
     );
     await this.store.dispatch(
       AppStateActionGroup.setWorkflowDefinitionId({
-      workflowDefinitionId: this.id(),
+        workflowDefinitionId: this.id(),
       }),
     );
     await this.store.dispatch(AppStateActionGroup.fetchJavaScriptTypeDefinitions());
@@ -83,7 +76,6 @@ export class WorkflowPlaceholder implements OnInit {
       this.code = this.jsCode;
       this.options = Object.assign({}, this.options, { language: 'typescript' });
     }
-
   }
 
   getSingleLineModel(): ActivityModel {

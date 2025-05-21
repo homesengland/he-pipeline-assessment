@@ -13,16 +13,19 @@ declare var monaco: any;
   standalone: false,
   selector: 'monaco-editor',
   templateUrl: './editor.html',
-  host:{
-    '[style.height]': 'editorHeight',
-    class: 'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300 elsa-p-4'
+  host: {
+    '[style.height]': 'editorHeight()',
+    'class':
+      'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300 elsa-p-4',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => EditorComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => EditorComponent),
+      multi: true,
+    },
+  ],
 })
 export class EditorComponent extends BaseEditor implements ControlValueAccessor {
   private zone = inject(NgZone);
@@ -66,8 +69,8 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
   registerOnChange(fn: any): void {
     let args: MonacoValueChangedArgs = {
       value: this._value,
-      markers: this._editor.getModel().getAllMarkers()
-    }
+      markers: this._editor.getModel().getAllMarkers(),
+    };
     this.propagateChange.emit(args);
   }
 
@@ -76,7 +79,6 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
   }
 
   protected initMonaco(options: any, insideNg: boolean): void {
-
     const hasModel = !!options.model;
 
     if (hasModel) {
@@ -94,7 +96,7 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
     } else {
       this.zone.runOutsideAngular(() => {
         this._editor = monaco.editor.create(this._editorContainer.nativeElement, options);
-      })
+      });
     }
 
     if (!hasModel) {
@@ -106,15 +108,14 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
 
       // value is not propagated to parent when executing outside zone.
       this.zone.run(() => {
-            let args: MonacoValueChangedArgs = {
-      value: this._value,
-      markers: this._editor.getModel().getAllMarkers()
-    }
+        let args: MonacoValueChangedArgs = {
+          value: this._value,
+          markers: monaco.editor.getModelMarkers({ resource: this._editor.getModel().uri }),
+        };
         this.propagateChange.emit(args);
         this._value = value;
       });
     });
-
 
     this._editor.onDidBlurEditorWidget(() => {
       this.onTouched();
@@ -129,20 +130,25 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
   }
 
   async addJavaScriptLib(libSource, libUri) {
-    monaco.languages.typescript.javascriptDefaults.setExtraLibs([{
-            filePath: "lib.es5.d.ts"
-        }, {
-            content: libSource,
-            filePath: libUri
-        }]);
+    monaco.languages.typescript.javascriptDefaults.setExtraLibs([
+      {
+        filePath: 'lib.es5.d.ts',
+      },
+      {
+        content: libSource,
+        filePath: libUri,
+      },
+    ]);
+    //monaco.languages.typescript.javascriptDefaults.setWorkerOptions({
+    //  // Set a custom TypeScript worker
+    //  customWorkerPath: '/static/assets/monaco-editor/min/vs/language/typescript/tsWorker.js',
+    //});
     const oldModel = monaco.editor.getModel(libUri);
-    if (oldModel)
-        oldModel.dispose();
+    if (oldModel) oldModel.dispose();
     const matches = libSource.matchAll(/declare const (\w+): (string|number)/g);
     EditorVariables.splice(0, EditorVariables.length);
     for (const match of matches) {
-        EditorVariables.push({ variableName: match[1], type: match[2] });
+      EditorVariables.push({ variableName: match[1], type: match[2] });
     }
-}
-
+  }
 }
