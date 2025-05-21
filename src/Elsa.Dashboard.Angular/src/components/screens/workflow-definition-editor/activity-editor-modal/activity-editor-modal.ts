@@ -43,10 +43,19 @@ export interface TabModel {
     standalone: false,
   })
 
-  export class ActivityEditorModal {
+  export class ActivityEditorModal implements OnInit {
+        @Output() close = new EventEmitter<void>();
         activityModel: ActivityModel;
         activityDescriptor: ActivityDescriptor;
         dialog: HTMLDialogElement;
+        isModalVisible: boolean;
+
+
+  ngOnInit(): void {
+    this.isModalVisible = false;
+    eventBus.on(EventTypes.ActivityEditor.Show, this.onShowActivityEditor);
+    console.log("Activity Modal Initialized");
+  }
 
 
     connectedCallback() {
@@ -65,10 +74,24 @@ export interface TabModel {
         //this.formContext = new FormContext(this.activityModel, newValue => this.activityModel = newValue);
         //this.timestamp = new Date();
         //this.renderProps = {};
-        await this.show();
+        await this.showModal();
       };
 
-      show = async () => await this.dialog.showModal();
+      // async show(){
+      //   await this.dialog.showModal();
+      // } 
+
+      closeModal() {
+        this.close.emit();
+      }
+
+      showModal() {
+        this.isModalVisible = true;
+        }
+
+      hideModal() {
+        this.isModalVisible = false;
+      }
 
       onDialogShown = async () => {
         const args: ActivityEditorAppearingEventArgs = {

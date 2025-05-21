@@ -1,6 +1,7 @@
-<div class="elsa-block">
-    <dialog  onShown={this.onDialogShown} onHidden={this.onDialogHidden}>
-      <h1> TEST </h1>
-      
-    </dialog>
+<div  *ngIf="isModalVisible" (close)="hideModal()" class="modal-overlay" (click)="closeModal()"> 
+  <div class="modal-content" (click)="$event.stopPropagation()">
+	<h2>Modal Title</h2>
+	<p>This is the content of the modal. It can include text, images, forms, or any other Angular component.</p>
+	<button (click)="closeModal()">Close</button>
+  </div>
 </div>
