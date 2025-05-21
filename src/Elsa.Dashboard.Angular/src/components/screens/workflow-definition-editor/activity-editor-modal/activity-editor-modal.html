@@ -1,7 +1,45 @@
-<div  *ngIf="isModalVisible" (close)="hideModal()" class="modal-overlay" (click)="closeModal()"> 
-  <div class="modal-content" (click)="$event.stopPropagation()">
-	<h2>Modal Title</h2>
-	<p>This is the content of the modal. It can include text, images, forms, or any other Angular component.</p>
-	<button (click)="closeModal()">Close</button>
+<modal-dialog [isVisible]="isModalVisible" class="elsa-block">
+  <div slot="content" class="elsa-py-8 elsa-pb-0">
+    <form
+      class='activity-editor-form'>
+  <div class="elsa-flex elsa-px-8">
+    <div class="elsa-space-y-8 elsa-divide-y elsa-divide-gray-200 elsa-w-full">
+      <div>
+        <div>
+          <h3 class="elsa-text-lg elsa-leading-6 elsa-font-medium elsa-text-gray-900">
+            <p>Test Type</p>
+            <!-- {{activityDescriptor.type}} -->
+          </h3>
+          <p class="elsa-mt-1 elsa-text-sm elsa-text-gray-500">
+            <p>Test Descriptor</p>
+            <!-- {{activityDescriptor.description}} -->
+        </div>
+
+        <div class="elsa-border-b elsa-border-gray-200">
+          <nav class="-elsa-mb-px elsa-flex elsa-space-x-8" aria-label="Tabs">
+          </nav>
+        </div>
+
+        <div class="elsa-mt-8">
+          <!-- {this.renderTabs(tabs)} -->
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
+  <div class="elsa-pt-5">
+    <div class="elsa-bg-gray-50 elsa-px-4 elsa-py-3 sm:elsa-px-6 sm:elsa-flex sm:elsa-flex-row-reverse">
+      <button type="submit"
+              class="elsa-ml-3 elsa-inline-flex elsa-justify-center elsa-py-2 elsa-px-4 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500">
+        {{('Save')}}
+      </button>
+      <button type="button"
+              onClick=""
+              class="elsa-w-full elsa-inline-flex elsa-justify-center elsa-rounded-md elsa-border elsa-border-gray-300 elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-bg-white elsa-text-base elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-mt-0 sm:elsa-ml-3 sm:elsa-w-auto sm:elsa-text-sm">
+              {{('Cancel')}}
+      </button>
+    </div>
+  </div>
+</form>
+  </div>
+</modal-dialog>

@@ -367,6 +367,7 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
   };
 
   onUpdateActivity = (activity: ActivityModel) => {
+
     const message = this.workflowTestActivityMessages.find(x => x.activityId === activity.activityId);
 
     if (message) {
