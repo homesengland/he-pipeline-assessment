@@ -607,6 +607,10 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
     if (this.selectedActivityId == e.activityId) this.selectedActivityId = null;
   };
 
+  onWorkflowChanged = async (e: WorkflowModel) => {
+    this.workflowModel = e;
+  }
+
   async onRestartActivityButtonClick() {
     await eventBus.emit(EventTypes.WorkflowRestarted, this, this.selectedActivityId);
 
