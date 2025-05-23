@@ -129,7 +129,6 @@ export class DesignerTree implements OnChanges, OnInit {
   }
 
   ngAfterViewInit(): void {
-    console.log('Designer tree view initialized');
 
     // Now the ViewChild references should be available
     if (this.svg && this.inner && this.workflowModel?.activities?.length > 0) {
@@ -139,7 +138,6 @@ export class DesignerTree implements OnChanges, OnInit {
 
       // Render the workflow model
       this.componentWillRender();
-      console.log('SVG initialized after view init');
     }
   }
 
