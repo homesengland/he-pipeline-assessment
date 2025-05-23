@@ -1,7 +1,7 @@
 import { Component, computed, effect, ElementRef, HostListener, Input, input, OnDestroy, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { selectServerUrl } from '../../state/selectors/app.state.selectors';
+import { selectServerUrl } from '../../../state/selectors/app.state.selectors';
 import { Location } from '@angular/common';
 import {
   ActivityBlueprint,
@@ -53,7 +53,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   };
 
   readonly designerTree = viewChild.required<ElementRef>('designerTree');
-  // journal: HTMLElsaWorkflowInstanceJournalElement;
+  readonly journal = viewChild.required<HTMLElement>('journal');
   readonly contextMenu = viewChild.required<ElementRef>('contextMenu');
   layoutDirection = LayoutDirection.TopBottom;
 
@@ -262,12 +262,9 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     };
   }
 
-  // onShowWorkflowSettingsClick() {
-  //   eventBus.emit(EventTypes.ShowWorkflowSettings);
-  // }
-
-  onRecordSelected(e: CustomEvent<WorkflowExecutionLogRecord>) {
-    const record = e.detail;
+  onRecordSelected(e: Event) {
+    const customEvent = e as CustomEvent<WorkflowExecutionLogRecord>;
+    const record = customEvent.detail;
     const activity = !!record ? this.workflowBlueprint.activities.find(x => x.id === record.activityId) : null;
     this.selectedActivityId = activity != null ? (activity.parentId != null ? activity.parentId : activity.id) : null;
   }

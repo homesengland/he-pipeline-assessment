@@ -11,6 +11,7 @@ import { routing } from '../workflow-routes.module';
 import { AppStateModule } from './state/app.state.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgStyle } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { WorkflowPager } from './controls/workflow-pager/workflow-pager';
 import { WorkflowDropdownButton } from './controls/workflow-dropdown-button/workflow-dropdown-button';
@@ -18,13 +19,18 @@ import { WorkflowContextMenu } from './controls/workflow-context-menu/workflow-c
 import { ConfirmDialog } from './shared/confirm-dialog/confirm-dialog';
 import { ModalDialog } from './shared/modal-dialog/modal-dialog';
 import { WorkflowInstancesView } from './dashboard/pages/workflow-instances-view/workflow-instances-view';
-import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
+import { WorkflowInstanceViewerScreen } from './screens/workflow-instance-viewer/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
 import { WorkflowPerformanceInformation } from './shared/workflow-performance-information/workflow-performance-information';
 import { WorkflowFaultInformation } from './shared/workflow-fault-information/workflow-fault-information';
 import { DesignerTree } from './designers/tree/designer-tree/designer-tree';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { ActivityIconProviderPlugin } from 'src/plugins/activity-icon-provider-plugin';
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
+import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
+import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
+import { FlyoutPanelComponent } from './shared/flyout-panel/flyout-panel.component';
+import { TabHeaderComponent } from './shared/tab-header/tab-header.component';
+import { TabContentComponent } from './shared/tab-content/tab-content.component';
 import { WorkflowDefinitionEdit } from './dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
 import { WorkflowDefinitionEditorScreen } from './screens/workflow-definition-editor/workflow-definition-editor-screen';
 import {ActivityEditorModal} from './screens/workflow-definition-editor/activity-editor-modal/activity-editor-modal';
@@ -51,11 +57,16 @@ import { HttpClientModule } from '@angular/common/http';
     DesignerTree,
     WorkflowInstancesView,
     WorkflowInstanceViewerScreen,
+    WorkflowInstanceJournalComponent,
+    FlyoutPanelComponent,
+    TabHeaderComponent,
+    TabContentComponent,
     WorkflowDefinitionEdit,
     WorkflowDefinitionEditorScreen,
     ActivityEditorModal
   ],
-  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, CommonModule, NgStyle],
+
+  imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle, BrowserAnimationsModule],
   providers: [ActivityIconProvider, ActivityIconProviderPlugin],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
