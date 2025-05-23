@@ -1,6 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { WorkflowRoot } from './dashboard/pages/workflow-root/workflow-root';
 import { WorkflowDashboard } from './dashboard/pages/workflow-dashboard/workflow-dashboard';
 import { WorkflowDefinitionsList } from './dashboard/pages/workflow-definitions-list/workflow-definitions-list';
@@ -32,12 +31,16 @@ import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-vi
 import { FlyoutPanelComponent } from './shared/flyout-panel/flyout-panel.component';
 import { TabHeaderComponent } from './shared/tab-header/tab-header.component';
 import { TabContentComponent } from './shared/tab-content/tab-content.component';
+import { WorkflowDefinitionEdit } from './dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
+import { WorkflowDefinitionEditorScreen } from './screens/workflow-definition-editor/workflow-definition-editor-screen';
+import {ActivityEditorModal} from './screens/workflow-definition-editor/activity-editor-modal/activity-editor-modal';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
     WorkflowRoot,
     WorkflowDashboard,
-    WorkflowDefinitionsList,
     WorkflowInstancesList,
     WorkflowHome,
     WorkflowRegistry,
@@ -48,7 +51,7 @@ import { TabContentComponent } from './shared/tab-content/tab-content.component'
     WorkflowContextMenu,
     ConfirmDialog,
     ModalDialog,
-    WorkflowDefinitionsView,
+    WorkflowDefinitionsList,
     WorkflowPerformanceInformation,
     WorkflowFaultInformation,
     DesignerTree,
@@ -58,6 +61,9 @@ import { TabContentComponent } from './shared/tab-content/tab-content.component'
     FlyoutPanelComponent,
     TabHeaderComponent,
     TabContentComponent,
+    WorkflowDefinitionEdit,
+    WorkflowDefinitionEditorScreen,
+    ActivityEditorModal
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle, BrowserAnimationsModule],

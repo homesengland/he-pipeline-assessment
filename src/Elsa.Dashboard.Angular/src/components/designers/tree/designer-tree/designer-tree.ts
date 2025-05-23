@@ -128,6 +128,19 @@ export class DesignerTree implements OnChanges, OnInit {
     eventBus.on(EventTypes.WorkflowExecuted, this.onWorkflowExecuted);
   }
 
+  ngAfterViewInit(): void {
+
+    // Now the ViewChild references should be available
+    if (this.svg && this.inner && this.workflowModel?.activities?.length > 0) {
+      // Set up D3 selections now that elements exist
+      this.svgD3Selected = d3.select(this.svg.nativeElement);
+      this.innerD3Selected = d3.select(this.inner.nativeElement);
+
+      // Render the workflow model
+      this.componentWillRender();
+    }
+  }
+
   ngOnDestroy(): void {
     // Clean up D3 event handlers
     eventBus.detach(EventTypes.ActivityPicked, this.onActivityPicked);

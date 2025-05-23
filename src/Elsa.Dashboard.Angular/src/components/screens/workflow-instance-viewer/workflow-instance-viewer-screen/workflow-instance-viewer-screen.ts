@@ -174,7 +174,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (!this.designerTree) {
+    if (this.designerTree) {
       const designerTreeElement = this.designerTree().nativeElement;
       if (designerTreeElement) {
         designerTreeElement.model = this.workflowModel;
@@ -269,15 +269,13 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     this.selectedActivityId = activity != null ? (activity.parentId != null ? activity.parentId : activity.id) : null;
   }
 
-  async onActivitySelected(e: Event) {
-    const customEvent = e as CustomEvent<ActivityModel>;
-    this.selectedActivityId = customEvent.detail.activityId;
+  async onActivitySelected(e: ActivityModel) {
+    this.selectedActivityId = e.activityId;
     // await this.journal.selectActivityRecord(this.selectedActivityId);
   }
 
-  async onActivityDeselected(e: Event) {
-    const customEvent = e as CustomEvent<ActivityModel>;
-    if (this.selectedActivityId == customEvent.detail.activityId) this.selectedActivityId = null;
+  async onActivityDeselected(e: ActivityModel) {
+    if (this.selectedActivityId == e.activityId) this.selectedActivityId = null;
 
     // await this.journal.selectActivityRecord(this.selectedActivityId);
   }

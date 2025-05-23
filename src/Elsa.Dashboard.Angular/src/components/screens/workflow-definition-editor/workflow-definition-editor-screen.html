@@ -1,0 +1,115 @@
+<div #el class="elsa-flex-1 elsa-flex">
+  <designer-tree
+    *ngIf="this.workflowDesignerMode === this.editWorkflowDesignerMode"
+    #designerTree
+    [model]="this.workflowModel"
+    [mode]="this.workflowDesignerMode"
+    [layoutDirection]="this.layoutDirection"
+    [activityContextMenuButton]="this.renderActivityContextMenuButton"
+    (activityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
+    [activityContextMenu]="this.activityContextMenuState"
+    [enableMultipleConnectionsFromSingleSource]="false"
+    [selectedActivityIds]="[this.selectedActivityId]"
+    (activityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
+    (activityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
+    (activitySelected)="onActivitySelected($event)"
+    (activityDeselected)="onActivityDeselected($event)"
+    (workflowChanged)="onWorkflowChanged($event)"
+    class="elsa-flex-1"
+  ></designer-tree>
+  <designer-tree
+    *ngIf="this.workflowDesignerMode !== this.editWorkflowDesignerMode"
+    #designerTree
+    [model]="this.workflowModel"
+    [mode]="this.workflowDesignerMode"
+    [layoutDirection]="this.layoutDirection"
+    [activityContextMenuButton]="this.renderActivityStatsButton"
+    (activityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
+    [activityContextMenu]="this.activityContextMenuTestState"
+    [enableMultipleConnectionsFromSingleSource]="false"
+    [selectedActivityIds]="[this.selectedActivityId]"
+    (activityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
+    (activityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
+    (activitySelected)="onActivitySelected($event)"
+    (activityDeselected)="onActivityDeselected($event)"
+    class="elsa-flex-1"
+  ></designer-tree>
+  <div
+    #activityContextMenu
+    *ngIf="activityContextMenuState.shown"
+    data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
+    data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
+    data-transition-enter-end="elsa-transform elsa-opacity-100 elsa-scale-100"
+    data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
+    data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
+    data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
+    class="context-menu elsa-z-20 elsa-mx-3 elsa-w-48 elsa-mt-1 elsa-rounded-md elsa-shadow-lg elsa-fixed"
+    [style.left.px]="activityContextMenuState.x"
+    [style.top.px]="activityContextMenuState.y"
+  >
+    <div class="elsa-rounded-md elsa-bg-white elsa-shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="pinned-project-options-menu-0">
+      <div class="elsa-py-1">
+        <a
+          (click)="onEditActivityClick($event)"
+          href="#"
+          class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm elsa-leading-5 elsa-text-gray-700 hover:elsa-bg-gray-100 hover:elsa-text-gray-900 focus:elsa-outline-none focus:elsa-bg-gray-100 focus:elsa-text-gray-900"
+          role="menuitem"
+        >
+          Edit
+        </a>
+      </div>
+      <div class="elsa-border-t elsa-border-gray-100"></div>
+      <div class="elsa-py-1">
+        <a
+          (click)="onDeleteActivityClick($event)"
+          href="#"
+          class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm elsa-leading-5 elsa-text-gray-700 hover:elsa-bg-gray-100 hover:elsa-text-gray-900 focus:elsa-outline-none focus:elsa-bg-gray-100 focus:elsa-text-gray-900"
+          role="menuitem"
+        >
+          {{selectedActivities.length > 1 && selectedActivities.indexOf(activityContextMenuState.activity.activityId) !== -1 ? 'Delete Selected' : 'Delete'}}
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    #activityContextMenu
+    *ngIf="!activityContextMenuState.shown"
+    data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
+    data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
+    data-transition-enter-end="elsa-transform elsa-opacity-100 elsa-scale-100"
+    data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
+    data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
+    data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
+    class="context-menu elsa-z-20 elsa-mx-3 elsa-w-48 elsa-mt-1 elsa-rounded-md elsa-shadow-lg elsa-fixed hidden"
+    [style.left.px]="activityContextMenuState.x"
+    [style.top.px]="activityContextMenuState.y"
+  >
+    <div class="elsa-rounded-md elsa-bg-white elsa-shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="pinned-project-options-menu-0">
+      <div class="elsa-py-1">
+        <a
+          (click)="onEditActivityClick($event)"
+          href="#"
+          class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm elsa-leading-5 elsa-text-gray-700 hover:elsa-bg-gray-100 hover:elsa-text-gray-900 focus:elsa-outline-none focus:elsa-bg-gray-100 focus:elsa-text-gray-900"
+          role="menuitem"
+        >
+          Edit
+        </a>
+      </div>
+      <div class="elsa-border-t elsa-border-gray-100"></div>
+      <div class="elsa-py-1">
+        <a
+          (click)="onDeleteActivityClick($event)"
+          href="#"
+          class="elsa-block elsa-px-4 elsa-py-2 elsa-text-sm elsa-leading-5 elsa-text-gray-700 hover:elsa-bg-gray-100 hover:elsa-text-gray-900 focus:elsa-outline-none focus:elsa-bg-gray-100 focus:elsa-text-gray-900"
+          role="menuitem"
+        >
+          {{selectedActivities.length > 1 && selectedActivities.indexOf(activityContextMenuState.activity.activityId) !== -1 ? 'Delete Selected' : 'Delete'}}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<activity-editor-modal></activity-editor-modal>
+
+
+
