@@ -35,4 +35,5 @@ export const appStateReducer = createReducer(
   on(AppStateActionGroup.setJavaScriptTypeDefinitions, (_state, { javaScriptTypeDefinitions }) => ({ ..._state, javaScriptTypeDefinitions: javaScriptTypeDefinitions })),
   on(AppStateActionGroup.setDataDictionaryIntellisense, (_state, { dataDictionaryIntellisense }) => ({ ..._state, dataDictionaryIntellisense: dataDictionaryIntellisense })),
   on(AppStateActionGroup.setActivityDefinitions, (_state, { activityDefinitions }) => ({ ..._state, activityDefinitions: activityDefinitions })),
+  on(AppStateActionGroup.setWorkflowStorageDescriptors, (_state, { workflowStorageDescriptors }) => ({ ..._state, workflowStorageDescriptors: workflowStorageDescriptors })),
 );

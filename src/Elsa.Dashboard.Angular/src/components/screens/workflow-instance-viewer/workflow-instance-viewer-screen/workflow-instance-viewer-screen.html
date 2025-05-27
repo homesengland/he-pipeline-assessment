@@ -9,8 +9,8 @@
     [activityBorderColor]="this.getActivityBorderColor"
     [activityContextMenu]="this.activityContextMenuState"
     [selectedActivityIds]="[this.selectedActivityId]"
-    (onActivitySelected)="onActivitySelected($event)"
-    (onActivityDeselected)="onActivityDeselected($event)"
+    (activitySelected)="onActivitySelected($event)"
+    (activityDeselected)="onActivityDeselected($event)"
     (activityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
   />
   @let hiddenClass = this.activityContextMenuState.shown ? "" : "hidden"; @let leftPx = this.activityContextMenuState.x + 64; @let topPx = this.activityContextMenuState.y - 256;
