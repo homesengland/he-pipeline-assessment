@@ -36,6 +36,7 @@ import { WorkflowDefinitionEditorScreen } from './screens/workflow-definition-ed
 import { ActivityEditorModal } from './screens/workflow-definition-editor/activity-editor-modal/activity-editor-modal';
 import { HttpClientModule } from '@angular/common/http';
 import { WorkflowSettingsButton } from './screens/workflow-definition-editor/buttons/workflow-settings-button/workflow-settings-button';
+import { WorkflowSettingsModal } from './screens/workflow-definition-editor/workflow-settings-modal/workflow-settings-modal';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { WorkflowSettingsButton } from './screens/workflow-definition-editor/but
     WorkflowDefinitionEditorScreen,
     ActivityEditorModal,
     WorkflowSettingsButton,
+    WorkflowSettingsModal,
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle, BrowserAnimationsModule],
