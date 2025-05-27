@@ -1,15 +1,11 @@
-import { PropertyDisplayDriver } from "../../services/property-display-driver";
-import { ActivityModel, ActivityPropertyDescriptor } from "../../models";
+import { PropertyDisplayDriver } from '../../services/property-display-driver';
+import { ActivityModel, ActivityPropertyDescriptor } from '../../models';
+import { Signal } from '@angular/core';
 
 export class NullPropertyDriver implements PropertyDisplayDriver {
-
-
-  display(activity: ActivityModel, property: ActivityPropertyDescriptor) {
+  display(activity: Signal<ActivityModel>, property: Signal<ActivityPropertyDescriptor>) {
     return undefined;
   }
 
-  update(activity: ActivityModel, property: ActivityPropertyDescriptor, form: FormData) {
-  }
-
+  update(activity: Signal<ActivityModel>, property: Signal<ActivityPropertyDescriptor>, form: FormData) {}
 }
-

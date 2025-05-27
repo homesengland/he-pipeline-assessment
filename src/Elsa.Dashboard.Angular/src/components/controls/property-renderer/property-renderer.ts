@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, OnInit, Signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor } from 'src/models';
 import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 
@@ -10,8 +10,8 @@ import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 })
 export class PropertyRenderer implements OnInit {
   @Input() driver: PropertyDisplayDriver;
-  @Input() activity: ActivityModel;
-  @Input() property: ActivityPropertyDescriptor;
+  @Input() activity: Signal<ActivityModel>;
+  @Input() property: Signal<ActivityPropertyDescriptor>;
   @Input() onUpdated: () => void;
   @Input() isEncypted: boolean;
 
@@ -29,6 +29,7 @@ export class PropertyRenderer implements OnInit {
     const componentInfo = this.driver.display(this.activity, this.property, this.onUpdated, this.isEncypted);
 
     const componentRef = this.container.createComponent(componentInfo.componentType);
+    console.log('Component created:', componentRef);
     Object.keys(componentInfo.inputs).forEach(key => {
       componentRef.instance[key] = componentInfo.inputs[key];
     });

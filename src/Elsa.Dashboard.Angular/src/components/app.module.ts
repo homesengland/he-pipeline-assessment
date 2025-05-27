@@ -67,5 +67,5 @@ import { SingleLineDriver } from '../drivers/single-line-driver';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {
-  constructor(private activityIconProviderPlugin: ActivityIconProviderPlugin) {}
+  constructor(private activityIconProviderPlugin: ActivityIconProviderPlugin, private singleLineDriver: SingleLineDriver) {}
 }

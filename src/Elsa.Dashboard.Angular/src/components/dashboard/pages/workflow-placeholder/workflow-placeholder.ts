@@ -44,6 +44,7 @@ export class WorkflowPlaceholder implements OnInit {
   constructor(store: Store, singleLineDriver: SingleLineDriver) {
     this.store = store;
     this.singleLineDriver = singleLineDriver;
+    console.log('single line driver', this.singleLineDriver);
     this.intellisenseGatherer = new IntellisenseService(this.store);
     this.activityModel.set(this.getSingleLineModel());
     this.propertyModel.set(this.getSingleLineDefinition());
@@ -124,7 +125,7 @@ export class WorkflowPlaceholder implements OnInit {
       name: 'Id',
       type: 'System.String',
       uiHint: 'single-line',
-      label: 'Text',
+      label: 'Test Label',
       hint: 'Test Hint',
       options: null,
       order: 0,

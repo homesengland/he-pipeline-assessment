@@ -2,6 +2,7 @@ import { ActivityModel, ActivityPropertyDescriptor, WorkflowStudio } from '../mo
 import { PropertyDisplayDriver } from './property-display-driver';
 import { NullPropertyDriver } from '../drivers/null-property-driver/null-property-driver';
 import { Map } from '../utils/utils';
+import { Signal } from '@angular/core';
 /*import { SecretModel, SecretPropertyDescriptor } from "../modules/credential-manager/models/secret.model";*/
 
 export type PropertyDisplayDriverMap = Map<(elsaStudio: WorkflowStudio) => PropertyDisplayDriver>;
@@ -22,13 +23,13 @@ export class PropertyDisplayManager {
     this.drivers[controlType] = driverFactory;
   }
 
-  display(model: ActivityModel /* | SecretModel*/, property: ActivityPropertyDescriptor /* | SecretPropertyDescriptor*/, onUpdated?: () => void, isEncrypted?: boolean) {
-    const driver = this.getDriver(property.uiHint);
+  display(model: Signal<ActivityModel>, property: Signal<ActivityPropertyDescriptor>, onUpdated?: () => void, isEncrypted?: boolean) {
+    const driver = this.getDriver(property().uiHint);
     return driver.display(model, property, onUpdated, isEncrypted);
   }
 
-  update(model: ActivityModel /* | SecretModel*/, property: ActivityPropertyDescriptor /*| SecretPropertyDescriptor*/, form: FormData) {
-    const driver = this.getDriver(property.uiHint);
+  update(model: Signal<ActivityModel>, property: Signal<ActivityPropertyDescriptor>, form: FormData) {
+    const driver = this.getDriver(property().uiHint);
     const update = driver.update;
 
     if (!update) return;

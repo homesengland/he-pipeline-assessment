@@ -1,7 +1,13 @@
+import { Signal, WritableSignal } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor } from '../models';
 
 export interface PropertyDisplayDriver {
-  display(model: ActivityModel, property: ActivityPropertyDescriptor, onUpdated?: () => void, isEncrypted?: boolean);
+  display(
+    model: Signal<ActivityModel> | WritableSignal<ActivityModel>,
+    property: Signal<ActivityPropertyDescriptor> | WritableSignal<ActivityPropertyDescriptor>,
+    onUpdated?: () => void,
+    isEncrypted?: boolean,
+  );
 
-  update?(model: ActivityModel, property: ActivityPropertyDescriptor, form: FormData);
+  update?(model: Signal<ActivityModel> | WritableSignal<ActivityModel>, property: Signal<ActivityPropertyDescriptor> | WritableSignal<ActivityPropertyDescriptor>, form: FormData);
 }
