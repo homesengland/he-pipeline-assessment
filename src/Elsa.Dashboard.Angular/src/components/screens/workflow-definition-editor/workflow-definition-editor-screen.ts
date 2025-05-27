@@ -530,10 +530,6 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
     };
   }
 
-  async onShowWorkflowSettingsClick() {
-    await eventBus.emit(EventTypes.ShowWorkflowSettings);
-  }
-
   async onDeleteClicked() {
     const result = await this.confirmDialog.show('DeleteConfirmationModel.Title', 'DeleteConfirmationModel.Message');
 
@@ -751,6 +747,10 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
               ${icon}
             </button>
           </div>`;
+  };
+
+  openWorkflowSettingsModal = async => {
+    console.log('showWorkflowSettingsClick');
   };
 
   get selectedActivities(): string[] {
