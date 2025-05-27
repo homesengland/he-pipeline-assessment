@@ -12,5 +12,6 @@ export class WorkflowSettingsButton {
 
   async onShowWorkflowSettingsClick() {
     await eventBus.emit(EventTypes.ShowWorkflowSettings);
+    console.log('Workflow settings button clicked');
   }
 }
