@@ -26,16 +26,15 @@ import { DesignerTree } from './designers/tree/designer-tree/designer-tree';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { ActivityIconProviderPlugin } from 'src/plugins/activity-icon-provider-plugin';
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
-import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
+// import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
 import { FlyoutPanelComponent } from './shared/flyout-panel/flyout-panel.component';
 import { TabHeaderComponent } from './shared/tab-header/tab-header.component';
 import { TabContentComponent } from './shared/tab-content/tab-content.component';
 import { WorkflowDefinitionEdit } from './dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
 import { WorkflowDefinitionEditorScreen } from './screens/workflow-definition-editor/workflow-definition-editor-screen';
-import {ActivityEditorModal} from './screens/workflow-definition-editor/activity-editor-modal/activity-editor-modal';
+import { ActivityEditorModal } from './screens/workflow-definition-editor/activity-editor-modal/activity-editor-modal';
 import { HttpClientModule } from '@angular/common/http';
-
 
 @NgModule({
   declarations: [
@@ -63,7 +62,7 @@ import { HttpClientModule } from '@angular/common/http';
     TabContentComponent,
     WorkflowDefinitionEdit,
     WorkflowDefinitionEditorScreen,
-    ActivityEditorModal
+    ActivityEditorModal,
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle, BrowserAnimationsModule],

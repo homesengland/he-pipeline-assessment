@@ -367,7 +367,6 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
   };
 
   onUpdateActivity = (activity: ActivityModel) => {
-
     const message = this.workflowTestActivityMessages.find(x => x.activityId === activity.activityId);
 
     if (message) {
@@ -609,7 +608,7 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
 
   onWorkflowChanged = async (e: WorkflowModel) => {
     this.workflowModel = e;
-  }
+  };
 
   async onRestartActivityButtonClick() {
     await eventBus.emit(EventTypes.WorkflowRestarted, this, this.selectedActivityId);
