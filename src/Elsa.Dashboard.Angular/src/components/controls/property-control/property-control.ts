@@ -4,7 +4,7 @@ import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 import { propertyDisplayManager } from 'src/services/property-display-manager';
 
 @Component({
-  selector: 'property-renderer',
+  selector: 'property-control',
   templateUrl: './property-control.html',
   styleUrls: ['./property-control.css'],
   standalone: false,
