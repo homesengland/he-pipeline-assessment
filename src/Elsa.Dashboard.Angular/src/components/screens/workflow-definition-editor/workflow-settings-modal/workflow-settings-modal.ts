@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { EventTypes, WorkflowContextFidelity, WorkflowContextOptions, WorkflowDefinition } from 'src/models';
 import { HTMLElsaMonacoElement, MonacoValueChangedArgs } from 'src/models/elsa-interfaces';
 import { eventBus } from 'src/services/event-bus';
@@ -37,7 +37,7 @@ export class WorkflowSettingsModal implements OnInit {
   onShowSettingsModal = async () => {
     this.isModalVisible = true;
     await this.dialog.show();
-  }
+  };
 
   closeModal() {
     this.dialog.hide();
@@ -86,19 +86,24 @@ export class WorkflowSettingsModal implements OnInit {
   //   this.workflowDefinitionInternal.variables = e.value;
   // }
 
-  renderSelectedTab() {
+  @ViewChild('settingsTab', { static: true }) settingsTab!: TemplateRef<any>;
+  @ViewChild('variablesTab', { static: true }) variablesTab!: TemplateRef<any>;
+  @ViewChild('workflowContextTab', { static: true }) workflowContextTab!: TemplateRef<any>;
+  @ViewChild('advancedTab', { static: true }) advancedTab!: TemplateRef<any>;
+
+  renderSelectedTab(): TemplateRef<any> {
     const selectedTab = this.selectedTab;
 
-    switch (selectedTab) {
+    switch (this.selectedTab) {
       case 'Workflow Context':
-        return this.renderWorkflowContextTab();
+        return this.workflowContextTab;
       case 'Variables':
-        return this.renderVariablesTab();
+        return this.variablesTab;
       case 'Advanced':
-        return this.renderAdvancedTab();
+        return this.advancedTab;
       case 'Settings':
       default:
-        return this.renderSettingsTab();
+        return this.settingsTab;
     }
   }
 
@@ -188,5 +193,6 @@ export class WorkflowSettingsModal implements OnInit {
     //     </div>
     //   </div>
     // );
+    return;
   }
 }

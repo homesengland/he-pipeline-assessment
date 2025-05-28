@@ -18,9 +18,7 @@
       </div>
 
       <!-- Render selected tab content -->
-      <ng-container *ngIf="renderSelectedTab() as selectedTabContent">
-        <ng-container [ngTemplateOutlet]="selectedTabContent"></ng-container>
-      </ng-container>
+      <ng-container [ngTemplateOutlet]="renderSelectedTab()"></ng-container>
 
       <div class="elsa-pt-5">
         <div class="elsa-bg-gray-50 elsa-px-4 elsa-py-3 sm:elsa-px-6 sm:elsa-flex sm:elsa-flex-row-reverse">
@@ -42,4 +40,28 @@
     </form>
   </div>
   <div slot="buttons"></div>
+
+  <!-- Workflow Context Tab -->
+  <ng-template #workflowContextTab>
+    <p>Workflow Context Tab Content</p>
+  </ng-template>
+  <!-- Variables Tab -->
+  <ng-template #variablesTab>
+    <p>Variables Tab Content</p>
+  </ng-template>
+  <!-- Advanced Tab -->
+  <ng-template #advancedTab>
+    <p>Advanced Tab Content</p>
+  </ng-template>
+  <!-- Settings Tab -->
+  <ng-template #settingsTab>
+    <p>Settings Tab Content</p>
+    <div class="elsa-flex elsa-px-8">
+      <div class="elsa-space-y-8 elsa-w-full">
+        <!-- {textInput(formContext, 'name', 'Name', workflowDefinition.name, 'The technical name of the workflow.', 'workflowName')}
+           {textInput(formContext, 'displayName', 'Display Name', workflowDefinition.displayName, 'A user-friendly display name of the workflow.', 'workflowDisplayName')}
+           {textArea(formContext, 'description', 'Description', workflowDefinition.description, null, 'workflowDescription')} -->
+      </div>
+    </div>
+  </ng-template>
 </modal-dialog>
