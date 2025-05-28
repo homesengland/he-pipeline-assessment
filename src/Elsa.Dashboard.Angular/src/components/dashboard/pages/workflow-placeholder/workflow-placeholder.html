@@ -1,4 +1,4 @@
 <monaco-editor [options]="options" [model]="model" [editorHeight]="'500px'"></monaco-editor>
-<div *ngFor="let property of activityProperties">
-  <property-renderer [activity]="activityModel" [property]="propertyDescriptor" [onUpdated]="" [isEncypted]="false"> </property-renderer>
+<div *ngFor="let activityProperty of activityProperties">
+    <property-renderer [activity]="activityModel" [property]="activityProperty" [onUpdated]="" [isEncypted]="false"> </property-renderer>
 </div>

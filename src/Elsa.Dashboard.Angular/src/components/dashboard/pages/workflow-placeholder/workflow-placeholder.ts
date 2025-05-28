@@ -1,5 +1,5 @@
 import { IntellisenseService } from '../../../../services/intellisense-service';
-import { Component, OnInit, signal, input } from '@angular/core';
+import { Component, OnInit, signal, input, Signal } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor, ActivityDefinitionProperty } from '../../../../models';
 import { Store } from '@ngrx/store';
 import { AppStateActionGroup } from '../../../../store/actions/app.state.actions';
@@ -38,7 +38,7 @@ export class WorkflowPlaceholder implements OnInit {
     value: this.jsonCode,
     language: 'typescript',
   };
-  activityProperties: ActivityPropertyDescriptor[] = [];
+  activityProperties: Signal<ActivityPropertyDescriptor>[] = [];
   singleLineDriver: SingleLineDriver;
 
   constructor(store: Store, singleLineDriver: SingleLineDriver) {
@@ -48,8 +48,9 @@ export class WorkflowPlaceholder implements OnInit {
     this.intellisenseGatherer = new IntellisenseService(this.store);
     this.activityModel.set(this.getSingleLineModel());
     this.propertyModel.set(this.getSingleLineDefinition());
+    const initialDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     this.propertyDescriptor.set(this.getSingleLineDescriptor());
-    this.activityProperties = [this.propertyDescriptor()];
+    this.activityProperties.push(initialDescriptor);
   }
 
   async ngOnInit() {
