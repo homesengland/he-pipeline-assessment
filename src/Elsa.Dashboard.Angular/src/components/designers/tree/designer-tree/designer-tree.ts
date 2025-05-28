@@ -205,7 +205,7 @@ export class DesignerTree implements OnChanges, OnInit {
     if (changes['model'] && this.model) {
       this.workflowModel = changes['model'].currentValue;
       this.updateWorkflowModel(this.workflowModel, false);
-      if (this.workflowModel.activities.length > 0) {
+      if (this.svg && this.inner && this.workflowModel.activities.length > 0) {
         this.svgD3Selected = d3.select(this.svg.nativeElement);
         this.innerD3Selected = d3.select(this.inner.nativeElement);
         this.componentWillRender();

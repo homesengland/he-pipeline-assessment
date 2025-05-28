@@ -173,8 +173,8 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
     const activityDescriptors = await client.activitiesApi.list();
     this.activityDescriptors = activityDescriptors;
     this.store.dispatch(
-      AppStateActionGroup.setActivityDefinitions({
-        activityDefinitions: this.activityDescriptors,
+      AppStateActionGroup.setActivityDescriptors({
+        activityDescriptors: this.activityDescriptors,
       }),
     );
   }

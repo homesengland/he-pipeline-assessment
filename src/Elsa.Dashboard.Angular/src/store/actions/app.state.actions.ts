@@ -12,7 +12,7 @@ export const AppStateActionGroup = createActionGroup({
     'Set JavaScript Type Definitions': props<{ javaScriptTypeDefinitions: string }>(),
     'Set Data Dictionary Intellisense': props<{ dataDictionaryIntellisense: string }>(),
     'Fetch JavaScript Type Definitions': null,
-    'Set Activity Definitions': props<{ activityDefinitions: Array<ActivityDescriptor> }>(),
+    'Set Activity Descriptors': props<{ activityDescriptors: Array<ActivityDescriptor> }>(),
     'Set Workflow Storage Descriptors': props<{ workflowStorageDescriptors: Array<WorkflowStorageDescriptor> }>(),
   },
   source: 'external sources in workflow-root',

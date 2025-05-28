@@ -186,8 +186,8 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
     this.activityDescriptors = await client.activitiesApi.list();
     this.store.dispatch(
-      AppStateActionGroup.setActivityDefinitions({
-        activityDefinitions: this.activityDescriptors,
+      AppStateActionGroup.setActivityDescriptors({
+        activityDescriptors: this.activityDescriptors,
       }),
     );
   }

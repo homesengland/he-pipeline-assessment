@@ -152,7 +152,7 @@ export class WorkflowRoot implements OnInit {
 
   setDataDictionary() {
     if (this.dataDictionaryJson != null) {
-      console.log("Setting Data Dictionary", this.dataDictionaryJson)
+      console.log('Setting Data Dictionary', this.dataDictionaryJson);
       this.dataDictionaryJson = JSON.stringify(this.dataDictionaryJson);
       this.dataDictionary = JSON.parse(this.dataDictionaryJson);
     }
