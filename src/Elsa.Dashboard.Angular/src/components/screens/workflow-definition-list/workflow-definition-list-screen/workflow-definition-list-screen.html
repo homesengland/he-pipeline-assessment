@@ -83,6 +83,6 @@
         </tr>
       </tbody>
     </table>
-    <workflow-pager [page]="currentPage" [pageSize]="currentPageSize" [totalCount]="totalCount" (paged)="onPaged($event)" />
+    <workflow-pager [page]="currentPage" [pageSize]="currentPageSize" [totalCount]="totalCount" (paged)="onPaged($any($event))" />
   </div>
 </div>

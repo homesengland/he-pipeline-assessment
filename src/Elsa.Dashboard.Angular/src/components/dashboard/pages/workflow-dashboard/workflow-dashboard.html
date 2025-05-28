@@ -6,15 +6,18 @@
 
                     <div class="elsa-flex-shrink-0">
                        <a [href]="basePath">
-                            <img class="elsa-h-8 elsa-w-8" [src]="logoSrc" alt="Workflow" /> 
-                       </a> 
+                            <img class="elsa-h-8 elsa-w-8" [src]="logoSrc" alt="Workflow" />
+                       </a>
                     </div>
                     <div class="elsa-ml-10 elsa-flex elsa-items-baseline elsa-space-x-4">
                         <a *ngFor="let item of menuItems" [routerLink]="[basePath, item[0]]" class="elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium">
                             {{ item[1]  }}
                         </a>
+                        <a [routerLink]="[basePath, placeholderItems[0][0], placeholderWorkflowId]" class="elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium">
+                          {{ placeholderItems[0][1]  }}
+                      </a>
                     </div>
-                    </div>  
+                    </div>
             </div>
         </div>
     </nav>

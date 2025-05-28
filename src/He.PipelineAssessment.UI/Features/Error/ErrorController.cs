@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using He.PipelineAssessment.UI.Features.Intervention.InterventionList;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.UI.Features.Error
@@ -6,10 +7,12 @@ namespace He.PipelineAssessment.UI.Features.Error
     public class ErrorController : Controller
     {
         private readonly IErrorHelper _errorHelper;
+        private readonly ILogger<ErrorController> _logger;
 
-        public ErrorController(IErrorHelper errorHelper)
+        public ErrorController(IErrorHelper errorHelper, ILogger<ErrorController> logger)
         {
             _errorHelper = errorHelper;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -22,6 +25,8 @@ namespace He.PipelineAssessment.UI.Features.Error
             }
 
             var errorMessage = $"An error occurred while processing your request {exception.Message}";
+
+            _logger.LogError(exception, errorMessage);
 
             return View("Index", exception);
         }

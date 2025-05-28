@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { ElsaClientService, ElsaClient } from '../../../../services/elsa-client';
 import { EventTypes, OrderBy, PagedList, WorkflowBlueprintSummary, WorkflowInstanceSummary, WorkflowStatus } from '../../../../models';
 import { Map, parseQuery } from '../../../../utils/utils';
-import { selectServerUrl, selectStoreConfig } from '../../../state/selectors/app.state.selectors';
+import { selectServerUrl, selectStoreConfig } from '../../../../store/selectors/app.state.selectors';
 import { eventBus } from '../../../../services/event-bus';
 import { confirmDialogService } from '../../../../services/confirm-dialog-service';
 import { DropdownButtonItem, DropdownButtonOrigin } from '../../../controls/workflow-dropdown-button/models';

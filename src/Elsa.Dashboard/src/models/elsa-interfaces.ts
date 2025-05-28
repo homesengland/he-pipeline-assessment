@@ -24,6 +24,7 @@ export interface ActivityDefinitionProperty {
   syntax?: string;
   expressions: Map<string>;
   value?: any;
+  type?: string;
 }
 
 export interface ActivityModel {

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, Host, ViewChild, ElementRef } from '@angular/core';
 import { ToastNotificationOptions } from '../../../models/toast'
 import { enter, leave, toggle } from 'el-transition';
 
@@ -6,6 +6,7 @@ import { enter, leave, toggle } from 'el-transition';
   selector: 'toast-notification',
   templateUrl: './toast-notification.html',
   styleUrls: ['./toast-notification.css'],
+  standalone: false,
 })
 export class ToastNotification implements OnInit {
 
@@ -13,7 +14,8 @@ export class ToastNotification implements OnInit {
   isVisible = signal(false);
   title? = signal(null);
   message? = signal(null);
-  toast: HTMLElement;
+  @ViewChild('toast') toast!: ElementRef<HTMLElement>;
+
 
   constructor() {
   }

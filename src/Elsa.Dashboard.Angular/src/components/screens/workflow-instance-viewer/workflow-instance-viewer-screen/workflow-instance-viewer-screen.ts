@@ -1,7 +1,7 @@
 import { Component, computed, effect, ElementRef, HostListener, Input, input, OnDestroy, OnInit, signal, viewChild, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { selectServerUrl } from '../../../state/selectors/app.state.selectors';
+import { selectServerUrl } from '../../../../store/selectors/app.state.selectors';
 import { Location } from '@angular/common';
 import {
   ActivityBlueprint,
@@ -20,12 +20,12 @@ import {
   WorkflowStatus,
   WorkflowStorageDescriptor,
 } from 'src/models';
-import { ActivityStats, ActivityEventCount } from 'src/services/workflow-client';
+import { ActivityStats, ActivityEventCount } from '../../../../services/workflow-client';
 import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from 'src/components/designers/tree/models';
-import { ElsaClientService } from 'src/services/elsa-client';
+import { ElsaClientService } from '../../../..//services/elsa-client';
 import * as collection from 'lodash/collection';
-import { featuresDataManager } from 'src/services/features-data-manager';
-import { AppStateActionGroup } from 'src/components/state/actions/app.state.actions';
+import { featuresDataManager } from '../../../../services/features-data-manager';
+import { AppStateActionGroup } from '../../../../store/actions/app.state.actions';
 
 @Component({
   selector: 'workflow-instance-viewer-screen',
@@ -152,7 +152,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
 
   private setVariablesFromAppState(): void {
     this.store.select(selectServerUrl).subscribe(data => {
-      this.serverUrl = data;
+      this.serverUrl = data as string;
     });
   }
 
@@ -186,8 +186,8 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
     this.activityDescriptors = await client.activitiesApi.list();
     this.store.dispatch(
-      AppStateActionGroup.setActivityDefinitions({
-        activityDefinitions: this.activityDescriptors,
+      AppStateActionGroup.setActivityDescriptors({
+        activityDescriptors: this.activityDescriptors,
       }),
     );
   }
@@ -269,18 +269,17 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     this.selectedActivityId = activity != null ? (activity.parentId != null ? activity.parentId : activity.id) : null;
   }
 
-  async onActivitySelected(e: ActivityModel) {
+  onActivitySelected = async (e: ActivityModel) => {
     this.selectedActivityId = e.activityId;
-    // await this.journal.selectActivityRecord(this.selectedActivityId);
-  }
+  };
 
-  async onActivityDeselected(e: ActivityModel) {
+  onActivityDeselected = async (e: ActivityModel) => {
     if (this.selectedActivityId == e.activityId) this.selectedActivityId = null;
 
     // await this.journal.selectActivityRecord(this.selectedActivityId);
-  }
+  };
 
-  async onActivityContextMenuButtonClicked(e: ActivityContextMenuState) {
+  onActivityContextMenuButtonClicked = async (e: ActivityContextMenuState) => {
     this.activityContextMenuState = e;
     this.activityStats = null;
 
@@ -290,7 +289,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
 
     const elsaClient = await this.elsaClientService.createElsaClient(this.serverUrl);
     this.activityStats = await elsaClient.activityStatsApi.get(this.workflowInstanceId, e.activity.activityId);
-  }
+  };
 
   getActivityBorderColor = (activity: ActivityModel): string => {
     const workflowInstance = this.workflowInstance;
