@@ -27,8 +27,22 @@ export class WorkflowSettingsModal implements OnInit {
   selectedTab: string = 'Settings';
   inactiveClass = 'elsa-border-transparent elsa-text-gray-500 hover:elsa-text-gray-700 hover:elsa-border-gray-300';
   selectedClass = 'elsa-border-blue-500 elsa-text-blue-600';
+  isModalVisible = false;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isModalVisible = false;
+    eventBus.on(EventTypes.ShowWorkflowSettings, this.onShowSettingsModal);
+  }
+
+  onShowSettingsModal = async () => {
+    this.isModalVisible = true;
+    await this.dialog.show();
+  }
+
+  closeModal() {
+    this.dialog.hide();
+    this.isModalVisible = false;
+  }
 
   // @Watch('workflowDefinition')
   // handleWorkflowDefinitionChanged(newValue: WorkflowDefinition) {

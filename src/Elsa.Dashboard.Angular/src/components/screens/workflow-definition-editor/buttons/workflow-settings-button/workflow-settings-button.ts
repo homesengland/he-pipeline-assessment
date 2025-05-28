@@ -8,10 +8,8 @@ import { eventBus } from 'src/services/event-bus';
   standalone: false,
 })
 export class WorkflowSettingsButton {
-  @Output() showWorkflowSettingsClick = new EventEmitter<void>();
 
   async onShowWorkflowSettingsClick() {
     await eventBus.emit(EventTypes.ShowWorkflowSettings);
-    console.log('Workflow settings button clicked');
   }
 }
