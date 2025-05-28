@@ -57,11 +57,7 @@
   <ng-template #settingsTab>
     <p>Settings Tab Content</p>
     <div class="elsa-flex elsa-px-8">
-      <div class="elsa-space-y-8 elsa-w-full">
-        <!-- {textInput(formContext, 'name', 'Name', workflowDefinition.name, 'The technical name of the workflow.', 'workflowName')}
-           {textInput(formContext, 'displayName', 'Display Name', workflowDefinition.displayName, 'A user-friendly display name of the workflow.', 'workflowDisplayName')}
-           {textArea(formContext, 'description', 'Description', workflowDefinition.description, null, 'workflowDescription')} -->
-      </div>
+      <div class="elsa-space-y-8 elsa-w-full">{{renderSettingsTab()}}</div>
     </div>
   </ng-template>
 </modal-dialog>
