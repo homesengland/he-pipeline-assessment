@@ -16,4 +16,4 @@ export const selectJavaScriptTypeDefinitionsFetchStatus = createSelector(getAppS
 
 export const selectDataDictionaryIntellisense = createSelector(getAppState, state => state.dataDictionaryIntellisense);
 
-export const selectActivityDefinitions = createSelector(getAppState, state => state.activityDefinitions);
+export const selectActivityDefinitions = createSelector(getAppState, state => state.activityDescriptors);

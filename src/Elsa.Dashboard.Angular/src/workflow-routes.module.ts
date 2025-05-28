@@ -7,8 +7,8 @@ import { WorkflowRegistry } from './components/dashboard/pages/workflow-registry
 import { WorkflowHome } from './components/dashboard/pages/workflow-home/workflow-home';
 import { WorkflowInstancesView } from './components/dashboard/pages/workflow-instances-view/workflow-instances-view';
 import { WorkflowBlueprintView } from './components/dashboard/pages/workflow-blueprint-view/workflow-blueprint-view';
-import { WorkflowDefinitionsView } from './components/dashboard/pages/workflow-definitions-view/workflow-definitions-view';
-import {WorkflowPlaceholder} from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
+import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
+import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
 
 const routes: Routes = [
   {
@@ -33,17 +33,16 @@ const routes: Routes = [
   },
   {
     path: 'workflow-definitions/:id',
-    component: WorkflowDefinitionsView,
+    component: WorkflowDefinitionEdit,
   },
   {
     path: 'workflow-registry/:id',
-    component: WorkflowBlueprintView
+    component: WorkflowBlueprintView,
   },
   {
     path: 'workflow-placeholder/:id',
-    component: WorkflowPlaceholder
-  }
-
+    component: WorkflowPlaceholder,
+  },
 ];
 
-export const routing = RouterModule.forRoot(routes, {bindToComponentInputs: true});
+export const routing = RouterModule.forRoot(routes, { bindToComponentInputs: true });

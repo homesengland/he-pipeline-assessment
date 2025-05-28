@@ -39,6 +39,10 @@ import { FlyoutPanelComponent } from './components/shared/flyout-panel/flyout-pa
 import { TabHeaderComponent } from './components/shared/tab-header/tab-header.component';
 import { TabContentComponent } from './components/shared/tab-content/tab-content.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { WorkflowDefinitionEditorScreen } from './components/screens/workflow-definition-editor/workflow-definition-editor-screen/workflow-definition-editor-screen';
+import { DesignerTree } from './components/designers/tree/designer-tree/designer-tree';
+import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
+import { PluginManager } from './services/plugin-manager';
 import { PropertyRenderer } from './components/controls/property-renderer/property-renderer';
 
 @NgModule({
@@ -69,6 +73,10 @@ import { PropertyRenderer } from './components/controls/property-renderer/proper
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,
     TabHeaderComponent,
+    TabContentComponent,
+    WorkflowDefinitionEditorScreen,
+    DesignerTree,
+    WorkflowDefinitionEdit,
     TabContentComponent,
     PropertyRenderer,
     SingleLineProperty,

@@ -14,7 +14,7 @@ import {
 import { eventBus } from '../../../../services/event-bus';
 import * as d3 from 'd3';
 import dagreD3 from 'dagre-d3';
-import { selectActivityDefinitions } from '../../../state/selectors/app.state.selectors';
+import { selectActivityDefinitions } from 'src/store/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
 import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from '../models';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -128,6 +128,18 @@ export class DesignerTree implements OnChanges, OnInit {
     eventBus.on(EventTypes.WorkflowExecuted, this.onWorkflowExecuted);
   }
 
+  ngAfterViewInit(): void {
+    // Now the ViewChild references should be available
+    if (this.svg && this.inner && this.workflowModel?.activities?.length > 0) {
+      // Set up D3 selections now that elements exist
+      this.svgD3Selected = d3.select(this.svg.nativeElement);
+      this.innerD3Selected = d3.select(this.inner.nativeElement);
+
+      // Render the workflow model
+      this.componentWillRender();
+    }
+  }
+
   ngOnDestroy(): void {
     // Clean up D3 event handlers
     eventBus.detach(EventTypes.ActivityPicked, this.onActivityPicked);
@@ -193,7 +205,7 @@ export class DesignerTree implements OnChanges, OnInit {
     if (changes['model'] && this.model) {
       this.workflowModel = changes['model'].currentValue;
       this.updateWorkflowModel(this.workflowModel, false);
-      if (this.workflowModel.activities.length > 0) {
+      if (this.svg && this.inner && this.workflowModel.activities.length > 0) {
         this.svgD3Selected = d3.select(this.svg.nativeElement);
         this.innerD3Selected = d3.select(this.inner.nativeElement);
         this.componentWillRender();
