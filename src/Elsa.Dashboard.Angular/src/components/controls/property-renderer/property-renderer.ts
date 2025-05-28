@@ -1,6 +1,7 @@
 import { Component, ComponentFactoryResolver, Input, OnInit, Signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor } from 'src/models';
 import { PropertyDisplayDriver } from 'src/services/property-display-driver';
+import { propertyDisplayManager } from 'src/services/property-display-manager';
 
 @Component({
   selector: 'property-renderer',
@@ -9,7 +10,6 @@ import { PropertyDisplayDriver } from 'src/services/property-display-driver';
   standalone: false,
 })
 export class PropertyRenderer implements OnInit {
-  @Input() driver: PropertyDisplayDriver;
   @Input() activity: Signal<ActivityModel>;
   @Input() property: Signal<ActivityPropertyDescriptor>;
   @Input() onUpdated: () => void;
@@ -25,8 +25,7 @@ export class PropertyRenderer implements OnInit {
 
   renderComponent() {
     this.container.clear();
-
-    const componentInfo = this.driver.display(this.activity, this.property, this.onUpdated, this.isEncypted);
+    const componentInfo = propertyDisplayManager.display(this.activity, this.property, this.onUpdated, this.isEncypted);
 
     const componentRef = this.container.createComponent(componentInfo.componentType);
     console.log('Component created:', componentRef);

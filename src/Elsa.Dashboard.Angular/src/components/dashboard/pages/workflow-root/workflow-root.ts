@@ -87,6 +87,8 @@ export class WorkflowRoot implements OnInit {
     pluginManager.initialize(workflowStudio, auth0Options);
     await eventBus.emit(EventTypes.Root.Initializing);
 
+    propertyDisplayManager.initialize(workflowStudio);
+
     featuresDataManager.initialize(workflowStudio);
   }
 
@@ -152,7 +154,7 @@ export class WorkflowRoot implements OnInit {
 
   setDataDictionary() {
     if (this.dataDictionaryJson != null) {
-      console.log("Setting Data Dictionary", this.dataDictionaryJson)
+      console.log('Setting Data Dictionary', this.dataDictionaryJson);
       this.dataDictionaryJson = JSON.stringify(this.dataDictionaryJson);
       this.dataDictionary = JSON.parse(this.dataDictionaryJson);
     }
