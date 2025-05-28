@@ -1,6 +1,5 @@
 import { Component, ComponentFactoryResolver, Input, OnInit, Signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor } from 'src/models';
-import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 import { propertyDisplayManager } from 'src/services/property-display-manager';
 
 @Component({

@@ -3,10 +3,7 @@ import { Component, OnInit, signal, input, Signal } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor, ActivityDefinitionProperty } from '../../../../models';
 import { Store } from '@ngrx/store';
 import { AppStateActionGroup } from '../../../../store/actions/app.state.actions';
-import { SingleLineProperty } from 'src/components/editors/properties/single-line-property/single-line-property';
 import { EditorModel } from 'src/components/monaco/types';
-import { SingleLineDriver } from 'src/drivers/single-line-driver';
-import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 
 @Component({
   selector: 'workflow-placeholder',
@@ -39,12 +36,9 @@ export class WorkflowPlaceholder implements OnInit {
     language: 'typescript',
   };
   activityProperties: Signal<ActivityPropertyDescriptor>[] = [];
-  singleLineDriver: SingleLineDriver;
 
-  constructor(store: Store, singleLineDriver: SingleLineDriver) {
+  constructor(store: Store) {
     this.store = store;
-    this.singleLineDriver = singleLineDriver;
-    console.log('single line driver', this.singleLineDriver);
     this.intellisenseGatherer = new IntellisenseService(this.store);
     this.activityModel.set(this.getSingleLineModel());
     this.propertyModel.set(this.getSingleLineDefinition());
