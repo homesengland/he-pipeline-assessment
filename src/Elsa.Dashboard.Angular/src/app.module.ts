@@ -8,7 +8,7 @@ import { WorkflowInstancesList } from './components/dashboard/pages/workflow-ins
 import { WorkflowHome } from './components/dashboard/pages/workflow-home/workflow-home';
 import { WorkflowRegistry } from './components/dashboard/pages/workflow-registry/workflow-registry';
 import { WorkflowInstanceListScreen } from './components/screens/workflow-instance-list/workflow-instance-list-screen/workflow-instance-list-screen';
-import { routing } from './workflow-routes.module'
+import { routing } from './workflow-routes.module';
 import { AppStateModule } from './store/app.state.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -40,6 +40,10 @@ import { FlyoutPanelComponent } from './components/shared/flyout-panel/flyout-pa
 import { TabHeaderComponent } from './components/shared/tab-header/tab-header.component';
 import { TabContentComponent } from './components/shared/tab-content/tab-content.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { WorkflowDefinitionEditorScreen } from './components/screens/workflow-definition-editor/workflow-definition-editor-screen/workflow-definition-editor-screen';
+import { DesignerTree } from './components/designers/tree/designer-tree/designer-tree';
+import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
+import { PluginManager } from './services/plugin-manager';
 
 @NgModule({
   declarations: [
@@ -70,7 +74,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,
     TabHeaderComponent,
-    TabContentComponent
+    TabContentComponent,
+    WorkflowDefinitionEditorScreen,
+    DesignerTree,
+    WorkflowDefinitionEdit,
   ],
   imports: [
     BrowserModule,
@@ -81,13 +88,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     RouterOutlet,
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
-  providers:[
-    IntellisenseService,
-    provideHttpClient(),
-    provideMonacoEditor(monacoConfig)
-  ],
+  providers: [IntellisenseService, provideHttpClient(), provideMonacoEditor(monacoConfig)],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

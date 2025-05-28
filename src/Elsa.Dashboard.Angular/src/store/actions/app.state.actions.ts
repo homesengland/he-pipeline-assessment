@@ -1,7 +1,7 @@
 import { createActionGroup, props } from '@ngrx/store';
 import { StoreConfig } from '../../models/store-config';
 import { DataDictionaryGroup } from '../../models/custom-component-models';
-import { ActivityDefinition, ActivityDescriptor } from '../../models/domain';
+import { ActivityDefinition, ActivityDescriptor, WorkflowStorageDescriptor } from '../../models/domain';
 
 export const AppStateActionGroup = createActionGroup({
   events: {
@@ -13,6 +13,7 @@ export const AppStateActionGroup = createActionGroup({
     'Set Data Dictionary Intellisense': props<{ dataDictionaryIntellisense: string }>(),
     'Fetch JavaScript Type Definitions': null,
     'Set Activity Definitions': props<{ activityDefinitions: Array<ActivityDescriptor> }>(),
+    'Set Workflow Storage Descriptors': props<{ workflowStorageDescriptors: Array<WorkflowStorageDescriptor> }>(),
   },
   source: 'external sources in workflow-root',
 });

@@ -26,10 +26,10 @@ import { eventBus } from 'src/services/event-bus';
 import { ElsaClientService } from 'src/services/elsa-client';
 import { downloadFromBlob } from 'src/utils/download';
 import { Location } from '@angular/common';
-import { AppStateActionGroup } from 'src/components/state/actions/app.state.actions';
+import { AppStateActionGroup } from 'src/store/actions/app.state.actions';
 import { Store } from '@ngrx/store';
 import { featuresDataManager } from 'src/services/features-data-manager';
-import { selectServerUrl } from 'src/components/state/selectors/app.state.selectors';
+import { selectServerUrl } from 'src/store/selectors/app.state.selectors';
 
 @Component({
   selector: 'workflow-definition-editor-screen',
@@ -42,6 +42,7 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
   @Output() workflowSaved: EventEmitter<WorkflowDefinition>;
   @Input() workflowDefinitionId: string;
   serverUrl: string;
+  // @Input() monacoLibPath: string;
   // @Input() features: string;
   basePath: string;
   // @Input() serverFeatures: Array<string> = [];
@@ -603,6 +604,10 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
 
   onActivityDeselected = async (e: ActivityModel) => {
     if (this.selectedActivityId == e.activityId) this.selectedActivityId = null;
+  };
+
+  onWorkflowChanged = async (e: WorkflowModel) => {
+    this.workflowModel = e;
   };
 
   async onRestartActivityButtonClick() {

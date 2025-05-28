@@ -174,7 +174,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    if (!this.designerTree) {
+    if (this.designerTree) {
       const designerTreeElement = this.designerTree().nativeElement;
       if (designerTreeElement) {
         designerTreeElement.model = this.workflowModel;
@@ -269,20 +269,17 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
     this.selectedActivityId = activity != null ? (activity.parentId != null ? activity.parentId : activity.id) : null;
   }
 
-  async onActivitySelected(e: Event) {
-    const customEvent = e as CustomEvent<ActivityModel>;
-    this.selectedActivityId = customEvent.detail.activityId;
-    // await this.journal.selectActivityRecord(this.selectedActivityId);
-  }
+  onActivitySelected = async (e: ActivityModel) => {
+    this.selectedActivityId = e.activityId;
+  };
 
-  async onActivityDeselected(e: Event) {
-    const customEvent = e as CustomEvent<ActivityModel>;
-    if (this.selectedActivityId == customEvent.detail.activityId) this.selectedActivityId = null;
+  onActivityDeselected = async (e: ActivityModel) => {
+    if (this.selectedActivityId == e.activityId) this.selectedActivityId = null;
 
     // await this.journal.selectActivityRecord(this.selectedActivityId);
-  }
+  };
 
-  async onActivityContextMenuButtonClicked(e: ActivityContextMenuState) {
+  onActivityContextMenuButtonClicked = async (e: ActivityContextMenuState) => {
     this.activityContextMenuState = e;
     this.activityStats = null;
 
@@ -292,7 +289,7 @@ export class WorkflowInstanceViewerScreen implements OnInit, OnDestroy {
 
     const elsaClient = await this.elsaClientService.createElsaClient(this.serverUrl);
     this.activityStats = await elsaClient.activityStatsApi.get(this.workflowInstanceId, e.activity.activityId);
-  }
+  };
 
   getActivityBorderColor = (activity: ActivityModel): string => {
     const workflowInstance = this.workflowInstance;
