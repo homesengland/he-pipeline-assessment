@@ -40,11 +40,6 @@ export class ExpressionEditor implements OnInit {
 
   async ngOnInit() {
     this.intellisenseGatherer = new IntellisenseService(this.store);
-    //let libSource: string = selectJavaScriptTypeDefinitions(this.store);
-    //const libUri = Uri.LibUri;
-
-    //await this.monacoEditor.addJavaScriptLib(libSource, libUri);
-    //this.setExpression(this.expression());
   }
 
   async ngAfterViewInit() {
@@ -112,13 +107,11 @@ export class ExpressionEditor implements OnInit {
 
   async onMonacoValueChanged(e: MonacoValueChangedArgs) {
     this.expression.set(e.value);
-    /* await this.expressionChanged.emit(e.value);*/
+    await this.expressionChanged.emit(e.value);
   }
 
   async onMonacoInit(e: MonacoValueChangedArgs) {
     const libUri = Uri.LibUri;
-    console.log('libsource', this.libSource);
-    console.log('Element', this.monacoEditor);
     await this.monacoEditor.addJavaScriptLib(this.libSource(), libUri);
     this.setExpression(this.expression());
   }

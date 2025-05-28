@@ -30,7 +30,7 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
   expressionChanged = output<string>();
 
   selectedSyntax = signal<string | undefined>(undefined);
-  currentValue?: Signal<string>;
+  currentValue?: string;
 
   defaultSyntaxValue: string;
   monacoLanguage;
@@ -52,15 +52,17 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
     this.selectedSyntax.set(this.syntax());
     this.fieldId = computed(() => this.propertyName() || '');
     this.fieldLabel = computed(() => this.label() || this.fieldId());
-    this.currentValue = computed(() => {
-      const expressionsMap = this.expressions();
-      const syntaxKey = this.selectedSyntax() || this.defaultSyntax();
-      return expressionsMap[syntaxKey] || '';
-    });
+    this.currentValue = this.getCurrentValue();
     this.expressionEditorClass = computed(() => (this.selectedSyntax() ? 'block' : 'hidden'));
     this.defaultEditorClass = computed<string>(() => (this.selectedSyntax() ? 'hidden' : 'block'));
     this.advancedButtonClass = computed(() => (this.selectedSyntax() ? 'elsa-text-blue-500' : 'elsa-text-gray-300'));
     this.monacoLanguage = computed(() => mapSyntaxToLanguage(this.selectedSyntax()));
+  }
+
+  private getCurrentValue() {
+    const expressionsMap = this.expressions();
+    const syntaxKey = this.selectedSyntax() || this.defaultSyntax();
+    return expressionsMap[syntaxKey] || '';
   }
 
   ngOnChanges() {}
@@ -98,9 +100,9 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
     this.selectedSyntax.set(syntax);
     this.syntaxChanged.emit(syntax);
 
-    //this.currentValue = this.expressions[syntax ? syntax : this.defaultSyntax || SyntaxNames.Literal];
-    if (this.currentValue) {
-      await this.expressionEditor.setExpression(this.currentValue());
+    this.currentValue = this.getCurrentValue();
+    if (this.currentValue !== null && this.currentValue !== undefined) {
+      await this.expressionEditor.setExpression(this.currentValue);
     }
     this.closeContextMenu();
   };
@@ -110,8 +112,7 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
     this.toggleContextMenu();
   }
 
-  onExpressionChanged(e: CustomEvent<string>) {
-    const expression = e.detail;
+  onExpressionChanged(expression: string) {
     if (expression) {
       const syntaxKey = this.selectedSyntax() || this.defaultSyntax();
 

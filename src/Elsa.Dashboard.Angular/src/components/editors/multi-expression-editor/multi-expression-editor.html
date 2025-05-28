@@ -75,11 +75,12 @@ elsa-text-sm " + advancedButtonClass();
     <div [class]="expressionEditorClass()">
       <expression-editor
         #expressionEditorRef
-        [expression]="currentValue()"
+        [expression]="currentValue"
         [language]="monacoLanguage()"
         [editorHeight]="editorHeight()"
         [singleLineMode]="singleLineMode()"
         [context]="context()"
+        (expressionChanged)="onExpressionChanged($event)"
       ></expression-editor>
     </div>
     <div class="{{defaultEditorClass()}}">

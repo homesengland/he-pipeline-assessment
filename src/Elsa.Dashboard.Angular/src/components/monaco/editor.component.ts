@@ -109,7 +109,7 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
       // value is not propagated to parent when executing outside zone.
       this.zone.run(() => {
         let args: MonacoValueChangedArgs = {
-          value: this._value,
+          value: value,
           markers: monaco.editor.getModelMarkers({ resource: this._editor.getModel().uri }),
         };
         this.propagateChange.emit(args);
