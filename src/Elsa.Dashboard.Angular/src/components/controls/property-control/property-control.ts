@@ -5,11 +5,11 @@ import { propertyDisplayManager } from 'src/services/property-display-manager';
 
 @Component({
   selector: 'property-renderer',
-  templateUrl: './property-renderer.html',
-  styleUrls: ['./property-renderer.css'],
+  templateUrl: './property-control.html',
+  styleUrls: ['./property-control.css'],
   standalone: false,
 })
-export class PropertyRenderer implements OnInit {
+export class PropertyControl implements OnInit {
   @Input() activity: Signal<ActivityModel>;
   @Input() property: Signal<ActivityPropertyDescriptor>;
   @Input() onUpdated: () => void;

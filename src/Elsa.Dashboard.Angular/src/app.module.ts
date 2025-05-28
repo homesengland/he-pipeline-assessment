@@ -43,7 +43,7 @@ import { WorkflowDefinitionEditorScreen } from './components/screens/workflow-de
 import { DesignerTree } from './components/designers/tree/designer-tree/designer-tree';
 import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
 import { PluginManager } from './services/plugin-manager';
-import { PropertyRenderer } from './components/controls/property-renderer/property-renderer';
+import { PropertyControl } from './components/controls/property-control/property-control';
 
 @NgModule({
   declarations: [
@@ -78,7 +78,7 @@ import { PropertyRenderer } from './components/controls/property-renderer/proper
     DesignerTree,
     WorkflowDefinitionEdit,
     TabContentComponent,
-    PropertyRenderer,
+    PropertyControl,
     SingleLineProperty,
   ],
   imports: [
