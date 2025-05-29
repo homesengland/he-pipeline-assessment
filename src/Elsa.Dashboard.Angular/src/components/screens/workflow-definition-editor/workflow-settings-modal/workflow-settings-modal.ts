@@ -4,7 +4,6 @@ import { HTMLElsaMonacoElement, MonacoValueChangedArgs } from 'src/models/elsa-i
 import { eventBus } from 'src/services/event-bus';
 import { ModalDialog } from 'src/components/shared/modal-dialog/modal-dialog';
 import { FormContext } from 'src/Utils/forms';
-import { textInput } from 'src/Utils/forms';
 import { ElsaClientService } from 'src/services/elsa-client';
 
 interface VariableDefinition {
@@ -23,8 +22,6 @@ export class WorkflowSettingsModal implements OnInit {
   serverUrl: string;
   // workflowDefinition: WorkflowDefinition;
   workflowDefinitionInternal: WorkflowDefinition;
-  workflowDefinitionId: string;
-
   newVariable: VariableDefinition = {};
   monacoEditor: HTMLElsaMonacoElement; // ?? Not sure if this is correct
   formContext: FormContext;
@@ -43,6 +40,7 @@ export class WorkflowSettingsModal implements OnInit {
 
   ngOnInit(): void {
     this.isModalVisible = false;
+    this.workflowDefinitionInternal = this.workflowDefinition;
     eventBus.on(EventTypes.ShowWorkflowSettings, this.onShowSettingsModal);
   }
 
@@ -57,8 +55,8 @@ export class WorkflowSettingsModal implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['WorkflowDefinition'] && changes['WorkflowDefinition'].currentValue) {
-      this.handleWorkflowDefinitionChanged(changes['WorkflowDefinition'].currentValue);
+    if (changes['WorkflowDefinitionInternal'] && changes['WorkflowDefinitionInternal'].currentValue) {
+      this.handleWorkflowDefinitionChanged(changes['WorkflowDefinitionInternal'].currentValue);
     }
   }
 
@@ -137,18 +135,18 @@ export class WorkflowSettingsModal implements OnInit {
     }
   }
 
-  renderSettingsTab() {
-    const workflowDefinition = this.workflowDefinition;
-    const formContext = this.formContext;
+  // renderSettingsTab() {
+  //   const workflowDefinition = this.workflowDefinitionInternal;
+  //   const formContext = this.formContext;
 
-    console.log('renderSettingsTab');
+  //   console.log('renderSettingsTab');
 
-    return textInput(formContext, 'name', 'Name', workflowDefinition.id, 'The technical name of the workflow.', 'workflowName');
+  //   return textInput(formContext, 'name', 'Name', workflowDefinition.id, 'The technical name of the workflow.', 'workflowName');
 
-    // {textInput(formContext, 'name', 'Name', workflowDefinition.name, 'The technical name of the workflow.', 'workflowName')
-    // {textInput(formContext, 'displayName', 'Display Name', workflowDefinition.displayName, 'A user-friendly display name of the workflow.', 'workflowDisplayName')}
-    // {textArea(formContext, 'description', 'Description', workflowDefinition.description, null, 'workflowDescription')}
-  }
+  //   // {textInput(formContext, 'name', 'Name', workflowDefinition.name, 'The technical name of the workflow.', 'workflowName')
+  //   // {textInput(formContext, 'displayName', 'Display Name', workflowDefinition.displayName, 'A user-friendly display name of the workflow.', 'workflowDisplayName')}
+  //   // {textArea(formContext, 'description', 'Description', workflowDefinition.description, null, 'workflowDescription')}
+  // }
 
   renderAdvancedTab() {
     const workflowDefinition = this.workflowDefinitionInternal;

@@ -26,7 +26,6 @@ import { DesignerTree } from './designers/tree/designer-tree/designer-tree';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { ActivityIconProviderPlugin } from 'src/plugins/activity-icon-provider-plugin';
 import { WorkflowDefinitionListScreen } from './screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
-// import { WorkflowDefinitionsView } from './dashboard/pages/workflow-definitions-view/workflow-definitions-view';
 import { WorkflowInstanceJournalComponent } from './screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
 import { FlyoutPanelComponent } from './shared/flyout-panel/flyout-panel.component';
 import { TabHeaderComponent } from './shared/tab-header/tab-header.component';
@@ -37,6 +36,11 @@ import { ActivityEditorModal } from './screens/workflow-definition-editor/activi
 import { HttpClientModule } from '@angular/common/http';
 import { WorkflowSettingsButton } from './screens/workflow-definition-editor/buttons/workflow-settings-button/workflow-settings-button';
 import { WorkflowSettingsModal } from './screens/workflow-definition-editor/workflow-settings-modal/workflow-settings-modal';
+import { FormTextInputComponent } from 'src/Utils/form-controls/form-text-input/form-text-input.component';
+import { FormCheckBoxComponent } from 'src/Utils/form-controls/form-check-box/form-check-box.component';
+import { FormSectionComponent } from 'src/Utils/form-controls/form-section/form-section.component';
+import { FormSelectFieldComponent } from 'src/Utils/form-controls/form-select-field/form-select-field.component';
+import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/form-text-area.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +71,11 @@ import { WorkflowSettingsModal } from './screens/workflow-definition-editor/work
     ActivityEditorModal,
     WorkflowSettingsButton,
     WorkflowSettingsModal,
+    FormTextInputComponent,
+    FormCheckBoxComponent,
+    FormSectionComponent,
+    FormSelectFieldComponent,
+    FormTextAreaComponent,
   ],
 
   imports: [BrowserModule, HttpClientModule, routing, AppStateModule, ReactiveFormsModule, RouterModule, RouterOutlet, CommonModule, NgStyle, BrowserAnimationsModule],
