@@ -88,12 +88,13 @@ export class WorkflowPlaceholder implements OnInit {
       displayName: 'Test Single Line',
       description: 'A Stub activity to display a single line property',
       outcomes: ['Done'],
-      properties: undefined,
+      properties: [],
       persistWorkflow: true,
       loadWorkflowContext: undefined,
       saveWorkflowContext: undefined,
       propertyStorageProviders: undefined,
     };
+    model.properties.push(this.getSingleLineDefinition());
     return model;
   }
 
@@ -101,10 +102,10 @@ export class WorkflowPlaceholder implements OnInit {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
       value: 'string',
-      name: 'Test',
+      name: 'TestSingleLine',
       expressions: {
-        Literal: '1',
-        Javascript: '',
+        Literal: '123',
+        JavaScript: 'console.log("Hello World")',
       },
       type: '',
     };
@@ -117,7 +118,7 @@ export class WorkflowPlaceholder implements OnInit {
       expectedOutputType: 'string',
       hasNestedProperties: false,
       hasColletedProperties: false,
-      name: 'Id',
+      name: 'TestSingleLine',
       type: 'System.String',
       uiHint: 'single-line',
       label: 'Test Label',

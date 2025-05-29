@@ -49,6 +49,9 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
 
   @Input('model')
   set model(model: EditorModel) {
+    if(model.value == null || model.value == undefined){
+      model.value = '';
+    }
     this.options.model = model;
     if (this._editor) {
       this._editor.dispose();

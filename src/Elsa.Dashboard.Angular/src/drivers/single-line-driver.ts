@@ -13,10 +13,13 @@ export class SingleLineDriver implements PropertyDisplayDriver {
   }
 
   display(model: Signal<ActivityModel>, property: Signal<ActivityPropertyDescriptor>, onUpdated?: () => void, isEncrypted?: boolean) {
+    console.log("Single Line Driver Setup");
+    console.log("Activity Model", model());
+    console.log("Property Model", property());
     const propertyModel = getOrCreateProperty(model(), property().name);
     const propertyModelSignal = signal<ActivityDefinitionProperty>(propertyModel);
 
-    console.log('property model', propertyModel);
+    console.log('property model for Single Line Driver', propertyModel);
     return {
       componentType: SingleLineProperty,
       inputs: {

@@ -1,4 +1,4 @@
-﻿import { Component, computed, model, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
+import { Component, computed, model, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
@@ -14,11 +14,15 @@ export class SingleLineProperty {
   propertyModel = model<ActivityDefinitionProperty>();
   defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
   isEncypted = model<boolean>(false);
-  currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax()] || undefined);
+  currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax()] || '');
 
   fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');
   fieldName = computed(() => this.propertyDescriptor()?.name ?? 'default');
   isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
+
+  constructor() {
+      console.log("Setting property model", this.propertyModel());
+  }
 
   onChange(e: Event) {
     const input = e.currentTarget as HTMLInputElement;

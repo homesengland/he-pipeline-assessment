@@ -3,6 +3,7 @@ import { PropertyDisplayDriver } from './property-display-driver';
 import { NullPropertyDriver } from '../drivers/null-property-driver/null-property-driver';
 import { Map } from '../utils/utils';
 import { Signal } from '@angular/core';
+import { SingleLineDriver } from 'src/drivers/single-line-driver';
 /*import { SecretModel, SecretPropertyDescriptor } from "../modules/credential-manager/models/secret.model";*/
 
 export type PropertyDisplayDriverMap = Map<(elsaStudio: WorkflowStudio) => PropertyDisplayDriver>;
@@ -12,10 +13,15 @@ export class PropertyDisplayManager {
   initialized: boolean;
   drivers: PropertyDisplayDriverMap = {};
 
+  constructor(elsaStudio?: WorkflowStudio) {
+    this.initialize(elsaStudio);
+  }
+
   initialize(elsaStudio: WorkflowStudio) {
     if (this.initialized) return;
 
     this.workflowStudio = elsaStudio;
+    this.addDriver('SingleLine', (studio) => new SingleLineDriver());
     this.initialized = true;
   }
 
@@ -37,7 +43,7 @@ export class PropertyDisplayManager {
     return update(model, property, form);
   }
 
-  getDriver(type: string) {
+  getDriver(type: string) : PropertyDisplayDriver {
     const driverFactory = this.drivers[type] || ((_: WorkflowStudio) => new NullPropertyDriver());
     return driverFactory(this.workflowStudio);
   }
