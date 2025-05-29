@@ -6,6 +6,7 @@ import { Auth0Plugin } from 'src/plugins/auth0-plugin';
 import { DynamicOutcomesPlugin } from 'src/plugins/dynamic-outcomes-plugin';
 import { CustomSwitchPlugin } from 'src/plugins/custom-switch-plugin';
 import { DisableDefaultOutcomesPlugin } from 'src/plugins/disable-default-outcomes-plugin';
+import { DefaultDriversPlugin } from '../plugins/default-drivers-plugin';
 
 export class PluginManager {
   pluginFactories: Array<any> = [];
@@ -28,6 +29,7 @@ export class PluginManager {
     this.registerPluginFactory(() => new DynamicOutcomesPlugin());
     this.registerPluginFactory(() => new CustomSwitchPlugin());
     this.registerPluginFactory(() => new DisableDefaultOutcomesPlugin());
+    this.registerPluginFactory(() => new DefaultDriversPlugin());
 
     for (const pluginType of this.pluginFactories) {
       this.createPlugin(pluginType);

@@ -26,8 +26,7 @@ import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-place
 import { StoreModule } from '@ngrx/store';
 import { appStateReducer } from './store/reducers/app.state.reducers';
 import { IntellisenseService } from './services/intellisense-service';
-import { createWorkflowClient, WorkflowClient } from './services/workflow-client';
-import { MonacoEditorModule, provideMonacoEditor } from './components/monaco/editor-module';
+import { provideMonacoEditor } from './components/monaco/editor-module';
 import { ToastNotification } from './components/shared/toast-notification/toast-notification';
 import { monacoConfig } from './components/monaco/config';
 import { WorkflowInstanceViewerScreen } from './components/screens/workflow-instance-viewer/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
@@ -44,6 +43,7 @@ import { WorkflowDefinitionEditorScreen } from './components/screens/workflow-de
 import { DesignerTree } from './components/designers/tree/designer-tree/designer-tree';
 import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
 import { PluginManager } from './services/plugin-manager';
+import { PropertyControl } from './components/controls/property-control/property-control';
 
 @NgModule({
   declarations: [
@@ -60,7 +60,6 @@ import { PluginManager } from './services/plugin-manager';
     WorkflowInstanceListScreen,
     WorkflowPager,
     WorkflowDropdownButton,
-    WorkflowContextMenu,
     WorkflowPlaceholder,
     ConfirmDialog,
     ModalDialog,
@@ -78,10 +77,13 @@ import { PluginManager } from './services/plugin-manager';
     WorkflowDefinitionEditorScreen,
     DesignerTree,
     WorkflowDefinitionEdit,
+    TabContentComponent,
+    PropertyControl,
+    SingleLineProperty,
   ],
   imports: [
-    BrowserModule,
     routing,
+    BrowserModule,
     AppStateModule,
     ReactiveFormsModule,
     RouterModule,

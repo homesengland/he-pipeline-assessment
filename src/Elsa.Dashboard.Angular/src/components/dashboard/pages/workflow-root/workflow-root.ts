@@ -87,6 +87,8 @@ export class WorkflowRoot implements OnInit {
     pluginManager.initialize(workflowStudio, auth0Options);
     await eventBus.emit(EventTypes.Root.Initializing);
 
+    propertyDisplayManager.initialize(workflowStudio);
+
     featuresDataManager.initialize(workflowStudio);
   }
 

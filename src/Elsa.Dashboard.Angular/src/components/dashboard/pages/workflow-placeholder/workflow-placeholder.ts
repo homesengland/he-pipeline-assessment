@@ -1,9 +1,8 @@
 import { IntellisenseService } from '../../../../services/intellisense-service';
-import { Component, OnInit, signal, input } from '@angular/core';
+import { Component, OnInit, signal, input, Signal } from '@angular/core';
 import { ActivityModel, ActivityPropertyDescriptor, ActivityDefinitionProperty } from '../../../../models';
 import { Store } from '@ngrx/store';
 import { AppStateActionGroup } from '../../../../store/actions/app.state.actions';
-import { SingleLineProperty } from 'src/components/editors/properties/single-line-property/single-line-property';
 import { EditorModel } from 'src/components/monaco/types';
 
 @Component({
@@ -34,15 +33,18 @@ export class WorkflowPlaceholder implements OnInit {
   jsonCode = ['{', '    "p1": "v3",', '    "p2": false', '}'].join('\n');
   model: EditorModel = {
     value: this.jsonCode,
-    language: 'typescript'
+    language: 'typescript',
   };
+  activityProperties: Signal<ActivityPropertyDescriptor>[] = [];
 
   constructor(store: Store) {
     this.store = store;
     this.intellisenseGatherer = new IntellisenseService(this.store);
     this.activityModel.set(this.getSingleLineModel());
     this.propertyModel.set(this.getSingleLineDefinition());
+    const initialDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     this.propertyDescriptor.set(this.getSingleLineDescriptor());
+    this.activityProperties.push(initialDescriptor);
   }
 
   async ngOnInit() {
@@ -86,12 +88,13 @@ export class WorkflowPlaceholder implements OnInit {
       displayName: 'Test Single Line',
       description: 'A Stub activity to display a single line property',
       outcomes: ['Done'],
-      properties: undefined,
+      properties: [],
       persistWorkflow: true,
       loadWorkflowContext: undefined,
       saveWorkflowContext: undefined,
       propertyStorageProviders: undefined,
     };
+    model.properties.push(this.getSingleLineDefinition());
     return model;
   }
 
@@ -99,10 +102,10 @@ export class WorkflowPlaceholder implements OnInit {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
       value: 'string',
-      name: 'Test',
+      name: 'TestSingleLine',
       expressions: {
-        Literal: '1',
-        Javascript: '',
+        Literal: '123',
+        JavaScript: 'console.log("Hello World")',
       },
       type: '',
     };
@@ -115,10 +118,10 @@ export class WorkflowPlaceholder implements OnInit {
       expectedOutputType: 'string',
       hasNestedProperties: false,
       hasColletedProperties: false,
-      name: 'Id',
+      name: 'TestSingleLine',
       type: 'System.String',
       uiHint: 'single-line',
-      label: 'Text',
+      label: 'Test Label',
       hint: 'Test Hint',
       options: null,
       order: 0,
