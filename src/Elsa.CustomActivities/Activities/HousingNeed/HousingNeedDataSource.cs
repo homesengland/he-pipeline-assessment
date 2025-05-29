@@ -5,6 +5,7 @@ using Elsa.Services;
 using Elsa.Services.Models;
 using He.PipelineAssessment.Data.LaHouseNeed;
 using He.PipelineAssessment.Data.VFM;
+using System.Drawing.Text;
 using System.Net.Http;
 
 namespace Elsa.CustomActivities.Activities.HousingNeed
@@ -24,12 +25,17 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
             _jsonHelper = jsonHelper;
         }
 
-        [ActivityInput(Hint = "Gss Codes of the record to get",  SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        [ActivityInput(Hint = "Gss Codes of the record to get.",  SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string? GssCodes { get; set; }
         [ActivityInput(Hint = "Name of Local Authority", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string? LocalAuthorities { get; set; }
         [ActivityInput(Hint = "Alternative Name of Local Authority", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string? LocalAuthoritiesAlt { get; set; }
+
+        [ActivityInput(Hint = "Previous Gss Codes of the record to get.  (To be used as a backup for the request if a local authority has changed)", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string? PreviousGssCodes { get; set; }
+        [ActivityInput(Hint = "Name of Previous Local Authority.  (To be used as a backup for the request if a local authority has changed)", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
+        public string? PreviousLocalAuthorities { get; set; }
 
         [ActivityOutput] public LaHouseNeedData? Output { get; set; }
         [ActivityOutput] public List<LaHouseNeedData>? OutputList { get; set; }
@@ -45,7 +51,26 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
             context.JournalData.Add(nameof(LocalAuthorities), LocalAuthorities);
             context.JournalData.Add(nameof(LocalAuthoritiesAlt), LocalAuthoritiesAlt);
 
-            var data = await _client.GetLaHouseNeedData(GssCodes, LocalAuthorities, LocalAuthoritiesAlt);
+            bool successfulQuery = await HandleQuery(context, GssCodes, LocalAuthorities, LocalAuthoritiesAlt);
+            if (!successfulQuery && HasPreviousValues())
+            {
+                context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null.  Retrying with Previous LA Values");
+                context.JournalData.Add(nameof(PreviousGssCodes), PreviousGssCodes);
+                context.JournalData.Add(nameof(PreviousLocalAuthorities), PreviousLocalAuthorities);
+                await HandleQuery(context, PreviousGssCodes, PreviousLocalAuthorities, null);
+            }
+
+            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
+            {
+                Outcomes("Done"),
+                new SuspendResult()
+            }));
+        }
+
+        protected async Task<bool> HandleQuery(ActivityExecutionContext context, string? gssCode, string? localAuthority, string? altLocalAuthority)
+        {
+            bool validQueryData = true;
+            var data = await _client.GetLaHouseNeedData(gssCode, localAuthority, altLocalAuthority);
 
             if (data != null)
             {
@@ -61,18 +86,19 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
                 else
                 {
                     context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
+                    validQueryData = false;
                 }
             }
             else
             {
                 context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
+                validQueryData = false;
             }
-
-            return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
-            {
-                Outcomes("Done"),
-                new SuspendResult()
-            }));
+            return validQueryData;
+        }
+        private bool HasPreviousValues()
+        {
+            return PreviousGssCodes != null || PreviousLocalAuthorities != null;
         }
     }
 }
