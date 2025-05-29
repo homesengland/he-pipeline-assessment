@@ -3,13 +3,24 @@ import { EventTypes, WorkflowContextFidelity, WorkflowContextOptions, WorkflowDe
 import { HTMLElsaMonacoElement, MonacoValueChangedArgs } from 'src/models/elsa-interfaces';
 import { eventBus } from 'src/services/event-bus';
 import { ModalDialog } from 'src/components/shared/modal-dialog/modal-dialog';
-import { FormContext } from 'src/Utils/forms';
+import { FormContext, SelectOption } from 'src/Utils/forms';
 import { ElsaClientService } from 'src/services/elsa-client';
 
 interface VariableDefinition {
   name?: string;
   value?: string;
 }
+
+const persistenceBehaviorOptionsConst: Array<SelectOption> = [{
+  text: 'Suspended',
+  value: 'Suspended'
+}, {
+  text: 'Workflow Burst',
+  value: 'WorkflowBurst'
+}, {
+  text: 'Activity Executed',
+  value: 'ActivityExecuted'
+}];
 @Component({
   selector: 'workflow-settings-modal',
   templateUrl: './workflow-settings-modal.html',
@@ -31,6 +42,19 @@ export class WorkflowSettingsModal implements OnInit {
   inactiveClass = 'elsa-border-transparent elsa-text-gray-500 hover:elsa-text-gray-700 hover:elsa-border-gray-300';
   selectedClass = 'elsa-border-blue-500 elsa-text-blue-600';
   isModalVisible = false;
+  persistenceBehaviorOptions: Array<SelectOption> = persistenceBehaviorOptionsConst;
+  workflowChannelOptions: Array<SelectOption> = [{
+      text: '',
+      value: null
+    }];
+  fidelityOptions: Array<SelectOption> = [{
+      text: 'Burst',
+      value: 'Burst'
+    }, {
+      text: 'Activity',
+      value: 'Activity'
+    }]
+  contextOptions: WorkflowContextOptions;
 
   constructor(private elsaClientService: ElsaClientService) {}
 
@@ -42,6 +66,10 @@ export class WorkflowSettingsModal implements OnInit {
     this.isModalVisible = false;
     this.workflowDefinitionInternal = this.workflowDefinition;
     eventBus.on(EventTypes.ShowWorkflowSettings, this.onShowSettingsModal);
+  }
+
+  ngAfterContentInit(): void {
+    this.workflowDefinitionInternal = this.workflowDefinition;
   }
 
   onShowSettingsModal = async () => {
@@ -95,12 +123,12 @@ export class WorkflowSettingsModal implements OnInit {
   }
 
   async onCancelClick() {
-    await this.dialog.close();
+    await this.dialog.hide();
   }
 
   async onSubmit(e: Event) {
     e.preventDefault();
-    await this.dialog.close();
+    await this.dialog.hide();
     setTimeout(() => eventBus.emit(EventTypes.UpdateWorkflowSettings, this, this.workflowDefinitionInternal), 250);
   }
 
