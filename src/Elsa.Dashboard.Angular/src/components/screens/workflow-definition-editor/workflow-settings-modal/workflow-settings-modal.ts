@@ -43,10 +43,7 @@ export class WorkflowSettingsModal implements OnInit {
   selectedClass = 'elsa-border-blue-500 elsa-text-blue-600';
   isModalVisible = false;
   persistenceBehaviorOptions: Array<SelectOption> = persistenceBehaviorOptionsConst;
-  workflowChannelOptions: Array<SelectOption> = [{
-      text: '',
-      value: null
-    }];
+  workflowChannelOptions: Array<SelectOption>;
   fidelityOptions: Array<SelectOption> = [{
       text: 'Burst',
       value: 'Burst'
@@ -68,7 +65,7 @@ export class WorkflowSettingsModal implements OnInit {
     eventBus.on(EventTypes.ShowWorkflowSettings, this.onShowSettingsModal);
   }
 
-  ngAfterContentInit(): void {
+  ngAfterViewChecked(): void {
     this.workflowDefinitionInternal = this.workflowDefinition;
   }
 
@@ -83,14 +80,18 @@ export class WorkflowSettingsModal implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['WorkflowDefinitionInternal'] && changes['WorkflowDefinitionInternal'].currentValue) {
-      this.handleWorkflowDefinitionChanged(changes['WorkflowDefinitionInternal'].currentValue);
+    if (changes['WorkflowDefinition'] && changes['WorkflowDefinition'].currentValue) {
+      this.handleWorkflowDefinitionChanged(changes['WorkflowDefinition'].currentValue);
     }
   }
 
   handleWorkflowDefinitionChanged(newValue: WorkflowDefinition) {
     this.workflowDefinitionInternal = { ...newValue };
     this.formContext = new FormContext(this.workflowDefinitionInternal, newValue => (this.workflowDefinitionInternal = newValue));
+    this.workflowChannelOptions = [{
+      text: '',
+      value: null
+    }, ...this.workflowChannels.map(x => ({text: x, value: x}))];
   }
 
   async componentWillLoad() {
