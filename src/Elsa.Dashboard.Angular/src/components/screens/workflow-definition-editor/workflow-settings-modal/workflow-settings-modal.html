@@ -49,9 +49,10 @@
           [context]="formContext"
           [fieldName]="contextOptions?.contextType"
           label="Type"
-          [value]="contextOptions?.contextType"
+          [value]="contextOptions?.contextType ?? ''"
           hint="The fully qualified workflow context type name."
-          fieldId="workflowContextType">
+          fieldId="workflowContextType"
+        >
         </form-text-input>
         <div class="elsa-space-y-8 elsa-w-full">
           <form-select-field
@@ -61,19 +62,21 @@
             [value]="contextOptions?.contextFidelity"
             [options]="fidelityOptions"
             hint="The workflow context refresh fidelity controls the behavior of when to load and persist the workflow context."
-            fieldId="workflowContextFidelity">
+            fieldId="workflowContextFidelity"
+          >
           </form-select-field>
         </div>
       </div>
     </div>
   </ng-template>
+
   <!-- Variables Tab -->
   <ng-template #variablesTab>
     <div class="elsa-flex elsa-px-8">
-      <div class="elsa-space-y-8 elsa-w-full">
-      </div>
+      <div class="elsa-space-y-8 elsa-w-full"></div>
     </div>
   </ng-template>
+
   <!-- Advanced Tab -->
   <ng-template #advancedTab>
     <div class="elsa-flex elsa-px-8">
@@ -82,9 +85,10 @@
           [context]="formContext"
           fieldName="tag"
           label="Tag"
-          [value]="workflowDefinition?.tag"
+          [value]="workflowDefinition?.tag ?? ''"
           hint="Tags can be used to query workflow definitions with."
-          fieldId="tag">
+          fieldId="tag"
+        >
         </form-text-input>
         <div class="elsa-space-y-8 elsa-w-full">
           <form-select-field
@@ -94,11 +98,11 @@
             [value]="workflowDefinition?.persistenceBehavior"
             [options]="persistenceBehaviorOptions"
             hint="The persistence behavior controls how often a workflow instance is persisted during workflow execution."
-            fieldId="workflowContextFidelity">
+            fieldId="workflowContextFidelity"
+          >
           </form-select-field>
         </div>
-        <div class="elsa-space-y-8 elsa-w-full"
-            *ngif="workflowChannelOptions.length > 0">
+        <div class="elsa-space-y-8 elsa-w-full" *ngif="workflowChannelOptions.length > 0">
           <form-select-field
             [context]="formContext"
             fieldName="channel"
@@ -106,7 +110,8 @@
             [value]="workflowDefinition?.channel"
             [options]="workflowChannelOptions"
             hint="Select a channel for this workflow to execute in."
-            fieldId="channel">
+            fieldId="channel"
+          >
           </form-select-field>
         </div>
         <div class="elsa-space-y-8 elsa-w-full">
@@ -116,12 +121,14 @@
             label="Singleton"
             [value]="workflowDefinition?.isSingleton"
             hint="Singleton workflows will only have one active instance executing at a time."
-            fieldId="isSingleton">
+            fieldId="isSingleton"
+          >
           </form-check-box>
         </div>
       </div>
     </div>
   </ng-template>
+
   <!-- Settings Tab -->
   <ng-template #settingsTab>
     <div class="elsa-flex elsa-px-8">
@@ -130,7 +137,7 @@
           [context]="formContext"
           fieldName="name"
           label="Name"
-          [value]="workflowDefinition?.name"
+          [value]="workflowDefinition?.name ?? ''"
           hint="The technical name of the workflow."
           fieldId="workflowName"
         ></form-text-input>
@@ -139,18 +146,14 @@
             [context]="formContext"
             fieldName="displayName"
             label="Display Name"
-            [value]="workflowDefinition?.displayName"
+            [value]="workflowDefinition?.displayName ?? ''"
             hint="A user-friendly display name of the workflow."
-            fieldId="workflowDisplayName">
+            fieldId="workflowDisplayName"
+          >
           </form-text-input>
         </div>
         <div class="elsa-space-y-8 elsa-w-full">
-          <form-text-input
-            [context]="formContext"
-            fieldName="description"
-            label="Description"
-            [value]="workflowDefinition?.description"
-            fieldId="workflowDescription">
+          <form-text-input [context]="formContext" fieldName="description" label="Description" [value]="workflowDefinition?.description ?? ''" fieldId="workflowDescription">
           </form-text-input>
         </div>
       </div>
