@@ -102,7 +102,7 @@
           >
           </form-select-field>
         </div>
-        <div class="elsa-space-y-8 elsa-w-full" *ngif="workflowChannelOptions.length > 0">
+        <div class="elsa-space-y-8 elsa-w-full" *ngIf="workflowChannelOptions?.length > 0">
           <form-select-field
             [context]="formContext"
             fieldName="channel"
