@@ -46,8 +46,10 @@ export class WorkflowPlaceholder implements OnInit {
     this.multiLineActivityModel.set(this.getMultiLineModel());
     this.jsonActivityModel.set(this.getJsonModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
+    const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
     const jsonDescriptor = signal<ActivityPropertyDescriptor>(this.getJsonDescriptor());
     this.activityProperties.push(singleLineDescriptor);
+    this.activityProperties.push(multiLineDescriptor);
     this.activityProperties.push(jsonDescriptor);
   }
 
