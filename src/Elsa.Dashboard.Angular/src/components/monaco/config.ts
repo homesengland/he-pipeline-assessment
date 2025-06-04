@@ -1,5 +1,4 @@
 import { ApplicationConfig, InjectionToken } from '@angular/core';
-import { provideMonacoEditor } from './editor-module';
 import { min } from 'lodash';
 
 export const MONACO_EDITOR_CONFIG = new InjectionToken('MONACO_EDITOR_CONFIG');
@@ -57,8 +56,4 @@ export const monacoConfig: MonacoEditorConfig = {
   baseUrl: 'assets',
   defaultOptions: { scrollBeyondLastLine: false, automaticLayout: true, minimap: { enabled: false } },
   onMonacoLoad,
-};
-
-export const appConfig: ApplicationConfig = {
-  providers: [provideMonacoEditor(monacoConfig)],
 };

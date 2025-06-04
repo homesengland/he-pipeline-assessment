@@ -49,6 +49,9 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
 
   @Input('model')
   set model(model: EditorModel) {
+    if (model.value == null || model.value == undefined) {
+      model.value = '';
+    }
     this.options.model = model;
     if (this._editor) {
       this._editor.dispose();
@@ -109,7 +112,7 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
       // value is not propagated to parent when executing outside zone.
       this.zone.run(() => {
         let args: MonacoValueChangedArgs = {
-          value: this._value,
+          value: value,
           markers: monaco.editor.getModelMarkers({ resource: this._editor.getModel().uri }),
         };
         this.propagateChange.emit(args);
