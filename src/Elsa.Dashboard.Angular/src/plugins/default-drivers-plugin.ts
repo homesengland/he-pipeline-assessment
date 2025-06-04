@@ -4,10 +4,12 @@ import { SingleLineDriver } from '../drivers/single-line-driver';
 import { WorkflowPlugin } from 'src/services/workflow-plugin';
 import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 import { WorkflowStudio } from 'src/models';
+import { JsonDriver } from 'src/drivers/json-driver';
 
 export class DefaultDriversPlugin implements WorkflowPlugin {
   constructor() {
     this.addDriver('single-line', () => new SingleLineDriver());
+    this.addDriver('json', () => new JsonDriver());
   }
 
   addDriver<T extends PropertyDisplayDriver>(controlType: string, c: (workflowStudio: WorkflowStudio) => T) {

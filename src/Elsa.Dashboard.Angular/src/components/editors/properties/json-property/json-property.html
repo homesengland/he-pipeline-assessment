@@ -1,0 +1,10 @@
+<property-editor
+  [(activityModel)]="activityModel"
+  [(propertyDescriptor)]="propertyDescriptor"
+  [(propertyModel)]="propertyModel"
+  (defaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
+  [editorHeight]="getEditorHeight()"
+  [context]="getContext()"
+>
+  <monaco-editor [model]="model" [options]="options" language="Json" [editorHeight]="getEditorHeight()" (propagateChange)="onMonacoValueChanged($any($event))" />
+</property-editor>

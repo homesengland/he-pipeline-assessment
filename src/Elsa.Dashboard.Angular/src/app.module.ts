@@ -42,6 +42,7 @@ import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-de
 import { PropertyControl } from './components/controls/property-control/property-control';
 import { EditorComponent } from './components/monaco/editor.component';
 import { DiffEditorComponent } from './components/monaco/diff-editor.component';
+import { JsonProperty } from './components/editors/properties/json-property/json-property';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { DiffEditorComponent } from './components/monaco/diff-editor.component';
     PropertyControl,
     EditorComponent,
     DiffEditorComponent,
+    JsonProperty,
   ],
   imports: [
     routing,

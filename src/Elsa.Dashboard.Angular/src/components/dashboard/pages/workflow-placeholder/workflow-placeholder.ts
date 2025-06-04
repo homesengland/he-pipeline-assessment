@@ -14,7 +14,8 @@ import { EditorModel } from 'src/components/monaco/types';
 export class WorkflowPlaceholder implements OnInit {
   private store: Store;
   id = input<string>('5e4506339c934e199a17ca7a2e44f874');
-  activityModel = signal<ActivityModel | null>(null);
+  singleLineActivityModel = signal<ActivityModel | null>(null);
+  jsonActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
   intellisenseGatherer: IntellisenseService;
@@ -40,11 +41,12 @@ export class WorkflowPlaceholder implements OnInit {
   constructor(store: Store) {
     this.store = store;
     this.intellisenseGatherer = new IntellisenseService(this.store);
-    this.activityModel.set(this.getSingleLineModel());
-    this.propertyModel.set(this.getSingleLineDefinition());
-    const initialDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
-    this.propertyDescriptor.set(this.getSingleLineDescriptor());
-    this.activityProperties.push(initialDescriptor);
+    this.singleLineActivityModel.set(this.getSingleLineModel());
+    this.jsonActivityModel.set(this.getJsonModel());
+    const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
+    const jsonDescriptor = signal<ActivityPropertyDescriptor>(this.getJsonDescriptor());
+    this.activityProperties.push(singleLineDescriptor);
+    this.activityProperties.push(jsonDescriptor);
   }
 
   async ngOnInit() {
@@ -98,6 +100,24 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getJsonModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '{"p1": "v3", p2: false}',
+      type: 'Json',
+      name: 'TestJson',
+      displayName: 'Test Json',
+      description: 'A Stub activity to display a json property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getJsonDefinition());
+    return model;
+  }
+
   getSingleLineDefinition(): ActivityDefinitionProperty {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
@@ -106,6 +126,19 @@ export class WorkflowPlaceholder implements OnInit {
       expressions: {
         Literal: '123',
         JavaScript: 'console.log("Hello World")',
+      },
+      type: '',
+    };
+    return model;
+  }
+
+  getJsonDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestJson',
+      expressions: {
+        Json: '{"p1": "v3", "p2": false}',
       },
       type: '',
     };
@@ -134,5 +167,40 @@ export class WorkflowPlaceholder implements OnInit {
       considerValuesAsOutcomes: false,
     };
     return model;
+  }
+
+  getJsonDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: [],
+      expectedOutputType: 'string',
+      hasNestedProperties: false,
+      hasColletedProperties: false,
+      name: 'TestJson',
+      type: 'System.String',
+      uiHint: 'json',
+      label: 'Test Label',
+      hint: 'Test Hint',
+      options: null,
+      order: 0,
+      defaultValue: null,
+      supportedSyntaxes: ['Json'],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+    };
+    return model;
+  }
+
+  getActivityModel(activityType: string): Signal<ActivityModel> {
+    switch (activityType) {
+      case 'single-line':
+        return this.singleLineActivityModel;
+      case 'json':
+        return this.jsonActivityModel;
+      default:
+        throw new Error(`Unknown activity type: ${activityType}`);
+    }
   }
 }

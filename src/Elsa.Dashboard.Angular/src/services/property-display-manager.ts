@@ -21,7 +21,7 @@ export class PropertyDisplayManager {
     if (this.initialized) return;
 
     this.workflowStudio = elsaStudio;
-    this.addDriver('SingleLine', (studio) => new SingleLineDriver());
+   // this.addDriver('SingleLine', (studio) => new SingleLineDriver());
     this.initialized = true;
   }
 
