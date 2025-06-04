@@ -27,36 +27,12 @@ export class JsonProperty implements OnInit {
       value: this.currentValue,
       language: 'json',
     };
-    this.options = this.getOptions();
+    this.options = this.propertyDescriptor().options || {};
   }
 
   ngOnInit(): void {
     const defaultSyntax = this.propertyDescriptor().defaultSyntax || SyntaxNames.Json;
     this.currentValue = this.propertyModel().expressions[defaultSyntax] || undefined;
-  }
-
-  getOptions(): any {
-    return {
-      value: this.currentValue,
-      language: 'json',
-      fontFamily: 'Roboto Mono, monospace',
-      renderLineHighlight: 'none',
-      minimap: {
-        enabled: false,
-      },
-      automaticLayout: true,
-      lineNumbers: 'off',
-      theme: 'vs',
-      roundedSelection: true,
-      scrollBeyondLastLine: false,
-      readOnly: false,
-      overviewRulerLanes: 0,
-      overviewRulerBorder: false,
-      lineDecorationsWidth: 0,
-      hideCursorInOverviewRuler: true,
-      glyphMargin: false,
-      singleLineMode: false,
-    };
   }
 
   getEditorHeight() {
@@ -72,10 +48,6 @@ export class JsonProperty implements OnInit {
 
   getContext(): string {
     return this.propertyDescriptor().options?.context;
-  }
-
-  onDefaultSyntaxValueChanged(e: string) {
-    this.currentValue = e;
   }
 
   async onMonacoValueChanged(e: MonacoValueChangedArgs) {

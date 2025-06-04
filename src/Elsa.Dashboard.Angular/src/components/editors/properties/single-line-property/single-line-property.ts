@@ -21,7 +21,7 @@ export class SingleLineProperty {
   isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
 
   constructor() {
-      console.log("Setting property model", this.propertyModel());
+    console.log('Setting property model', this.propertyModel());
   }
 
   onChange(e: Event) {
@@ -38,10 +38,5 @@ export class SingleLineProperty {
       expressions[this.defaultSyntax()] = input.value;
       this.propertyModel.update(x => ({ ...x, expressions: expressions }));
     }
-  }
-
-  onDefaultSyntaxValueChanged(e: string) {
-    //dont think we need this...
-    //this.currentValue = e.detail;
   }
 }
