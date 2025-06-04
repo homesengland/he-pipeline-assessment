@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, makeEnvironmentProviders } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { WorkflowRoot } from './components/dashboard/pages/workflow-root/workflow-root';
@@ -26,14 +26,11 @@ import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-place
 import { StoreModule } from '@ngrx/store';
 import { appStateReducer } from './store/reducers/app.state.reducers';
 import { IntellisenseService } from './services/intellisense-service';
-import { provideMonacoEditor } from './components/monaco/editor-module';
 import { ToastNotification } from './components/shared/toast-notification/toast-notification';
-import { monacoConfig } from './components/monaco/config';
+import { MONACO_EDITOR_CONFIG, monacoConfig, MonacoEditorConfig } from './components/monaco/config';
 import { WorkflowInstanceViewerScreen } from './components/screens/workflow-instance-viewer/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
 import { WorkflowInstancesView } from './components/dashboard/pages/workflow-instances-view/workflow-instances-view';
 import { WorkflowDefinitionListScreen } from './components/screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
-import { EditorComponent } from './components/monaco/editor.component';
-import { DiffEditorComponent } from './components/monaco/diff-editor.component';
 import { WorkflowInstanceJournalComponent } from './components/screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
 import { FlyoutPanelComponent } from './components/shared/flyout-panel/flyout-panel.component';
 import { TabHeaderComponent } from './components/shared/tab-header/tab-header.component';
@@ -42,8 +39,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkflowDefinitionEditorScreen } from './components/screens/workflow-definition-editor/workflow-definition-editor-screen/workflow-definition-editor-screen';
 import { DesignerTree } from './components/designers/tree/designer-tree/designer-tree';
 import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
-import { PluginManager } from './services/plugin-manager';
 import { PropertyControl } from './components/controls/property-control/property-control';
+import { EditorComponent } from './components/monaco/editor.component';
+import { DiffEditorComponent } from './components/monaco/diff-editor.component';
 
 @NgModule({
   declarations: [
@@ -68,8 +66,6 @@ import { PropertyControl } from './components/controls/property-control/property
     PropertyEditor,
     SingleLineProperty,
     ToastNotification,
-    DiffEditorComponent,
-    EditorComponent,
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,
     TabHeaderComponent,
@@ -79,7 +75,8 @@ import { PropertyControl } from './components/controls/property-control/property
     WorkflowDefinitionEdit,
     TabContentComponent,
     PropertyControl,
-    SingleLineProperty,
+    EditorComponent,
+    DiffEditorComponent,
   ],
   imports: [
     routing,
@@ -92,7 +89,7 @@ import { PropertyControl } from './components/controls/property-control/property
     StoreModule.forRoot({ appState: appStateReducer }),
     BrowserAnimationsModule,
   ],
-  providers: [IntellisenseService, provideHttpClient(), provideMonacoEditor(monacoConfig)],
+  providers: [IntellisenseService, provideHttpClient(), { provide: MONACO_EDITOR_CONFIG, useValue: monacoConfig }],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

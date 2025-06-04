@@ -1,11 +1,12 @@
 import { toSignal } from '@angular/core/rxjs-interop';
 import { IntellisenseService } from '../../../services/intellisense-service';
-import { Component, ElementRef, input, Input, model, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, input, Input, model, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild, computed, effect } from '@angular/core';
 import { HTMLMonacoElement, MonacoValueChangedArgs } from '../../../models/monaco-elements';
 import { IntellisenseContext } from '../../../models';
 import { Uri } from '../../../constants/constants';
 import { selectJavaScriptTypeDefinitions, selectWorkflowDefinitionId } from '../../../store/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
+import { EditorModel } from 'src/components/monaco/types';
 
 @Component({
   selector: 'expression-editor',
@@ -23,11 +24,13 @@ export class ExpressionEditor implements OnInit {
   workflowDefinitionId? = model<string>();
   expressionChanged = output<string>();
   libSource = signal<string>('');
-  //monacoEditor: HTMLMonacoElement = null;
   intellisenseGatherer: IntellisenseService;
   options: any;
   theme: string = 'vs';
+  model: EditorModel;
   @ViewChild('monacoContainer') monacoEditor!: HTMLMonacoElement;
+
+  private isUpdating = false;
 
   constructor(private store: Store) {
     this.store.select(selectWorkflowDefinitionId).subscribe(workflowDefinitionId => {
@@ -36,6 +39,10 @@ export class ExpressionEditor implements OnInit {
       }
     });
     this.options = this.getOptions();
+    this.model = {
+      language: this.language(),
+      value: this.expression(),
+    };
   }
 
   async ngOnInit() {
@@ -48,22 +55,10 @@ export class ExpressionEditor implements OnInit {
     });
   }
 
-  //ngOnChanges(changes: SimpleChanges) {
-
-  //  if (changes["expression"].currentValue != changes["expression"].previousValue) {
-  //    this.expressionChangedHandler(changes["expression"].currentValue)
-  //  }
-
-  //}
-
-  //expressionChangedHandler(newValue: string) {
-  //  this.currentExpression.set(newValue);
-  //}
-
   getOptions(): any {
     const defaultOptions = {
       value: this.expression(),
-      language: this.language,
+      language: this.language(),
       fontFamily: 'Roboto Mono, monospace',
       renderLineHighlight: 'none',
       minimap: {
@@ -103,6 +98,10 @@ export class ExpressionEditor implements OnInit {
 
   async setExpression(value: string) {
     await this.monacoEditor.setValue(value);
+  }
+
+  async setLanguage(language: string) {
+    await this.monacoEditor.setLanguage(language);
   }
 
   async onMonacoValueChanged(e: MonacoValueChangedArgs) {

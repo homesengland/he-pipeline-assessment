@@ -96,11 +96,10 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
 
   selectSyntax = async (e: Event, syntax: string) => {
     e.preventDefault();
-
     this.selectedSyntax.set(syntax);
     this.syntaxChanged.emit(syntax);
-
     this.currentValue = this.getCurrentValue();
+    this.expressionEditor.setLanguage(mapSyntaxToLanguage(syntax));
     if (this.currentValue !== null && this.currentValue !== undefined) {
       await this.expressionEditor.setExpression(this.currentValue);
     }
