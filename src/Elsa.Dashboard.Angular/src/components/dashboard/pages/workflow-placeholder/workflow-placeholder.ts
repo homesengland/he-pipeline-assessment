@@ -15,6 +15,7 @@ export class WorkflowPlaceholder implements OnInit {
   private store: Store;
   id = input<string>('5e4506339c934e199a17ca7a2e44f874');
   singleLineActivityModel = signal<ActivityModel | null>(null);
+  multiLineActivityModel = signal<ActivityModel | null>(null);
   jsonActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
@@ -42,6 +43,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.store = store;
     this.intellisenseGatherer = new IntellisenseService(this.store);
     this.singleLineActivityModel.set(this.getSingleLineModel());
+    this.multiLineActivityModel.set(this.getMultiLineModel());
     this.jsonActivityModel.set(this.getJsonModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const jsonDescriptor = signal<ActivityPropertyDescriptor>(this.getJsonDescriptor());
@@ -100,6 +102,24 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getMultiLineModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '123',
+      type: 'MultiLine',
+      name: 'TestMultiLine',
+      displayName: 'Test Multi Line',
+      description: 'A Stub activity to display a multi line property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getMultiLineDefinition());
+    return model;
+  }
+
   getJsonModel(): ActivityModel {
     const model: ActivityModel = {
       activityId: '{"p1": "v3", p2: false}',
@@ -126,6 +146,20 @@ export class WorkflowPlaceholder implements OnInit {
       expressions: {
         Literal: '123',
         JavaScript: 'console.log("Hello World")',
+      },
+      type: '',
+    };
+    return model;
+  }
+
+  getMultiLineDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestMultiLine',
+      expressions: {
+        Literal: '123',
+        JavaScript: 'console.log("Hello MultiLine")',
       },
       type: '',
     };
@@ -169,6 +203,30 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getMultiLineDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: [],
+      expectedOutputType: 'string',
+      hasNestedProperties: false,
+      hasColletedProperties: false,
+      name: 'TestMultiLine',
+      type: 'System.String',
+      uiHint: 'multi-line',
+      label: 'Test Label',
+      hint: 'Test Hint',
+      options: null,
+      order: 0,
+      defaultValue: null,
+      supportedSyntaxes: ['Literal', 'JavaScript'],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+    };
+    return model;
+  }
+
   getJsonDescriptor(): ActivityPropertyDescriptor {
     const model: ActivityPropertyDescriptor = {
       conditionalActivityTypes: [],
@@ -197,6 +255,8 @@ export class WorkflowPlaceholder implements OnInit {
     switch (activityType) {
       case 'single-line':
         return this.singleLineActivityModel;
+      case 'multi-line':
+        return this.multiLineActivityModel;
       case 'json':
         return this.jsonActivityModel;
       default:

@@ -22,6 +22,7 @@ import { MultiExpressionEditor } from './components/editors/multi-expression-edi
 import { ExpressionEditor } from './components/editors/expression-editor/expression-editor';
 import { PropertyEditor } from './components/editors/property-editor/property-editor';
 import { SingleLineProperty } from './components/editors/properties/single-line-property/single-line-property';
+import { MultiLineProperty } from './components/editors/properties/multi-line-property/multi-line-property';
 import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
 import { StoreModule } from '@ngrx/store';
 import { appStateReducer } from './store/reducers/app.state.reducers';
@@ -66,6 +67,7 @@ import { JsonProperty } from './components/editors/properties/json-property/json
     ExpressionEditor,
     PropertyEditor,
     SingleLineProperty,
+    MultiLineProperty,
     ToastNotification,
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,

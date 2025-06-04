@@ -1,0 +1,17 @@
+<property-editor
+  [(activityModel)]="activityModel"
+  [(propertyDescriptor)]="propertyDescriptor"
+  [(propertyModel)]="propertyModel"
+  (defaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
+  editor-height="20em"
+
+>
+  <input
+    [id]="fieldId()"
+    [name]="fieldName()"
+    [value]="currentValue()"
+    (change)="onChange($event)"
+    class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
+    rows="editorHeightTextArea"
+  />
+</property-editor>

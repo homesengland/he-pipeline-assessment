@@ -4,6 +4,7 @@ import { NullPropertyDriver } from '../drivers/null-property-driver/null-propert
 import { Map } from '../utils/utils';
 import { Signal } from '@angular/core';
 import { SingleLineDriver } from 'src/drivers/single-line-driver';
+import { MultiLineDriver } from 'src/drivers/multi-line-driver';
 /*import { SecretModel, SecretPropertyDescriptor } from "../modules/credential-manager/models/secret.model";*/
 
 export type PropertyDisplayDriverMap = Map<(elsaStudio: WorkflowStudio) => PropertyDisplayDriver>;
@@ -21,7 +22,8 @@ export class PropertyDisplayManager {
     if (this.initialized) return;
 
     this.workflowStudio = elsaStudio;
-   // this.addDriver('SingleLine', (studio) => new SingleLineDriver());
+    // this.addDriver('SingleLine', (studio) => new SingleLineDriver());
+    // this.addDriver('MultiLine', (studio) => new MultiLineDriver());
     this.initialized = true;
   }
 
