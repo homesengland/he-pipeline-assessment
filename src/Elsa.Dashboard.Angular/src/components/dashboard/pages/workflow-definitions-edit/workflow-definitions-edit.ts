@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'workflow-definitions-edit',
   templateUrl: './workflow-definitions-edit.html',
-  styleUrls: ['./workflow-definitions-edit.css'],
   standalone: false,
 })
 export class WorkflowDefinitionEdit implements OnInit {

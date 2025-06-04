@@ -6,6 +6,7 @@ export class StoreStatus {
   static readonly Fetching: string = "fetching";
   static readonly Available: string = "available";
   static readonly Empty: string = "empty";
+  static readonly Error: string = "error";
 }
 
 export class SyntaxNames {

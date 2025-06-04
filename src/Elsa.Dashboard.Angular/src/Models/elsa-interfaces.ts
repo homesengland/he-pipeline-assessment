@@ -1,4 +1,4 @@
-import { Map } from '../utils/utils'
+import { Map } from '../utils/utils';
 //import { x } from '@elsa-workflows/elsa-workflows-studio';
 //Not In Use.  Using as a placeholder to prompt developers to draw, and copy any interfaces they need from Elsa directly.
 
@@ -39,50 +39,47 @@ export interface ActivityModel {
   propertyStorageProviders: Map<string>;
 }
 
-
 export interface HTMLElsaMultiExpressionEditorElement extends ElsaMultiExpressionEditor, HTMLElement {
   componentOnReady(): Promise<this>;
 }
 
 export interface ElsaMultiExpressionEditor {
-  "context"?: IntellisenseContext;
-  "defaultSyntax": string;
-  "editorHeight": string;
-  "expressions": Map<string>;
-  "fieldName"?: string;
-  "isReadOnly"?: boolean;
-  "label": string;
-  "singleLineMode": boolean;
-  "supportedSyntaxes": Array<string>;
-  "syntax"?: string;
+  context?: IntellisenseContext;
+  defaultSyntax: string;
+  editorHeight: string;
+  expressions: Map<string>;
+  fieldName?: string;
+  isReadOnly?: boolean;
+  label: string;
+  singleLineMode: boolean;
+  supportedSyntaxes: Array<string>;
+  syntax?: string;
 }
 
-export interface HTMLElsaConfirmDialogElement extends ConfirmDialog, HTMLElement {
-}
+export interface HTMLElsaConfirmDialogElement extends ConfirmDialog, HTMLElement {}
 
 export interface ConfirmDialog {
-  "culture": string;
-  "hide": () => Promise<void>;
-  "show": (caption: string, message: string) => Promise<boolean>;
+  culture: string;
+  hide: () => Promise<void>;
+  show: (caption: string, message: string) => Promise<boolean>;
 }
 
-export interface HTMLElsaExpressionEditorElement extends ElsaExpressionEditor, HTMLElement {
-}
+export interface HTMLElsaExpressionEditorElement extends ElsaExpressionEditor, HTMLElement {}
 var HTMLElsaExpressionEditorElement: {
   prototype: HTMLElsaExpressionEditorElement;
-  new(): HTMLElsaExpressionEditorElement;
+  new (): HTMLElsaExpressionEditorElement;
 };
 
 export interface ElsaExpressionEditor {
-  "context"?: IntellisenseContext;
-  "editorHeight": string;
-  "expression": string;
-  "language": string;
-  "padding": string;
-  "serverUrl": string;
-  "setExpression": (value: string) => Promise<void>;
-  "singleLineMode": boolean;
-  "workflowDefinitionId": string;
+  context?: IntellisenseContext;
+  editorHeight: string;
+  expression: string;
+  language: string;
+  padding: string;
+  serverUrl: string;
+  setExpression: (value: string) => Promise<void>;
+  singleLineMode: boolean;
+  workflowDefinitionId: string;
 }
 
 export interface IntellisenseContext {
@@ -122,21 +119,19 @@ export interface RuntimeSelectListProviderSettings {
 }
 
 export interface CustomMonacoElement {
-  "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
-  "editorHeight": string;
-  "language": string;
-  "monacoLibPath": string;
-  "padding": string;
-  "setValue": (value: string) => Promise<void>;
-  "singleLineMode": boolean;
-  "value": string;
+  addJavaScriptLib: (libSource: string, libUri: string) => Promise<void>;
+  editorHeight: string;
+  language: string;
+  padding: string;
+  setValue: (value: string) => Promise<void>;
+  singleLineMode: boolean;
+  value: string;
 }
 
-export interface HTMLElsaMonacoElement extends CustomMonacoElement, HTMLElement {
-}
+export interface HTMLElsaMonacoElement extends CustomMonacoElement, HTMLElement {}
 var HTMLElsaMonacoElement: {
   prototype: HTMLElsaMonacoElement;
-  new(): HTMLElsaMonacoElement;
+  new (): HTMLElsaMonacoElement;
 };
 
 export interface MenuItem {
@@ -145,5 +140,3 @@ export interface MenuItem {
   clickHandler?: (e: Event) => void;
   icon?: any;
 }
-
-

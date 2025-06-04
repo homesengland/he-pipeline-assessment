@@ -13,6 +13,8 @@ export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor
   defaultSyntax?: string;
   supportedSyntaxes: Array<string>;
   isReadOnly?: boolean;
+  isBrowsable?: boolean;
+  isDesignerCritical: boolean;
   defaultWorkflowStorageProvider?: string;
   disableWorkflowProviderSelection: boolean;
   considerValuesAsOutcomes: boolean;

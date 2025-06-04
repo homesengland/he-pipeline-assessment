@@ -2,8 +2,9 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 const colors = require('tailwindcss/colors')
 module.exports = {
-  //important: 'elsa-studio-root',
-  content: ['./src/**/*.tsx', './src/**/*.html'],
+  content: [
+    './src/**/*.{html,ts}'
+  ],
   safelist: ['hidden', 'jtk-connector', 'jtk-endpoint', 'x6-node', 'x6-port-out', 'x6-port-label', 'x6-graph-scroller', 'rose', 'sky', 'label-container', 'node', 'start', 'activity', 'border-blue-600', 'border-green-600', 'border-red-600', {
     pattern: /gray|pink|blue|green|red|yellow|rose/
   }],
@@ -18,6 +19,6 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/aspect-ratio')
   ],
 };
