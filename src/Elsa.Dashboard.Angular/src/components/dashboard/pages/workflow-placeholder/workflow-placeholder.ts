@@ -16,6 +16,7 @@ export class WorkflowPlaceholder implements OnInit {
   id = input<string>('5e4506339c934e199a17ca7a2e44f874');
   singleLineActivityModel = signal<ActivityModel | null>(null);
   multiLineActivityModel = signal<ActivityModel | null>(null);
+  checkboxActivityModel = signal<ActivityModel | null>(null);
   jsonActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
@@ -44,12 +45,15 @@ export class WorkflowPlaceholder implements OnInit {
     this.intellisenseGatherer = new IntellisenseService(this.store);
     this.singleLineActivityModel.set(this.getSingleLineModel());
     this.multiLineActivityModel.set(this.getMultiLineModel());
+    this.checkboxActivityModel.set(this.getCheckboxModel());
     this.jsonActivityModel.set(this.getJsonModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
+    const checkboxDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckboxDescriptor());
     const jsonDescriptor = signal<ActivityPropertyDescriptor>(this.getJsonDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);
+    this.activityProperties.push(checkboxDescriptor);
     this.activityProperties.push(jsonDescriptor);
   }
 
@@ -122,6 +126,24 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getCheckboxModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '123',
+      type: 'Checkbox',
+      name: 'TestCheckbox',
+      displayName: 'Test Checkbox',
+      description: 'A Stub activity to display a checkbox property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getCheckboxDefinition());
+    return model;
+  }
+
   getJsonModel(): ActivityModel {
     const model: ActivityModel = {
       activityId: '{"p1": "v3", p2: false}',
@@ -162,6 +184,20 @@ export class WorkflowPlaceholder implements OnInit {
       expressions: {
         Literal: '123',
         JavaScript: 'console.log("Hello MultiLine")',
+      },
+      type: '',
+    };
+    return model;
+  }
+
+  getCheckboxDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestCheckbox',
+      expressions: {
+        Literal: '123',
+        JavaScript: 'console.log("Hello Checkbox")',
       },
       type: '',
     };
@@ -229,6 +265,30 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getCheckboxDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: [],
+      expectedOutputType: 'string',
+      hasNestedProperties: false,
+      hasColletedProperties: false,
+      name: 'TestCheckbox',
+      type: 'System.String',
+      uiHint: 'checkbox',
+      label: 'Test Label',
+      hint: 'Test Hint',
+      options: null,
+      order: 0,
+      defaultValue: null,
+      supportedSyntaxes: ['Json'],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+    };
+    return model;
+  }
+
   getJsonDescriptor(): ActivityPropertyDescriptor {
     const model: ActivityPropertyDescriptor = {
       conditionalActivityTypes: [],
@@ -259,6 +319,8 @@ export class WorkflowPlaceholder implements OnInit {
         return this.singleLineActivityModel;
       case 'multi-line':
         return this.multiLineActivityModel;
+      case 'checkbox':
+        return this.checkboxActivityModel;
       case 'json':
         return this.jsonActivityModel;
       default:

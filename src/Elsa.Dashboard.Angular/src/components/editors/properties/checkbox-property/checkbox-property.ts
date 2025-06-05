@@ -19,7 +19,7 @@ export class CheckboxProperty {
 
   fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');
   fieldName = computed(() => this.propertyDescriptor()?.name ?? 'default');
-  isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
+  fieldLabel = computed(() => this.propertyDescriptor()?.label ?? 'default');
 
   constructor() {
     console.log('Setting property model', this.propertyModel());
@@ -27,20 +27,10 @@ export class CheckboxProperty {
 
   onCheckChanged(e: Event) {
     const checkbox = (e.target as HTMLInputElement);
-    isChecked = checkbox.checked;
+    this.isChecked.set(checkbox.checked) ;
 
     let expressions = this.propertyModel().expressions;
     expressions[this.defaultSyntax()] = checkbox.checked.toString();
     this.propertyModel.update(x => ({ ...x, expressions: expressions }));
   }
-
-  // from checkbox property Elsa
-  onCheckChanged(e: Event) {
-    const checkbox = (e.target as HTMLInputElement);
-    this.isChecked = checkbox.checked;
-    const defaultSyntax = this.propertyDescriptor.defaultSyntax || SyntaxNames.Literal;
-    this.propertyModel.expressions[defaultSyntax] = this.isChecked.toString();
-  }
-  //
-
 }

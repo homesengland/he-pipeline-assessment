@@ -26,8 +26,6 @@ export class CheckboxDriver implements PropertyDisplayDriver {
         activityModel: model,
         propertyDescriptor: property,
         propertyModel: propertyModelSignal,
-        isEncrypted: isEncrypted,
-        propertyChanged: onUpdated,
       },
     };
   }
