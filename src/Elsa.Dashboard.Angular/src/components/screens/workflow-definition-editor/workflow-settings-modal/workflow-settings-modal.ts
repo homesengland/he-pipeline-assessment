@@ -5,22 +5,27 @@ import { eventBus } from 'src/services/event-bus';
 import { ModalDialog } from 'src/components/shared/modal-dialog/modal-dialog';
 import { FormContext, SelectOption } from 'src/Utils/forms';
 import { ElsaClientService } from 'src/services/elsa-client';
+import { MarkerSeverity } from 'src/components/monaco/types';
 
 interface VariableDefinition {
   name?: string;
   value?: string;
 }
 
-const persistenceBehaviorOptionsConst: Array<SelectOption> = [{
-  text: 'Suspended',
-  value: 'Suspended'
-}, {
-  text: 'Workflow Burst',
-  value: 'WorkflowBurst'
-}, {
-  text: 'Activity Executed',
-  value: 'ActivityExecuted'
-}];
+const persistenceBehaviorOptionsConst: Array<SelectOption> = [
+  {
+    text: 'Suspended',
+    value: 'Suspended',
+  },
+  {
+    text: 'Workflow Burst',
+    value: 'WorkflowBurst',
+  },
+  {
+    text: 'Activity Executed',
+    value: 'ActivityExecuted',
+  },
+];
 @Component({
   selector: 'workflow-settings-modal',
   templateUrl: './workflow-settings-modal.html',
@@ -44,19 +49,30 @@ export class WorkflowSettingsModal implements OnInit {
   isModalVisible = false;
   persistenceBehaviorOptions: Array<SelectOption> = persistenceBehaviorOptionsConst;
   workflowChannelOptions: Array<SelectOption>;
-  fidelityOptions: Array<SelectOption> = [{
+  fidelityOptions: Array<SelectOption> = [
+    {
       text: 'Burst',
-      value: 'Burst'
-    }, {
+      value: 'Burst',
+    },
+    {
       text: 'Activity',
-      value: 'Activity'
-    }]
+      value: 'Activity',
+    },
+  ];
   contextOptions: WorkflowContextOptions;
 
   constructor(private elsaClientService: ElsaClientService) {}
 
   async getServerUrl(): Promise<string> {
     return this.serverUrl;
+  }
+
+  get variablesValue(): string {
+    return this.workflowDefinitionInternal.variables || '{}';
+  }
+
+  get variablesLanguage(): string {
+    return 'json';
   }
 
   ngOnInit(): void {
@@ -88,10 +104,13 @@ export class WorkflowSettingsModal implements OnInit {
   handleWorkflowDefinitionChanged(newValue: WorkflowDefinition) {
     this.workflowDefinitionInternal = { ...newValue };
     this.formContext = new FormContext(this.workflowDefinitionInternal, newValue => (this.workflowDefinitionInternal = newValue));
-    this.workflowChannelOptions = [{
-      text: '',
-      value: null
-    }, ...this.workflowChannels.map(x => ({text: x, value: x}))];
+    this.workflowChannelOptions = [
+      {
+        text: '',
+        value: null,
+      },
+      ...this.workflowChannels.map(x => ({ text: x, value: x })),
+    ];
   }
 
   async componentWillLoad() {
@@ -133,15 +152,14 @@ export class WorkflowSettingsModal implements OnInit {
     setTimeout(() => eventBus.emit(EventTypes.UpdateWorkflowSettings, this, this.workflowDefinitionInternal), 250);
   }
 
-  // onMonacoValueChanged(e: MonacoValueChangedArgs) {
-  //   // Don't try and parse JSON if it contains errors.
-  //   const errorCount = e.markers.filter(x => x.severity == MarkerSeverity.Error).length;
+  onMonacoValueChanged(e: MonacoValueChangedArgs) {
+    // Don't try and parse JSON if it contains errors.
+    const errorCount = e.markers?.filter(x => x.severity == MarkerSeverity.Error).length;
 
-  //   if (errorCount > 0)
-  //     return;
+    if (errorCount > 0) return;
 
-  //   this.workflowDefinitionInternal.variables = e.value;
-  // }
+    this.workflowDefinitionInternal.variables = e.value;
+  }
 
   @ViewChild('settingsTab', { static: true }) settingsTab!: TemplateRef<any>;
   @ViewChild('variablesTab', { static: true }) variablesTab!: TemplateRef<any>;
