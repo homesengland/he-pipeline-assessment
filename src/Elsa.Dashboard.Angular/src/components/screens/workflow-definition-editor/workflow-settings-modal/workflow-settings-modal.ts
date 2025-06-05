@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, signal, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { EventTypes, WorkflowContextFidelity, WorkflowContextOptions, WorkflowDefinition } from 'src/models';
 import { HTMLElsaMonacoElement, MonacoValueChangedArgs } from 'src/models/elsa-interfaces';
 import { eventBus } from 'src/services/event-bus';
@@ -6,6 +6,7 @@ import { ModalDialog } from 'src/components/shared/modal-dialog/modal-dialog';
 import { FormContext, SelectOption } from 'src/Utils/forms';
 import { ElsaClientService } from 'src/services/elsa-client';
 import { MarkerSeverity } from 'src/components/monaco/types';
+import { sign } from 'crypto';
 
 interface VariableDefinition {
   name?: string;
@@ -35,8 +36,9 @@ export class WorkflowSettingsModal implements OnInit {
   @ViewChild(ModalDialog) dialog;
   @Input() workflowDefinition: WorkflowDefinition;
 
+  variables = signal<string>('{"name":"John", "age":30, "car":null}'); // Default value for variables
+
   serverUrl: string;
-  // workflowDefinition: WorkflowDefinition;
   workflowDefinitionInternal: WorkflowDefinition;
   newVariable: VariableDefinition = {};
   monacoEditor: HTMLElsaMonacoElement; // ?? Not sure if this is correct
@@ -68,7 +70,7 @@ export class WorkflowSettingsModal implements OnInit {
   }
 
   get variablesValue(): string {
-    return this.workflowDefinitionInternal.variables || '{}';
+    return this.workflowDefinitionInternal.variables || '{"name":"John", "age":30, "car":null}';
   }
 
   get variablesLanguage(): string {
