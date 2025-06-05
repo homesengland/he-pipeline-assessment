@@ -74,7 +74,14 @@
   <ng-template #variablesTab>
     <div class="elsa-flex elsa-px-8">
       <div class="elsa-space-y-8 elsa-w-full elsa-h-30">
-        <monaco-editor [value]="variables()" [language]="variablesLanguage" editorHeight="30em" (propagateChange)="onMonacoValueChanged($any($event))"> </monaco-editor>
+        <monaco-editor
+        [value]="variablesValue"
+        [language]="variablesLanguage"
+        editorHeight="30em"
+        (propagateChange)="onMonacoValueChanged($any($event))"
+        #monacoVariablesEditor
+        (onInit)="onMonacoInit($event)">
+        </monaco-editor>
       </div>
     </div>
   </ng-template>

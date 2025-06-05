@@ -158,4 +158,8 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
       EditorVariables.push({ variableName: match[1], type: match[2] });
     }
   }
+
+  async addJsonLib() {
+    monaco.languages.register({ id: 'json' });
+  }
 }
