@@ -55,6 +55,8 @@ export class JsonProperty implements OnInit {
       ...model,
       expressions,
     }));
+    this.updateActivityModel(expressions);
+    console.log('Activity Model Property', this.activityModel().properties);
   }
 
   onDefaultSyntaxValueChanged(e: string) {
@@ -71,5 +73,17 @@ export class JsonProperty implements OnInit {
       language: SyntaxNames.Json,
       value: this.currentValue,
     };
+    this.updateActivityModel(expressions);
+    console.log('Activity Model Property', this.activityModel().properties);
+  }
+
+  private updateActivityModel(expressions: { Json: string }) {
+    const updatedProperties = this.activityModel().properties.map(property =>
+      property.name === this.propertyDescriptor().name ? { ...property, expressions: expressions, syntax: this.defaultSyntax() } : property,
+    );
+    this.activityModel.update(model => ({
+      ...model,
+      properties: updatedProperties,
+    }));
   }
 }

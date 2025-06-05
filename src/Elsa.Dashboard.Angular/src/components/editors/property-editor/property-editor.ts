@@ -47,9 +47,30 @@ export class PropertyEditor implements OnInit, OnChanges {
       [syntax]: expression,
     };
     this.propertyModel.update(x => ({ ...x, expressions: expressions }));
+    // Ensure the expressions object has a 'Json' property as required by updateActivityModel
+    this.updateActivityModel(syntax, expression);
 
     if (syntax != defaultSyntax) return;
 
     this.defaultSyntaxValueChanged.emit(expression);
+  }
+
+  private updateActivityModel(syntax: string, value: string) {
+    const updatedProperties = this.activityModel().properties.map(property =>
+      property.name === this.propertyDescriptor().name
+        ? {
+            ...property,
+            expressions: {
+              ...property.expressions,
+              [syntax]: value,
+            },
+            syntax: syntax,
+          }
+        : property,
+    );
+    this.activityModel.update(model => ({
+      ...model,
+      properties: updatedProperties,
+    }));
   }
 }

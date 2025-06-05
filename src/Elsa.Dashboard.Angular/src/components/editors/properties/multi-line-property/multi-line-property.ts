@@ -26,6 +26,26 @@ export class MultiLineProperty {
     let expressions = this.propertyModel().expressions;
     expressions['Literal'] = input.value;
     this.propertyModel.update(x => ({ ...x, expressions: expressions }));
+    this.updateActivityModel('Literal', input.value);
+  }
+
+  private updateActivityModel(syntax: string, value: string) {
+    const updatedProperties = this.activityModel().properties.map(property =>
+      property.name === this.propertyDescriptor().name
+        ? {
+            ...property,
+            expressions: {
+              ...property.expressions,
+              [syntax]: value,
+            },
+            syntax: this.defaultSyntax(),
+          }
+        : property,
+    );
+    this.activityModel.update(model => ({
+      ...model,
+      properties: updatedProperties,
+    }));
   }
 
   getEditorHeight() {
