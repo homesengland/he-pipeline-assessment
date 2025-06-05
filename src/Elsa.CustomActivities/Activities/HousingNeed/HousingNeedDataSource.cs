@@ -54,10 +54,10 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
             bool successfulQuery = await HandleQuery(context, GssCodes, LocalAuthorities, LocalAuthoritiesAlt);
             if (!successfulQuery && HasPreviousValues())
             {
-                context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null.  Retrying with Previous LA Values");
+                context.JournalData.Add("No Current Authority Error", "Call to GetLAHouseNeedData returned null.  Retrying with Previous LA Values");
                 context.JournalData.Add(nameof(PreviousGssCodes), PreviousGssCodes);
                 context.JournalData.Add(nameof(PreviousLocalAuthorities), PreviousLocalAuthorities);
-                await HandleQuery(context, PreviousGssCodes, PreviousLocalAuthorities, null);
+                await HandleQuery(context, PreviousGssCodes, PreviousLocalAuthorities, null, "Error for Previous Local Authority");
             }
 
             return await Task.FromResult(new CombinedResult(new List<IActivityExecutionResult>
@@ -67,7 +67,7 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
             }));
         }
 
-        protected async Task<bool> HandleQuery(ActivityExecutionContext context, string? gssCode, string? localAuthority, string? altLocalAuthority)
+        protected async Task<bool> HandleQuery(ActivityExecutionContext context, string? gssCode, string? localAuthority, string? altLocalAuthority, string errorKey = "Error")
         {
             bool validQueryData = true;
             var data = await _client.GetLaHouseNeedData(gssCode, localAuthority, altLocalAuthority);
@@ -85,13 +85,13 @@ namespace Elsa.CustomActivities.Activities.HousingNeed
                 }
                 else
                 {
-                    context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
+                    context.JournalData.Add(errorKey, "Call to GetLAHouseNeedData returned null");
                     validQueryData = false;
                 }
             }
             else
             {
-                context.JournalData.Add("Error", "Call to GetLAHouseNeedData returned null");
+                context.JournalData.Add(errorKey, "Call to GetLAHouseNeedData returned null");
                 validQueryData = false;
             }
             return validQueryData;
