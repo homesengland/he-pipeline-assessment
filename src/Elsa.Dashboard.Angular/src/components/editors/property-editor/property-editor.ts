@@ -3,14 +3,12 @@ import { SyntaxNames } from '../../../constants/constants';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from '../../../models';
 import { MultiExpressionEditor } from '../multi-expression-editor/multi-expression-editor';
 
-
 @Component({
-    selector: 'property-editor',
-    templateUrl: './property-editor.html',
-    standalone: false
+  selector: 'property-editor',
+  templateUrl: './property-editor.html',
+  standalone: false,
 })
 export class PropertyEditor implements OnInit, OnChanges {
-
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
@@ -21,35 +19,29 @@ export class PropertyEditor implements OnInit, OnChanges {
 
   defaultSyntaxValueChanged = output<string>();
   editorContext: IntellisenseContext;
-  constructor() {
-
-  }
-    ngOnChanges(changes: SimpleChanges): void {
-
-    }
+  constructor() {}
+  ngOnChanges(changes: SimpleChanges): void {}
 
   ngOnInit() {
     this.editorContext = {
       propertyName: this.propertyDescriptor().name,
-      activityTypeName: this.activityModel().type
-    }
+      activityTypeName: this.activityModel().type,
+    };
   }
-
 
   onSyntaxChanged(e: string) {
     this.propertyModel.update(x => ({ ...x, syntax: e }));
   }
 
-  onExpressionChanged(e: string) {
+  onExpressionChanged(expression: string) {
     let defaultSyntax = this.propertyDescriptor().defaultSyntax || SyntaxNames.Literal;
     let syntax = this.propertyModel().syntax || defaultSyntax;
     let expressions = this.propertyModel().expressions;
-    expressions[syntax] = e;
-    this.propertyModel.update(x => ({ ...x, expressions: expressions }))
+    expressions[syntax] = expression;
+    this.propertyModel.update(x => ({ ...x, expressions: expressions }));
 
-    if (syntax != defaultSyntax)
-      return;
+    if (syntax != defaultSyntax) return;
 
-    this.defaultSyntaxValueChanged.emit(e);
+    this.defaultSyntaxValueChanged.emit(expression);
   }
 }

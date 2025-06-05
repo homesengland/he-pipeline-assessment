@@ -1,72 +1,90 @@
-@let selectedSyntaxClass = "elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 elsa-text-blue-700";
-@let nonSelectedSyntaxClass = "elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 elsa-text-grey-700";
-@let advancedBtnClass = "elsa-border-0 focus:elsa-outline-none elsa-text-sm " + advancedButtonClass();
+@let selectedSyntaxClass = "elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 elsa-text-blue-700"; @let nonSelectedSyntaxClass =
+"elsa-block elsa-px-4 elsa-py-2 elsa-text-sm hover:elsa-bg-gray-100 hover:elsa-text-gray-900 elsa-text-grey-700"; @let advancedBtnClass = "elsa-border-0 focus:elsa-outline-none
+elsa-text-sm " + advancedButtonClass();
 
 <div>
-    <div class="elsa-mb-1">
-        <div class="elsa-flex">
-            <div class="elsa-flex-1">
-                <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700">
-                    {{fieldLabel}}
-                </label>
+  <div class="elsa-mb-1">
+    <div class="elsa-flex">
+      <div class="elsa-flex-1">
+        <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700"> {{fieldLabel()}} </label>
+      </div>
+      <div class="elsa-relative" #contextRef>
+        <button type="button" [ngClass]="advancedBtnClass" (click)="onSettingsClick($event)">
+          <ng-container *ngIf="!isReadOnly()">
+            <svg
+              class="elsa-h-5 elsa-w-5 elsa-text-gray-400"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" />
+              <circle cx="12" cy="12" r="9" />
+              <line x1="8" y1="12" x2="8" y2="12.01" />
+              <line x1="12" y1="12" x2="12" y2="12.01" />
+              <line x1="16" y1="12" x2="16" y2="12.01" />
+            </svg>
+          </ng-container>
+          <ng-container *ngIf="isReadOnly()">
+            <span>{{selectedSyntax()}}</span>
+          </ng-container>
+        </button>
+        <div>
+          <div
+            #contextMenu
+            data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
+            data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
+            data-transition-enter-end="elsa-transform elsa-opacity-100 elsa-scale-100"
+            data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
+            data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
+            data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
+            class="hidden elsa-origin-top-right elsa-absolute elsa-right-1 elsa-mt-1 elsa-w-56 elsa-rounded-md elsa-shadow-lg elsa-bg-white elsa-ring-1 elsa-ring-black elsa-ring-opacity-5 elsa-divide-y elsa-divide-gray-100 focus:elsa-outline-none elsa-z-10"
+            role="menu"
+            aria-orientation="vertical"
+            aria-abelledby="options-menu"
+          >
+            <div class="elsa-py-1" role="none">
+              <a (click)="selectSyntax($event, undefined)" href="#" [ngClass]="syntax() == selectedSyntax() ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem">
+                Default
+              </a>
             </div>
-            <div class="elsa-relative" #contextRef>
-                <button type="button" [ngClass]="advancedBtnClass" (click)="onSettingsClick($event)">
-
-                    <ng-template *ngIf="!isReadOnly()">
-                        <svg class="elsa-h-5 elsa-w-5 elsa-text-gray-400" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" />
-                            <circle cx="12" cy="12" r="9" />
-                            <line x1="8" y1="12" x2="8" y2="12.01" />
-                            <line x1="12" y1="12" x2="12" y2="12.01" />
-                            <line x1="16" y1="12" x2="16" y2="12.01" />
-                        </svg>
-                    </ng-template>
-                    <ng-template *ngIf="isReadOnly()">
-                        <span>{{selectedSyntax()}}</span>
-                    </ng-template>
-                </button>
-                <div>
-                    <div #contextMenu
-                         data-transition-enter="elsa-transition elsa-ease-out elsa-duration-100"
-                         data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
-                         data-transition-enter-end="elsa-transform elsa-opacity-100 elsa-scale-100"
-                         data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
-                         data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
-                         data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
-                         class="hidden elsa-origin-top-right elsa-absolute elsa-right-1 elsa-mt-1 elsa-w-56 elsa-rounded-md elsa-shadow-lg elsa-bg-white elsa-ring-1 elsa-ring-black elsa-ring-opacity-5 elsa-divide-y elsa-divide-gray-100 focus:elsa-outline-none elsa-z-10" role="menu"
-                         aria-orientation="vertical"
-                         aria-abelledby="options-menu">
-                        <div class="elsa-py-1" role="none">
-                            <a (click)='selectSyntax($event, syntax())' href="#" [ngClass]="syntax == selectedSyntax ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem"> Default </a>
-                        </div>
-                        <div class="elsa-py-1" role="none">
-
-                            <a *ngFor="let syntax of supportedSyntaxes(); index as i;"
-                               (click)="selectSyntax($event, syntax)" href="#"
-                               [class]="syntax == selectedSyntax ? selectedSyntaxClass : nonSelectedSyntaxClass" role="menuitem">
-                                {{ syntax }}
-                            </a>
-                        </div>
-                    </div>
-                </div>
+            <div class="elsa-py-1" role="none">
+              <a
+                *ngFor="let syntax of supportedSyntaxes(); index as i;"
+                (click)="selectSyntax($event, syntax)"
+                href="#"
+                [class]="syntax == selectedSyntax() ? selectedSyntaxClass : nonSelectedSyntaxClass"
+                role="menuitem"
+              >
+                {{ syntax }}
+              </a>
             </div>
+          </div>
         </div>
-        <div class="elsa-flex">
-            <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500"> {{hint()}} </p>
-        </div>
+      </div>
     </div>
-    <div>
-        <div [class]="expressionEditorClass()">
-            <expression-editor #expressionEditorRef
-                               [expression]="currentValue()"
-                               [language]="monacoLanguage()"
-                               [editorHeight]="editorHeight()"
-                               [singleLineMode]="singleLineMode()"
-                               [context]="context()"></expression-editor>
-        </div>
-        <div class="{{defaultEditorClass()}}">
-            <ng-content></ng-content>
-        </div>
+    <div class="elsa-flex">
+      <p class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">{{hint()}}</p>
     </div>
+  </div>
+  <div>
+    <div [class]="expressionEditorClass()">
+      <expression-editor
+        #expressionEditorRef
+        [expression]="currentValue"
+        [language]="monacoLanguage()"
+        [editorHeight]="editorHeight()"
+        [singleLineMode]="singleLineMode()"
+        [context]="context()"
+        (expressionChanged)="onExpressionChanged($event)"
+      ></expression-editor>
+    </div>
+    <div class="{{defaultEditorClass()}}">
+      <ng-content></ng-content>
+    </div>
+  </div>
 </div>

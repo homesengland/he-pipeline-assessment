@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, makeEnvironmentProviders } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { WorkflowRoot } from './components/dashboard/pages/workflow-root/workflow-root';
@@ -22,19 +22,16 @@ import { MultiExpressionEditor } from './components/editors/multi-expression-edi
 import { ExpressionEditor } from './components/editors/expression-editor/expression-editor';
 import { PropertyEditor } from './components/editors/property-editor/property-editor';
 import { SingleLineProperty } from './components/editors/properties/single-line-property/single-line-property';
+import { MultiLineProperty } from './components/editors/properties/multi-line-property/multi-line-property';
 import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
 import { StoreModule } from '@ngrx/store';
 import { appStateReducer } from './store/reducers/app.state.reducers';
 import { IntellisenseService } from './services/intellisense-service';
-import { createWorkflowClient, WorkflowClient } from './services/workflow-client';
-import { MonacoEditorModule, provideMonacoEditor } from './components/monaco/editor-module';
 import { ToastNotification } from './components/shared/toast-notification/toast-notification';
-import { monacoConfig } from './components/monaco/config';
+import { MONACO_EDITOR_CONFIG, monacoConfig, MonacoEditorConfig } from './components/monaco/config';
 import { WorkflowInstanceViewerScreen } from './components/screens/workflow-instance-viewer/workflow-instance-viewer-screen/workflow-instance-viewer-screen';
 import { WorkflowInstancesView } from './components/dashboard/pages/workflow-instances-view/workflow-instances-view';
 import { WorkflowDefinitionListScreen } from './components/screens/workflow-definition-list/workflow-definition-list-screen/workflow-definition-list-screen';
-import { EditorComponent } from './components/monaco/editor.component';
-import { DiffEditorComponent } from './components/monaco/diff-editor.component';
 import { WorkflowInstanceJournalComponent } from './components/screens/workflow-instance-viewer/workflow-instance-journal/workflow-instance-journal';
 import { FlyoutPanelComponent } from './components/shared/flyout-panel/flyout-panel.component';
 import { TabHeaderComponent } from './components/shared/tab-header/tab-header.component';
@@ -51,6 +48,10 @@ import { FormCheckBoxComponent } from 'src/Utils/form-controls/form-check-box/fo
 import { FormSectionComponent } from 'src/Utils/form-controls/form-section/form-section.component';
 import { FormSelectFieldComponent } from 'src/Utils/form-controls/form-select-field/form-select-field.component';
 import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/form-text-area.component';
+import { PropertyControl } from './components/controls/property-control/property-control';
+import { EditorComponent } from './components/monaco/editor.component';
+import { DiffEditorComponent } from './components/monaco/diff-editor.component';
+import { JsonProperty } from './components/editors/properties/json-property/json-property';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,6 @@ import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/fo
     WorkflowInstanceListScreen,
     WorkflowPager,
     WorkflowDropdownButton,
-    WorkflowContextMenu,
     WorkflowPlaceholder,
     ConfirmDialog,
     ModalDialog,
@@ -75,9 +75,8 @@ import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/fo
     ExpressionEditor,
     PropertyEditor,
     SingleLineProperty,
+    MultiLineProperty,
     ToastNotification,
-    DiffEditorComponent,
-    EditorComponent,
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,
     TabHeaderComponent,
@@ -85,6 +84,11 @@ import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/fo
     WorkflowDefinitionEditorScreen,
     DesignerTree,
     WorkflowDefinitionEdit,
+    TabContentComponent,
+    PropertyControl,
+    EditorComponent,
+    DiffEditorComponent,
+    JsonProperty,
     ActivityEditorModal,
     WorkflowSettingsButton,
     WorkflowSettingsModal,
@@ -95,8 +99,8 @@ import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/fo
     FormTextAreaComponent,
   ],
   imports: [
-    BrowserModule,
     routing,
+    BrowserModule,
     AppStateModule,
     ReactiveFormsModule,
     RouterModule,
@@ -105,7 +109,7 @@ import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/fo
     StoreModule.forRoot({ appState: appStateReducer }),
     BrowserAnimationsModule,
   ],
-  providers: [IntellisenseService, provideHttpClient(), provideMonacoEditor(monacoConfig)],
+  providers: [IntellisenseService, provideHttpClient(), { provide: MONACO_EDITOR_CONFIG, useValue: monacoConfig }],
   bootstrap: [WorkflowRoot],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

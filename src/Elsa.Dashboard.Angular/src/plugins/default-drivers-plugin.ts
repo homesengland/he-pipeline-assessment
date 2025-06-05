@@ -1,25 +1,20 @@
-//import { propertyDisplayManager, WorkflowPlugin, PropertyDisplayDriver } from "../services";
-//import { JsonDriver, RadioListDriver, CheckboxDriver, CheckListDriver, CodeEditorDriver, DictionaryDriver, DropdownDriver, MultilineDriver, MultiTextDriver, SingleLineDriver, SwitchCaseBuilderDriver } from "../drivers";
-//import { WorkflowStudio } from "../models";
-//import { CronExpressionDriver } from "../drivers/cron-expression-driver";
+import { from } from 'rxjs';
+import { propertyDisplayManager } from '../services/property-display-manager';
+import { SingleLineDriver } from '../drivers/single-line-driver';
+import { MultiLineDriver } from '../drivers/multi-line-driver';
+import { WorkflowPlugin } from 'src/services/workflow-plugin';
+import { PropertyDisplayDriver } from 'src/services/property-display-driver';
+import { WorkflowStudio } from 'src/models';
+import { JsonDriver } from 'src/drivers/json-driver';
 
-//export class DefaultDriversPlugin implements WorkflowPlugin {
-//  constructor() {
-//    this.addDriver('single-line', () => new SingleLineDriver());
-//    this.addDriver('multi-line', () => new MultilineDriver());
-//    this.addDriver('json', () => new JsonDriver());
-//    this.addDriver('check-list', () => new CheckListDriver());
-//    this.addDriver('radio-list', () => new RadioListDriver());
-//    this.addDriver('checkbox', () => new CheckboxDriver());
-//    this.addDriver('dropdown', () => new DropdownDriver());
-//    this.addDriver('multi-text', () => new MultiTextDriver());
-//    this.addDriver('code-editor', () => new CodeEditorDriver());
-//    this.addDriver('switch-case-builder', () => new SwitchCaseBuilderDriver());
-//    this.addDriver('dictionary', () => new DictionaryDriver());
-//    this.addDriver('cron-expression', () => new CronExpressionDriver());
-//  }
+export class DefaultDriversPlugin implements WorkflowPlugin {
+  constructor() {
+    this.addDriver('single-line', () => new SingleLineDriver());
+    this.addDriver('multi-line', () => new MultiLineDriver());
+    this.addDriver('json', () => new JsonDriver());
+  }
 
-//  addDriver<T extends PropertyDisplayDriver>(controlType: string, c: (elsaStudio: ElsaStudio) => T) {
-//    propertyDisplayManager.addDriver(controlType, c);
-//  }
-//}
+  addDriver<T extends PropertyDisplayDriver>(controlType: string, c: (workflowStudio: WorkflowStudio) => T) {
+    propertyDisplayManager.addDriver(controlType, c);
+  }
+}

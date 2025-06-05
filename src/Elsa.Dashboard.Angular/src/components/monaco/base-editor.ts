@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, inject, input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild, inject, input, Inject, Optional } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MONACO_EDITOR_CONFIG, MonacoEditorConfig } from './config';
 
@@ -10,8 +10,9 @@ let loadPromise: Promise<void>;
   standalone: false,
 })
 export abstract class BaseEditor implements AfterViewInit, OnDestroy {
-  config = inject<MonacoEditorConfig>(MONACO_EDITOR_CONFIG);
-
+  constructor(@Optional() @Inject(MONACO_EDITOR_CONFIG) protected config: MonacoEditorConfig) {
+    this.config = this.config || {};
+  }
   @Input('insideNg')
   set insideNg(insideNg: boolean) {
     this._insideNg = insideNg;
@@ -128,6 +129,13 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
       this._editor.setValue(value);
     }
   }
+
+  setLanguage(language: string) {
+    if (this._editor) {
+      this._editor.getModel().setLanguage(language);
+    }
+  }
+
 
   private setupMonacoWorkerEnvironment(baseUrl: string): void {
     // Ensure baseUrl is absolute
