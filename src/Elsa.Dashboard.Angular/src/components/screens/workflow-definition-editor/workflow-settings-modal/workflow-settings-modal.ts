@@ -165,7 +165,8 @@ export class WorkflowSettingsModal implements OnInit {
   async onMonacoInit(e:MonacoValueChangedArgs){
     console.log('Monaco editor initialized', e);
     await this.monacoVariablesEditor.addJsonLib();
-    this.setExpression(this.variablesValue);;
+    this.setLanguage(this.variablesLanguage);
+    this.setExpression(this.variablesValue);
   }
 
   async setExpression(value: string) {
