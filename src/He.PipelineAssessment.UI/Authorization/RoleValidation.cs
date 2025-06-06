@@ -55,13 +55,13 @@ public class RoleValidation : IRoleValidation
         {
             switch (assessment?.BusinessArea)
             {
-                case "MPP":
+                case Constants.BusinessArea.MPP:
                     isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
-                case "Investment":
+                case Constants.BusinessArea.Investment:
                     isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
-                case "Development":
+                case Constants.BusinessArea.Development:
                     isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
                 default: return isRoleExist;

@@ -12,6 +12,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public string Reference { get; set; } = null!;
         public string? LocalAuthority { get; set; }
         public string? ProjectManager { get; set; }   
+        public bool HasValidBusinessArea { get; set; }
         public IEnumerable<AssessmentSummaryStage> Stages { get; set; } = null!;
         public IEnumerable<AssessmentInterventionViewModel> Interventions { get; set; } = null!;
         public IEnumerable<AssessmentSummaryStage> StagesHistory { get; set; } = null!;
@@ -38,6 +39,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public int? AssessmentToolWorkflowInstanceId { get; set; }
         public bool? IsFirstWorkflow { get; set; }
         public bool? IsVariation { get; set; }
+        public bool? IsEarlyStage { get; set; }
         public string? Result { get; set; } = null;
         public string? SubmittedBy { get; set; } = null;
 
