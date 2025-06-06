@@ -33,6 +33,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60184F01-9213-4233-B604-A3F384050DB6}"
 	ProjectSection(SolutionItems) = preProject
 		CodeCoverage.runsettings = CodeCoverage.runsettings
+		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
 		nuget.config = nuget.config
 		..\README.md = ..\README.md
