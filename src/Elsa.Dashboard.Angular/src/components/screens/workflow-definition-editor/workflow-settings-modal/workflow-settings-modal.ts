@@ -147,7 +147,7 @@ export class WorkflowSettingsModal implements OnInit {
     await this.dialog.hide();
   }
 
-  async onSubmit(e: Event) {
+  async onSaveClick(e: Event) {
     e.preventDefault();
     await this.dialog.hide();
     setTimeout(() => eventBus.emit(EventTypes.UpdateWorkflowSettings, this, this.workflowDefinitionInternal), 250);
