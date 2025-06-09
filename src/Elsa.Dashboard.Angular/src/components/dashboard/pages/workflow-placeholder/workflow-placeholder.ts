@@ -158,7 +158,7 @@ export class WorkflowPlaceholder implements OnInit {
       saveWorkflowContext: undefined,
       propertyStorageProviders: undefined,
     };
-    model.properties.push(this.getJsonDefinition());
+    model.properties.push(this.getDropDownDefinition());
     return model;
   }
 
@@ -300,7 +300,14 @@ export class WorkflowPlaceholder implements OnInit {
       uiHint: 'dropdown',
       label: 'Test Label',
       hint: 'Test Hint',
-      options: null,
+      options: {
+        items: [
+          { text: 'Option 1', value: 'Option1' },
+          { text: 'Option 2', value: 'Option2' },
+          { text: 'Option 3', value: 'Option3' },
+        ],
+        isFlagsEnum: false,
+      },
       order: 0,
       defaultValue: null,
       supportedSyntaxes: ['Literal'],
@@ -322,6 +329,8 @@ export class WorkflowPlaceholder implements OnInit {
         return this.multiLineActivityModel;
       case 'json':
         return this.jsonActivityModel;
+      case 'dropdown':
+        return this.dropDownActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);
     }

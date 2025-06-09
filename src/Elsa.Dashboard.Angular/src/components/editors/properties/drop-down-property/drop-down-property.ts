@@ -186,4 +186,13 @@ export class DropDownProperty implements OnInit {
       this.serverUrl = data;
     });
   }
+
+  getSelectItems(): any {
+    return this.selectList.items.map(item => {
+      return {
+        text: item.label,
+        value: item.value,
+      } as SelectListItem;
+    });
+  }
 }
