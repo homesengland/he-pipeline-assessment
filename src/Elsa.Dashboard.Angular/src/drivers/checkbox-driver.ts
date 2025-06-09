@@ -25,8 +25,7 @@ export class CheckboxDriver implements PropertyDisplayDriver {
       inputs: {
         activityModel: model,
         propertyDescriptor: property,
-        propertyModel: propertyModelSignal,
-        isChecked: signal(propertyModel.value === true),
+        propertyModel: propertyModelSignal
       },
     };
   }

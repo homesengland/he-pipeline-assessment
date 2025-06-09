@@ -193,11 +193,9 @@ export class WorkflowPlaceholder implements OnInit {
   getCheckboxDefinition(): ActivityDefinitionProperty {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
-      value: 'true',
+      value: 'string',
       name: 'TestCheckbox',
-      expressions: {
-        Literal: 'true',
-      },
+      expressions: {},
       type: '',
     };
     return model;
@@ -277,7 +275,7 @@ export class WorkflowPlaceholder implements OnInit {
       hint: 'Test Hint',
       options: null,
       order: 0,
-      defaultValue: null,
+      defaultValue: true,
       supportedSyntaxes: [],
       isReadOnly: false,
       isBrowsable: true,
