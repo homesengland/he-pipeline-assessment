@@ -198,29 +198,29 @@ export interface ActivityDefinitionProperty {
 }
 
 export interface ActivityPropertyDescriptor {
-    name: string;
-    uiHint: string;
-    label?: string;
-    hint?: string;
-    type?: string;
-    options?: any;
-    category?: string;
-    order?: number;
-    defaultValue?: any;
-    defaultSyntax?: string;
-    supportedSyntaxes: Array<string>;
-    isReadOnly?: boolean;
-    isBrowsable?: boolean;
-    isDesignerCritical?: boolean;
-    defaultWorkflowStorageProvider?: string;
-    disableWorkflowProviderSelection: boolean;
-    considerValuesAsOutcomes?: boolean;
-    displayInDesigner?: boolean;
-    conditionalActivityTypes?: Array<string>;
-    expectedOutputType?: string;
-    hasNestedProperties?: boolean;
-    hasColletedProperties?: boolean;
-    nestedProperties?: Array<ActivityPropertyDescriptor>;
+  name: string;
+  uiHint: string;
+  label?: string;
+  hint?: string;
+  type?: string;
+  options?: any;
+  category?: string;
+  order?: number;
+  defaultValue?: any;
+  defaultSyntax?: string;
+  supportedSyntaxes: Array<string>;
+  isReadOnly?: boolean;
+  isBrowsable?: boolean;
+  isDesignerCritical?: boolean;
+  defaultWorkflowStorageProvider?: string;
+  disableWorkflowProviderSelection: boolean;
+  considerValuesAsOutcomes?: boolean;
+  displayInDesigner?: boolean;
+  conditionalActivityTypes?: Array<string>;
+  expectedOutputType?: string;
+  hasNestedProperties?: boolean;
+  hasColletedProperties?: boolean;
+  nestedProperties?: Array<ActivityPropertyDescriptor>;
 }
 
 interface BlockingActivity {

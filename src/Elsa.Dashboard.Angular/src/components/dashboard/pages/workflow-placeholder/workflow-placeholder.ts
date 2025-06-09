@@ -17,6 +17,7 @@ export class WorkflowPlaceholder implements OnInit {
   singleLineActivityModel = signal<ActivityModel | null>(null);
   multiLineActivityModel = signal<ActivityModel | null>(null);
   jsonActivityModel = signal<ActivityModel | null>(null);
+  dropDownActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
   intellisenseGatherer: IntellisenseService;
@@ -45,12 +46,15 @@ export class WorkflowPlaceholder implements OnInit {
     this.singleLineActivityModel.set(this.getSingleLineModel());
     this.multiLineActivityModel.set(this.getMultiLineModel());
     this.jsonActivityModel.set(this.getJsonModel());
+    this.dropDownActivityModel.set(this.getDropDownModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
     const jsonDescriptor = signal<ActivityPropertyDescriptor>(this.getJsonDescriptor());
+    const dropdownDescriptor = signal<ActivityPropertyDescriptor>(this.getDropDownDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);
     this.activityProperties.push(jsonDescriptor);
+    this.activityProperties.push(dropdownDescriptor);
   }
 
   async ngOnInit() {
@@ -137,6 +141,37 @@ export class WorkflowPlaceholder implements OnInit {
       propertyStorageProviders: undefined,
     };
     model.properties.push(this.getJsonDefinition());
+    return model;
+  }
+
+  getDropDownModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '',
+      type: 'DropDown',
+      name: 'TestDropDown',
+      displayName: 'Test Drop Down',
+      description: 'A Stub activity to display a dropdown property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getJsonDefinition());
+    return model;
+  }
+
+  getDropDownDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestDropDown',
+      expressions: {
+        Literal: '123',
+      },
+      type: '',
+    };
     return model;
   }
 
@@ -250,6 +285,31 @@ export class WorkflowPlaceholder implements OnInit {
       disableWorkflowProviderSelection: false,
       considerValuesAsOutcomes: false,
       defaultSyntax: 'Json',
+    };
+    return model;
+  }
+
+  getDropDownDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: [],
+      expectedOutputType: 'string',
+      hasNestedProperties: false,
+      hasColletedProperties: false,
+      name: 'TestDropDown',
+      type: 'System.String',
+      uiHint: 'dropdown',
+      label: 'Test Label',
+      hint: 'Test Hint',
+      options: null,
+      order: 0,
+      defaultValue: null,
+      supportedSyntaxes: ['Literal'],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+      defaultSyntax: 'Literal',
     };
     return model;
   }
