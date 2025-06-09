@@ -4,6 +4,7 @@
   [(propertyModel)]="propertyModel"
   [editorHeight]="getEditorHeight()"
   [context]="getContext()"
+  (defaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
 >
   <monaco-editor [model]="model" [options]="options" language="Json" [editorHeight]="getEditorHeight()" (propagateChange)="onMonacoValueChanged($any($event))" />
 </property-editor>

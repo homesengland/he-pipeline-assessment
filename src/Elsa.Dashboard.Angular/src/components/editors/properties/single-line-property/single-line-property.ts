@@ -2,6 +2,7 @@ import { Component, computed, model, OnChanges, OnInit, signal, SimpleChanges } 
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
+import { Map } from 'src/utils/utils';
 
 @Component({
   selector: 'single-line-property',
@@ -29,6 +30,27 @@ export class SingleLineProperty {
     let expressions = this.propertyModel().expressions;
     expressions[this.defaultSyntax()] = input.value;
     this.propertyModel.update(x => ({ ...x, expressions: expressions }));
+    console.log('Action model properties', this.activityModel().properties);
+    this.updateActivityModel(this.defaultSyntax(), input.value);
+  }
+
+  private updateActivityModel(syntax: string, value: string) {
+    const updatedProperties = this.activityModel().properties.map(property =>
+      property.name === this.propertyDescriptor().name
+        ? {
+            ...property,
+            expressions: {
+              ...property.expressions,
+              [syntax]: value,
+            },
+            syntax: this.defaultSyntax(),
+          }
+        : property,
+    );
+    this.activityModel.update(model => ({
+      ...model,
+      properties: updatedProperties,
+    }));
   }
 
   onFocus(e: Event) {
@@ -37,6 +59,7 @@ export class SingleLineProperty {
       let expressions = this.propertyModel().expressions;
       expressions[this.defaultSyntax()] = input.value;
       this.propertyModel.update(x => ({ ...x, expressions: expressions }));
+      this.updateActivityModel(this.defaultSyntax(), input.value);
     }
   }
 }
