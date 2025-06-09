@@ -1,22 +1,19 @@
-<property-editor [(activityModel)]="activityModel"
-                 [(propertyDescriptor)]="propertyDescriptor"
-                 [(propertyModel)]="propertyModel"
-                 single-line="true"
-                 showLabel="false"
->
+<property-editor [(activityModel)]="activityModel" [(propertyDescriptor)]="propertyDescriptor" [(propertyModel)]="propertyModel" single-line="true" [showLabel]="false">
   <div class="elsa-max-w-lg">
     <div class="elsa-relative elsa-flex elsa-items-start">
       <div class="elsa-flex elsa-items-center elsa-h-5">
-        <input [id]="fieldId()"
-               [name]="fieldName()"
-               type="checkbox"
-               [checked]="isCheck()"
-               [value]="currentValue()"
-               (change)="onCheckChanged($event)"
-               class="focus:elsa-ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+        <input
+          [id]="fieldId()"
+          [name]="fieldName()"
+          type="checkbox"
+          [checked]="isChecked()"
+          [value]="currentValue()"
+          (change)="onCheckChanged($event)"
+          class="focus:elsa-ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded"
+        />
       </div>
       <div class="elsa-ml-3 elsa-text-sm">
-        <label htmlFor={fieldId} class="elsa-font-medium elsa-text-gray-700">{fieldLabel}</label>
+        <label htmlFor="{fieldId}" class="elsa-font-medium elsa-text-gray-700">{{fieldLabel()}}</label>
       </div>
     </div>
   </div>

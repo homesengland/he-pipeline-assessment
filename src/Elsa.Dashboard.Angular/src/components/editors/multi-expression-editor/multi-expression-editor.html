@@ -8,7 +8,7 @@ elsa-text-sm " + advancedButtonClass();
       <div class="elsa-flex-1">
         <label class="elsa-block elsa-text-sm elsa-font-medium elsa-text-gray-700"> {{fieldLabel()}} </label>
       </div>
-      <div class="elsa-relative" #contextRef>
+      <div *ngIf="supportedSyntaxes().length > 0" class="elsa-relative" #contextRef>
         <button type="button" [ngClass]="advancedBtnClass" (click)="onSettingsClick($event)">
           <ng-container *ngIf="!isReadOnly()">
             <svg
