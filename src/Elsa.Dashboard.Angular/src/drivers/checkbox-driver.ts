@@ -13,9 +13,9 @@ export class CheckboxDriver implements PropertyDisplayDriver {
   }
 
   display(model: Signal<ActivityModel>, property: Signal<ActivityPropertyDescriptor>, onUpdated?: () => void, isEncrypted?: boolean) {
-    console.log("Checkbox Driver Setup");
-    console.log("Activity Model", model());
-    console.log("Property Model", property());
+    console.log('Checkbox Driver Setup');
+    console.log('Activity Model', model());
+    console.log('Property Model', property());
     const propertyModel = getOrCreateProperty(model(), property().name);
     const propertyModelSignal = signal<ActivityDefinitionProperty>(propertyModel);
 
@@ -26,6 +26,7 @@ export class CheckboxDriver implements PropertyDisplayDriver {
         activityModel: model,
         propertyDescriptor: property,
         propertyModel: propertyModelSignal,
+        isChecked: signal(propertyModel.value === true),
       },
     };
   }

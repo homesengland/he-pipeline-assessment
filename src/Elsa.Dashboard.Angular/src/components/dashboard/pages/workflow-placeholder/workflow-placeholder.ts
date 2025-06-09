@@ -193,11 +193,10 @@ export class WorkflowPlaceholder implements OnInit {
   getCheckboxDefinition(): ActivityDefinitionProperty {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
-      value: 'string',
+      value: 'true',
       name: 'TestCheckbox',
       expressions: {
-        Literal: '123',
-        JavaScript: 'console.log("Hello Checkbox")',
+        Literal: 'true',
       },
       type: '',
     };
