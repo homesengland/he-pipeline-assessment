@@ -77,15 +77,21 @@ export class MultiExpressionEditor implements OnInit, OnChanges {
   }
 
   toggleContextMenu() {
-    toggle(this.contextMenu.nativeElement);
+    if (this.contextMenu) {
+      toggle(this.contextMenu.nativeElement);
+    }
   }
 
   openContextMenu() {
-    enter(this.contextMenu.nativeElement);
+    if (this.contextMenu) {
+      enter(this.contextMenu.nativeElement);
+    }
   }
 
   closeContextMenu() {
-    if (!!this.contextMenu.nativeElement) leave(this.contextMenu.nativeElement);
+    if (this.contextMenu) {
+      if (!!this.contextMenu.nativeElement) leave(this.contextMenu.nativeElement);
+    }
   }
 
   selectDefaultEditor(e: Event) {
