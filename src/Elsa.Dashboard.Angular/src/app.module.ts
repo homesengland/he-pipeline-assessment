@@ -23,6 +23,7 @@ import { ExpressionEditor } from './components/editors/expression-editor/express
 import { PropertyEditor } from './components/editors/property-editor/property-editor';
 import { SingleLineProperty } from './components/editors/properties/single-line-property/single-line-property';
 import { MultiLineProperty } from './components/editors/properties/multi-line-property/multi-line-property';
+import { CheckboxProperty } from './components/editors/properties/checkbox-property/checkbox-property';
 import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
 import { StoreModule } from '@ngrx/store';
 import { appStateReducer } from './store/reducers/app.state.reducers';
@@ -69,6 +70,7 @@ import { DropDownProperty } from './components/editors/properties/drop-down-prop
     PropertyEditor,
     SingleLineProperty,
     MultiLineProperty,
+    CheckboxProperty,
     ToastNotification,
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,
