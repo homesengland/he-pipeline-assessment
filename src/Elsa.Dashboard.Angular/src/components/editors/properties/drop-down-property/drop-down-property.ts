@@ -190,7 +190,7 @@ export class DropDownProperty implements OnInit {
   getSelectItems(): any {
     return this.selectList.items.map(item => {
       return {
-        text: item.label,
+        text: item.text,
         value: item.value,
       } as SelectListItem;
     });
