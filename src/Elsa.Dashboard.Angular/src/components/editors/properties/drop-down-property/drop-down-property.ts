@@ -81,7 +81,17 @@ export class DropDownProperty implements OnInit {
         }
       }
     } else {
-      this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
+      // this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
+
+      // Using hard-coding values to test
+      this.selectList = {
+        items: [
+          { text: 'Option 1', value: 'Option1Bogus' },
+          { text: 'Option 2', value: 'Option2Bogus' },
+          { text: 'Option 3', value: 'Option3Bogus' },
+        ],
+        isFlagsEnum: false
+      }
 
       if (this.currentValue == undefined) {
         const defaultValue = this.propertyDescriptor().defaultValue;
@@ -190,7 +200,7 @@ export class DropDownProperty implements OnInit {
   getSelectItems(): any {
     return this.selectList.items.map(item => {
       return {
-        text: item.label,
+        text: item.text,
         value: item.value,
       } as SelectListItem;
     });
