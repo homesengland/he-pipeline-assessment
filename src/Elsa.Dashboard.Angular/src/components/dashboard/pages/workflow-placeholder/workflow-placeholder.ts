@@ -4,6 +4,7 @@ import { ActivityModel, ActivityPropertyDescriptor, ActivityDefinitionProperty }
 import { Store } from '@ngrx/store';
 import { AppStateActionGroup } from '../../../../store/actions/app.state.actions';
 import { EditorModel } from 'src/components/monaco/types';
+import { SelectList } from '../../../../models/elsa-interfaces';
 
 @Component({
   selector: 'workflow-placeholder',
@@ -347,6 +348,16 @@ export class WorkflowPlaceholder implements OnInit {
   }
 
   getDropDownDescriptor(): ActivityPropertyDescriptor {
+
+    const selectList: SelectList = {
+      items: [
+        { text: "Option 1", value: "Option1" },
+        { text: "Option 2", value: "Option2" },
+        { text: "Option 3", value: "Option3" }
+      ],
+      isFlagsEnum: false
+    };
+
     const model: ActivityPropertyDescriptor = {
       conditionalActivityTypes: [],
       expectedOutputType: 'string',
@@ -357,14 +368,7 @@ export class WorkflowPlaceholder implements OnInit {
       uiHint: 'dropdown',
       label: 'Test Label',
       hint: 'Test Hint',
-      options: {
-        items: [
-          { text: 'Option 1', value: 'Option1' },
-          { text: 'Option 2', value: 'Option2' },
-          { text: 'Option 3', value: 'Option3' },
-        ],
-        isFlagsEnum: false,
-      },
+      options: selectList,
       order: 0,
       defaultValue: null,
       supportedSyntaxes: ['Literal'],
