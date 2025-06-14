@@ -14,7 +14,7 @@ export class DefaultDriversPlugin implements WorkflowPlugin {
     this.addDriver('single-line', () => new SingleLineDriver());
     this.addDriver('multi-line', () => new MultiLineDriver());
     this.addDriver('json', () => new JsonDriver());
-    this.addDriver('json', () => new DropDownDriver());
+    this.addDriver('dropdown', () => new DropDownDriver());
   }
 
   addDriver<T extends PropertyDisplayDriver>(controlType: string, c: (workflowStudio: WorkflowStudio) => T) {

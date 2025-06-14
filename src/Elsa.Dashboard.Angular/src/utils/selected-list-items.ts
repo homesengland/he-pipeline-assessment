@@ -11,12 +11,12 @@ export async function getSelectListItems(elsaClientService: ElsaClientService, s
   let selectList: SelectList;
 
   if (!!options && options.runtimeSelectListProviderType) selectList = await fetchRuntimeItems(elsaClientService, serverUrl, options);
-  else if (Array.isArray(options))
+  else if (Array.isArray(options.items) && options.items.length > 0) {
     selectList = {
-      items: options,
+      items: options.items,
       isFlagsEnum: false,
     };
-  else selectList = options as SelectList;
+  }
 
   return selectList || { items: [], isFlagsEnum: false };
 }
