@@ -190,7 +190,7 @@ export class WorkflowPlaceholder implements OnInit {
       value: 'string',
       name: 'TestDropDown',
       expressions: {
-        Literal: '123',
+        Literal: 'Option1',
       },
       type: '',
     };
