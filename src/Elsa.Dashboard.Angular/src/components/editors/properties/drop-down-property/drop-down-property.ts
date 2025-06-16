@@ -150,7 +150,7 @@ export class DropDownProperty implements OnInit {
   };
 
   onChange(e: Event) {
-    const input = e.currentTarget as HTMLTextAreaElement;
+    const input = e.currentTarget as HTMLSelectElement;
     const defaultSyntax = this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal;
     let expressions = this.propertyModel().expressions;
     expressions[defaultSyntax] = input.value;

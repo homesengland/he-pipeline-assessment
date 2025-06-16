@@ -10,13 +10,15 @@ export async function getSelectListItems(elsaClientService: ElsaClientService, s
   const options: any = propertyDescriptor.options;
   let selectList: SelectList;
 
-  if (!!options && options.runtimeSelectListProviderType) selectList = await this.fetchRuntimeItems(serverUrl, options);
+  if (!!options && options.runtimeSelectListProviderType)
+    selectList = await this.fetchRuntimeItems(serverUrl, options);
   else if (Array.isArray(options))
     selectList = {
       items: options,
       isFlagsEnum: false,
     };
-  else selectList = options as SelectList;
+  else
+    selectList = options as SelectList;
 
   return selectList || { items: [], isFlagsEnum: false };
 }
