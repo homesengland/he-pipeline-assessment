@@ -367,7 +367,7 @@ export class WorkflowPlaceholder implements OnInit {
       },
       order: 0,
       defaultValue: 'Option3',
-      supportedSyntaxes: ['Literal'],
+      supportedSyntaxes: [],
       isReadOnly: false,
       isBrowsable: true,
       isDesignerCritical: false,
