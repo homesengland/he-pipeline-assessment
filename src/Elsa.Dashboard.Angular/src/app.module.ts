@@ -45,6 +45,7 @@ import { PropertyControl } from './components/controls/property-control/property
 import { EditorComponent } from './components/monaco/editor.component';
 import { DiffEditorComponent } from './components/monaco/diff-editor.component';
 import { JsonProperty } from './components/editors/properties/json-property/json-property';
+import { DropDownProperty } from './components/editors/properties/drop-down-property/drop-down-property';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { JsonProperty } from './components/editors/properties/json-property/json
     EditorComponent,
     DiffEditorComponent,
     JsonProperty,
+    DropDownProperty
   ],
   imports: [
     routing,

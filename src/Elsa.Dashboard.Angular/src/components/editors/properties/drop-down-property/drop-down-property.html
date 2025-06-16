@@ -1,0 +1,12 @@
+<property-editor [(activityModel)]="activityModel" [(propertyDescriptor)]="propertyDescriptor" [(propertyModel)]="propertyModel" [singleLineMode]="true">
+  <select
+    [id]="fieldId()"
+    [name]="fieldName()"
+    (change)="onChange($event)"
+    class="elsa-mt-1 elsa-block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-max-w-xs sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md"
+  >
+    <ng-container *ngFor="let item of getSelectItems()">
+      <option [value]="item.value" [selected]="item.value === currentValue">{{ item.text }}</option>
+    </ng-container>
+  </select>
+</property-editor>

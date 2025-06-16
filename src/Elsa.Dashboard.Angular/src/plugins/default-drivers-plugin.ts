@@ -7,6 +7,7 @@ import { WorkflowPlugin } from 'src/services/workflow-plugin';
 import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 import { WorkflowStudio } from 'src/models';
 import { JsonDriver } from 'src/drivers/json-driver';
+import { DropDownDriver } from 'src/drivers/drop-down-driver';
 
 export class DefaultDriversPlugin implements WorkflowPlugin {
   constructor() {
@@ -14,6 +15,7 @@ export class DefaultDriversPlugin implements WorkflowPlugin {
     this.addDriver('multi-line', () => new MultiLineDriver());
     this.addDriver('checkbox', () => new CheckboxDriver());
     this.addDriver('json', () => new JsonDriver());
+    this.addDriver('dropdown', () => new DropDownDriver());
   }
 
   addDriver<T extends PropertyDisplayDriver>(controlType: string, c: (workflowStudio: WorkflowStudio) => T) {
