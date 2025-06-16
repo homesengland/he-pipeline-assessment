@@ -112,91 +112,6 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
-  getMultiLineModel(): ActivityModel {
-    const model: ActivityModel = {
-      activityId: '123',
-      type: 'MultiLine',
-      name: 'TestMultiLine',
-      displayName: 'Test Multi Line',
-      description: 'A Stub activity to display a multi line property',
-      outcomes: ['Done'],
-      properties: [],
-      persistWorkflow: true,
-      loadWorkflowContext: undefined,
-      saveWorkflowContext: undefined,
-      propertyStorageProviders: undefined,
-    };
-    model.properties.push(this.getMultiLineDefinition());
-    return model;
-  }
-
-  getCheckboxModel(): ActivityModel {
-    const model: ActivityModel = {
-      activityId: '123',
-      type: 'Checkbox',
-      name: 'TestCheckbox',
-      displayName: 'Test Checkbox',
-      description: 'A Stub activity to display a checkbox property',
-      outcomes: ['Done'],
-      properties: [],
-      persistWorkflow: true,
-      loadWorkflowContext: undefined,
-      saveWorkflowContext: undefined,
-      propertyStorageProviders: undefined,
-    };
-    model.properties.push(this.getCheckboxDefinition());
-    return model;
-  }
-
-  getJsonModel(): ActivityModel {
-    const model: ActivityModel = {
-      activityId: '{"p1": "v3", p2: false}',
-      type: 'Json',
-      name: 'TestJson',
-      displayName: 'Test Json',
-      description: 'A Stub activity to display a json property',
-      outcomes: ['Done'],
-      properties: [],
-      persistWorkflow: true,
-      loadWorkflowContext: undefined,
-      saveWorkflowContext: undefined,
-      propertyStorageProviders: undefined,
-    };
-    model.properties.push(this.getJsonDefinition());
-    return model;
-  }
-
-  getDropDownModel(): ActivityModel {
-    const model: ActivityModel = {
-      activityId: '',
-      type: 'DropDown',
-      name: 'TestDropDown',
-      displayName: 'Test Drop Down',
-      description: 'A Stub activity to display a dropdown property',
-      outcomes: ['Done'],
-      properties: [],
-      persistWorkflow: true,
-      loadWorkflowContext: undefined,
-      saveWorkflowContext: undefined,
-      propertyStorageProviders: undefined,
-    };
-    model.properties.push(this.getDropDownDefinition());
-    return model;
-  }
-
-  getDropDownDefinition(): ActivityDefinitionProperty {
-    const model: ActivityDefinitionProperty = {
-      syntax: undefined,
-      value: 'string',
-      name: 'TestDropDown',
-      expressions: {
-        Literal: 'Option2',
-      },
-      type: '',
-    };
-    return model;
-  }
-
   getSingleLineDefinition(): ActivityDefinitionProperty {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
@@ -205,44 +120,6 @@ export class WorkflowPlaceholder implements OnInit {
       expressions: {
         Literal: '123',
         JavaScript: 'console.log("Hello World")',
-      },
-      type: '',
-    };
-    return model;
-  }
-
-  getMultiLineDefinition(): ActivityDefinitionProperty {
-    const model: ActivityDefinitionProperty = {
-      syntax: undefined,
-      value: 'string',
-      name: 'TestMultiLine',
-      expressions: {
-        Literal: '123',
-        JavaScript: 'console.log("Hello MultiLine")',
-      },
-      type: '',
-    };
-    return model;
-  }
-
-  getCheckboxDefinition(): ActivityDefinitionProperty {
-    const model: ActivityDefinitionProperty = {
-      syntax: undefined,
-      value: 'string',
-      name: 'TestCheckbox',
-      expressions: {},
-      type: '',
-    };
-    return model;
-  }
-
-  getJsonDefinition(): ActivityDefinitionProperty {
-    const model: ActivityDefinitionProperty = {
-      syntax: undefined,
-      value: 'string',
-      name: 'TestJson',
-      expressions: {
-        Json: '{"p1": "v3", "p2": false}',
       },
       type: '',
     };
@@ -273,6 +150,38 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getMultiLineModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '123',
+      type: 'MultiLine',
+      name: 'TestMultiLine',
+      displayName: 'Test Multi Line',
+      description: 'A Stub activity to display a multi line property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getMultiLineDefinition());
+    return model;
+  }
+
+  getMultiLineDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestMultiLine',
+      expressions: {
+        Literal: '123',
+        JavaScript: 'console.log("Hello MultiLine")',
+      },
+      type: '',
+    };
+    return model;
+  }
+
   getMultiLineDescriptor(): ActivityPropertyDescriptor {
     const model: ActivityPropertyDescriptor = {
       conditionalActivityTypes: [],
@@ -293,6 +202,35 @@ export class WorkflowPlaceholder implements OnInit {
       isDesignerCritical: false,
       disableWorkflowProviderSelection: false,
       considerValuesAsOutcomes: false,
+    };
+    return model;
+  }
+
+  getCheckboxModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '123',
+      type: 'Checkbox',
+      name: 'TestCheckbox',
+      displayName: 'Test Checkbox',
+      description: 'A Stub activity to display a checkbox property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getCheckboxDefinition());
+    return model;
+  }
+
+  getCheckboxDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestCheckbox',
+      expressions: {},
+      type: '',
     };
     return model;
   }
@@ -321,6 +259,37 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getJsonModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '{"p1": "v3", p2: false}',
+      type: 'Json',
+      name: 'TestJson',
+      displayName: 'Test Json',
+      description: 'A Stub activity to display a json property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getJsonDefinition());
+    return model;
+  }
+
+  getJsonDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestJson',
+      expressions: {
+        Json: '{"p1": "v3", "p2": false}',
+      },
+      type: '',
+    };
+    return model;
+  }
+
   getJsonDescriptor(): ActivityPropertyDescriptor {
     const model: ActivityPropertyDescriptor = {
       conditionalActivityTypes: [],
@@ -342,6 +311,37 @@ export class WorkflowPlaceholder implements OnInit {
       disableWorkflowProviderSelection: false,
       considerValuesAsOutcomes: false,
       defaultSyntax: 'Json',
+    };
+    return model;
+  }
+
+  getDropDownModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '',
+      type: 'DropDown',
+      name: 'TestDropDown',
+      displayName: 'Test Drop Down',
+      description: 'A Stub activity to display a dropdown property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getDropDownDefinition());
+    return model;
+  }
+
+  getDropDownDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestDropDown',
+      expressions: {
+        Literal: 'Option2',
+      },
+      type: '',
     };
     return model;
   }

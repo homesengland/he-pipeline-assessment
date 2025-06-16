@@ -7,7 +7,6 @@ import { WorkflowPlugin } from 'src/services/workflow-plugin';
 import { PropertyDisplayDriver } from 'src/services/property-display-driver';
 import { WorkflowStudio } from 'src/models';
 import { JsonDriver } from 'src/drivers/json-driver';
-// Import DropDownDriver if it exists
 import { DropDownDriver } from 'src/drivers/drop-down-driver';
 
 export class DefaultDriversPlugin implements WorkflowPlugin {
