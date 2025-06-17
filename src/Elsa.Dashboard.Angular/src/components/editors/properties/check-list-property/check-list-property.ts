@@ -1,21 +1,31 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SelectList, SyntaxNames } from '../../../../models';
-import { SelectListService } from '../../../../services/select-list.service'; // You need to implement this service
-import { parseJson } from '../../../../utils/utils'; // You need to implement or import this utility
+import { Component, computed, model, Input, OnInit } from '@angular/core';
+import { ActivityModel, SyntaxNames } from '../../../../models';
+import { ActivityDefinitionProperty, ActivityPropertyDescriptor, SelectList } from '../../../../models';
+import { parseJson } from '../../../../utils/utils'; 
+import { ElsaClientService } from 'src/services/elsa-client';
+import { selectServerUrl } from 'src/store/selectors/app.state.selectors';
+import { Store } from '@ngrx/store';
+import { getSelectListItems } from 'src/utils/selected-list-items';
 
 @Component({
-  selector: 'elsa-check-list-property',
-  templateUrl: './elsa-check-list-property.component.html',
-  styleUrls: ['./elsa-check-list-property.component.scss']
+  selector: 'check-list-property',
+  templateUrl: './check-list-property.component.html',
+  standalone: false,
 })
 export class ElsaCheckListPropertyComponent implements OnInit {
-  @Input() activityModel: ActivityModel;
-  @Input() propertyDescriptor: ActivityPropertyDescriptor;
-  @Input() propertyModel: ActivityDefinitionProperty;
-  @Input() serverUrl: string;
-
+  activityModel = model<ActivityModel>();
+  propertyDescriptor = model<ActivityPropertyDescriptor>();
+  propertyModel = model<ActivityDefinitionProperty>();
   currentValue: string;
-  selectList: SelectList = { items: [], isFlagsEnum: false };
+  defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
+
+  fieldName = computed(() => this.propertyDescriptor()?.name || 'default');
+  fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
+  selectList: SelectList = {
+    items: [],
+    isFlagsEnum: false,
+  };
+  serverUrl: string;
 
   constructor(private selectListService: SelectListService) { }
 
