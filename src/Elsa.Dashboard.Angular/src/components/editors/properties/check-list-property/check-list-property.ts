@@ -6,6 +6,7 @@ import { ElsaClientService } from 'src/services/elsa-client';
 import { selectServerUrl } from 'src/store/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
 import { getSelectListItems } from 'src/utils/selected-list-items';
+import { HTMLElsaMonacoElement } from '../../../../models/elsa-interfaces';
 
 @Component({
   selector: 'check-list-property',
@@ -21,19 +22,22 @@ export class ElsaCheckListPropertyComponent implements OnInit {
 
   fieldName = computed(() => this.propertyDescriptor()?.name || 'default');
   fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
+  monacoEditor: HTMLElsaMonacoElement;
   selectList: SelectList = {
     items: [],
     isFlagsEnum: false,
   };
   serverUrl: string;
 
-  constructor(private selectListService: SelectListService) { }
+  constructor(private elsaClientService: ElsaClientService, private store: Store) {
+    console.log('Setting property model', this.propertyModel());
+  }
 
-  async ngOnInit() {
-    if (this.propertyModel.expressions[SyntaxNames.Json] === undefined)
-      this.propertyModel.expressions[SyntaxNames.Json] = JSON.stringify(this.propertyDescriptor.defaultValue);
-    this.currentValue = this.propertyModel.expressions[SyntaxNames.Json] || '[]';
-    this.selectList = await this.selectListService.getSelectListItems(this.serverUrl, this.propertyDescriptor);
+  async ngOnInit() : Promise<void>{
+    if (this.propertyModel().expressions[SyntaxNames.Json] === undefined)
+      this.propertyModel().expressions[SyntaxNames.Json] = JSON.stringify(this.propertyDescriptor().defaultValue);
+    this.currentValue = this.propertyModel()?.expressions[SyntaxNames.Json] || '[]';
+    this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
   }
 
   onCheckChanged(event: Event, value: string) {
@@ -60,7 +64,7 @@ export class ElsaCheckListPropertyComponent implements OnInit {
       this.currentValue = JSON.stringify(newValue);
     }
 
-    this.propertyModel.expressions[SyntaxNames.Json] = this.currentValue.toString();
+    this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue.toString();
   }
 
   isChecked(value: string): boolean {
