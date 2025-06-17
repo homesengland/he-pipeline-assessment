@@ -10,10 +10,10 @@ import { HTMLElsaMonacoElement } from '../../../../models/elsa-interfaces';
 
 @Component({
   selector: 'check-list-property',
-  templateUrl: './check-list-property.component.html',
+  templateUrl: './check-list-property.html',
   standalone: false,
 })
-export class ElsaCheckListPropertyComponent implements OnInit {
+export class CheckListProperty implements OnInit {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();

@@ -1,0 +1,19 @@
+<property-editor [(activityModel)]="activityModel" [(propertyDescriptor)]="propertyDescriptor" [(propertyModel)]="propertyModel" [singleLineMode]="true">
+  <div class="elsa-max-w-lg elsa-space-y-3 elsa-my-4">
+    <div *ngFor="let item of selectList.items; let i = index" class="elsa-relative elsa-flex elsa-items-start">
+      <div class="elsa-flex elsa-items-center elsa-h-5">
+        <input [id]="propertyDescriptor.name + '_' + i"
+               type="checkbox"
+               [checked]="isChecked(item.value || item)"
+               [value]="item.value || item"
+               (change)="onCheckChanged($event, item.value || item)"
+               class="focus:elsa-ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300 elsa-rounded" />
+      </div>
+      <div class="elsa-ml-3 elsa-mt-1 elsa-text-sm">
+        <label htmlFor="propertyDescriptor.name + '_' + i" class="elsa-font-medium elsa-text-gray-700">
+          {{ item.text || item }}
+        </label>
+      </div>
+    </div>
+  </div>
+</property-editor>
