@@ -1,4 +1,4 @@
-import { Component, computed, model, Input, OnInit } from '@angular/core';
+import { Component, computed, model, signal, Input, OnInit } from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor, SelectList } from '../../../../models';
 import { parseJson } from '../../../../utils/utils'; 
@@ -17,11 +17,10 @@ export class CheckListProperty implements OnInit {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
+  isSelected = signal(false);
   currentValue: string;
-  defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
-
-  fieldName = computed(() => this.propertyDescriptor()?.name || 'default');
   fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
+  
   monacoEditor: HTMLElsaMonacoElement;
   selectList: SelectList = {
     items: [],
@@ -40,8 +39,10 @@ export class CheckListProperty implements OnInit {
     this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
   }
 
-  onCheckChanged(event: Event, value: string) {
-    const checked = (event.target as HTMLInputElement).checked;
+  onCheckChanged(e: Event) {
+    const checkbox = e.currentTarget as HTMLInputElement;
+    const checked = checkbox.checked;
+    const value = checkbox.value;
     const isFlags = this.selectList.isFlagsEnum;
 
     if (isFlags) {
@@ -67,12 +68,25 @@ export class CheckListProperty implements OnInit {
     this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue.toString();
   }
 
-  isChecked(value: string): boolean {
-    if (this.selectList.isFlagsEnum) {
-      return (parseInt(this.currentValue, 10) & parseInt(value, 10)) === parseInt(value, 10);
-    } else {
-      const selectedValues = parseJson(this.currentValue as string) || [];
-      return selectedValues.includes(value);
-    }
+  //// Don't think this is needed
+  //isChecked(value: string): boolean {
+  //  if (this.selectList.isFlagsEnum) {
+  //    return (parseInt(this.currentValue, 10) & parseInt(value, 10)) === parseInt(value, 10);
+  //  } else {
+  //    const selectedValues = parseJson(this.currentValue as string) || [];
+  //    return selectedValues.includes(value);
+  //  }
+  //}
+
+  getSelectItems(): any {
+    console.log('Select list items:', this.selectList.items);
+    return this.selectList.items.map((item, index) => {
+      return {
+        text: item.text,
+        value: item.value,
+        inputId: `${this.fieldId}_${index}`,
+
+      };
+    });
   }
 }
