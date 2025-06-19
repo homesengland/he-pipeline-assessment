@@ -421,7 +421,7 @@ export class WorkflowPlaceholder implements OnInit {
       hasColletedProperties: false,
       name: 'TestCheckList',
       type: 'System.String',
-      uiHint: 'checklist',
+      uiHint: 'check-list',
       label: 'Test Label',
       hint: 'Test Hint',
       options: {
