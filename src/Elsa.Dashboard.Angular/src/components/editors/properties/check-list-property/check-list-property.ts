@@ -68,16 +68,6 @@ export class CheckListProperty implements OnInit {
     this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue.toString();
   }
 
-  //// Don't think this is needed
-  //isChecked(value: string): boolean {
-  //  if (this.selectList.isFlagsEnum) {
-  //    return (parseInt(this.currentValue, 10) & parseInt(value, 10)) === parseInt(value, 10);
-  //  } else {
-  //    const selectedValues = parseJson(this.currentValue as string) || [];
-  //    return selectedValues.includes(value);
-  //  }
-  //}
-
   getSelectItems(): any {
     console.log('Select list items:', this.selectList.items);
     return this.selectList.items.map((item, index) => {

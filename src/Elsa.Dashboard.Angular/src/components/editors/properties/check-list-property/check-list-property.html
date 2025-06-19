@@ -1,7 +1,6 @@
 <property-editor [(activityModel)]="activityModel" [(propertyDescriptor)]="propertyDescriptor" [(propertyModel)]="propertyModel" [singleLineMode]="true">
   <div class="elsa-max-w-lg elsa-space-y-3 elsa-my-4">
     <ng-container *ngFor="let item of getSelectItems()">
-
       <div class="elsa-relative elsa-flex elsa-items-start">
         <div class="elsa-flex elsa-items-center elsa-h-5">
           <input [id]="item.inputId"
