@@ -84,8 +84,7 @@ export class CheckListProperty implements OnInit {
       return {
         text: item.text,
         value: item.value,
-        inputId: `${this.fieldId}_${index}`,
-
+        inputId: `${this.fieldId}_${index}`
       };
     });
   }
