@@ -10,6 +10,7 @@ public interface IRoleValidation
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
     bool ValidateSensitiveRecords(Assessment assessment);
+    bool ValidateForBusinessArea(string? businessArea);
 }
 public class RoleValidation : IRoleValidation
 {
@@ -49,11 +50,17 @@ public class RoleValidation : IRoleValidation
 
     private bool ValidateForBusinessArea(Assessment? assessment)
     {
-        bool isRoleExist = false;
-
         if (assessment != null)
         {
-            switch (assessment?.BusinessArea)
+            return ValidateForBusinessArea(assessment?.BusinessArea);
+        }
+        return false;
+    }
+
+    public bool ValidateForBusinessArea(string? businessArea)
+    {
+        bool isRoleExist = false;
+            switch (businessArea)
             {
                 case Constants.BusinessArea.MPP:
                     isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
@@ -66,8 +73,6 @@ public class RoleValidation : IRoleValidation
                     return isRoleExist;
                 default: return isRoleExist;
             }
-        }
-        return false;
     }
 
     public bool ValidateSensitiveRecords(Assessment? assessment)

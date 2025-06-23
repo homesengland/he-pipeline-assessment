@@ -4,6 +4,7 @@ using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
+using Microsoft.Extensions.Azure;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
@@ -44,7 +45,10 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
 
-                var hasValidBusinessArea = _businessAreaValidation.IsValidBusinessArea(dbAssessment.BusinessArea);
+                var hasValidBusinessArea = _roleValidation.ValidateForBusinessArea(dbAssessment.BusinessArea);
+                hasValidBusinessArea = false;
+                string businessAreaErrorMessage = string.Empty;
+         
 
                 var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
                 var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
@@ -75,6 +79,23 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         }
                     }
                 }
+                if (!hasValidBusinessArea)
+                {
+                    string assessmentToolName = "Early Stage Tools";
+                    if (stages.Any())
+                    {
+                        if (stages.Any())
+                        {
+                            var earlyStageTools = stages.Where(x => x.IsEarlyStage is not null and true);
+                            if (earlyStageTools.Any())
+                            {
+                                assessmentToolName = earlyStageTools.OrderByDescending(x => x.Order).FirstOrDefault()!.Name;
+                            }
+                        }
+                    }
+
+                    businessAreaErrorMessage = string.Format("You do not have permission to complete assessments beyond the {0}. Please contact a System Administrator to request the correct level of access to complete {1} Assessments", assessmentToolName, dbAssessment.BusinessArea);
+                }
 
                 var dbHistory = await _storedProcedureRepository.GetAssessmentHistory(request.AssessmentId);
 
@@ -101,7 +122,9 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     LocalAuthority = dbAssessment.LocalAuthority,
                     ProjectManager = dbAssessment.ProjectManager,
                     Interventions = interventions,
-                    HasValidBusinessArea = false
+                    BusinessArea = dbAssessment.BusinessArea,
+                    HasValidBusinessArea = hasValidBusinessArea,
+                    BusinessAreaMessage = hasValidBusinessArea ? null : businessAreaErrorMessage
                 };
             }
             catch (UnauthorizedAccessException e)
