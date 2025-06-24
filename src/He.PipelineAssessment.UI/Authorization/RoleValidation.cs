@@ -48,7 +48,8 @@ public class RoleValidation : IRoleValidation
         return canSeeRecord;
     }
 
-    private bool ValidateForBusinessArea(Assessment? assessment)
+    // PREVIOSLY MARKED AS PRIVATE?
+    public bool ValidateForBusinessArea(Assessment? assessment)
     {
         if (assessment != null)
         {

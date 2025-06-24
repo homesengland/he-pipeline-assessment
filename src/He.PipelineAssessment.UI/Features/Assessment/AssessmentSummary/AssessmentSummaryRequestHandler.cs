@@ -94,7 +94,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         }
                     }
 
-                    businessAreaErrorMessage = string.Format("You do not have permission to complete assessments beyond the {0}. Please contact a System Administrator to request the correct level of access to complete {1} Assessments", assessmentToolName, dbAssessment.BusinessArea);
+                    businessAreaErrorMessage = string.Format("You do not have permission to complete assessments beyond the {0}. \n\nPlease contact a System Administrator to request the correct level of access to complete {1} Assessments", assessmentToolName, dbAssessment.BusinessArea);
                 }
 
                 var dbHistory = await _storedProcedureRepository.GetAssessmentHistory(request.AssessmentId);
