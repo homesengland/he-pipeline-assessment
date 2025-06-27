@@ -53,13 +53,7 @@ body {
     overflow-x: auto;
 }
 
-.preserve-linebreaks {
-    white-space: pre-line;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-.govuk-notification-banner__content .preserve-linebreaks {
+.notification-banner-max-width {
     max-width: 100% !important;
 }
     

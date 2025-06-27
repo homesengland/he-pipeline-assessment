@@ -109,7 +109,23 @@
                                 }
                                 else
                                 {
-                                    <input class="govuk-button govuk-button--warning govuk-!-margin-0" data-module="govuk-button" value="Blocked" disabled />
+                                    // **** USING BLOCKED BUTTON ****
+                                    // <input class="govuk-button govuk-button--warning govuk-!-margin-0" data-module="govuk-button" value="Blocked" disabled />
+                                    
+@*                                     <p class="govuk-error-message govuk-form-group--error">
+                                        <span>Blocked:</span>
+                                    </p> *@
+
+                                    @* <div class="govuk-inset-text">
+                                        Blocked:
+                                    </div> *@
+
+
+                                    <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" disabled aria-disabled="true" value="Blocked" />
+@*                                     <button type="submit" disabled aria-disabled="true" class="govuk-button" data-module="govuk-button">
+                                        Blocked
+                                    </button> *@
+
                                 }
 
                             }
