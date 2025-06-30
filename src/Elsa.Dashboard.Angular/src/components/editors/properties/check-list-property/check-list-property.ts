@@ -17,15 +17,15 @@ export class CheckListProperty implements OnInit {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
-  isSelected = signal(false);
   currentValue: string;
   fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
-  
-  monacoEditor: HTMLElsaMonacoElement;
+
   selectList: SelectList = {
     items: [],
     isFlagsEnum: false,
   };
+
+  monacoEditor: HTMLElsaMonacoElement;
   serverUrl: string;
 
   constructor(private elsaClientService: ElsaClientService, private store: Store) {
@@ -46,12 +46,12 @@ export class CheckListProperty implements OnInit {
     const isFlags = this.selectList.isFlagsEnum;
 
     if (isFlags) {
-      let newValue = parseInt(this.currentValue as string, 10);
+      let newValue = parseInt(this.currentValue as string);
 
       if (checked)
-        newValue = newValue | parseInt(value, 10);
+        newValue = newValue | parseInt(value);
       else
-        newValue = newValue & ~parseInt(value, 10);
+        newValue = newValue & ~parseInt(value);
 
       this.currentValue = newValue.toString();
     } else {
@@ -67,14 +67,24 @@ export class CheckListProperty implements OnInit {
 
     this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue.toString();
   }
-
+  
   getSelectItems(): any {
     console.log('Select list items:', this.selectList.items);
     return this.selectList.items.map((item, index) => {
+      let isSelected = this.selectList.isFlagsEnum;
+
+      if (isSelected) {
+        isSelected = (parseInt(this.currentValue) & parseInt(item.value)) === parseInt(item.value);
+      } else {
+        const selectedValues = parseJson(this.currentValue as string) || [];
+        isSelected = selectedValues.includes(item.value);
+      }
+
       return {
         text: item.text,
         value: item.value,
-        inputId: `${this.fieldId}_${index}`
+        inputId: `${this.fieldId}_${index}`,
+        isSelected: isSelected
       };
     });
   }
