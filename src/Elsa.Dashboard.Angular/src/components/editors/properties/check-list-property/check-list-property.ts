@@ -1,7 +1,7 @@
 import { Component, computed, model, signal, Input, OnInit } from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor, SelectList } from '../../../../models';
-import { parseJson } from '../../../../utils/utils'; 
+import { parseJson } from '../../../../utils/utils';
 import { ElsaClientService } from 'src/services/elsa-client';
 import { selectServerUrl } from 'src/store/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
@@ -27,12 +27,12 @@ export class CheckListProperty implements OnInit {
   };
 
   monacoEditor: HTMLElsaMonacoElement;
-  
+
   constructor(private elsaClientService: ElsaClientService, private store: Store) {
     console.log('Setting property model', this.propertyModel());
   }
 
-  async ngOnInit() : Promise<void>{
+  async ngOnInit(): Promise<void> {
     if (this.propertyModel().expressions[SyntaxNames.Json] === undefined)
       this.propertyModel().expressions[SyntaxNames.Json] = JSON.stringify(this.propertyDescriptor().defaultValue);
     this.currentValue = this.propertyModel()?.expressions[SyntaxNames.Json] || '[]';
@@ -58,7 +58,7 @@ export class CheckListProperty implements OnInit {
       let newValue = parseJson(this.currentValue as string);
 
       if (checked)
-        newValue = Array.from(new Set([...newValue, value]));
+        newValue = [...newValue, value].distinct();
       else
         newValue = newValue.filter(x => x !== value);
 
@@ -67,7 +67,7 @@ export class CheckListProperty implements OnInit {
 
     this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue.toString();
   }
-  
+
   getSelectItems(): any {
     console.log('Select list items:', this.selectList.items);
     return this.selectList.items.map((item, index) => {

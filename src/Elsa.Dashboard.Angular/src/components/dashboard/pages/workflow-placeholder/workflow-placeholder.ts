@@ -405,7 +405,9 @@ export class WorkflowPlaceholder implements OnInit {
       syntax: undefined,
       value: 'string',
       name: 'TestCheckList',
-      expressions: {},
+      expressions: {
+        Json: '[]',
+      },
       type: '',
     };
     return model;
@@ -424,14 +426,14 @@ export class WorkflowPlaceholder implements OnInit {
       hint: 'Test Hint',
       options: {
         items: [
-          { text: 'Option 1', value: '1' },
-          { text: 'Option 2', value: '2' },
-          { text: 'Option 3', value: '3' },
+          { text: 'Option 4', value: '4' },
+          { text: 'Option 5', value: '5' },
+          { text: 'Option 6', value: '6' },
         ],
         isFlagsEnum: false,
       },
       order: 0,
-      defaultValue: '2',
+      defaultValue: '',
       supportedSyntaxes: [],
       isReadOnly: false,
       isBrowsable: true,
