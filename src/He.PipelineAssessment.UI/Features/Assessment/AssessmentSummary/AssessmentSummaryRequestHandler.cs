@@ -46,7 +46,6 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 }
 
                 var hasValidBusinessArea = _roleValidation.ValidateForBusinessArea(dbAssessment.BusinessArea);
-                hasValidBusinessArea = false;
                 List<string> businessAreaErrorMessage = new List<string>();
          
 
@@ -95,7 +94,9 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     }
 
                     businessAreaErrorMessage.Add(string.Format("You do not have permission to complete assessments beyond the {0}.", assessmentToolName));
-                    businessAreaErrorMessage.Add(string.Format("Please contact a System Administrator to request the correct level of access to complete {0} Assessments", dbAssessment.BusinessArea));                }
+                    businessAreaErrorMessage.Add(string.Format("Please contact a System Administrator to request the correct level of access to complete {0} Assessments", dbAssessment.BusinessArea));
+                
+                }
 
                 var dbHistory = await _storedProcedureRepository.GetAssessmentHistory(request.AssessmentId);
 

@@ -21,32 +21,9 @@
 
 @if (!Model.HasValidBusinessArea)
 {
-
-    <!-- USING NOTIFICATION BANNER -->
     @if (Model.BusinessAreaMessage != null)
     {
-        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-            <div class="govuk-notification-banner__header">
-                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-                    Important
-                </h2>
-            </div>
-            <div class="govuk-notification-banner__content">
-                @foreach (var message in Model.BusinessAreaMessage)
-                {
-                    <p class="govuk-notification-banner__heading notification-banner-max-width">
-                        @message
-                    </p>
-                }
-            </div>
-        </div>
-    }
-
-
-    <!-- USING WARNING TEXT -->
-    @if (Model.BusinessAreaMessage != null)
-    {
-        <div class="govuk-warning-text">
+        <div class="govuk-warning-text govuk-warning-text__pas-custom">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
 
             @foreach (var message in Model.BusinessAreaMessage)
@@ -60,21 +37,6 @@
             
         </div>
     }
-
-
-    <!-- USING INSET TEXT -->
-
-    @if(Model.BusinessAreaMessage != null)
-    {
-        <div class="govuk-inset-text">
-            @foreach(var message in Model.BusinessAreaMessage)
-            {
-                <p>@message</p>
-            }
-        </div>
-        }
-
-
 }
 
 <div class="govuk-tabs" data-module="govuk-tabs">
