@@ -17,6 +17,7 @@ export class CheckListProperty implements OnInit {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
+  serverUrl: string;
   currentValue: string;
   fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
 
@@ -26,8 +27,7 @@ export class CheckListProperty implements OnInit {
   };
 
   monacoEditor: HTMLElsaMonacoElement;
-  serverUrl: string;
-
+  
   constructor(private elsaClientService: ElsaClientService, private store: Store) {
     console.log('Setting property model', this.propertyModel());
   }
