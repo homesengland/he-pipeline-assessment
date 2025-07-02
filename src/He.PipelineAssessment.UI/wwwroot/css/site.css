@@ -52,3 +52,17 @@ body {
     overflow-y: scroll;
     overflow-x: auto;
 }
+
+.notification-banner-max-width {
+    max-width: 100% !important;
+}
+
+.govuk-warning-text__pas-custom{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.govuk-button__pas-assessment-summary {
+    width: 110px !important;
+}

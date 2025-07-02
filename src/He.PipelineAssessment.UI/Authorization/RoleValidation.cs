@@ -10,6 +10,7 @@ public interface IRoleValidation
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
     bool ValidateSensitiveRecords(Assessment assessment);
+    bool ValidateForBusinessArea(string? businessArea);
 }
 public class RoleValidation : IRoleValidation
 {
@@ -47,27 +48,32 @@ public class RoleValidation : IRoleValidation
         return canSeeRecord;
     }
 
-    private bool ValidateForBusinessArea(Assessment? assessment)
+    // PREVIOSLY MARKED AS PRIVATE?
+    public bool ValidateForBusinessArea(Assessment? assessment)
     {
-        bool isRoleExist = false;
-
         if (assessment != null)
         {
-            switch (assessment?.BusinessArea)
+            return ValidateForBusinessArea(assessment?.BusinessArea);
+        }
+        return false;
+    }
+
+    public bool ValidateForBusinessArea(string? businessArea)
+    {
+        bool isRoleExist = false;
+            switch (businessArea)
             {
-                case "MPP":
+                case Constants.BusinessArea.MPP:
                     isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
-                case "Investment":
+                case Constants.BusinessArea.Investment:
                     isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
-                case "Development":
+                case Constants.BusinessArea.Development:
                     isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
                     return isRoleExist;
                 default: return isRoleExist;
             }
-        }
-        return false;
     }
 
     public bool ValidateSensitiveRecords(Assessment? assessment)
