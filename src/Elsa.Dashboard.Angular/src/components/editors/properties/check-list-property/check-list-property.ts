@@ -80,7 +80,7 @@ export class CheckListProperty implements OnInit {
       }
 
       return {
-        text: item.text,dsd
+        text: item.text,
         value: item.value,
         inputId: `${this.fieldId}_${index}`,
         isSelected: isSelected
