@@ -1,7 +1,8 @@
 import { Component, computed, model, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
-import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
+import { ActivityDefinitionProperty, ActivityPropertyDescriptor, SelectList } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
+import { getSelectListItems } from 'src/utils/selected-list-items';
 
 @Component({
   selector: 'radio-list-property',
@@ -15,17 +16,28 @@ export class RadioListProperty implements OnInit {
 
   fieldLabel = computed(() => this.propertyDescriptor()?.label ?? 'default');
 
+  selectList: SelectList = {
+    items: [],
+    isFlagsEnum: false,
+  };
+
   constructor() {
     console.log('Setting property model', this.propertyModel());
   }
 
-  ngOnInit(): void {
-
+  getSelectItems(): any {
+    console.log('Select list items:', this.selectList.items);
+    return this.selectList.items.map(item => {
+      return {
+        text: item.text,
+        value: item.value,
+        isSelected: true,
+        inputId: '${this.fieldId}_${index}',
+      };
+    });
   }
 
-  onCheckChanged(e: Event) {
+  ngOnInit(): void {}
 
-  }
-
-
+  onCheckChanged(e: Event) {}
 }
