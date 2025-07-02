@@ -104,12 +104,12 @@
                                         @Html.HiddenFor(x => x.CorrelationId)
                                         <input type="hidden" name="WorkflowDefinitionId" value="@assessmentStage.WorkflowDefinitionId" />
                                         <input type="hidden" name="AssessmentToolWorkflowId" value="@assessmentStage.AssessmentToolWorkflowId" />
-                                        <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="Submit" type="submit" value="Start now" />
+                                        <input class="govuk-button govuk-!-margin-0 govuk-button__pas-assessment-summary" data-module="govuk-button" id="Submit" type="submit" value="Start now" />
                                     }
                                 }
                                 else
                                 {
-                                    <input class="govuk-button govuk-button--warning govuk-!-margin-0 blocked-button" data-module="govuk-button" id="Submit" type="submit" disabled aria-disabled="true" value="Blocked" />
+                                    <input class="govuk-button govuk-button--warning govuk-!-margin-0 govuk-button__pas-assessment-summary" data-module="govuk-button" id="Submit" type="submit" disabled aria-disabled="true" value="Blocked" />
                                 }
 
                             }

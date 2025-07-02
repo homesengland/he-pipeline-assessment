@@ -63,6 +63,6 @@ body {
     flex-wrap: wrap;
 }
 
-.govuk-button {
+.govuk-button__pas-assessment-summary {
     width: 110px !important;
 }
