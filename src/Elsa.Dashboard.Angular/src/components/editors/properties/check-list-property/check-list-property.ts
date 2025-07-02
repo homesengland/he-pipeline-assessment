@@ -69,7 +69,6 @@ export class CheckListProperty implements OnInit {
   }
 
   getSelectItems(): any {
-    console.log('Select list items:', this.selectList.items);
     return this.selectList.items.map((item, index) => {
       let isSelected = this.selectList.isFlagsEnum;
 
@@ -81,7 +80,7 @@ export class CheckListProperty implements OnInit {
       }
 
       return {
-        text: item.text,
+        text: item.text,dsd
         value: item.value,
         inputId: `${this.fieldId}_${index}`,
         isSelected: isSelected
