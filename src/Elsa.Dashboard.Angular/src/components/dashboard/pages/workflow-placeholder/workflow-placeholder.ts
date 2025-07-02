@@ -433,7 +433,7 @@ export class WorkflowPlaceholder implements OnInit {
         isFlagsEnum: false,
       },
       order: 0,
-      defaultValue: '',
+      defaultValue: ['4'],
       supportedSyntaxes: [],
       isReadOnly: false,
       isBrowsable: true,
