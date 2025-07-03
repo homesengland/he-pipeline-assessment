@@ -13,7 +13,6 @@
     <ItemGroup>
         <PackageReference Include="Asp.Versioning.Mvc" />
         <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
-        <PackageReference Include="Microsoft.AspNet.WebApi.Core" />
         <PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
         <PackageReference Include="NodaTime.Serialization.SystemTextJson" />
