@@ -48,6 +48,7 @@ import { JsonProperty } from './components/editors/properties/json-property/json
 import { DropDownProperty } from './components/editors/properties/drop-down-property/drop-down-property';
 import { CheckListProperty } from './components/editors/properties/check-list-property/check-list-property';
 import { RadioListProperty } from './components/editors/properties/radio-list-property/radio-list-property';
+import { SwitchCaseProperty } from './components/editors/properties/switch-case-property/switch-case-property';
 
 @NgModule({
   declarations: [
@@ -87,8 +88,9 @@ import { RadioListProperty } from './components/editors/properties/radio-list-pr
     DiffEditorComponent,
     JsonProperty,
     DropDownProperty,
-    CheckListProperty
-    RadioListProperty
+    CheckListProperty,
+    RadioListProperty,
+    SwitchCaseProperty
   ],
   imports: [
     routing,
