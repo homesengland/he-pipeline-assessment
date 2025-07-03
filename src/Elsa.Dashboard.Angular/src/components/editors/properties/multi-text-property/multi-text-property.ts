@@ -61,7 +61,6 @@ export class MultiTextProperty {
         text: item.text,
         value: item.value,
         isSelected: this.currentValue == item.value,
-        inputId: `${this.fieldId}_${index}`,
       };
     });
   }
