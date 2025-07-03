@@ -38,13 +38,13 @@
 		<PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
 		<PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.17" />
 		<PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.17" />
-		<PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="9.0.6" />
-		<PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="9.0.6" />
-		<PackageVersion Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.2" />
+		<PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="8.0.17" />
+		<PackageVersion Include="Microsoft.AspNetCore.DataProtection" Version="8.0.17" />
+		<PackageVersion Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.17" />
 		<PackageVersion Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
 		<PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-		<PackageVersion Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-		<PackageVersion Include="Microsoft.AspNetCore.MVC.Core" Version="2.3.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc" Version="2.3.0" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
 		<PackageVersion Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.17" />
 		<PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
 		<PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />

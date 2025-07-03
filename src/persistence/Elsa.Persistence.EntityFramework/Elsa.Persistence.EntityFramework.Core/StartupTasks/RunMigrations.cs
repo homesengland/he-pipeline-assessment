@@ -23,7 +23,7 @@ namespace Elsa.Persistence.EntityFramework.Core.StartupTasks
         public async Task ExecuteAsync(CancellationToken cancellationToken = default)
         {
             await using var dbContext = _dbContextFactory.CreateDbContext();
-            await dbContext.Database.MigrateAsync(cancellationToken);
+            //await dbContext.Database.MigrateAsync(cancellationToken);
             await dbContext.DisposeAsync();
         }
     }
