@@ -3,6 +3,7 @@ using Elsa.CustomWorkflow.Sdk;
 using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using MediatR;
+using Jint;
 using System.Globalization;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers

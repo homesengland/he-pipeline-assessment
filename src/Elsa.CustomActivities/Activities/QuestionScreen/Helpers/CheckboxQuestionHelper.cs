@@ -4,6 +4,7 @@ using Elsa.Scripting.JavaScript.Events;
 using Elsa.Scripting.JavaScript.Messages;
 using Elsa.Services.Models;
 using MediatR;
+using Jint;
 
 namespace Elsa.CustomActivities.Activities.QuestionScreen.Helpers
 {

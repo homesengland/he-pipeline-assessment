@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
@@ -11,18 +11,26 @@
     <None Remove="Activities\Helpers\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Elsa" />
-    <PackageReference Include="Elsa.Client" />
-    <PackageReference Include="Elsa.Core" />
-    <PackageReference Include="Elsa.Server.Api" />
     <PackageReference Include="Rebus.ServiceProvider" />
     <PackageReference Include="StackExchange.Redis" />
+	  <PackageReference Include="MediatR" />
+	    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
 	 <PackageReference Include="Jint" />
+	  <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\clients\Elsa.Client\Elsa.Client.csproj" />
+    <ProjectReference Include="..\core\Elsa.Abstractions\Elsa.Abstractions.csproj" />
+    <ProjectReference Include="..\core\Elsa.Core\Elsa.Core.csproj" />
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\Elsa.Models\Elsa.CustomModels.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
+    <ProjectReference Include="..\scripting\Elsa.Scripting.JavaScript\Elsa.Scripting.JavaScript.csproj" />
+    <ProjectReference Include="..\scripting\Elsa.Scripting.Liquid\Elsa.Scripting.Liquid.csproj" />
+    <ProjectReference Include="..\scripting\Elsa.Scripting.Sql\Elsa.Scripting.Sql.csproj" />
+    <ProjectReference Include="..\server\Elsa.Server.Api\Elsa.Server.Api.csproj" />
   </ItemGroup>
 </Project>

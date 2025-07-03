@@ -62,6 +62,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="EntityFrameworkProfiler.Appender" />
     <PackageReference Include="Azure.Messaging.ServiceBus" />
     <PackageReference Include="FluentValidation" />
@@ -84,7 +85,7 @@
     </PackageReference>
     <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="System.Drawing.Common" />
-    <PackageReference Include="Azure.Storage.Blobs" VersionOverride="12.18.0" />
+    <PackageReference Include="Azure.Storage.Blobs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />

@@ -18,13 +18,6 @@
     <None Remove="Azure.Storage.Blobs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Elsa" />
-    <PackageReference Include="Elsa.Activities.Http" />
-    <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" />
-    <PackageReference Include="Elsa.Providers.Redis" />
-    <PackageReference Include="Elsa.Server.Api" />
-    <PackageReference Include="Elsa.Server.Authentication" />
-    <PackageReference Include="Elsa.WorkflowSettings.Persistence.EntityFramework.Core" />
     <PackageReference Include="EntityFrameworkProfiler.Appender" />
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="MediatR" />
@@ -46,7 +39,7 @@
     <PackageReference Include="System.Drawing.Common" />
     <PackageReference Include="Azure.Storage.Blobs" />
     <PackageReference Include="AutoMapper" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"/>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />
@@ -55,10 +48,18 @@
     <None Include="appsettings.Development.json" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\activities\Elsa.Activities.Http\Elsa.Activities.Http.csproj" />
+    <ProjectReference Include="..\core\Elsa.Abstractions\Elsa.Abstractions.csproj" />
+    <ProjectReference Include="..\core\Elsa.Core\Elsa.Core.csproj" />
+    <ProjectReference Include="..\core\Elsa.Features\Elsa.Features.csproj" />
+    <ProjectReference Include="..\core\Elsa\Elsa.csproj" />
     <ProjectReference Include="..\Elsa.CustomActivities\Elsa.CustomActivities.csproj" />
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
     <ProjectReference Include="..\He.PipelineAssessment.Data\He.PipelineAssessment.Data.csproj" />
+    <ProjectReference Include="..\modules\workflowsettings\Elsa.WorkflowSettings.Persistence.EntityFramework.Core\Elsa.WorkflowSettings.Persistence.EntityFramework.Core.csproj" />
+    <ProjectReference Include="..\persistence\Elsa.Persistence.EntityFramework\Elsa.Persistence.EntityFramework.SqlServer\Elsa.Persistence.EntityFramework.SqlServer.csproj" />
+    <ProjectReference Include="..\providers\Elsa.Providers.Redis\Elsa.Providers.Redis.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Dockerfile">
