@@ -20,6 +20,7 @@ export class WorkflowPlaceholder implements OnInit {
   jsonActivityModel = signal<ActivityModel | null>(null);
   dropDownActivityModel = signal<ActivityModel | null>(null);
   checkListActivityModel = signal<ActivityModel | null>(null);
+  radioListActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
   intellisenseGatherer: IntellisenseService;
@@ -50,6 +51,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.checkboxActivityModel.set(this.getCheckboxModel());
     this.jsonActivityModel.set(this.getJsonModel());
     this.dropDownActivityModel.set(this.getDropDownModel());
+    this.radioListActivityModel.set(this.getRadioListModel());
     this.checkListActivityModel.set(this.getDropDownModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
@@ -57,12 +59,14 @@ export class WorkflowPlaceholder implements OnInit {
     const jsonDescriptor = signal<ActivityPropertyDescriptor>(this.getJsonDescriptor());
     const dropdownDescriptor = signal<ActivityPropertyDescriptor>(this.getDropDownDescriptor());
     const checkListDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckListDescriptor());
+    const radioListDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioListDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);
     this.activityProperties.push(checkboxDescriptor);
     this.activityProperties.push(jsonDescriptor);
     this.activityProperties.push(dropdownDescriptor);
     this.activityProperties.push(checkListDescriptor);
+    this.activityProperties.push(radioListDescriptor);
   }
 
   async ngOnInit() {
@@ -445,6 +449,69 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getRadioListModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '',
+      type: 'RadioList',
+      name: 'TestRadioList',
+      displayName: 'Test Radio List',
+      description: 'A Stub activity to display a radio list property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getRadioListDefinition());
+    return model;
+  }
+
+  getRadioListDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestRadioList',
+      expressions: {
+        Json: '[]'
+      },
+      type: '',
+    };
+    return model;
+  }
+
+  getRadioListDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: [],
+      expectedOutputType: 'string',
+      hasNestedProperties: false,
+      hasColletedProperties: false,
+      name: 'TestRadioList',
+      type: 'System.String',
+      uiHint: 'radio-list',
+      label: 'Test Label',
+      hint: 'Test Hint',
+      options: {
+        items: [
+          { text: 'Option 1', value: '1' },
+          { text: 'Option 2', value: '2' },
+          { text: 'Option 3', value: '3' },
+        ],
+        isFlagsEnum: false,
+      },
+      order: 0,
+      defaultValue: '1',
+      supportedSyntaxes: [],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+      defaultSyntax: 'Json',
+    };
+    return model;
+  }
+
   getActivityModel(activityType: string): Signal<ActivityModel> {
     switch (activityType) {
       case 'single-line':
@@ -459,6 +526,8 @@ export class WorkflowPlaceholder implements OnInit {
         return this.dropDownActivityModel;
       case 'check-list':
         return this.checkListActivityModel;
+      case 'radio-list':
+        return this.radioListActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);
     }

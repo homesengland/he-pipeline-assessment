@@ -47,6 +47,7 @@ import { DiffEditorComponent } from './components/monaco/diff-editor.component';
 import { JsonProperty } from './components/editors/properties/json-property/json-property';
 import { DropDownProperty } from './components/editors/properties/drop-down-property/drop-down-property';
 import { CheckListProperty } from './components/editors/properties/check-list-property/check-list-property';
+import { RadioListProperty } from './components/editors/properties/radio-list-property/radio-list-property';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { CheckListProperty } from './components/editors/properties/check-list-pr
     JsonProperty,
     DropDownProperty,
     CheckListProperty
+    RadioListProperty
   ],
   imports: [
     routing,
