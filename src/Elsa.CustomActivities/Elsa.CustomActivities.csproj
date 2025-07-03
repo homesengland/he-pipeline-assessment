@@ -17,6 +17,7 @@
     <PackageReference Include="Elsa.Server.Api" />
     <PackageReference Include="Rebus.ServiceProvider" />
     <PackageReference Include="StackExchange.Redis" />
+	 <PackageReference Include="Jint" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
