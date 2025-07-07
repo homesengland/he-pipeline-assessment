@@ -11,14 +11,15 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         public string Reference { get; set; } = null!;
         public string? LocalAuthority { get; set; }
         public string? ProjectManager { get; set; }
-        public string? AssessmentToolName { get; set; } = "Stage 1 Eligibility";
-        public string? AssessmentToolWorkflowName { get; set; } = "All Projects";
+        public string? AssessmentToolName { get; set; }
+        public string? AssessmentToolWorkflowName { get; set; }
 
         public string? WorkflowName 
         {
             get 
             {
-                return $"{AssessmentToolName}-{AssessmentToolWorkflowName}";
+                //return $"{AssessmentToolName} - {AssessmentToolWorkflowName}";
+                return $"{AssessmentToolName} ({AssessmentToolWorkflowName})";
             }
         } 
     }

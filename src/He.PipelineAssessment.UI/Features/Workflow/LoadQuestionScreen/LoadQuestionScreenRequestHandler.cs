@@ -82,6 +82,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadQuestionScreen
                     result!.IsAuthorised = true;
                     result!.AssessmentId = assessmentWorkflowInstance.AssessmentId;
                     result!.WorkflowDefinitionId = assessmentWorkflowInstance.WorkflowDefinitionId;
+                    result!.AssessmentToolName = assessmentWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Name;
+                    result!.AssessmentToolWorkflowName = assessmentWorkflowInstance.AssessmentToolWorkflow.Name;
 
                     PageHeaderHelper.PopulatePageHeaderInformation(result, assessmentWorkflowInstance);
                     return await Task.FromResult(result);
