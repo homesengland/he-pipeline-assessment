@@ -122,6 +122,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                         }
                         result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId;
                         result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
+                        result!.AssessmentToolName = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Name;
+                        result!.AssessmentToolWorkflowName = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.Name;
                         if (currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow != null)
                         {
                             result.IsVariationAllowed = await _assessmentToolWorkflowInstanceHelpers.IsVariationAllowed(currentAssessmentToolWorkflowInstance);
