@@ -11,6 +11,7 @@ public interface IRoleValidation
 
     bool ValidateSensitiveRecords(Assessment assessment);
     bool ValidateForBusinessArea(string? businessArea);
+    bool IsAdmin();
 }
 public class RoleValidation : IRoleValidation
 {
@@ -48,6 +49,11 @@ public class RoleValidation : IRoleValidation
         return canSeeRecord;
     }
 
+    public bool IsAdmin()
+    {
+        return _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+    }
+
     // PREVIOSLY MARKED AS PRIVATE?
     public bool ValidateForBusinessArea(Assessment? assessment)
     {
@@ -61,16 +67,17 @@ public class RoleValidation : IRoleValidation
     public bool ValidateForBusinessArea(string? businessArea)
     {
         bool isRoleExist = false;
-            switch (businessArea)
+        bool isAdmin = IsAdmin();
+        switch (businessArea)
             {
                 case Constants.BusinessArea.MPP:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || isAdmin);
                     return isRoleExist;
                 case Constants.BusinessArea.Investment:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || isAdmin);
                     return isRoleExist;
                 case Constants.BusinessArea.Development:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || isAdmin);
                     return isRoleExist;
                 default: return isRoleExist;
             }
