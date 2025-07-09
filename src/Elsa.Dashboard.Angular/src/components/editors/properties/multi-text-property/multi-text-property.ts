@@ -64,4 +64,12 @@ export class MultiTextProperty {
       };
     });
   }
+
+  get useDropdown() {
+    return !!this.propertyDescriptor().options && Array.isArray(this.propertyDescriptor().options) && this.propertyDescriptor().options.length > 0;
+  }
+
+  get propertyOptions() {
+    return this.createKeyValueOptions(this.selectList.items as Array<SelectListItem>);
+  }
 }

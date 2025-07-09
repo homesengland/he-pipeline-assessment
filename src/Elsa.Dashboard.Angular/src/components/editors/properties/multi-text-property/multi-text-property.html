@@ -6,4 +6,22 @@
   single-line="true"
   [showLabel]="false"
 >
+  <ng-container *ngIf="useDropdown; else tagsInput">
+    <ng-container *ngFor="let item of getSelectItems()">
+      <app-elsa-input-tags-dropdown
+        [dropdownValues]="propertyOptions"
+        [values]="item.value"
+        [fieldId]="propertyDescriptor().name"
+        [fieldName]="propertyDescriptor().name"
+        (valueChanged)="onValueChanged($event.detail)"
+      >
+      </app-elsa-input-tags-dropdown>
+    </ng-container>
+  </ng-container>
+  <ng-template #tagsInput>
+    <ng-container *ngFor="let item of getSelectItems()">
+      <app-elsa-input-tags [value]="item.value" [fieldId]="propertyDescriptor.name" [fieldName]="propertyDescriptor.name" (valueChanged)="onValueChanged($event)">
+      </app-elsa-input-tags>
+    </ng-container>
+  </ng-template>
 </property-editor>
