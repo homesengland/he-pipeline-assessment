@@ -18,7 +18,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ViewModels
         {
             get 
             {
-                //return $"{AssessmentToolName} - {AssessmentToolWorkflowName}";
                 return $"{AssessmentToolName} ({AssessmentToolWorkflowName})";
             }
         } 
