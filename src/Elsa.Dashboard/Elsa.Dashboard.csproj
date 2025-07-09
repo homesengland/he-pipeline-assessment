@@ -14,7 +14,6 @@
     <None Remove="System.Text.RegularExpressions" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Elsa.Designer.Components.Web" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
@@ -94,6 +93,7 @@
     <None Include="wwwroot\Scripts\Constants\CustomPropertyUiHints.js" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\designer\Elsa.Designer.Components.Web\Elsa.Designer.Components.Web.csproj" />
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
   </ItemGroup>

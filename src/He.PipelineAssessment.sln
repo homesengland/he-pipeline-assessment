@@ -121,6 +121,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.WorkflowSettings.Persi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.WorkflowSettings.Api", "modules\workflowsettings\Elsa.WorkflowSettings.Api\Elsa.WorkflowSettings.Api.csproj", "{E44B75DE-618E-0C6C-F219-B904D34CF275}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "designer", "designer", "{D766812D-9D49-42A7-8F03-251E68F3EC03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elsa.Designer.Components.Web", "designer\Elsa.Designer.Components.Web\Elsa.Designer.Components.Web.csproj", "{4B1FAF8E-79E9-9066-310B-16F989DF3008}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -283,6 +287,10 @@ Global
 		{E44B75DE-618E-0C6C-F219-B904D34CF275}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E44B75DE-618E-0C6C-F219-B904D34CF275}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E44B75DE-618E-0C6C-F219-B904D34CF275}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B1FAF8E-79E9-9066-310B-16F989DF3008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B1FAF8E-79E9-9066-310B-16F989DF3008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B1FAF8E-79E9-9066-310B-16F989DF3008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B1FAF8E-79E9-9066-310B-16F989DF3008}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -325,6 +333,8 @@ Global
 		{5BD265D8-F8D6-1A70-04BA-D423FC00008B} = {5ED6499F-A84D-48D1-AD7D-44F313D32D2D}
 		{C443918D-A63B-4E5C-7F8F-3D985E140A18} = {5ED6499F-A84D-48D1-AD7D-44F313D32D2D}
 		{E44B75DE-618E-0C6C-F219-B904D34CF275} = {5ED6499F-A84D-48D1-AD7D-44F313D32D2D}
+		{D766812D-9D49-42A7-8F03-251E68F3EC03} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{4B1FAF8E-79E9-9066-310B-16F989DF3008} = {D766812D-9D49-42A7-8F03-251E68F3EC03}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8FBFE024-7094-4738-B42D-4214E6140235}
