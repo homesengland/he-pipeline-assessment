@@ -122,13 +122,13 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                         }
                         result.CorrelationId = currentAssessmentToolWorkflowInstance.Assessment.SpId;
                         result.AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId;
-                        result!.AssessmentToolName = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Name;
-                        result!.AssessmentToolWorkflowName = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.Name;
                         if (currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow != null)
                         {
                             result.IsVariationAllowed = await _assessmentToolWorkflowInstanceHelpers.IsVariationAllowed(currentAssessmentToolWorkflowInstance);
                             result.IsLatestSubmittedWorkflow = await _assessmentToolWorkflowInstanceHelpers.IsOrderEqualToLatestSubmittedWorkflowOrder(currentAssessmentToolWorkflowInstance);
                             result.IsAmendableWorkflow = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsAmendable;
+                            result.AssessmentToolName = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Name;
+                            result.AssessmentToolWorkflowName = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.Name;
                         }
                         PageHeaderHelper.PopulatePageHeaderInformation(result, currentAssessmentToolWorkflowInstance);
                         return await Task.FromResult(result);
