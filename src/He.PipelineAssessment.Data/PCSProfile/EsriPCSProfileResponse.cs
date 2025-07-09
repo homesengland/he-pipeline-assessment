@@ -83,6 +83,8 @@
         public decimal? total_af_comp_fc_sr { get; set; }
         public decimal? total_af_comp_ac { get; set; }
         public string? fund_recovery { get; set; }
+        public decimal? prev_years_expend { get; set; }
+        public decimal? prev_years_receipts { get; set; }
     }
 
 
