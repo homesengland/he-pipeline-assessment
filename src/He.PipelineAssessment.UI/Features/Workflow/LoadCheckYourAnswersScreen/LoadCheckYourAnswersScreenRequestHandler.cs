@@ -71,6 +71,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                         result.WorkflowDefinitionId= entity.WorkflowDefinitionId;
                         result.IsReadOnly = assessmentWorkflowInstance.Status !=
                                             AssessmentToolWorkflowInstanceConstants.Draft;
+                        result!.AssessmentToolName = assessmentWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Name;
+                        result!.AssessmentToolWorkflowName = assessmentWorkflowInstance.AssessmentToolWorkflow.Name;
 
                         PageHeaderHelper.PopulatePageHeaderInformation(result, assessmentWorkflowInstance);
                     }

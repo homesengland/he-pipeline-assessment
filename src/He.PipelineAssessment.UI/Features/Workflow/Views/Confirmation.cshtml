@@ -6,6 +6,7 @@
 }
 <span class="govuk-caption-l">@Model.Reference</span>
 <h2 class="govuk-heading-m">@Model.SiteName</h2>
+@await Html.PartialAsync("_WorkflowName")
 <div class="govuk-panel govuk-panel--confirmation">
     <h1 class="govuk-panel__title">
         @Model.Data.ConfirmationTitle
