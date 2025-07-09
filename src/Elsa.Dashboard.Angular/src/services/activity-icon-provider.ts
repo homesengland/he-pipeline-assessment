@@ -32,6 +32,9 @@ export class ActivityIconProvider {
     this.registerWebhookIcons();
     this.registerWriteHttpResponseIcons();
     this.registerWriteLineIcons();
+    this.registerAddCaseIcons();
+    this.registerTrashBinIcons();
+    this.registerOpenInDialogIcons();
   }
 
   //#region Register Icon Methods
@@ -236,6 +239,22 @@ export class ActivityIconProvider {
     this.register('WriteLine', (colour: string) => {
       return this.sanitizer.bypassSecurityTrustHtml(this.createWriteLineIconHtml(colour));
     });
+  }
+
+  private registerAddCaseIcons(): void {
+    this.register('AddCase', (colour: string) => {
+      return this.sanitizer.bypassSecurityTrustHtml(this.createAddCaseIconHtml(colour));
+    });
+  }
+
+  private registerTrashBinIcons(): void {
+        this.register('TrashBin', (colour: string) => {
+      return this.sanitizer.bypassSecurityTrustHtml(this.createTrashBinIcon(colour));
+    });
+  }
+
+  private registerOpenInDialogIcons(): void {
+    //Icon unused as of now
   }
 
   //#endregion
@@ -501,6 +520,38 @@ export class ActivityIconProvider {
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
     </svg>
   </span>`;
+  }
+
+    private createAddCaseIconHtml(colour: string): string {
+    return `
+    <svg 
+        class="${`elsa-mr-2 elsa-h-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
+        width="24" height="24" viewBox="0 0 24 24"
+        stroke-width="2" stroke="currentColor" fill="transparent" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>`;
+  }
+
+  private createTrashBinIcon(colour: string): string {
+    return  `<svg 
+        class="${`elsa-h-5 elsa-w-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
+        width="24" height="24" viewBox="0 0 24 24"
+        stroke-width="2" stroke="currentColor" fill="transparent" stroke-linecap="round"
+        stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        <line x1="10" y1="11" x2="10" y2="17"/>
+        <line x1="14" y1="11" x2="14" y2="17"/>
+    </svg>`;
+  }
+
+  private createOpenInDialogIcon(colour: string): string {
+    return `<svg 
+        class="${`elsa-h-5 elsa-w-5 ${colour? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
+    </svg>`  
   }
 
   //#endregion
