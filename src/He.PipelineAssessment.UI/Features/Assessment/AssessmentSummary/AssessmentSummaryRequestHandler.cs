@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Utility;
@@ -44,8 +45,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
+                bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
 
-                var hasValidBusinessArea = _roleValidation.ValidateForBusinessArea(dbAssessment.BusinessArea);
                 List<string> businessAreaErrorMessage = new List<string>();
          
 
@@ -78,22 +79,12 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         }
                     }
                 }
+
                 if (!hasValidBusinessArea)
                 {
                     string assessmentToolName = "Early Stage Tools";
-                    if (stages.Any())
-                    {
-                        if (stages.Any())
-                        {
-                            var earlyStageTools = stages.Where(x => x.IsEarlyStage is not null and true);
-                            if (earlyStageTools.Any())
-                            {
-                                assessmentToolName = earlyStageTools.OrderByDescending(x => x.Order).FirstOrDefault()!.Name;
-                            }
-                        }
-                    }
 
-                    businessAreaErrorMessage.Add(string.Format("You do not have permission to complete assessments beyond the {0}.", assessmentToolName));
+                    businessAreaErrorMessage.Add(string.Format("You do not have permission for this opportunity to complete assessments other than the {0}.", assessmentToolName));
                     businessAreaErrorMessage.Add(string.Format("Please contact a System Administrator to request the correct level of access to complete {0} Assessments", dbAssessment.BusinessArea));
                 
                 }
@@ -138,6 +129,12 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 _logger.LogError(e, e.Message);
                 throw new ApplicationException($"Unable to get the assessment summary. AssessmentId: {request.AssessmentId}");
             }
+        }
+
+        private bool HasValidBusinessArea(string businessArea)
+        {
+            bool hasValidBusinessArea = _roleValidation.IsAdmin() ? true : _roleValidation.ValidateForBusinessArea(businessArea);
+            return hasValidBusinessArea;
         }
 
         private AssessmentSummaryStage AssessmentSummaryStage( string name, int order, bool? isEarlyStage)
