@@ -23,8 +23,6 @@ export class SwitchCaseProperty {
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
-
-
   defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
   isEncypted = model<boolean>(false);
   currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax()] || '');
@@ -48,9 +46,9 @@ export class SwitchCaseProperty {
   }
 
   async ngOnInit(): Promise<void> {
-    // const propertyModel = this.propertyModel;
-    // const casesJson = propertyModel().expressions['Switch']
-    // this.cases = parseJson(casesJson) || [];
+     const propertyModel = this.propertyModel();
+     const casesJson = propertyModel().expressions['Switch']
+     this.cases = parseJson(casesJson) || [];
   }
 
   updatePropertyModel() {
@@ -69,7 +67,7 @@ export class SwitchCaseProperty {
     this.updatePropertyModel();
   }
 
-    onDeleteCaseClick(switchCase: SwitchCase) {
+  onDeleteCaseClick(switchCase: SwitchCase) {
     this.cases = this.cases.filter(x => x != switchCase);
     this.updatePropertyModel();
   }
@@ -79,9 +77,15 @@ export class SwitchCaseProperty {
     this.updatePropertyModel();
   }
 
-  onCaseExpressionChanged(e: Event, switchCase: SwitchCase) {
-    const detail = (e as CustomEvent<string>).detail;
-    switchCase.expressions[switchCase.syntax] = detail;
+  //// original
+  //onCaseExpressionChanged(e: Event, switchCase: SwitchCase) {
+  //  const detail = (e as CustomEvent<string>).detail;
+  //  switchCase.expressions[switchCase.syntax] = detail;
+  //  this.updatePropertyModel();
+  //}
+
+  onCaseExpressionChanged(e: CustomEvent<string>, switchCase: SwitchCase) {
+    switchCase.expressions[switchCase.syntax] = e.detail;
     this.updatePropertyModel();
   }
 
@@ -92,9 +96,25 @@ export class SwitchCaseProperty {
     this.updatePropertyModel();
   }
 
-  onMultiExpressionEditorValueChanged(e: Event) {
-    const detail = (e as CustomEvent<string>).detail;
-    const json = detail;
+  //// original
+  //onMultiExpressionEditorValueChanged(e: Event) {
+  //  const detail = (e as CustomEvent<string>).detail;
+  //  const json = detail;
+  //  const parsed = parseJson(json);
+
+  //  if (!parsed)
+  //    return;
+
+  //  if (!Array.isArray(parsed))
+  //    return;
+
+  //  this.propertyModel().expressions['Switch'] = json;
+  //  this.cases = parsed;
+
+  //}
+
+  onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
+    const json = e.detail;
     const parsed = parseJson(json);
 
     if (!parsed)
@@ -103,12 +123,17 @@ export class SwitchCaseProperty {
     if (!Array.isArray(parsed))
       return;
 
-    this.propertyModel().expressions['Switch'] = json;
+    this.propertyModel.expressions['Switch'] = json;
     this.cases = parsed;
 
   }
 
-  onMultiExpressionEditorSyntaxChanged(e: Event) {
+  //// original
+  //onMultiExpressionEditorSyntaxChanged(e: Event) {
+  //  this.syntaxSwitchCount++;
+  //}
+
+  onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
     this.syntaxSwitchCount++;
   }
 
