@@ -47,7 +47,7 @@ export class SwitchCaseProperty {
 
   async ngOnInit(): Promise<void> {
      const propertyModel = this.propertyModel();
-     const casesJson = propertyModel().expressions['Switch']
+     const casesJson = this.propertyModel().expressions['Switch']
      this.cases = parseJson(casesJson) || [];
   }
 
@@ -123,7 +123,7 @@ export class SwitchCaseProperty {
     if (!Array.isArray(parsed))
       return;
 
-    this.propertyModel.expressions['Switch'] = json;
+    this.propertyModel().expressions['Switch'] = json;
     this.cases = parsed;
 
   }
