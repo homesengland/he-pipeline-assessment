@@ -16,23 +16,50 @@ export class SwitchCaseProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
-
   cases: Array<SwitchCase> = [];
+
+  //// Correctly assigning values to cases at declaration time
+  //cases: Array<SwitchCase> = [
+  //  {
+  //    name: "Case 1",
+  //    syntax: "JavaScript",
+  //    expressions: {
+  //      JavaScript: "x > 5",
+  //      Liquid: "{{ x | plus: 5 }}"
+  //    }
+  //  },
+  //  {
+  //    name: "Case 2",
+  //    syntax: "Liquid",
+  //    expressions: {
+  //      JavaScript: "y < 10",
+  //      Liquid: "{{ y | minus: 10 }}"
+  //    }
+  //  }
+  //];
+
   valueChange: EventEmitter<Array<any>>;
+
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
-  defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
-  isEncypted = model<boolean>(false);
-  currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax()] || '');
-  fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');
-  fieldName = computed(() => this.propertyDescriptor()?.name ?? 'default');
-  isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
+
+  /* COMMENTED OUT AS I MIGHT NOT NEED THIS AT THE MOMENT */
+  //defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
+  //isEncypted = model<boolean>(false);
+  //currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax()] || '');
+  //fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');
+  //fieldName = computed(() => this.propertyDescriptor()?.name ?? 'default');
+  //isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
+
+
+  /* This was already commented out by Cameron */
   // context: IntellisenseContext = {
   //   activityTypeName: this.activityModel().type,
   //   propertyName: this.propertyDescriptor().name
   // };
+
   expressions = computed(() => {
     const model = this.propertyModel();
     return model?.expressions ? { ...model.expressions } : {};
@@ -46,7 +73,7 @@ export class SwitchCaseProperty {
   }
 
   async ngOnInit(): Promise<void> {
-     const propertyModel = this.propertyModel();
+     // const propertyModel = this.propertyModel();
      const casesJson = this.propertyModel().expressions['Switch']
      this.cases = parseJson(casesJson) || [];
   }
