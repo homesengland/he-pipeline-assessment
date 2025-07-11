@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
+import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
@@ -6,6 +6,8 @@ import { Map, mapSyntaxToLanguage, parseJson } from 'src/utils/utils';
 import { SwitchCase } from './models';
 import { HTMLElsaExpressionEditorElement, HTMLElsaMultiExpressionEditorElement, IntellisenseContext } from 'src/models/elsa-interfaces';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
+import { EditorModel } from '../../../../components/monaco/types';
+import { ExpressionEditor } from '../../expression-editor/expression-editor';
 
 @Component({
   selector: 'switch-case-property',
@@ -16,11 +18,12 @@ export class SwitchCaseProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
+  @ViewChild('multiExpressionEditor') multiExpressionEditor;
 
   cases: Array<SwitchCase> = [];
   valueChange: EventEmitter<Array<any>>;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
-  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  //multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
 
@@ -31,14 +34,16 @@ export class SwitchCaseProperty {
   fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');
   fieldName = computed(() => this.propertyDescriptor()?.name ?? 'default');
   isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
+  monacoLanguage = computed(() => mapSyntaxToLanguage(this.defaultSyntax()));
   // context: IntellisenseContext = {
   //   activityTypeName: this.activityModel().type,
   //   propertyName: this.propertyDescriptor().name
   // };
-  expressions = computed(() => {
-    const model = this.propertyModel();
-    return model?.expressions ? { ...model.expressions } : {};
-  });
+   expressions = computed(() => {
+     const model = this.propertyModel();
+     return model?.expressions ?? {};
+   });
+  //expressions: any;
   Json: any;
   activityIconProvider: any;
 
@@ -48,9 +53,11 @@ export class SwitchCaseProperty {
   }
 
   async ngOnInit(): Promise<void> {
-    // const propertyModel = this.propertyModel;
-    // const casesJson = propertyModel().expressions['Switch']
-    // this.cases = parseJson(casesJson) || [];
+    const propertyModel = this.propertyModel;
+    const casesJson = propertyModel().expressions['Switch']
+    this.cases = parseJson(casesJson) || [];
+    //this.expressions = propertyModel().expressions;
+    
   }
 
   updatePropertyModel() {
@@ -69,7 +76,7 @@ export class SwitchCaseProperty {
     this.updatePropertyModel();
   }
 
-    onDeleteCaseClick(switchCase: SwitchCase) {
+  onDeleteCaseClick(switchCase: SwitchCase) {
     this.cases = this.cases.filter(x => x != switchCase);
     this.updatePropertyModel();
   }
@@ -79,10 +86,9 @@ export class SwitchCaseProperty {
     this.updatePropertyModel();
   }
 
-  onCaseExpressionChanged(e: Event, switchCase: SwitchCase) {
-    const detail = (e as CustomEvent<string>).detail;
-    switchCase.expressions[switchCase.syntax] = detail;
-    this.updatePropertyModel();
+  onCaseExpressionChanged(newValue: string, switchCase: SwitchCase) {
+    // switchCase.expressions[switchCase.syntax] = newValue;
+    // this.updatePropertyModel();
   }
 
   onCaseSyntaxChanged(e: Event, switchCase: SwitchCase, expressionEditor: HTMLElsaExpressionEditorElement) {
@@ -122,12 +128,10 @@ export class SwitchCaseProperty {
       console.log("monacoLanguage:", mapSyntaxToLanguage(switchCase.syntax));
       return {
         index: index,
-        expression: switchCase.expressions[switchCase.syntax],
-        syntax: switchCase.syntax,
-        monacoLanguage: mapSyntaxToLanguage(switchCase.syntax),
-        name: switchCase.name,
-        //onNameChanged: (e: Event) => this.onCaseNameChanged(e, switchCase),
-        //onExpressionChanged: (e: CustomEvent<string>) => this.onCaseExpressionChanged(e, switchCase)
+        expression: "test",
+        syntax: "JavaScript",
+        monacoLanguage: "JavaScript",
+        name: switchCase.name
       };
     });
   }

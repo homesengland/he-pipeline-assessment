@@ -2,3 +2,8 @@
 <div *ngFor="let activityProperty of activityProperties">
   <property-control [activity]="getActivityModel(activityProperty().uiHint)" [property]="activityProperty" [onUpdated]="" [isEncypted]="false"> </property-control>
 </div>
+<switch-case-property [activityModel]="getSwitchCaseModel()"
+                      [propertyDescriptor]="getSwitchCaseDescriptor()"
+                      [propertyModel]="getSwitchCaseDefinition()">
+
+</switch-case-property>

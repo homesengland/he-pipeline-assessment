@@ -54,7 +54,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.dropDownActivityModel.set(this.getDropDownModel());
     this.radioListActivityModel.set(this.getRadioListModel());
     this.checkListActivityModel.set(this.getDropDownModel());
-    this.switchCaseActivityModel.set(this.getSwitchCaseModel());
+    //this.switchCaseActivityModel.set(this.getSwitchCaseModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
     const checkboxDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckboxDescriptor());
@@ -62,7 +62,7 @@ export class WorkflowPlaceholder implements OnInit {
     const dropdownDescriptor = signal<ActivityPropertyDescriptor>(this.getDropDownDescriptor());
     const checkListDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckListDescriptor());
     const radioListDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioListDescriptor());
-    const switchCaseDescriptor = signal<ActivityPropertyDescriptor>(this.getSwitchCaseDescriptor());
+    //const switchCaseDescriptor = signal<ActivityPropertyDescriptor>(this.getSwitchCaseDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);
     this.activityProperties.push(checkboxDescriptor);
@@ -70,7 +70,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.activityProperties.push(dropdownDescriptor);
     this.activityProperties.push(checkListDescriptor);
     this.activityProperties.push(radioListDescriptor);
-    this.activityProperties.push(switchCaseDescriptor);
+    //this.activityProperties.push(switchCaseDescriptor);
   }
 
   async ngOnInit() {
