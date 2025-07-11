@@ -1,0 +1,172 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { Component, h, Event, Prop, State } from '@stencil/core';
+import { parseJson, newOptionLetter } from "../../utils/utils";
+import { IconProvider } from "../providers/icon-provider/icon-provider";
+import PlusIcon from '../../icons/plus_icon';
+import TrashCanIcon from '../../icons/trash-can';
+import { PropertyOutputTypes, SyntaxNames, WeightedScoringSyntax } from '../../constants/constants';
+import { SortableComponent } from '../base-component';
+import SortIcon from '../../icons/sort_icon';
+import { DisplayToggle } from '../display-toggle-component';
+import MaximiseIcon from '../../icons/maximise_icon';
+import MinimiseIcon from '../../icons/minimise_icon';
+let HeWeightedCheckboxProperty = class HeWeightedCheckboxProperty {
+    constructor() {
+        this.modelSyntax = SyntaxNames.Json;
+        this.properties = [];
+        this.iconProvider = new IconProvider();
+        this.dictionary = {};
+        this.switchTextHeight = "";
+        this.editorHeight = "2.75em";
+        this.supportedSyntaxes = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
+        this.syntaxSwitchCount = 0;
+        this.scoreSyntaxSwitchCount = 0;
+        this.displayValue = "table-row";
+        this.hiddenValue = "none";
+        this._base = new SortableComponent(this);
+        this._toggle = new DisplayToggle(this);
+    }
+    async componentWillLoad() {
+        this._base.componentWillLoad();
+    }
+    async componentDidLoad() {
+        this._base.componentDidLoad();
+    }
+    async componentWillRender() {
+        this._base.componentWillRender();
+    }
+    updatePropertyModel() {
+        this._base.updatePropertyModel();
+    }
+    onDefaultSyntaxValueChanged(e) {
+        this.properties = e.detail;
+    }
+    onAddGroupClick() {
+        const groupName = newOptionLetter(this._base.IdentifierArray());
+        const newGroup = {
+            name: groupName,
+            syntax: SyntaxNames.Json,
+            expressions: {
+                [SyntaxNames.Json]: '',
+                [WeightedScoringSyntax.GroupArrayScore]: ''
+            }, type: PropertyOutputTypes.CheckboxGroup
+        };
+        this.properties = [...this.properties, newGroup];
+        this.updatePropertyModel();
+    }
+    onDeleteGroupClick(checkboxGroup) {
+        this.properties = this.properties.filter(x => x != checkboxGroup);
+        this.updatePropertyModel();
+    }
+    onPropertyExpressionChange(event, property) {
+        event = event;
+        property = property;
+        this.updatePropertyModel();
+    }
+    onMultiExpressionEditorValueChanged(e) {
+        const json = e.detail;
+        const parsed = parseJson(json);
+        if (!parsed)
+            return;
+        if (!Array.isArray(parsed))
+            return;
+        this.propertyModel.expressions[SyntaxNames.Json] = json;
+        this.properties = parsed;
+    }
+    onMultiExpressionEditorSyntaxChanged(e) {
+        e = e;
+        this.syntaxSwitchCount++;
+    }
+    onToggleOptions(index) {
+        this._toggle.onToggleDisplay(index);
+    }
+    render() {
+        const answerGroups = this.properties;
+        const json = JSON.stringify(answerGroups, null, 2);
+        const renderCheckboxGroups = (checkboxGroup) => {
+            const eventHandler = this.onPropertyExpressionChange.bind(this);
+            const groupKey = "group_" + checkboxGroup.name;
+            const isMinimised = this.dictionary[groupKey] != null && this.dictionary[groupKey] == this.displayValue;
+            let minimiseIconStyle = isMinimised ? this.hiddenValue : this.displayValue;
+            let maximiseIconStyle = !isMinimised ? this.hiddenValue : this.displayValue;
+            let displayGroupStyle = isMinimised ? this.hiddenValue : "";
+            return (h("div", { key: this.keyId },
+                h("br", null),
+                h("div", { class: "elsa-mb-1" },
+                    h("div", { class: "elsa-flex" },
+                        h("div", { class: "elsa-flex-1 sortablejs-custom-handle" },
+                            h(SortIcon, { options: this.iconProvider.getOptions() })),
+                        h("div", { class: "elsa-flex-1 elsa-text-left elsa-mx-auto" },
+                            h("h2", { class: "inline" },
+                                "Group: ",
+                                checkboxGroup.name),
+                            h("button", { type: "button", onClick: () => this.onToggleOptions(groupKey), class: "elsa-h-5 inline float-right elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none", style: { display: minimiseIconStyle } },
+                                h(MinimiseIcon, { options: this.iconProvider.getOptions() })),
+                            h("button", { type: "button", onClick: () => this.onToggleOptions(groupKey), class: "elsa-h-5 float-right inline elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none", style: { display: maximiseIconStyle } },
+                                h(MaximiseIcon, { options: this.iconProvider.getOptions() }))),
+                        h("div", { class: "px-3 inline" }),
+                        h("div", null,
+                            h("button", { type: "button", onClick: () => this.onDeleteGroupClick(checkboxGroup), class: "elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none" },
+                                h(TrashCanIcon, { options: this.iconProvider.getOptions() }))))),
+                h("he-weighted-checkbox-option-group-property", { activityModel: this.activityModel, propertyModel: checkboxGroup, onExpressionChanged: e => eventHandler(e, checkboxGroup), style: { display: displayGroupStyle } }),
+                h("br", null),
+                h("hr", null)));
+        };
+        const context = {
+            activityTypeName: this.activityModel.type,
+            propertyName: this.propertyDescriptor.name
+        };
+        return (h("div", null,
+            h("he-multi-expression-editor", { ref: el => this.multiExpressionEditor = el, label: this.propertyDescriptor.label, defaultSyntax: SyntaxNames.Json, supportedSyntaxes: [SyntaxNames.Json], context: context, expressions: { 'Json': json }, "editor-height": "20rem", onExpressionChanged: e => this.onMultiExpressionEditorValueChanged(e), onSyntaxChanged: e => this.onMultiExpressionEditorSyntaxChanged(e) },
+                h("hr", null),
+                h("div", { class: "elsa-min-w-full elsa-divide-y elsa-divide-gray-200", ref: el => (this.container = el) }, answerGroups.map(renderCheckboxGroups)),
+                h("button", { type: "button", onClick: () => this.onAddGroupClick(), class: "elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2" },
+                    h(PlusIcon, { options: this.iconProvider.getOptions() }),
+                    "Add Answer Group"))));
+    }
+};
+__decorate([
+    Prop()
+], HeWeightedCheckboxProperty.prototype, "activityModel", void 0);
+__decorate([
+    Prop()
+], HeWeightedCheckboxProperty.prototype, "propertyDescriptor", void 0);
+__decorate([
+    Prop()
+], HeWeightedCheckboxProperty.prototype, "propertyModel", void 0);
+__decorate([
+    Prop()
+], HeWeightedCheckboxProperty.prototype, "modelSyntax", void 0);
+__decorate([
+    State()
+], HeWeightedCheckboxProperty.prototype, "keyId", void 0);
+__decorate([
+    State()
+], HeWeightedCheckboxProperty.prototype, "properties", void 0);
+__decorate([
+    State()
+], HeWeightedCheckboxProperty.prototype, "iconProvider", void 0);
+__decorate([
+    Event()
+], HeWeightedCheckboxProperty.prototype, "expressionChanged", void 0);
+__decorate([
+    State()
+], HeWeightedCheckboxProperty.prototype, "dictionary", void 0);
+__decorate([
+    State()
+], HeWeightedCheckboxProperty.prototype, "switchTextHeight", void 0);
+__decorate([
+    State()
+], HeWeightedCheckboxProperty.prototype, "editorHeight", void 0);
+HeWeightedCheckboxProperty = __decorate([
+    Component({
+        tag: 'he-weighted-checkbox-property',
+        shadow: false,
+    })
+], HeWeightedCheckboxProperty);
+export { HeWeightedCheckboxProperty };

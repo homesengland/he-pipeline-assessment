@@ -1,31 +1,29 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false,
-    "allowJs": true,
+    "allowUnreachableCode": true,
+    "allowUnusedLabels": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "skipLibCheck": true,
     "lib": [
       "dom",
       "es2017"
     ],
-    //"typeRoots": [
-    //  "node_modules/@elsa-workflows"
-    //],
     "moduleResolution": "node",
     "module": "esnext",
     "target": "es2017",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "plugins": [
+      { "name": "typescript-tslint-plugin" }
+    ]
   },
   "include": [
     "src"
   ],
   "exclude": [
-    "node_modules",
-    "src/index.html"
+    "node_modules"
   ]
 }

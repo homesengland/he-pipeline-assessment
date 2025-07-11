@@ -5,61 +5,150 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
+import { ActivityDefinitionProperty, ActivityDeletedArgs, ActivityDescriptor, ActivityModel, ActivityPropertyDescriptor, ElsaStudio, IntellisenseContext, OrderBy, SelectListItem, VersionOptions, WorkflowBlueprint, WorkflowDefinition, WorkflowDefinitionVersion, WorkflowExecutionLogRecord, WorkflowFault, WorkflowInstance, WorkflowModel, WorkflowStatus } from "./models";
+import { LocationSegments, MatchResults, RouterHistory } from "@stencil/router";
+import { MenuItem } from "./components/controls/elsa-context-menu/models";
 import { VNode } from "@stencil/core";
-import { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco";
+import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from "./components/designers/tree/elsa-designer-tree/models";
+import { DropdownButtonItem, DropdownButtonOrigin } from "./components/controls/elsa-dropdown-button/models";
+import { MonacoValueChangedArgs } from "./components/controls/elsa-monaco/elsa-monaco";
 import { Map } from "./utils/utils";
-import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
+import { PagerData } from "./components/controls/elsa-pager/elsa-pager";
+import { ToastNotificationOptions } from "./components/shared/elsa-toast-notification/elsa-toast-notification";
+import { WebhookDefinition } from "./modules/elsa-webhooks/models";
+import { ActivityStats } from ".";
 export namespace Components {
-    interface HeCheckListProperty {
+    interface ElsaActivityEditorModal {
+        "culture": string;
+    }
+    interface ElsaActivityEditorPanel {
+        "culture": string;
+    }
+    interface ElsaActivityPickerModal {
+    }
+    interface ElsaCheckListProperty {
         "activityModel": ActivityModel;
-        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "serverUrl": string;
+    }
+    interface ElsaCheckboxProperty {
+        "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface HeCheckboxOptionsProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaConfirmDialog {
+        "culture": string;
+        "hide": () => Promise<void>;
+        "show": (caption: string, message: string) => Promise<boolean>;
     }
-    interface HeCheckboxProperty {
-        "activityModel": ActivityModel;
-        "keyId": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaContextMenu {
+        "history": RouterHistory;
+        "menuItems": Array<MenuItem>;
     }
-    interface HeDashboard {
-        "dataDictionaryGroup": string;
-        "storeConfig": string;
-    }
-    interface HeDataTableProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-    }
-    interface HeElsaControl {
+    interface ElsaControl {
         "content": VNode | string | Element;
     }
-    interface HeExpressionEditor {
+    interface ElsaCopyButton {
+        "value": string;
+    }
+    interface ElsaCredentialManagerItemsList {
+        "basePath": string;
+        "culture": string;
+        "monacoLibPath": string;
+        "serverUrl": string;
+    }
+    interface ElsaCredentialManagerListScreen {
+        "basePath": string;
+        "culture": string;
+        "history"?: RouterHistory;
+        "serverUrl": string;
+    }
+    interface ElsaCronExpressionProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+    }
+    interface ElsaDesignerPanel {
+        "culture": string;
+    }
+    interface ElsaDesignerTree {
+        "activityBorderColor"?: (activity: ActivityModel) => string;
+        "activityContextMenu"?: ActivityContextMenuState;
+        "activityContextMenuButton"?: (activity: ActivityModel) => string;
+        "activityContextTestMenu"?: ActivityContextMenuState;
+        "connectionContextMenu"?: ActivityContextMenuState;
+        "enableMultipleConnectionsFromSingleSource": boolean;
+        "layoutDirection": LayoutDirection;
+        "mode": WorkflowDesignerMode;
+        "model": WorkflowModel;
+        "removeActivity": (activity: ActivityModel) => Promise<void>;
+        "removeSelectedActivities": () => Promise<void>;
+        "selectedActivityIds": Array<string>;
+        "showActivityEditor": (activity: ActivityModel, animate: boolean) => Promise<void>;
+    }
+    interface ElsaDictionaryProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "serverUrl": string;
+    }
+    interface ElsaDropdownButton {
+        "btnClass"?: string;
+        "icon"?: any;
+        "items": Array<DropdownButtonItem>;
+        "origin": DropdownButtonOrigin;
+        "text": string;
+    }
+    interface ElsaDropdownProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "serverUrl": string;
+    }
+    interface ElsaExpressionEditor {
         "context"?: IntellisenseContext;
         "editorHeight": string;
         "expression": string;
         "language": string;
+        "opensModal": boolean;
         "padding": string;
         "serverUrl": string;
         "setExpression": (value: string) => Promise<void>;
         "singleLineMode": boolean;
         "workflowDefinitionId": string;
     }
-    interface HeJsonProperty {
+    interface ElsaFlyoutPanel {
+        "autoExpand": boolean;
+        "expandButtonPosition": number;
+        "hidden": boolean;
+        "selectTab": (tab: string, expand?: boolean) => Promise<void>;
+        "silent": boolean;
+        "updateCounter": number;
+    }
+    interface ElsaInputTags {
+        "fieldId"?: string;
+        "fieldName"?: string;
+        "placeHolder"?: string;
+        "values"?: Array<string>;
+    }
+    interface ElsaInputTagsDropdown {
+        "dropdownValues"?: Array<SelectListItem>;
+        "fieldId"?: string;
+        "fieldName"?: string;
+        "placeHolder"?: string;
+        "values"?: Array<string | SelectListItem>;
+    }
+    interface ElsaJsonProperty {
         "activityModel": ActivityModel;
-        "keyId": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface HeMonaco {
+    interface ElsaModalDialog {
+        "hide": (animate?: boolean) => Promise<void>;
+        "show": (animate?: boolean) => Promise<void>;
+    }
+    interface ElsaMonaco {
         "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
         "editorHeight": string;
         "language": string;
@@ -69,43 +158,40 @@ export namespace Components {
         "singleLineMode": boolean;
         "value": string;
     }
-    interface HeMultiExpressionEditor {
+    interface ElsaMultiExpressionEditor {
         "context"?: IntellisenseContext;
         "defaultSyntax": string;
         "editorHeight": string;
         "expressions": Map<string>;
         "fieldName"?: string;
-        "hint"?: string;
         "isReadOnly"?: boolean;
         "label": string;
         "singleLineMode": boolean;
         "supportedSyntaxes": Array<string>;
         "syntax"?: string;
     }
-    interface HeMultiLineProperty {
-        "activityModel": ActivityModel;
-        "keyId": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-    }
-    interface HeMultiTextProperty {
-        "activityModel": ActivityModel;
-        "keyId": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-    }
-    interface HeNumericProperty {
-        "activityModel": ActivityModel;
-        "keyId": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-    }
-    interface HePotscoreRadioOptionsProperty {
+    interface ElsaMultiLineProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface HePropertyEditor {
+    interface ElsaMultiTextProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "serverUrl": string;
+    }
+    interface ElsaOauth2Authorized {
+    }
+    interface ElsaPager {
+        "culture": string;
+        "history"?: RouterHistory;
+        "location": LocationSegments;
+        "page": number;
+        "pageSize": number;
+        "totalCount": number;
+    }
+    interface ElsaPropertyEditor {
         "activityModel": ActivityModel;
         "context"?: string;
         "editorHeight": string;
@@ -114,692 +200,1307 @@ export namespace Components {
         "showLabel": boolean;
         "singleLineMode": boolean;
     }
-    interface HeQuestionDataDictionaryProperty {
+    interface ElsaRadioListProperty {
+        "activityModel": ActivityModel;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "serverUrl": string;
+    }
+    interface ElsaScriptProperty {
+        "activityModel": ActivityModel;
+        "editorHeight": string;
+        "propertyDescriptor": ActivityPropertyDescriptor;
+        "propertyModel": ActivityDefinitionProperty;
+        "serverUrl": string;
+        "singleLineMode": boolean;
+        "syntax"?: string;
+        "workflowDefinitionId": string;
+    }
+    interface ElsaSecretEditorModal {
+        "culture": string;
+        "monacoLibPath": string;
+        "serverUrl": string;
+    }
+    interface ElsaSecretsPickerModal {
+    }
+    interface ElsaSingleLineProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-    interface HeRadioOptionsProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaStudioDashboard {
+        "basePath": string;
+        "culture": string;
     }
-    interface HeSingleLineProperty {
-        "activityModel": ActivityModel;
-        "keyId": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaStudioHome {
+        "culture": string;
+        "serverVersion": string;
     }
-    interface HeSwitchAnswersProperty {
-        "activityModel": ActivityModel;
-        "keyId": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaStudioRoot {
+        "addPlugin": (pluginType: any) => Promise<void>;
+        "addPlugins": (pluginTypes: Array<any>) => Promise<void>;
+        "basePath": string;
+        "config": string;
+        "culture": string;
+        "features": any;
+        "monacoLibPath": string;
+        "serverUrl": string;
+        "useX6Graphs": boolean;
     }
-    interface HeTextActivityProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaStudioWebhookDefinitionsEdit {
+        "match": MatchResults;
     }
-    interface HeTextGroupProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaStudioWebhookDefinitionsList {
+        "basePath": string;
+        "culture": string;
     }
-    interface HeValidationProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaStudioWorkflowBlueprintView {
+        "match": MatchResults;
     }
-    interface HeWeightedCheckboxOptionGroupProperty {
-        "activityModel": ActivityModel;
-        "keyId": string;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": NestedActivityDefinitionProperty;
+    interface ElsaStudioWorkflowDefinitionsEdit {
+        "match": MatchResults;
     }
-    interface HeWeightedCheckboxProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaStudioWorkflowDefinitionsList {
+        "basePath": string;
+        "culture": string;
+        "history": RouterHistory;
+        "serverUrl": string;
     }
-    interface HeWeightedRadioOptionGroupProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": NestedActivityDefinitionProperty;
+    interface ElsaStudioWorkflowInstancesList {
+        "culture": string;
     }
-    interface HeWeightedRadioProperty {
-        "activityModel": ActivityModel;
-        "modelSyntax": string;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
+    interface ElsaStudioWorkflowInstancesView {
+        "match": MatchResults;
     }
-    interface NestedPropertyList {
-        "activityModel": ActivityModel;
-        "nestedDescriptors": Array<HeActivityPropertyDescriptor>;
-        "propertyModel": NestedActivityDefinitionProperty;
+    interface ElsaStudioWorkflowRegistry {
+        "basePath": string;
+        "culture": string;
     }
-    interface QuestionProperty {
-        "activityModel": ActivityModel;
-        "questionModel": NestedPropertyModel;
-    }
-    interface QuestionScreenProperty {
-        "activityModel": ActivityModel;
-        "propertyDescriptor": ActivityPropertyDescriptor;
-        "propertyModel": ActivityDefinitionProperty;
-        "questionProperties": Array<HeActivityPropertyDescriptor>;
-    }
-    interface SwitchAnswersProperty {
+    interface ElsaSwitchCasesProperty {
         "activityModel": ActivityModel;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
-}
-export interface HeCheckListPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeCheckListPropertyElement;
-}
-export interface HeCheckboxOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeCheckboxOptionsPropertyElement;
-}
-export interface HeCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeCheckboxPropertyElement;
-}
-export interface HeDataTablePropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeDataTablePropertyElement;
-}
-export interface HeExpressionEditorCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeExpressionEditorElement;
-}
-export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeJsonPropertyElement;
-}
-export interface HeMonacoCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeMonacoElement;
-}
-export interface HeMultiExpressionEditorCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeMultiExpressionEditorElement;
-}
-export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeMultiLinePropertyElement;
-}
-export interface HeMultiTextPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeMultiTextPropertyElement;
-}
-export interface HeNumericPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeNumericPropertyElement;
-}
-export interface HePotscoreRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHePotscoreRadioOptionsPropertyElement;
-}
-export interface HePropertyEditorCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHePropertyEditorElement;
-}
-export interface HeQuestionDataDictionaryPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeQuestionDataDictionaryPropertyElement;
-}
-export interface HeRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeRadioOptionsPropertyElement;
-}
-export interface HeSingleLinePropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeSingleLinePropertyElement;
-}
-export interface HeSwitchAnswersPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeSwitchAnswersPropertyElement;
-}
-export interface HeTextActivityPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeTextActivityPropertyElement;
-}
-export interface HeTextGroupPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeTextGroupPropertyElement;
-}
-export interface HeValidationPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeValidationPropertyElement;
-}
-export interface HeWeightedCheckboxOptionGroupPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeWeightedCheckboxOptionGroupPropertyElement;
-}
-export interface HeWeightedCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeWeightedCheckboxPropertyElement;
-}
-export interface HeWeightedRadioOptionGroupPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeWeightedRadioOptionGroupPropertyElement;
-}
-export interface HeWeightedRadioPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLHeWeightedRadioPropertyElement;
-}
-export interface NestedPropertyListCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLNestedPropertyListElement;
-}
-export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLQuestionPropertyElement;
+    interface ElsaTabContent {
+        "active": boolean;
+        "tab": string;
+    }
+    interface ElsaTabHeader {
+        "active": boolean;
+        "tab": string;
+    }
+    interface ElsaToastNotification {
+        "hide": () => Promise<void>;
+        "show": (options: ToastNotificationOptions) => Promise<void>;
+    }
+    interface ElsaUserContextMenu {
+        "menuItemSelected": (item: DropdownButtonItem) => Promise<void>;
+        "serverUrl": string;
+    }
+    interface ElsaVersionHistoryPanel {
+        "serverUrl": string;
+        "workflowDefinition": WorkflowDefinition;
+    }
+    interface ElsaWebhookDefinitionEditorNotifications {
+    }
+    interface ElsaWebhookDefinitionEditorScreen {
+        "culture": string;
+        "getServerUrl": () => Promise<string>;
+        "getWebhookId": () => Promise<string>;
+        "history"?: RouterHistory;
+        "serverUrl": string;
+        "webhookDefinition": WebhookDefinition;
+        "webhookId": string;
+    }
+    interface ElsaWebhookDefinitionsListScreen {
+        "basePath": string;
+        "culture": string;
+        "history"?: RouterHistory;
+        "serverUrl": string;
+    }
+    interface ElsaWorkflowBlueprintPropertiesPanel {
+        "culture": string;
+        "serverUrl": string;
+        "workflowId": string;
+    }
+    interface ElsaWorkflowBlueprintViewerScreen {
+        "culture": string;
+        "getServerUrl": () => Promise<string>;
+        "serverUrl": string;
+        "workflowDefinitionId": string;
+    }
+    interface ElsaWorkflowDefinitionEditorNotifications {
+    }
+    interface ElsaWorkflowDefinitionEditorScreen {
+        "basePath": string;
+        "culture": string;
+        "exportWorkflow": () => Promise<void>;
+        "features": string;
+        "getServerUrl": () => Promise<string>;
+        "getWorkflowDefinitionId": () => Promise<string>;
+        "history": RouterHistory;
+        "importWorkflow": (file: File) => Promise<void>;
+        "monacoLibPath": string;
+        "serverFeatures": Array<string>;
+        "serverUrl": string;
+        "workflowDefinitionId": string;
+    }
+    interface ElsaWorkflowDefinitionsListScreen {
+        "basePath": string;
+        "culture": string;
+        "history"?: RouterHistory;
+        "loadWorkflowDefinitions": () => Promise<void>;
+        "serverUrl": string;
+    }
+    interface ElsaWorkflowFaultInformation {
+        "faultedAt": Date;
+        "workflowFault": WorkflowFault;
+    }
+    interface ElsaWorkflowInstanceJournal {
+        "activityDescriptors": Array<ActivityDescriptor>;
+        "selectActivityRecord": (activityId?: string) => Promise<void>;
+        "serverUrl": string;
+        "workflowBlueprint": WorkflowBlueprint;
+        "workflowInstance": WorkflowInstance;
+        "workflowInstanceId": string;
+        "workflowModel": WorkflowModel;
+    }
+    interface ElsaWorkflowInstanceListScreen {
+        "basePath": string;
+        "correlationId"?: string;
+        "culture": string;
+        "getSelectedWorkflowInstanceIds": () => Promise<string[]>;
+        "history"?: RouterHistory;
+        "orderBy"?: OrderBy;
+        "refresh": () => Promise<void>;
+        "serverUrl": string;
+        "workflowId"?: string;
+        "workflowStatus"?: WorkflowStatus;
+    }
+    interface ElsaWorkflowInstanceViewerScreen {
+        "culture": string;
+        "getServerUrl": () => Promise<string>;
+        "serverUrl": string;
+        "workflowInstanceId": string;
+    }
+    interface ElsaWorkflowPerformanceInformation {
+        "activityStats": ActivityStats;
+    }
+    interface ElsaWorkflowPropertiesPanel {
+        "culture": string;
+        "serverUrl": string;
+        "workflowDefinition": WorkflowDefinition;
+    }
+    interface ElsaWorkflowPublishButton {
+        "culture": string;
+        "publishing": boolean;
+        "workflowDefinition": WorkflowDefinition;
+    }
+    interface ElsaWorkflowRegistryListScreen {
+        "basePath": string;
+        "culture": string;
+        "history"?: RouterHistory;
+        "serverUrl": string;
+    }
+    interface ElsaWorkflowSettingsModal {
+        "serverUrl": string;
+        "workflowDefinition": WorkflowDefinition;
+    }
+    interface ElsaWorkflowTestPanel {
+        "culture": string;
+        "selectedActivityId"?: string;
+        "serverUrl": string;
+        "workflowDefinition": WorkflowDefinition;
+        "workflowTestActivityId": string;
+    }
+    interface X6Designer {
+        "activityBorderColor"?: (activity: ActivityModel) => string;
+        "activityContextMenu"?: ActivityContextMenuState;
+        "activityContextMenuButton"?: (activity: ActivityModel) => string;
+        "activityContextTestMenu"?: ActivityContextMenuState;
+        "connectionContextMenu"?: ActivityContextMenuState;
+        "enableMultipleConnectionsFromSingleSource": boolean;
+        "layoutDirection": LayoutDirection;
+        "mode": WorkflowDesignerMode;
+        "model": WorkflowModel;
+        "removeActivity": (activity: ActivityModel) => Promise<void>;
+        "removeSelectedActivities": () => Promise<void>;
+        "selectedActivityIds": Array<string>;
+        "showActivityEditor": (activity: ActivityModel, animate: boolean) => Promise<void>;
+        "updateLayout": () => Promise<void>;
+    }
 }
 declare global {
-    interface HTMLHeCheckListPropertyElement extends Components.HeCheckListProperty, HTMLStencilElement {
+    interface HTMLElsaActivityEditorModalElement extends Components.ElsaActivityEditorModal, HTMLStencilElement {
     }
-    var HTMLHeCheckListPropertyElement: {
-        prototype: HTMLHeCheckListPropertyElement;
-        new (): HTMLHeCheckListPropertyElement;
+    var HTMLElsaActivityEditorModalElement: {
+        prototype: HTMLElsaActivityEditorModalElement;
+        new (): HTMLElsaActivityEditorModalElement;
     };
-    interface HTMLHeCheckboxOptionsPropertyElement extends Components.HeCheckboxOptionsProperty, HTMLStencilElement {
+    interface HTMLElsaActivityEditorPanelElement extends Components.ElsaActivityEditorPanel, HTMLStencilElement {
     }
-    var HTMLHeCheckboxOptionsPropertyElement: {
-        prototype: HTMLHeCheckboxOptionsPropertyElement;
-        new (): HTMLHeCheckboxOptionsPropertyElement;
+    var HTMLElsaActivityEditorPanelElement: {
+        prototype: HTMLElsaActivityEditorPanelElement;
+        new (): HTMLElsaActivityEditorPanelElement;
     };
-    interface HTMLHeCheckboxPropertyElement extends Components.HeCheckboxProperty, HTMLStencilElement {
+    interface HTMLElsaActivityPickerModalElement extends Components.ElsaActivityPickerModal, HTMLStencilElement {
     }
-    var HTMLHeCheckboxPropertyElement: {
-        prototype: HTMLHeCheckboxPropertyElement;
-        new (): HTMLHeCheckboxPropertyElement;
+    var HTMLElsaActivityPickerModalElement: {
+        prototype: HTMLElsaActivityPickerModalElement;
+        new (): HTMLElsaActivityPickerModalElement;
     };
-    interface HTMLHeDashboardElement extends Components.HeDashboard, HTMLStencilElement {
+    interface HTMLElsaCheckListPropertyElement extends Components.ElsaCheckListProperty, HTMLStencilElement {
     }
-    var HTMLHeDashboardElement: {
-        prototype: HTMLHeDashboardElement;
-        new (): HTMLHeDashboardElement;
+    var HTMLElsaCheckListPropertyElement: {
+        prototype: HTMLElsaCheckListPropertyElement;
+        new (): HTMLElsaCheckListPropertyElement;
     };
-    interface HTMLHeDataTablePropertyElement extends Components.HeDataTableProperty, HTMLStencilElement {
+    interface HTMLElsaCheckboxPropertyElement extends Components.ElsaCheckboxProperty, HTMLStencilElement {
     }
-    var HTMLHeDataTablePropertyElement: {
-        prototype: HTMLHeDataTablePropertyElement;
-        new (): HTMLHeDataTablePropertyElement;
+    var HTMLElsaCheckboxPropertyElement: {
+        prototype: HTMLElsaCheckboxPropertyElement;
+        new (): HTMLElsaCheckboxPropertyElement;
     };
-    interface HTMLHeElsaControlElement extends Components.HeElsaControl, HTMLStencilElement {
+    interface HTMLElsaConfirmDialogElement extends Components.ElsaConfirmDialog, HTMLStencilElement {
     }
-    var HTMLHeElsaControlElement: {
-        prototype: HTMLHeElsaControlElement;
-        new (): HTMLHeElsaControlElement;
+    var HTMLElsaConfirmDialogElement: {
+        prototype: HTMLElsaConfirmDialogElement;
+        new (): HTMLElsaConfirmDialogElement;
     };
-    interface HTMLHeExpressionEditorElement extends Components.HeExpressionEditor, HTMLStencilElement {
+    interface HTMLElsaContextMenuElement extends Components.ElsaContextMenu, HTMLStencilElement {
     }
-    var HTMLHeExpressionEditorElement: {
-        prototype: HTMLHeExpressionEditorElement;
-        new (): HTMLHeExpressionEditorElement;
+    var HTMLElsaContextMenuElement: {
+        prototype: HTMLElsaContextMenuElement;
+        new (): HTMLElsaContextMenuElement;
     };
-    interface HTMLHeJsonPropertyElement extends Components.HeJsonProperty, HTMLStencilElement {
+    interface HTMLElsaControlElement extends Components.ElsaControl, HTMLStencilElement {
     }
-    var HTMLHeJsonPropertyElement: {
-        prototype: HTMLHeJsonPropertyElement;
-        new (): HTMLHeJsonPropertyElement;
+    var HTMLElsaControlElement: {
+        prototype: HTMLElsaControlElement;
+        new (): HTMLElsaControlElement;
     };
-    interface HTMLHeMonacoElement extends Components.HeMonaco, HTMLStencilElement {
+    interface HTMLElsaCopyButtonElement extends Components.ElsaCopyButton, HTMLStencilElement {
     }
-    var HTMLHeMonacoElement: {
-        prototype: HTMLHeMonacoElement;
-        new (): HTMLHeMonacoElement;
+    var HTMLElsaCopyButtonElement: {
+        prototype: HTMLElsaCopyButtonElement;
+        new (): HTMLElsaCopyButtonElement;
     };
-    interface HTMLHeMultiExpressionEditorElement extends Components.HeMultiExpressionEditor, HTMLStencilElement {
+    interface HTMLElsaCredentialManagerItemsListElement extends Components.ElsaCredentialManagerItemsList, HTMLStencilElement {
     }
-    var HTMLHeMultiExpressionEditorElement: {
-        prototype: HTMLHeMultiExpressionEditorElement;
-        new (): HTMLHeMultiExpressionEditorElement;
+    var HTMLElsaCredentialManagerItemsListElement: {
+        prototype: HTMLElsaCredentialManagerItemsListElement;
+        new (): HTMLElsaCredentialManagerItemsListElement;
     };
-    interface HTMLHeMultiLinePropertyElement extends Components.HeMultiLineProperty, HTMLStencilElement {
+    interface HTMLElsaCredentialManagerListScreenElement extends Components.ElsaCredentialManagerListScreen, HTMLStencilElement {
     }
-    var HTMLHeMultiLinePropertyElement: {
-        prototype: HTMLHeMultiLinePropertyElement;
-        new (): HTMLHeMultiLinePropertyElement;
+    var HTMLElsaCredentialManagerListScreenElement: {
+        prototype: HTMLElsaCredentialManagerListScreenElement;
+        new (): HTMLElsaCredentialManagerListScreenElement;
     };
-    interface HTMLHeMultiTextPropertyElement extends Components.HeMultiTextProperty, HTMLStencilElement {
+    interface HTMLElsaCronExpressionPropertyElement extends Components.ElsaCronExpressionProperty, HTMLStencilElement {
     }
-    var HTMLHeMultiTextPropertyElement: {
-        prototype: HTMLHeMultiTextPropertyElement;
-        new (): HTMLHeMultiTextPropertyElement;
+    var HTMLElsaCronExpressionPropertyElement: {
+        prototype: HTMLElsaCronExpressionPropertyElement;
+        new (): HTMLElsaCronExpressionPropertyElement;
     };
-    interface HTMLHeNumericPropertyElement extends Components.HeNumericProperty, HTMLStencilElement {
+    interface HTMLElsaDesignerPanelElement extends Components.ElsaDesignerPanel, HTMLStencilElement {
     }
-    var HTMLHeNumericPropertyElement: {
-        prototype: HTMLHeNumericPropertyElement;
-        new (): HTMLHeNumericPropertyElement;
+    var HTMLElsaDesignerPanelElement: {
+        prototype: HTMLElsaDesignerPanelElement;
+        new (): HTMLElsaDesignerPanelElement;
     };
-    interface HTMLHePotscoreRadioOptionsPropertyElement extends Components.HePotscoreRadioOptionsProperty, HTMLStencilElement {
+    interface HTMLElsaDesignerTreeElement extends Components.ElsaDesignerTree, HTMLStencilElement {
     }
-    var HTMLHePotscoreRadioOptionsPropertyElement: {
-        prototype: HTMLHePotscoreRadioOptionsPropertyElement;
-        new (): HTMLHePotscoreRadioOptionsPropertyElement;
+    var HTMLElsaDesignerTreeElement: {
+        prototype: HTMLElsaDesignerTreeElement;
+        new (): HTMLElsaDesignerTreeElement;
     };
-    interface HTMLHePropertyEditorElement extends Components.HePropertyEditor, HTMLStencilElement {
+    interface HTMLElsaDictionaryPropertyElement extends Components.ElsaDictionaryProperty, HTMLStencilElement {
     }
-    var HTMLHePropertyEditorElement: {
-        prototype: HTMLHePropertyEditorElement;
-        new (): HTMLHePropertyEditorElement;
+    var HTMLElsaDictionaryPropertyElement: {
+        prototype: HTMLElsaDictionaryPropertyElement;
+        new (): HTMLElsaDictionaryPropertyElement;
     };
-    interface HTMLHeQuestionDataDictionaryPropertyElement extends Components.HeQuestionDataDictionaryProperty, HTMLStencilElement {
+    interface HTMLElsaDropdownButtonElement extends Components.ElsaDropdownButton, HTMLStencilElement {
     }
-    var HTMLHeQuestionDataDictionaryPropertyElement: {
-        prototype: HTMLHeQuestionDataDictionaryPropertyElement;
-        new (): HTMLHeQuestionDataDictionaryPropertyElement;
+    var HTMLElsaDropdownButtonElement: {
+        prototype: HTMLElsaDropdownButtonElement;
+        new (): HTMLElsaDropdownButtonElement;
     };
-    interface HTMLHeRadioOptionsPropertyElement extends Components.HeRadioOptionsProperty, HTMLStencilElement {
+    interface HTMLElsaDropdownPropertyElement extends Components.ElsaDropdownProperty, HTMLStencilElement {
     }
-    var HTMLHeRadioOptionsPropertyElement: {
-        prototype: HTMLHeRadioOptionsPropertyElement;
-        new (): HTMLHeRadioOptionsPropertyElement;
+    var HTMLElsaDropdownPropertyElement: {
+        prototype: HTMLElsaDropdownPropertyElement;
+        new (): HTMLElsaDropdownPropertyElement;
     };
-    interface HTMLHeSingleLinePropertyElement extends Components.HeSingleLineProperty, HTMLStencilElement {
+    interface HTMLElsaExpressionEditorElement extends Components.ElsaExpressionEditor, HTMLStencilElement {
     }
-    var HTMLHeSingleLinePropertyElement: {
-        prototype: HTMLHeSingleLinePropertyElement;
-        new (): HTMLHeSingleLinePropertyElement;
+    var HTMLElsaExpressionEditorElement: {
+        prototype: HTMLElsaExpressionEditorElement;
+        new (): HTMLElsaExpressionEditorElement;
     };
-    interface HTMLHeSwitchAnswersPropertyElement extends Components.HeSwitchAnswersProperty, HTMLStencilElement {
+    interface HTMLElsaFlyoutPanelElement extends Components.ElsaFlyoutPanel, HTMLStencilElement {
     }
-    var HTMLHeSwitchAnswersPropertyElement: {
-        prototype: HTMLHeSwitchAnswersPropertyElement;
-        new (): HTMLHeSwitchAnswersPropertyElement;
+    var HTMLElsaFlyoutPanelElement: {
+        prototype: HTMLElsaFlyoutPanelElement;
+        new (): HTMLElsaFlyoutPanelElement;
     };
-    interface HTMLHeTextActivityPropertyElement extends Components.HeTextActivityProperty, HTMLStencilElement {
+    interface HTMLElsaInputTagsElement extends Components.ElsaInputTags, HTMLStencilElement {
     }
-    var HTMLHeTextActivityPropertyElement: {
-        prototype: HTMLHeTextActivityPropertyElement;
-        new (): HTMLHeTextActivityPropertyElement;
+    var HTMLElsaInputTagsElement: {
+        prototype: HTMLElsaInputTagsElement;
+        new (): HTMLElsaInputTagsElement;
     };
-    interface HTMLHeTextGroupPropertyElement extends Components.HeTextGroupProperty, HTMLStencilElement {
+    interface HTMLElsaInputTagsDropdownElement extends Components.ElsaInputTagsDropdown, HTMLStencilElement {
     }
-    var HTMLHeTextGroupPropertyElement: {
-        prototype: HTMLHeTextGroupPropertyElement;
-        new (): HTMLHeTextGroupPropertyElement;
+    var HTMLElsaInputTagsDropdownElement: {
+        prototype: HTMLElsaInputTagsDropdownElement;
+        new (): HTMLElsaInputTagsDropdownElement;
     };
-    interface HTMLHeValidationPropertyElement extends Components.HeValidationProperty, HTMLStencilElement {
+    interface HTMLElsaJsonPropertyElement extends Components.ElsaJsonProperty, HTMLStencilElement {
     }
-    var HTMLHeValidationPropertyElement: {
-        prototype: HTMLHeValidationPropertyElement;
-        new (): HTMLHeValidationPropertyElement;
+    var HTMLElsaJsonPropertyElement: {
+        prototype: HTMLElsaJsonPropertyElement;
+        new (): HTMLElsaJsonPropertyElement;
     };
-    interface HTMLHeWeightedCheckboxOptionGroupPropertyElement extends Components.HeWeightedCheckboxOptionGroupProperty, HTMLStencilElement {
+    interface HTMLElsaModalDialogElement extends Components.ElsaModalDialog, HTMLStencilElement {
     }
-    var HTMLHeWeightedCheckboxOptionGroupPropertyElement: {
-        prototype: HTMLHeWeightedCheckboxOptionGroupPropertyElement;
-        new (): HTMLHeWeightedCheckboxOptionGroupPropertyElement;
+    var HTMLElsaModalDialogElement: {
+        prototype: HTMLElsaModalDialogElement;
+        new (): HTMLElsaModalDialogElement;
     };
-    interface HTMLHeWeightedCheckboxPropertyElement extends Components.HeWeightedCheckboxProperty, HTMLStencilElement {
+    interface HTMLElsaMonacoElement extends Components.ElsaMonaco, HTMLStencilElement {
     }
-    var HTMLHeWeightedCheckboxPropertyElement: {
-        prototype: HTMLHeWeightedCheckboxPropertyElement;
-        new (): HTMLHeWeightedCheckboxPropertyElement;
+    var HTMLElsaMonacoElement: {
+        prototype: HTMLElsaMonacoElement;
+        new (): HTMLElsaMonacoElement;
     };
-    interface HTMLHeWeightedRadioOptionGroupPropertyElement extends Components.HeWeightedRadioOptionGroupProperty, HTMLStencilElement {
+    interface HTMLElsaMultiExpressionEditorElement extends Components.ElsaMultiExpressionEditor, HTMLStencilElement {
     }
-    var HTMLHeWeightedRadioOptionGroupPropertyElement: {
-        prototype: HTMLHeWeightedRadioOptionGroupPropertyElement;
-        new (): HTMLHeWeightedRadioOptionGroupPropertyElement;
+    var HTMLElsaMultiExpressionEditorElement: {
+        prototype: HTMLElsaMultiExpressionEditorElement;
+        new (): HTMLElsaMultiExpressionEditorElement;
     };
-    interface HTMLHeWeightedRadioPropertyElement extends Components.HeWeightedRadioProperty, HTMLStencilElement {
+    interface HTMLElsaMultiLinePropertyElement extends Components.ElsaMultiLineProperty, HTMLStencilElement {
     }
-    var HTMLHeWeightedRadioPropertyElement: {
-        prototype: HTMLHeWeightedRadioPropertyElement;
-        new (): HTMLHeWeightedRadioPropertyElement;
+    var HTMLElsaMultiLinePropertyElement: {
+        prototype: HTMLElsaMultiLinePropertyElement;
+        new (): HTMLElsaMultiLinePropertyElement;
     };
-    interface HTMLNestedPropertyListElement extends Components.NestedPropertyList, HTMLStencilElement {
+    interface HTMLElsaMultiTextPropertyElement extends Components.ElsaMultiTextProperty, HTMLStencilElement {
     }
-    var HTMLNestedPropertyListElement: {
-        prototype: HTMLNestedPropertyListElement;
-        new (): HTMLNestedPropertyListElement;
+    var HTMLElsaMultiTextPropertyElement: {
+        prototype: HTMLElsaMultiTextPropertyElement;
+        new (): HTMLElsaMultiTextPropertyElement;
     };
-    interface HTMLQuestionPropertyElement extends Components.QuestionProperty, HTMLStencilElement {
+    interface HTMLElsaOauth2AuthorizedElement extends Components.ElsaOauth2Authorized, HTMLStencilElement {
     }
-    var HTMLQuestionPropertyElement: {
-        prototype: HTMLQuestionPropertyElement;
-        new (): HTMLQuestionPropertyElement;
+    var HTMLElsaOauth2AuthorizedElement: {
+        prototype: HTMLElsaOauth2AuthorizedElement;
+        new (): HTMLElsaOauth2AuthorizedElement;
     };
-    interface HTMLQuestionScreenPropertyElement extends Components.QuestionScreenProperty, HTMLStencilElement {
+    interface HTMLElsaPagerElement extends Components.ElsaPager, HTMLStencilElement {
     }
-    var HTMLQuestionScreenPropertyElement: {
-        prototype: HTMLQuestionScreenPropertyElement;
-        new (): HTMLQuestionScreenPropertyElement;
+    var HTMLElsaPagerElement: {
+        prototype: HTMLElsaPagerElement;
+        new (): HTMLElsaPagerElement;
     };
-    interface HTMLSwitchAnswersPropertyElement extends Components.SwitchAnswersProperty, HTMLStencilElement {
+    interface HTMLElsaPropertyEditorElement extends Components.ElsaPropertyEditor, HTMLStencilElement {
     }
-    var HTMLSwitchAnswersPropertyElement: {
-        prototype: HTMLSwitchAnswersPropertyElement;
-        new (): HTMLSwitchAnswersPropertyElement;
+    var HTMLElsaPropertyEditorElement: {
+        prototype: HTMLElsaPropertyEditorElement;
+        new (): HTMLElsaPropertyEditorElement;
+    };
+    interface HTMLElsaRadioListPropertyElement extends Components.ElsaRadioListProperty, HTMLStencilElement {
+    }
+    var HTMLElsaRadioListPropertyElement: {
+        prototype: HTMLElsaRadioListPropertyElement;
+        new (): HTMLElsaRadioListPropertyElement;
+    };
+    interface HTMLElsaScriptPropertyElement extends Components.ElsaScriptProperty, HTMLStencilElement {
+    }
+    var HTMLElsaScriptPropertyElement: {
+        prototype: HTMLElsaScriptPropertyElement;
+        new (): HTMLElsaScriptPropertyElement;
+    };
+    interface HTMLElsaSecretEditorModalElement extends Components.ElsaSecretEditorModal, HTMLStencilElement {
+    }
+    var HTMLElsaSecretEditorModalElement: {
+        prototype: HTMLElsaSecretEditorModalElement;
+        new (): HTMLElsaSecretEditorModalElement;
+    };
+    interface HTMLElsaSecretsPickerModalElement extends Components.ElsaSecretsPickerModal, HTMLStencilElement {
+    }
+    var HTMLElsaSecretsPickerModalElement: {
+        prototype: HTMLElsaSecretsPickerModalElement;
+        new (): HTMLElsaSecretsPickerModalElement;
+    };
+    interface HTMLElsaSingleLinePropertyElement extends Components.ElsaSingleLineProperty, HTMLStencilElement {
+    }
+    var HTMLElsaSingleLinePropertyElement: {
+        prototype: HTMLElsaSingleLinePropertyElement;
+        new (): HTMLElsaSingleLinePropertyElement;
+    };
+    interface HTMLElsaStudioDashboardElement extends Components.ElsaStudioDashboard, HTMLStencilElement {
+    }
+    var HTMLElsaStudioDashboardElement: {
+        prototype: HTMLElsaStudioDashboardElement;
+        new (): HTMLElsaStudioDashboardElement;
+    };
+    interface HTMLElsaStudioHomeElement extends Components.ElsaStudioHome, HTMLStencilElement {
+    }
+    var HTMLElsaStudioHomeElement: {
+        prototype: HTMLElsaStudioHomeElement;
+        new (): HTMLElsaStudioHomeElement;
+    };
+    interface HTMLElsaStudioRootElement extends Components.ElsaStudioRoot, HTMLStencilElement {
+    }
+    var HTMLElsaStudioRootElement: {
+        prototype: HTMLElsaStudioRootElement;
+        new (): HTMLElsaStudioRootElement;
+    };
+    interface HTMLElsaStudioWebhookDefinitionsEditElement extends Components.ElsaStudioWebhookDefinitionsEdit, HTMLStencilElement {
+    }
+    var HTMLElsaStudioWebhookDefinitionsEditElement: {
+        prototype: HTMLElsaStudioWebhookDefinitionsEditElement;
+        new (): HTMLElsaStudioWebhookDefinitionsEditElement;
+    };
+    interface HTMLElsaStudioWebhookDefinitionsListElement extends Components.ElsaStudioWebhookDefinitionsList, HTMLStencilElement {
+    }
+    var HTMLElsaStudioWebhookDefinitionsListElement: {
+        prototype: HTMLElsaStudioWebhookDefinitionsListElement;
+        new (): HTMLElsaStudioWebhookDefinitionsListElement;
+    };
+    interface HTMLElsaStudioWorkflowBlueprintViewElement extends Components.ElsaStudioWorkflowBlueprintView, HTMLStencilElement {
+    }
+    var HTMLElsaStudioWorkflowBlueprintViewElement: {
+        prototype: HTMLElsaStudioWorkflowBlueprintViewElement;
+        new (): HTMLElsaStudioWorkflowBlueprintViewElement;
+    };
+    interface HTMLElsaStudioWorkflowDefinitionsEditElement extends Components.ElsaStudioWorkflowDefinitionsEdit, HTMLStencilElement {
+    }
+    var HTMLElsaStudioWorkflowDefinitionsEditElement: {
+        prototype: HTMLElsaStudioWorkflowDefinitionsEditElement;
+        new (): HTMLElsaStudioWorkflowDefinitionsEditElement;
+    };
+    interface HTMLElsaStudioWorkflowDefinitionsListElement extends Components.ElsaStudioWorkflowDefinitionsList, HTMLStencilElement {
+    }
+    var HTMLElsaStudioWorkflowDefinitionsListElement: {
+        prototype: HTMLElsaStudioWorkflowDefinitionsListElement;
+        new (): HTMLElsaStudioWorkflowDefinitionsListElement;
+    };
+    interface HTMLElsaStudioWorkflowInstancesListElement extends Components.ElsaStudioWorkflowInstancesList, HTMLStencilElement {
+    }
+    var HTMLElsaStudioWorkflowInstancesListElement: {
+        prototype: HTMLElsaStudioWorkflowInstancesListElement;
+        new (): HTMLElsaStudioWorkflowInstancesListElement;
+    };
+    interface HTMLElsaStudioWorkflowInstancesViewElement extends Components.ElsaStudioWorkflowInstancesView, HTMLStencilElement {
+    }
+    var HTMLElsaStudioWorkflowInstancesViewElement: {
+        prototype: HTMLElsaStudioWorkflowInstancesViewElement;
+        new (): HTMLElsaStudioWorkflowInstancesViewElement;
+    };
+    interface HTMLElsaStudioWorkflowRegistryElement extends Components.ElsaStudioWorkflowRegistry, HTMLStencilElement {
+    }
+    var HTMLElsaStudioWorkflowRegistryElement: {
+        prototype: HTMLElsaStudioWorkflowRegistryElement;
+        new (): HTMLElsaStudioWorkflowRegistryElement;
+    };
+    interface HTMLElsaSwitchCasesPropertyElement extends Components.ElsaSwitchCasesProperty, HTMLStencilElement {
+    }
+    var HTMLElsaSwitchCasesPropertyElement: {
+        prototype: HTMLElsaSwitchCasesPropertyElement;
+        new (): HTMLElsaSwitchCasesPropertyElement;
+    };
+    interface HTMLElsaTabContentElement extends Components.ElsaTabContent, HTMLStencilElement {
+    }
+    var HTMLElsaTabContentElement: {
+        prototype: HTMLElsaTabContentElement;
+        new (): HTMLElsaTabContentElement;
+    };
+    interface HTMLElsaTabHeaderElement extends Components.ElsaTabHeader, HTMLStencilElement {
+    }
+    var HTMLElsaTabHeaderElement: {
+        prototype: HTMLElsaTabHeaderElement;
+        new (): HTMLElsaTabHeaderElement;
+    };
+    interface HTMLElsaToastNotificationElement extends Components.ElsaToastNotification, HTMLStencilElement {
+    }
+    var HTMLElsaToastNotificationElement: {
+        prototype: HTMLElsaToastNotificationElement;
+        new (): HTMLElsaToastNotificationElement;
+    };
+    interface HTMLElsaUserContextMenuElement extends Components.ElsaUserContextMenu, HTMLStencilElement {
+    }
+    var HTMLElsaUserContextMenuElement: {
+        prototype: HTMLElsaUserContextMenuElement;
+        new (): HTMLElsaUserContextMenuElement;
+    };
+    interface HTMLElsaVersionHistoryPanelElement extends Components.ElsaVersionHistoryPanel, HTMLStencilElement {
+    }
+    var HTMLElsaVersionHistoryPanelElement: {
+        prototype: HTMLElsaVersionHistoryPanelElement;
+        new (): HTMLElsaVersionHistoryPanelElement;
+    };
+    interface HTMLElsaWebhookDefinitionEditorNotificationsElement extends Components.ElsaWebhookDefinitionEditorNotifications, HTMLStencilElement {
+    }
+    var HTMLElsaWebhookDefinitionEditorNotificationsElement: {
+        prototype: HTMLElsaWebhookDefinitionEditorNotificationsElement;
+        new (): HTMLElsaWebhookDefinitionEditorNotificationsElement;
+    };
+    interface HTMLElsaWebhookDefinitionEditorScreenElement extends Components.ElsaWebhookDefinitionEditorScreen, HTMLStencilElement {
+    }
+    var HTMLElsaWebhookDefinitionEditorScreenElement: {
+        prototype: HTMLElsaWebhookDefinitionEditorScreenElement;
+        new (): HTMLElsaWebhookDefinitionEditorScreenElement;
+    };
+    interface HTMLElsaWebhookDefinitionsListScreenElement extends Components.ElsaWebhookDefinitionsListScreen, HTMLStencilElement {
+    }
+    var HTMLElsaWebhookDefinitionsListScreenElement: {
+        prototype: HTMLElsaWebhookDefinitionsListScreenElement;
+        new (): HTMLElsaWebhookDefinitionsListScreenElement;
+    };
+    interface HTMLElsaWorkflowBlueprintPropertiesPanelElement extends Components.ElsaWorkflowBlueprintPropertiesPanel, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowBlueprintPropertiesPanelElement: {
+        prototype: HTMLElsaWorkflowBlueprintPropertiesPanelElement;
+        new (): HTMLElsaWorkflowBlueprintPropertiesPanelElement;
+    };
+    interface HTMLElsaWorkflowBlueprintViewerScreenElement extends Components.ElsaWorkflowBlueprintViewerScreen, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowBlueprintViewerScreenElement: {
+        prototype: HTMLElsaWorkflowBlueprintViewerScreenElement;
+        new (): HTMLElsaWorkflowBlueprintViewerScreenElement;
+    };
+    interface HTMLElsaWorkflowDefinitionEditorNotificationsElement extends Components.ElsaWorkflowDefinitionEditorNotifications, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowDefinitionEditorNotificationsElement: {
+        prototype: HTMLElsaWorkflowDefinitionEditorNotificationsElement;
+        new (): HTMLElsaWorkflowDefinitionEditorNotificationsElement;
+    };
+    interface HTMLElsaWorkflowDefinitionEditorScreenElement extends Components.ElsaWorkflowDefinitionEditorScreen, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowDefinitionEditorScreenElement: {
+        prototype: HTMLElsaWorkflowDefinitionEditorScreenElement;
+        new (): HTMLElsaWorkflowDefinitionEditorScreenElement;
+    };
+    interface HTMLElsaWorkflowDefinitionsListScreenElement extends Components.ElsaWorkflowDefinitionsListScreen, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowDefinitionsListScreenElement: {
+        prototype: HTMLElsaWorkflowDefinitionsListScreenElement;
+        new (): HTMLElsaWorkflowDefinitionsListScreenElement;
+    };
+    interface HTMLElsaWorkflowFaultInformationElement extends Components.ElsaWorkflowFaultInformation, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowFaultInformationElement: {
+        prototype: HTMLElsaWorkflowFaultInformationElement;
+        new (): HTMLElsaWorkflowFaultInformationElement;
+    };
+    interface HTMLElsaWorkflowInstanceJournalElement extends Components.ElsaWorkflowInstanceJournal, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowInstanceJournalElement: {
+        prototype: HTMLElsaWorkflowInstanceJournalElement;
+        new (): HTMLElsaWorkflowInstanceJournalElement;
+    };
+    interface HTMLElsaWorkflowInstanceListScreenElement extends Components.ElsaWorkflowInstanceListScreen, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowInstanceListScreenElement: {
+        prototype: HTMLElsaWorkflowInstanceListScreenElement;
+        new (): HTMLElsaWorkflowInstanceListScreenElement;
+    };
+    interface HTMLElsaWorkflowInstanceViewerScreenElement extends Components.ElsaWorkflowInstanceViewerScreen, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowInstanceViewerScreenElement: {
+        prototype: HTMLElsaWorkflowInstanceViewerScreenElement;
+        new (): HTMLElsaWorkflowInstanceViewerScreenElement;
+    };
+    interface HTMLElsaWorkflowPerformanceInformationElement extends Components.ElsaWorkflowPerformanceInformation, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowPerformanceInformationElement: {
+        prototype: HTMLElsaWorkflowPerformanceInformationElement;
+        new (): HTMLElsaWorkflowPerformanceInformationElement;
+    };
+    interface HTMLElsaWorkflowPropertiesPanelElement extends Components.ElsaWorkflowPropertiesPanel, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowPropertiesPanelElement: {
+        prototype: HTMLElsaWorkflowPropertiesPanelElement;
+        new (): HTMLElsaWorkflowPropertiesPanelElement;
+    };
+    interface HTMLElsaWorkflowPublishButtonElement extends Components.ElsaWorkflowPublishButton, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowPublishButtonElement: {
+        prototype: HTMLElsaWorkflowPublishButtonElement;
+        new (): HTMLElsaWorkflowPublishButtonElement;
+    };
+    interface HTMLElsaWorkflowRegistryListScreenElement extends Components.ElsaWorkflowRegistryListScreen, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowRegistryListScreenElement: {
+        prototype: HTMLElsaWorkflowRegistryListScreenElement;
+        new (): HTMLElsaWorkflowRegistryListScreenElement;
+    };
+    interface HTMLElsaWorkflowSettingsModalElement extends Components.ElsaWorkflowSettingsModal, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowSettingsModalElement: {
+        prototype: HTMLElsaWorkflowSettingsModalElement;
+        new (): HTMLElsaWorkflowSettingsModalElement;
+    };
+    interface HTMLElsaWorkflowTestPanelElement extends Components.ElsaWorkflowTestPanel, HTMLStencilElement {
+    }
+    var HTMLElsaWorkflowTestPanelElement: {
+        prototype: HTMLElsaWorkflowTestPanelElement;
+        new (): HTMLElsaWorkflowTestPanelElement;
+    };
+    interface HTMLX6DesignerElement extends Components.X6Designer, HTMLStencilElement {
+    }
+    var HTMLX6DesignerElement: {
+        prototype: HTMLX6DesignerElement;
+        new (): HTMLX6DesignerElement;
     };
     interface HTMLElementTagNameMap {
-        "he-check-list-property": HTMLHeCheckListPropertyElement;
-        "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
-        "he-checkbox-property": HTMLHeCheckboxPropertyElement;
-        "he-dashboard": HTMLHeDashboardElement;
-        "he-data-table-property": HTMLHeDataTablePropertyElement;
-        "he-elsa-control": HTMLHeElsaControlElement;
-        "he-expression-editor": HTMLHeExpressionEditorElement;
-        "he-json-property": HTMLHeJsonPropertyElement;
-        "he-monaco": HTMLHeMonacoElement;
-        "he-multi-expression-editor": HTMLHeMultiExpressionEditorElement;
-        "he-multi-line-property": HTMLHeMultiLinePropertyElement;
-        "he-multi-text-property": HTMLHeMultiTextPropertyElement;
-        "he-numeric-property": HTMLHeNumericPropertyElement;
-        "he-potscore-radio-options-property": HTMLHePotscoreRadioOptionsPropertyElement;
-        "he-property-editor": HTMLHePropertyEditorElement;
-        "he-question-data-dictionary-property": HTMLHeQuestionDataDictionaryPropertyElement;
-        "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
-        "he-single-line-property": HTMLHeSingleLinePropertyElement;
-        "he-switch-answers-property": HTMLHeSwitchAnswersPropertyElement;
-        "he-text-activity-property": HTMLHeTextActivityPropertyElement;
-        "he-text-group-property": HTMLHeTextGroupPropertyElement;
-        "he-validation-property": HTMLHeValidationPropertyElement;
-        "he-weighted-checkbox-option-group-property": HTMLHeWeightedCheckboxOptionGroupPropertyElement;
-        "he-weighted-checkbox-property": HTMLHeWeightedCheckboxPropertyElement;
-        "he-weighted-radio-option-group-property": HTMLHeWeightedRadioOptionGroupPropertyElement;
-        "he-weighted-radio-property": HTMLHeWeightedRadioPropertyElement;
-        "nested-property-list": HTMLNestedPropertyListElement;
-        "question-property": HTMLQuestionPropertyElement;
-        "question-screen-property": HTMLQuestionScreenPropertyElement;
-        "switch-answers-property": HTMLSwitchAnswersPropertyElement;
+        "elsa-activity-editor-modal": HTMLElsaActivityEditorModalElement;
+        "elsa-activity-editor-panel": HTMLElsaActivityEditorPanelElement;
+        "elsa-activity-picker-modal": HTMLElsaActivityPickerModalElement;
+        "elsa-check-list-property": HTMLElsaCheckListPropertyElement;
+        "elsa-checkbox-property": HTMLElsaCheckboxPropertyElement;
+        "elsa-confirm-dialog": HTMLElsaConfirmDialogElement;
+        "elsa-context-menu": HTMLElsaContextMenuElement;
+        "elsa-control": HTMLElsaControlElement;
+        "elsa-copy-button": HTMLElsaCopyButtonElement;
+        "elsa-credential-manager-items-list": HTMLElsaCredentialManagerItemsListElement;
+        "elsa-credential-manager-list-screen": HTMLElsaCredentialManagerListScreenElement;
+        "elsa-cron-expression-property": HTMLElsaCronExpressionPropertyElement;
+        "elsa-designer-panel": HTMLElsaDesignerPanelElement;
+        "elsa-designer-tree": HTMLElsaDesignerTreeElement;
+        "elsa-dictionary-property": HTMLElsaDictionaryPropertyElement;
+        "elsa-dropdown-button": HTMLElsaDropdownButtonElement;
+        "elsa-dropdown-property": HTMLElsaDropdownPropertyElement;
+        "elsa-expression-editor": HTMLElsaExpressionEditorElement;
+        "elsa-flyout-panel": HTMLElsaFlyoutPanelElement;
+        "elsa-input-tags": HTMLElsaInputTagsElement;
+        "elsa-input-tags-dropdown": HTMLElsaInputTagsDropdownElement;
+        "elsa-json-property": HTMLElsaJsonPropertyElement;
+        "elsa-modal-dialog": HTMLElsaModalDialogElement;
+        "elsa-monaco": HTMLElsaMonacoElement;
+        "elsa-multi-expression-editor": HTMLElsaMultiExpressionEditorElement;
+        "elsa-multi-line-property": HTMLElsaMultiLinePropertyElement;
+        "elsa-multi-text-property": HTMLElsaMultiTextPropertyElement;
+        "elsa-oauth2-authorized": HTMLElsaOauth2AuthorizedElement;
+        "elsa-pager": HTMLElsaPagerElement;
+        "elsa-property-editor": HTMLElsaPropertyEditorElement;
+        "elsa-radio-list-property": HTMLElsaRadioListPropertyElement;
+        "elsa-script-property": HTMLElsaScriptPropertyElement;
+        "elsa-secret-editor-modal": HTMLElsaSecretEditorModalElement;
+        "elsa-secrets-picker-modal": HTMLElsaSecretsPickerModalElement;
+        "elsa-single-line-property": HTMLElsaSingleLinePropertyElement;
+        "elsa-studio-dashboard": HTMLElsaStudioDashboardElement;
+        "elsa-studio-home": HTMLElsaStudioHomeElement;
+        "elsa-studio-root": HTMLElsaStudioRootElement;
+        "elsa-studio-webhook-definitions-edit": HTMLElsaStudioWebhookDefinitionsEditElement;
+        "elsa-studio-webhook-definitions-list": HTMLElsaStudioWebhookDefinitionsListElement;
+        "elsa-studio-workflow-blueprint-view": HTMLElsaStudioWorkflowBlueprintViewElement;
+        "elsa-studio-workflow-definitions-edit": HTMLElsaStudioWorkflowDefinitionsEditElement;
+        "elsa-studio-workflow-definitions-list": HTMLElsaStudioWorkflowDefinitionsListElement;
+        "elsa-studio-workflow-instances-list": HTMLElsaStudioWorkflowInstancesListElement;
+        "elsa-studio-workflow-instances-view": HTMLElsaStudioWorkflowInstancesViewElement;
+        "elsa-studio-workflow-registry": HTMLElsaStudioWorkflowRegistryElement;
+        "elsa-switch-cases-property": HTMLElsaSwitchCasesPropertyElement;
+        "elsa-tab-content": HTMLElsaTabContentElement;
+        "elsa-tab-header": HTMLElsaTabHeaderElement;
+        "elsa-toast-notification": HTMLElsaToastNotificationElement;
+        "elsa-user-context-menu": HTMLElsaUserContextMenuElement;
+        "elsa-version-history-panel": HTMLElsaVersionHistoryPanelElement;
+        "elsa-webhook-definition-editor-notifications": HTMLElsaWebhookDefinitionEditorNotificationsElement;
+        "elsa-webhook-definition-editor-screen": HTMLElsaWebhookDefinitionEditorScreenElement;
+        "elsa-webhook-definitions-list-screen": HTMLElsaWebhookDefinitionsListScreenElement;
+        "elsa-workflow-blueprint-properties-panel": HTMLElsaWorkflowBlueprintPropertiesPanelElement;
+        "elsa-workflow-blueprint-viewer-screen": HTMLElsaWorkflowBlueprintViewerScreenElement;
+        "elsa-workflow-definition-editor-notifications": HTMLElsaWorkflowDefinitionEditorNotificationsElement;
+        "elsa-workflow-definition-editor-screen": HTMLElsaWorkflowDefinitionEditorScreenElement;
+        "elsa-workflow-definitions-list-screen": HTMLElsaWorkflowDefinitionsListScreenElement;
+        "elsa-workflow-fault-information": HTMLElsaWorkflowFaultInformationElement;
+        "elsa-workflow-instance-journal": HTMLElsaWorkflowInstanceJournalElement;
+        "elsa-workflow-instance-list-screen": HTMLElsaWorkflowInstanceListScreenElement;
+        "elsa-workflow-instance-viewer-screen": HTMLElsaWorkflowInstanceViewerScreenElement;
+        "elsa-workflow-performance-information": HTMLElsaWorkflowPerformanceInformationElement;
+        "elsa-workflow-properties-panel": HTMLElsaWorkflowPropertiesPanelElement;
+        "elsa-workflow-publish-button": HTMLElsaWorkflowPublishButtonElement;
+        "elsa-workflow-registry-list-screen": HTMLElsaWorkflowRegistryListScreenElement;
+        "elsa-workflow-settings-modal": HTMLElsaWorkflowSettingsModalElement;
+        "elsa-workflow-test-panel": HTMLElsaWorkflowTestPanelElement;
+        "x6-designer": HTMLX6DesignerElement;
     }
 }
 declare namespace LocalJSX {
-    interface HeCheckListProperty {
+    interface ElsaActivityEditorModal {
+        "culture"?: string;
+    }
+    interface ElsaActivityEditorPanel {
+        "culture"?: string;
+    }
+    interface ElsaActivityPickerModal {
+    }
+    interface ElsaCheckListProperty {
         "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "onExpressionChanged"?: (event: HeCheckListPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+        "serverUrl"?: string;
+    }
+    interface ElsaCheckboxProperty {
+        "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface HeCheckboxOptionsProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeCheckboxOptionsPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
+    interface ElsaConfirmDialog {
+        "culture"?: string;
     }
-    interface HeCheckboxProperty {
-        "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "onExpressionChanged"?: (event: HeCheckboxPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
+    interface ElsaContextMenu {
+        "history"?: RouterHistory;
+        "menuItems"?: Array<MenuItem>;
     }
-    interface HeDashboard {
-        "dataDictionaryGroup"?: string;
-        "storeConfig"?: string;
-    }
-    interface HeDataTableProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeDataTablePropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeElsaControl {
+    interface ElsaControl {
         "content"?: VNode | string | Element;
     }
-    interface HeExpressionEditor {
+    interface ElsaCopyButton {
+        "value"?: string;
+    }
+    interface ElsaCredentialManagerItemsList {
+        "basePath"?: string;
+        "culture"?: string;
+        "monacoLibPath"?: string;
+        "serverUrl"?: string;
+    }
+    interface ElsaCredentialManagerListScreen {
+        "basePath"?: string;
+        "culture"?: string;
+        "history"?: RouterHistory;
+        "serverUrl"?: string;
+    }
+    interface ElsaCronExpressionProperty {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface ElsaDesignerPanel {
+        "culture"?: string;
+        "onFeatureChanged"?: (event: CustomEvent<string>) => void;
+        "onFeatureStatusChanged"?: (event: CustomEvent<string>) => void;
+    }
+    interface ElsaDesignerTree {
+        "activityBorderColor"?: (activity: ActivityModel) => string;
+        "activityContextMenu"?: ActivityContextMenuState;
+        "activityContextMenuButton"?: (activity: ActivityModel) => string;
+        "activityContextTestMenu"?: ActivityContextMenuState;
+        "connectionContextMenu"?: ActivityContextMenuState;
+        "enableMultipleConnectionsFromSingleSource"?: boolean;
+        "layoutDirection"?: LayoutDirection;
+        "mode"?: WorkflowDesignerMode;
+        "model"?: WorkflowModel;
+        "onActivityContextMenuButtonClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
+        "onActivityContextMenuButtonTestClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
+        "onActivityDeselected"?: (event: CustomEvent<ActivityModel>) => void;
+        "onActivitySelected"?: (event: CustomEvent<ActivityModel>) => void;
+        "onConnectionContextMenuButtonClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
+        "onWorkflow-changed"?: (event: CustomEvent<WorkflowModel>) => void;
+        "selectedActivityIds"?: Array<string>;
+    }
+    interface ElsaDictionaryProperty {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+        "serverUrl"?: string;
+    }
+    interface ElsaDropdownButton {
+        "btnClass"?: string;
+        "icon"?: any;
+        "items"?: Array<DropdownButtonItem>;
+        "onItemSelected"?: (event: CustomEvent<DropdownButtonItem>) => void;
+        "origin"?: DropdownButtonOrigin;
+        "text"?: string;
+    }
+    interface ElsaDropdownProperty {
+        "activityModel"?: ActivityModel;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+        "serverUrl"?: string;
+    }
+    interface ElsaExpressionEditor {
         "context"?: IntellisenseContext;
         "editorHeight"?: string;
         "expression"?: string;
         "language"?: string;
-        "onExpressionChanged"?: (event: HeExpressionEditorCustomEvent<string>) => void;
+        "onExpressionChanged"?: (event: CustomEvent<string>) => void;
+        "opensModal"?: boolean;
         "padding"?: string;
         "serverUrl"?: string;
         "singleLineMode"?: boolean;
         "workflowDefinitionId"?: string;
     }
-    interface HeJsonProperty {
+    interface ElsaFlyoutPanel {
+        "autoExpand"?: boolean;
+        "expandButtonPosition"?: number;
+        "hidden"?: boolean;
+        "silent"?: boolean;
+        "updateCounter"?: number;
+    }
+    interface ElsaInputTags {
+        "fieldId"?: string;
+        "fieldName"?: string;
+        "onValueChanged"?: (event: CustomEvent<Array<string>>) => void;
+        "placeHolder"?: string;
+        "values"?: Array<string>;
+    }
+    interface ElsaInputTagsDropdown {
+        "dropdownValues"?: Array<SelectListItem>;
+        "fieldId"?: string;
+        "fieldName"?: string;
+        "onValueChanged"?: (event: CustomEvent<Array<string | SelectListItem>>) => void;
+        "placeHolder"?: string;
+        "values"?: Array<string | SelectListItem>;
+    }
+    interface ElsaJsonProperty {
         "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "onExpressionChanged"?: (event: HeJsonPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface HeMonaco {
+    interface ElsaModalDialog {
+        "onHidden"?: (event: CustomEvent<any>) => void;
+        "onShown"?: (event: CustomEvent<any>) => void;
+    }
+    interface ElsaMonaco {
         "editorHeight"?: string;
         "language"?: string;
         "monacoLibPath"?: string;
-        "onValueChanged"?: (event: HeMonacoCustomEvent<MonacoValueChangedArgs>) => void;
+        "onValueChanged"?: (event: CustomEvent<MonacoValueChangedArgs>) => void;
         "padding"?: string;
         "singleLineMode"?: boolean;
         "value"?: string;
     }
-    interface HeMultiExpressionEditor {
+    interface ElsaMultiExpressionEditor {
         "context"?: IntellisenseContext;
         "defaultSyntax"?: string;
         "editorHeight"?: string;
         "expressions"?: Map<string>;
         "fieldName"?: string;
-        "hint"?: string;
         "isReadOnly"?: boolean;
         "label"?: string;
-        "onExpressionChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;
-        "onSyntaxChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;
+        "onExpressionChanged"?: (event: CustomEvent<string>) => void;
+        "onSyntaxChanged"?: (event: CustomEvent<string>) => void;
         "singleLineMode"?: boolean;
         "supportedSyntaxes"?: Array<string>;
         "syntax"?: string;
     }
-    interface HeMultiLineProperty {
+    interface ElsaMultiLineProperty {
         "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "onExpressionChanged"?: (event: HeMultiLinePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
-    interface HeMultiTextProperty {
+    interface ElsaMultiTextProperty {
         "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "onExpressionChanged"?: (event: HeMultiTextPropertyCustomEvent<string>) => void;
+        "onValueChange"?: (event: CustomEvent<Array<string | number | boolean | SelectListItem>>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
+        "serverUrl"?: string;
     }
-    interface HeNumericProperty {
-        "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "onExpressionChanged"?: (event: HeNumericPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
+    interface ElsaOauth2Authorized {
     }
-    interface HePotscoreRadioOptionsProperty {
-        "activityModel"?: ActivityModel;
-        "onExpressionChanged"?: (event: HePotscoreRadioOptionsPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
+    interface ElsaPager {
+        "culture"?: string;
+        "history"?: RouterHistory;
+        "location"?: LocationSegments;
+        "onPaged"?: (event: CustomEvent<PagerData>) => void;
+        "page"?: number;
+        "pageSize"?: number;
+        "totalCount"?: number;
     }
-    interface HePropertyEditor {
+    interface ElsaPropertyEditor {
         "activityModel"?: ActivityModel;
         "context"?: string;
         "editorHeight"?: string;
-        "onDefaultSyntaxValueChanged"?: (event: HePropertyEditorCustomEvent<string>) => void;
+        "onDefaultSyntaxValueChanged"?: (event: CustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "showLabel"?: boolean;
         "singleLineMode"?: boolean;
     }
-    interface HeQuestionDataDictionaryProperty {
-        "activityModel"?: ActivityModel;
-        "onExpressionChanged"?: (event: HeQuestionDataDictionaryPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeRadioOptionsProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeRadioOptionsPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeSingleLineProperty {
-        "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "onExpressionChanged"?: (event: HeSingleLinePropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeSwitchAnswersProperty {
-        "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "onExpressionChanged"?: (event: HeSwitchAnswersPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeTextActivityProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeTextActivityPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeTextGroupProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeTextGroupPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeValidationProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeValidationPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeWeightedCheckboxOptionGroupProperty {
-        "activityModel"?: ActivityModel;
-        "keyId"?: string;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeWeightedCheckboxOptionGroupPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: NestedActivityDefinitionProperty;
-    }
-    interface HeWeightedCheckboxProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeWeightedCheckboxPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface HeWeightedRadioOptionGroupProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeWeightedRadioOptionGroupPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: NestedActivityDefinitionProperty;
-    }
-    interface HeWeightedRadioProperty {
-        "activityModel"?: ActivityModel;
-        "modelSyntax"?: string;
-        "onExpressionChanged"?: (event: HeWeightedRadioPropertyCustomEvent<string>) => void;
-        "propertyDescriptor"?: ActivityPropertyDescriptor;
-        "propertyModel"?: ActivityDefinitionProperty;
-    }
-    interface NestedPropertyList {
-        "activityModel"?: ActivityModel;
-        "nestedDescriptors"?: Array<HeActivityPropertyDescriptor>;
-        "onExpressionChanged"?: (event: NestedPropertyListCustomEvent<string>) => void;
-        "propertyModel"?: NestedActivityDefinitionProperty;
-    }
-    interface QuestionProperty {
-        "activityModel"?: ActivityModel;
-        "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
-        "questionModel"?: NestedPropertyModel;
-    }
-    interface QuestionScreenProperty {
+    interface ElsaRadioListProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
-        "questionProperties"?: Array<HeActivityPropertyDescriptor>;
+        "serverUrl"?: string;
     }
-    interface SwitchAnswersProperty {
+    interface ElsaScriptProperty {
+        "activityModel"?: ActivityModel;
+        "editorHeight"?: string;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+        "serverUrl"?: string;
+        "singleLineMode"?: boolean;
+        "syntax"?: string;
+        "workflowDefinitionId"?: string;
+    }
+    interface ElsaSecretEditorModal {
+        "culture"?: string;
+        "monacoLibPath"?: string;
+        "serverUrl"?: string;
+    }
+    interface ElsaSecretsPickerModal {
+    }
+    interface ElsaSingleLineProperty {
         "activityModel"?: ActivityModel;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface ElsaStudioDashboard {
+        "basePath"?: string;
+        "culture"?: string;
+    }
+    interface ElsaStudioHome {
+        "culture"?: string;
+        "serverVersion"?: string;
+    }
+    interface ElsaStudioRoot {
+        "basePath"?: string;
+        "config"?: string;
+        "culture"?: string;
+        "features"?: any;
+        "monacoLibPath"?: string;
+        "onInitialized"?: (event: CustomEvent<ElsaStudio>) => void;
+        "onInitializing"?: (event: CustomEvent<ElsaStudio>) => void;
+        "serverUrl"?: string;
+        "useX6Graphs"?: boolean;
+    }
+    interface ElsaStudioWebhookDefinitionsEdit {
+        "match"?: MatchResults;
+    }
+    interface ElsaStudioWebhookDefinitionsList {
+        "basePath"?: string;
+        "culture"?: string;
+    }
+    interface ElsaStudioWorkflowBlueprintView {
+        "match"?: MatchResults;
+    }
+    interface ElsaStudioWorkflowDefinitionsEdit {
+        "match"?: MatchResults;
+    }
+    interface ElsaStudioWorkflowDefinitionsList {
+        "basePath"?: string;
+        "culture"?: string;
+        "history"?: RouterHistory;
+        "serverUrl"?: string;
+    }
+    interface ElsaStudioWorkflowInstancesList {
+        "culture"?: string;
+    }
+    interface ElsaStudioWorkflowInstancesView {
+        "match"?: MatchResults;
+    }
+    interface ElsaStudioWorkflowRegistry {
+        "basePath"?: string;
+        "culture"?: string;
+    }
+    interface ElsaSwitchCasesProperty {
+        "activityModel"?: ActivityModel;
+        "onValueChange"?: (event: CustomEvent<Array<any>>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor;
+        "propertyModel"?: ActivityDefinitionProperty;
+    }
+    interface ElsaTabContent {
+        "active"?: boolean;
+        "tab"?: string;
+    }
+    interface ElsaTabHeader {
+        "active"?: boolean;
+        "tab"?: string;
+    }
+    interface ElsaToastNotification {
+    }
+    interface ElsaUserContextMenu {
+        "serverUrl"?: string;
+    }
+    interface ElsaVersionHistoryPanel {
+        "onDeleteVersionClicked"?: (event: CustomEvent<WorkflowDefinitionVersion>) => void;
+        "onRevertVersionClicked"?: (event: CustomEvent<WorkflowDefinitionVersion>) => void;
+        "onVersionSelected"?: (event: CustomEvent<WorkflowDefinitionVersion>) => void;
+        "serverUrl"?: string;
+        "workflowDefinition"?: WorkflowDefinition;
+    }
+    interface ElsaWebhookDefinitionEditorNotifications {
+    }
+    interface ElsaWebhookDefinitionEditorScreen {
+        "culture"?: string;
+        "history"?: RouterHistory;
+        "serverUrl"?: string;
+        "webhookDefinition"?: WebhookDefinition;
+        "webhookId"?: string;
+    }
+    interface ElsaWebhookDefinitionsListScreen {
+        "basePath"?: string;
+        "culture"?: string;
+        "history"?: RouterHistory;
+        "serverUrl"?: string;
+    }
+    interface ElsaWorkflowBlueprintPropertiesPanel {
+        "culture"?: string;
+        "serverUrl"?: string;
+        "workflowId"?: string;
+    }
+    interface ElsaWorkflowBlueprintViewerScreen {
+        "culture"?: string;
+        "serverUrl"?: string;
+        "workflowDefinitionId"?: string;
+    }
+    interface ElsaWorkflowDefinitionEditorNotifications {
+    }
+    interface ElsaWorkflowDefinitionEditorScreen {
+        "basePath"?: string;
+        "culture"?: string;
+        "features"?: string;
+        "history"?: RouterHistory;
+        "monacoLibPath"?: string;
+        "onWorkflowSaved"?: (event: CustomEvent<WorkflowDefinition>) => void;
+        "serverFeatures"?: Array<string>;
+        "serverUrl"?: string;
+        "workflowDefinitionId"?: string;
+    }
+    interface ElsaWorkflowDefinitionsListScreen {
+        "basePath"?: string;
+        "culture"?: string;
+        "history"?: RouterHistory;
+        "serverUrl"?: string;
+    }
+    interface ElsaWorkflowFaultInformation {
+        "faultedAt"?: Date;
+        "workflowFault"?: WorkflowFault;
+    }
+    interface ElsaWorkflowInstanceJournal {
+        "activityDescriptors"?: Array<ActivityDescriptor>;
+        "onRecordSelected"?: (event: CustomEvent<WorkflowExecutionLogRecord>) => void;
+        "serverUrl"?: string;
+        "workflowBlueprint"?: WorkflowBlueprint;
+        "workflowInstance"?: WorkflowInstance;
+        "workflowInstanceId"?: string;
+        "workflowModel"?: WorkflowModel;
+    }
+    interface ElsaWorkflowInstanceListScreen {
+        "basePath"?: string;
+        "correlationId"?: string;
+        "culture"?: string;
+        "history"?: RouterHistory;
+        "orderBy"?: OrderBy;
+        "serverUrl"?: string;
+        "workflowId"?: string;
+        "workflowStatus"?: WorkflowStatus;
+    }
+    interface ElsaWorkflowInstanceViewerScreen {
+        "culture"?: string;
+        "serverUrl"?: string;
+        "workflowInstanceId"?: string;
+    }
+    interface ElsaWorkflowPerformanceInformation {
+        "activityStats"?: ActivityStats;
+    }
+    interface ElsaWorkflowPropertiesPanel {
+        "culture"?: string;
+        "serverUrl"?: string;
+        "workflowDefinition"?: WorkflowDefinition;
+    }
+    interface ElsaWorkflowPublishButton {
+        "culture"?: string;
+        "onDeleteClicked"?: (event: CustomEvent<any>) => void;
+        "onExportClicked"?: (event: CustomEvent<any>) => void;
+        "onImportClicked"?: (event: CustomEvent<File>) => void;
+        "onPublishClicked"?: (event: CustomEvent<any>) => void;
+        "onRevertClicked"?: (event: CustomEvent<any>) => void;
+        "onUnPublishClicked"?: (event: CustomEvent<any>) => void;
+        "publishing"?: boolean;
+        "workflowDefinition"?: WorkflowDefinition;
+    }
+    interface ElsaWorkflowRegistryListScreen {
+        "basePath"?: string;
+        "culture"?: string;
+        "history"?: RouterHistory;
+        "serverUrl"?: string;
+    }
+    interface ElsaWorkflowSettingsModal {
+        "serverUrl"?: string;
+        "workflowDefinition"?: WorkflowDefinition;
+    }
+    interface ElsaWorkflowTestPanel {
+        "culture"?: string;
+        "selectedActivityId"?: string;
+        "serverUrl"?: string;
+        "workflowDefinition"?: WorkflowDefinition;
+        "workflowTestActivityId"?: string;
+    }
+    interface X6Designer {
+        "activityBorderColor"?: (activity: ActivityModel) => string;
+        "activityContextMenu"?: ActivityContextMenuState;
+        "activityContextMenuButton"?: (activity: ActivityModel) => string;
+        "activityContextTestMenu"?: ActivityContextMenuState;
+        "connectionContextMenu"?: ActivityContextMenuState;
+        "enableMultipleConnectionsFromSingleSource"?: boolean;
+        "layoutDirection"?: LayoutDirection;
+        "mode"?: WorkflowDesignerMode;
+        "model"?: WorkflowModel;
+        "onActivityContextMenuButtonClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
+        "onActivityContextMenuButtonTestClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
+        "onActivityDeleted"?: (event: CustomEvent<ActivityDeletedArgs>) => void;
+        "onActivityDeselected"?: (event: CustomEvent<ActivityModel>) => void;
+        "onActivitySelected"?: (event: CustomEvent<ActivityModel>) => void;
+        "onConnectionContextMenuButtonClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
+        "onWorkflow-changed"?: (event: CustomEvent<WorkflowModel>) => void;
+        "selectedActivityIds"?: Array<string>;
     }
     interface IntrinsicElements {
-        "he-check-list-property": HeCheckListProperty;
-        "he-checkbox-options-property": HeCheckboxOptionsProperty;
-        "he-checkbox-property": HeCheckboxProperty;
-        "he-dashboard": HeDashboard;
-        "he-data-table-property": HeDataTableProperty;
-        "he-elsa-control": HeElsaControl;
-        "he-expression-editor": HeExpressionEditor;
-        "he-json-property": HeJsonProperty;
-        "he-monaco": HeMonaco;
-        "he-multi-expression-editor": HeMultiExpressionEditor;
-        "he-multi-line-property": HeMultiLineProperty;
-        "he-multi-text-property": HeMultiTextProperty;
-        "he-numeric-property": HeNumericProperty;
-        "he-potscore-radio-options-property": HePotscoreRadioOptionsProperty;
-        "he-property-editor": HePropertyEditor;
-        "he-question-data-dictionary-property": HeQuestionDataDictionaryProperty;
-        "he-radio-options-property": HeRadioOptionsProperty;
-        "he-single-line-property": HeSingleLineProperty;
-        "he-switch-answers-property": HeSwitchAnswersProperty;
-        "he-text-activity-property": HeTextActivityProperty;
-        "he-text-group-property": HeTextGroupProperty;
-        "he-validation-property": HeValidationProperty;
-        "he-weighted-checkbox-option-group-property": HeWeightedCheckboxOptionGroupProperty;
-        "he-weighted-checkbox-property": HeWeightedCheckboxProperty;
-        "he-weighted-radio-option-group-property": HeWeightedRadioOptionGroupProperty;
-        "he-weighted-radio-property": HeWeightedRadioProperty;
-        "nested-property-list": NestedPropertyList;
-        "question-property": QuestionProperty;
-        "question-screen-property": QuestionScreenProperty;
-        "switch-answers-property": SwitchAnswersProperty;
+        "elsa-activity-editor-modal": ElsaActivityEditorModal;
+        "elsa-activity-editor-panel": ElsaActivityEditorPanel;
+        "elsa-activity-picker-modal": ElsaActivityPickerModal;
+        "elsa-check-list-property": ElsaCheckListProperty;
+        "elsa-checkbox-property": ElsaCheckboxProperty;
+        "elsa-confirm-dialog": ElsaConfirmDialog;
+        "elsa-context-menu": ElsaContextMenu;
+        "elsa-control": ElsaControl;
+        "elsa-copy-button": ElsaCopyButton;
+        "elsa-credential-manager-items-list": ElsaCredentialManagerItemsList;
+        "elsa-credential-manager-list-screen": ElsaCredentialManagerListScreen;
+        "elsa-cron-expression-property": ElsaCronExpressionProperty;
+        "elsa-designer-panel": ElsaDesignerPanel;
+        "elsa-designer-tree": ElsaDesignerTree;
+        "elsa-dictionary-property": ElsaDictionaryProperty;
+        "elsa-dropdown-button": ElsaDropdownButton;
+        "elsa-dropdown-property": ElsaDropdownProperty;
+        "elsa-expression-editor": ElsaExpressionEditor;
+        "elsa-flyout-panel": ElsaFlyoutPanel;
+        "elsa-input-tags": ElsaInputTags;
+        "elsa-input-tags-dropdown": ElsaInputTagsDropdown;
+        "elsa-json-property": ElsaJsonProperty;
+        "elsa-modal-dialog": ElsaModalDialog;
+        "elsa-monaco": ElsaMonaco;
+        "elsa-multi-expression-editor": ElsaMultiExpressionEditor;
+        "elsa-multi-line-property": ElsaMultiLineProperty;
+        "elsa-multi-text-property": ElsaMultiTextProperty;
+        "elsa-oauth2-authorized": ElsaOauth2Authorized;
+        "elsa-pager": ElsaPager;
+        "elsa-property-editor": ElsaPropertyEditor;
+        "elsa-radio-list-property": ElsaRadioListProperty;
+        "elsa-script-property": ElsaScriptProperty;
+        "elsa-secret-editor-modal": ElsaSecretEditorModal;
+        "elsa-secrets-picker-modal": ElsaSecretsPickerModal;
+        "elsa-single-line-property": ElsaSingleLineProperty;
+        "elsa-studio-dashboard": ElsaStudioDashboard;
+        "elsa-studio-home": ElsaStudioHome;
+        "elsa-studio-root": ElsaStudioRoot;
+        "elsa-studio-webhook-definitions-edit": ElsaStudioWebhookDefinitionsEdit;
+        "elsa-studio-webhook-definitions-list": ElsaStudioWebhookDefinitionsList;
+        "elsa-studio-workflow-blueprint-view": ElsaStudioWorkflowBlueprintView;
+        "elsa-studio-workflow-definitions-edit": ElsaStudioWorkflowDefinitionsEdit;
+        "elsa-studio-workflow-definitions-list": ElsaStudioWorkflowDefinitionsList;
+        "elsa-studio-workflow-instances-list": ElsaStudioWorkflowInstancesList;
+        "elsa-studio-workflow-instances-view": ElsaStudioWorkflowInstancesView;
+        "elsa-studio-workflow-registry": ElsaStudioWorkflowRegistry;
+        "elsa-switch-cases-property": ElsaSwitchCasesProperty;
+        "elsa-tab-content": ElsaTabContent;
+        "elsa-tab-header": ElsaTabHeader;
+        "elsa-toast-notification": ElsaToastNotification;
+        "elsa-user-context-menu": ElsaUserContextMenu;
+        "elsa-version-history-panel": ElsaVersionHistoryPanel;
+        "elsa-webhook-definition-editor-notifications": ElsaWebhookDefinitionEditorNotifications;
+        "elsa-webhook-definition-editor-screen": ElsaWebhookDefinitionEditorScreen;
+        "elsa-webhook-definitions-list-screen": ElsaWebhookDefinitionsListScreen;
+        "elsa-workflow-blueprint-properties-panel": ElsaWorkflowBlueprintPropertiesPanel;
+        "elsa-workflow-blueprint-viewer-screen": ElsaWorkflowBlueprintViewerScreen;
+        "elsa-workflow-definition-editor-notifications": ElsaWorkflowDefinitionEditorNotifications;
+        "elsa-workflow-definition-editor-screen": ElsaWorkflowDefinitionEditorScreen;
+        "elsa-workflow-definitions-list-screen": ElsaWorkflowDefinitionsListScreen;
+        "elsa-workflow-fault-information": ElsaWorkflowFaultInformation;
+        "elsa-workflow-instance-journal": ElsaWorkflowInstanceJournal;
+        "elsa-workflow-instance-list-screen": ElsaWorkflowInstanceListScreen;
+        "elsa-workflow-instance-viewer-screen": ElsaWorkflowInstanceViewerScreen;
+        "elsa-workflow-performance-information": ElsaWorkflowPerformanceInformation;
+        "elsa-workflow-properties-panel": ElsaWorkflowPropertiesPanel;
+        "elsa-workflow-publish-button": ElsaWorkflowPublishButton;
+        "elsa-workflow-registry-list-screen": ElsaWorkflowRegistryListScreen;
+        "elsa-workflow-settings-modal": ElsaWorkflowSettingsModal;
+        "elsa-workflow-test-panel": ElsaWorkflowTestPanel;
+        "x6-designer": X6Designer;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
-            "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
-            "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
-            "he-dashboard": LocalJSX.HeDashboard & JSXBase.HTMLAttributes<HTMLHeDashboardElement>;
-            "he-data-table-property": LocalJSX.HeDataTableProperty & JSXBase.HTMLAttributes<HTMLHeDataTablePropertyElement>;
-            "he-elsa-control": LocalJSX.HeElsaControl & JSXBase.HTMLAttributes<HTMLHeElsaControlElement>;
-            "he-expression-editor": LocalJSX.HeExpressionEditor & JSXBase.HTMLAttributes<HTMLHeExpressionEditorElement>;
-            "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
-            "he-monaco": LocalJSX.HeMonaco & JSXBase.HTMLAttributes<HTMLHeMonacoElement>;
-            "he-multi-expression-editor": LocalJSX.HeMultiExpressionEditor & JSXBase.HTMLAttributes<HTMLHeMultiExpressionEditorElement>;
-            "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
-            "he-multi-text-property": LocalJSX.HeMultiTextProperty & JSXBase.HTMLAttributes<HTMLHeMultiTextPropertyElement>;
-            "he-numeric-property": LocalJSX.HeNumericProperty & JSXBase.HTMLAttributes<HTMLHeNumericPropertyElement>;
-            "he-potscore-radio-options-property": LocalJSX.HePotscoreRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHePotscoreRadioOptionsPropertyElement>;
-            "he-property-editor": LocalJSX.HePropertyEditor & JSXBase.HTMLAttributes<HTMLHePropertyEditorElement>;
-            "he-question-data-dictionary-property": LocalJSX.HeQuestionDataDictionaryProperty & JSXBase.HTMLAttributes<HTMLHeQuestionDataDictionaryPropertyElement>;
-            "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
-            "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
-            "he-switch-answers-property": LocalJSX.HeSwitchAnswersProperty & JSXBase.HTMLAttributes<HTMLHeSwitchAnswersPropertyElement>;
-            "he-text-activity-property": LocalJSX.HeTextActivityProperty & JSXBase.HTMLAttributes<HTMLHeTextActivityPropertyElement>;
-            "he-text-group-property": LocalJSX.HeTextGroupProperty & JSXBase.HTMLAttributes<HTMLHeTextGroupPropertyElement>;
-            "he-validation-property": LocalJSX.HeValidationProperty & JSXBase.HTMLAttributes<HTMLHeValidationPropertyElement>;
-            "he-weighted-checkbox-option-group-property": LocalJSX.HeWeightedCheckboxOptionGroupProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxOptionGroupPropertyElement>;
-            "he-weighted-checkbox-property": LocalJSX.HeWeightedCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxPropertyElement>;
-            "he-weighted-radio-option-group-property": LocalJSX.HeWeightedRadioOptionGroupProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioOptionGroupPropertyElement>;
-            "he-weighted-radio-property": LocalJSX.HeWeightedRadioProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioPropertyElement>;
-            "nested-property-list": LocalJSX.NestedPropertyList & JSXBase.HTMLAttributes<HTMLNestedPropertyListElement>;
-            "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
-            "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
-            "switch-answers-property": LocalJSX.SwitchAnswersProperty & JSXBase.HTMLAttributes<HTMLSwitchAnswersPropertyElement>;
+            "elsa-activity-editor-modal": LocalJSX.ElsaActivityEditorModal & JSXBase.HTMLAttributes<HTMLElsaActivityEditorModalElement>;
+            "elsa-activity-editor-panel": LocalJSX.ElsaActivityEditorPanel & JSXBase.HTMLAttributes<HTMLElsaActivityEditorPanelElement>;
+            "elsa-activity-picker-modal": LocalJSX.ElsaActivityPickerModal & JSXBase.HTMLAttributes<HTMLElsaActivityPickerModalElement>;
+            "elsa-check-list-property": LocalJSX.ElsaCheckListProperty & JSXBase.HTMLAttributes<HTMLElsaCheckListPropertyElement>;
+            "elsa-checkbox-property": LocalJSX.ElsaCheckboxProperty & JSXBase.HTMLAttributes<HTMLElsaCheckboxPropertyElement>;
+            "elsa-confirm-dialog": LocalJSX.ElsaConfirmDialog & JSXBase.HTMLAttributes<HTMLElsaConfirmDialogElement>;
+            "elsa-context-menu": LocalJSX.ElsaContextMenu & JSXBase.HTMLAttributes<HTMLElsaContextMenuElement>;
+            "elsa-control": LocalJSX.ElsaControl & JSXBase.HTMLAttributes<HTMLElsaControlElement>;
+            "elsa-copy-button": LocalJSX.ElsaCopyButton & JSXBase.HTMLAttributes<HTMLElsaCopyButtonElement>;
+            "elsa-credential-manager-items-list": LocalJSX.ElsaCredentialManagerItemsList & JSXBase.HTMLAttributes<HTMLElsaCredentialManagerItemsListElement>;
+            "elsa-credential-manager-list-screen": LocalJSX.ElsaCredentialManagerListScreen & JSXBase.HTMLAttributes<HTMLElsaCredentialManagerListScreenElement>;
+            "elsa-cron-expression-property": LocalJSX.ElsaCronExpressionProperty & JSXBase.HTMLAttributes<HTMLElsaCronExpressionPropertyElement>;
+            "elsa-designer-panel": LocalJSX.ElsaDesignerPanel & JSXBase.HTMLAttributes<HTMLElsaDesignerPanelElement>;
+            "elsa-designer-tree": LocalJSX.ElsaDesignerTree & JSXBase.HTMLAttributes<HTMLElsaDesignerTreeElement>;
+            "elsa-dictionary-property": LocalJSX.ElsaDictionaryProperty & JSXBase.HTMLAttributes<HTMLElsaDictionaryPropertyElement>;
+            "elsa-dropdown-button": LocalJSX.ElsaDropdownButton & JSXBase.HTMLAttributes<HTMLElsaDropdownButtonElement>;
+            "elsa-dropdown-property": LocalJSX.ElsaDropdownProperty & JSXBase.HTMLAttributes<HTMLElsaDropdownPropertyElement>;
+            "elsa-expression-editor": LocalJSX.ElsaExpressionEditor & JSXBase.HTMLAttributes<HTMLElsaExpressionEditorElement>;
+            "elsa-flyout-panel": LocalJSX.ElsaFlyoutPanel & JSXBase.HTMLAttributes<HTMLElsaFlyoutPanelElement>;
+            "elsa-input-tags": LocalJSX.ElsaInputTags & JSXBase.HTMLAttributes<HTMLElsaInputTagsElement>;
+            "elsa-input-tags-dropdown": LocalJSX.ElsaInputTagsDropdown & JSXBase.HTMLAttributes<HTMLElsaInputTagsDropdownElement>;
+            "elsa-json-property": LocalJSX.ElsaJsonProperty & JSXBase.HTMLAttributes<HTMLElsaJsonPropertyElement>;
+            "elsa-modal-dialog": LocalJSX.ElsaModalDialog & JSXBase.HTMLAttributes<HTMLElsaModalDialogElement>;
+            "elsa-monaco": LocalJSX.ElsaMonaco & JSXBase.HTMLAttributes<HTMLElsaMonacoElement>;
+            "elsa-multi-expression-editor": LocalJSX.ElsaMultiExpressionEditor & JSXBase.HTMLAttributes<HTMLElsaMultiExpressionEditorElement>;
+            "elsa-multi-line-property": LocalJSX.ElsaMultiLineProperty & JSXBase.HTMLAttributes<HTMLElsaMultiLinePropertyElement>;
+            "elsa-multi-text-property": LocalJSX.ElsaMultiTextProperty & JSXBase.HTMLAttributes<HTMLElsaMultiTextPropertyElement>;
+            "elsa-oauth2-authorized": LocalJSX.ElsaOauth2Authorized & JSXBase.HTMLAttributes<HTMLElsaOauth2AuthorizedElement>;
+            "elsa-pager": LocalJSX.ElsaPager & JSXBase.HTMLAttributes<HTMLElsaPagerElement>;
+            "elsa-property-editor": LocalJSX.ElsaPropertyEditor & JSXBase.HTMLAttributes<HTMLElsaPropertyEditorElement>;
+            "elsa-radio-list-property": LocalJSX.ElsaRadioListProperty & JSXBase.HTMLAttributes<HTMLElsaRadioListPropertyElement>;
+            "elsa-script-property": LocalJSX.ElsaScriptProperty & JSXBase.HTMLAttributes<HTMLElsaScriptPropertyElement>;
+            "elsa-secret-editor-modal": LocalJSX.ElsaSecretEditorModal & JSXBase.HTMLAttributes<HTMLElsaSecretEditorModalElement>;
+            "elsa-secrets-picker-modal": LocalJSX.ElsaSecretsPickerModal & JSXBase.HTMLAttributes<HTMLElsaSecretsPickerModalElement>;
+            "elsa-single-line-property": LocalJSX.ElsaSingleLineProperty & JSXBase.HTMLAttributes<HTMLElsaSingleLinePropertyElement>;
+            "elsa-studio-dashboard": LocalJSX.ElsaStudioDashboard & JSXBase.HTMLAttributes<HTMLElsaStudioDashboardElement>;
+            "elsa-studio-home": LocalJSX.ElsaStudioHome & JSXBase.HTMLAttributes<HTMLElsaStudioHomeElement>;
+            "elsa-studio-root": LocalJSX.ElsaStudioRoot & JSXBase.HTMLAttributes<HTMLElsaStudioRootElement>;
+            "elsa-studio-webhook-definitions-edit": LocalJSX.ElsaStudioWebhookDefinitionsEdit & JSXBase.HTMLAttributes<HTMLElsaStudioWebhookDefinitionsEditElement>;
+            "elsa-studio-webhook-definitions-list": LocalJSX.ElsaStudioWebhookDefinitionsList & JSXBase.HTMLAttributes<HTMLElsaStudioWebhookDefinitionsListElement>;
+            "elsa-studio-workflow-blueprint-view": LocalJSX.ElsaStudioWorkflowBlueprintView & JSXBase.HTMLAttributes<HTMLElsaStudioWorkflowBlueprintViewElement>;
+            "elsa-studio-workflow-definitions-edit": LocalJSX.ElsaStudioWorkflowDefinitionsEdit & JSXBase.HTMLAttributes<HTMLElsaStudioWorkflowDefinitionsEditElement>;
+            "elsa-studio-workflow-definitions-list": LocalJSX.ElsaStudioWorkflowDefinitionsList & JSXBase.HTMLAttributes<HTMLElsaStudioWorkflowDefinitionsListElement>;
+            "elsa-studio-workflow-instances-list": LocalJSX.ElsaStudioWorkflowInstancesList & JSXBase.HTMLAttributes<HTMLElsaStudioWorkflowInstancesListElement>;
+            "elsa-studio-workflow-instances-view": LocalJSX.ElsaStudioWorkflowInstancesView & JSXBase.HTMLAttributes<HTMLElsaStudioWorkflowInstancesViewElement>;
+            "elsa-studio-workflow-registry": LocalJSX.ElsaStudioWorkflowRegistry & JSXBase.HTMLAttributes<HTMLElsaStudioWorkflowRegistryElement>;
+            "elsa-switch-cases-property": LocalJSX.ElsaSwitchCasesProperty & JSXBase.HTMLAttributes<HTMLElsaSwitchCasesPropertyElement>;
+            "elsa-tab-content": LocalJSX.ElsaTabContent & JSXBase.HTMLAttributes<HTMLElsaTabContentElement>;
+            "elsa-tab-header": LocalJSX.ElsaTabHeader & JSXBase.HTMLAttributes<HTMLElsaTabHeaderElement>;
+            "elsa-toast-notification": LocalJSX.ElsaToastNotification & JSXBase.HTMLAttributes<HTMLElsaToastNotificationElement>;
+            "elsa-user-context-menu": LocalJSX.ElsaUserContextMenu & JSXBase.HTMLAttributes<HTMLElsaUserContextMenuElement>;
+            "elsa-version-history-panel": LocalJSX.ElsaVersionHistoryPanel & JSXBase.HTMLAttributes<HTMLElsaVersionHistoryPanelElement>;
+            "elsa-webhook-definition-editor-notifications": LocalJSX.ElsaWebhookDefinitionEditorNotifications & JSXBase.HTMLAttributes<HTMLElsaWebhookDefinitionEditorNotificationsElement>;
+            "elsa-webhook-definition-editor-screen": LocalJSX.ElsaWebhookDefinitionEditorScreen & JSXBase.HTMLAttributes<HTMLElsaWebhookDefinitionEditorScreenElement>;
+            "elsa-webhook-definitions-list-screen": LocalJSX.ElsaWebhookDefinitionsListScreen & JSXBase.HTMLAttributes<HTMLElsaWebhookDefinitionsListScreenElement>;
+            "elsa-workflow-blueprint-properties-panel": LocalJSX.ElsaWorkflowBlueprintPropertiesPanel & JSXBase.HTMLAttributes<HTMLElsaWorkflowBlueprintPropertiesPanelElement>;
+            "elsa-workflow-blueprint-viewer-screen": LocalJSX.ElsaWorkflowBlueprintViewerScreen & JSXBase.HTMLAttributes<HTMLElsaWorkflowBlueprintViewerScreenElement>;
+            "elsa-workflow-definition-editor-notifications": LocalJSX.ElsaWorkflowDefinitionEditorNotifications & JSXBase.HTMLAttributes<HTMLElsaWorkflowDefinitionEditorNotificationsElement>;
+            "elsa-workflow-definition-editor-screen": LocalJSX.ElsaWorkflowDefinitionEditorScreen & JSXBase.HTMLAttributes<HTMLElsaWorkflowDefinitionEditorScreenElement>;
+            "elsa-workflow-definitions-list-screen": LocalJSX.ElsaWorkflowDefinitionsListScreen & JSXBase.HTMLAttributes<HTMLElsaWorkflowDefinitionsListScreenElement>;
+            "elsa-workflow-fault-information": LocalJSX.ElsaWorkflowFaultInformation & JSXBase.HTMLAttributes<HTMLElsaWorkflowFaultInformationElement>;
+            "elsa-workflow-instance-journal": LocalJSX.ElsaWorkflowInstanceJournal & JSXBase.HTMLAttributes<HTMLElsaWorkflowInstanceJournalElement>;
+            "elsa-workflow-instance-list-screen": LocalJSX.ElsaWorkflowInstanceListScreen & JSXBase.HTMLAttributes<HTMLElsaWorkflowInstanceListScreenElement>;
+            "elsa-workflow-instance-viewer-screen": LocalJSX.ElsaWorkflowInstanceViewerScreen & JSXBase.HTMLAttributes<HTMLElsaWorkflowInstanceViewerScreenElement>;
+            "elsa-workflow-performance-information": LocalJSX.ElsaWorkflowPerformanceInformation & JSXBase.HTMLAttributes<HTMLElsaWorkflowPerformanceInformationElement>;
+            "elsa-workflow-properties-panel": LocalJSX.ElsaWorkflowPropertiesPanel & JSXBase.HTMLAttributes<HTMLElsaWorkflowPropertiesPanelElement>;
+            "elsa-workflow-publish-button": LocalJSX.ElsaWorkflowPublishButton & JSXBase.HTMLAttributes<HTMLElsaWorkflowPublishButtonElement>;
+            "elsa-workflow-registry-list-screen": LocalJSX.ElsaWorkflowRegistryListScreen & JSXBase.HTMLAttributes<HTMLElsaWorkflowRegistryListScreenElement>;
+            "elsa-workflow-settings-modal": LocalJSX.ElsaWorkflowSettingsModal & JSXBase.HTMLAttributes<HTMLElsaWorkflowSettingsModalElement>;
+            "elsa-workflow-test-panel": LocalJSX.ElsaWorkflowTestPanel & JSXBase.HTMLAttributes<HTMLElsaWorkflowTestPanelElement>;
+            "x6-designer": LocalJSX.X6Designer & JSXBase.HTMLAttributes<HTMLX6DesignerElement>;
         }
     }
 }

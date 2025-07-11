@@ -1,66 +1,124 @@
-import { SyntaxNames } from "../constants/constants";
-import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedProperty, NestedPropertyModel } from "../models/custom-component-models";
-import { ActivityDefinitionProperty, ActivityModel } from "../models/elsa-interfaces";
-import { v4 as uuidv4 } from 'uuid';
+import {ActivityDefinition, ActivityDefinitionProperty, ActivityModel, ConnectionModel, WorkflowModel} from "../models";
+import * as collection from 'lodash/collection';
+import {Duration} from "moment";
+import {createDocument} from "@stencil/core/mock-doc";
+
+declare global {
+  interface Array<T> {
+    distinct(): Array<T>;
+
+    last(): T;
+  }
+}
 
 export type Map<T> = {
   [key: string]: T
 };
 
-export function newOptionNumber(options: Array<number>) : string {
-  let highestValue: number = 0;
-  if (options != null && options.length > 0) {
-    highestValue = options.sort(function (a, b) {
-      return a - b;
-    }).pop();
-  }
-  highestValue = highestValue + 1;
-  return highestValue.toString();
+export function format(first: string, middle: string, last: string): string {
+  return (first || '') + (middle ? ` ${middle}` : '') + (last ? ` ${last}` : '');
 }
 
-export function newOptionLetter(options: Array<string>): string {
-  let highestValue: string = "A";
-  if (options != null && options.length > 0) {
-    highestValue = options.sort().pop();
-    return incrementString(highestValue);
-  }
-  return highestValue;
-  
+export interface Array<T> {
+  distinct(): Array<T>;
+
+  last(): T;
+
+  find<S extends T>(predicate: (this: void, value: T, index: number, obj: T[]) => value is S, thisArg?: any): S | undefined;
+
+  find(predicate: (value: T, index: number, obj: T[]) => unknown, thisArg?: any): T | undefined;
+
+  push(...items: T[]): number;
+
 }
 
-export function toLetter(num: number) {
-  "use strict";
-  var mod = num % 26,
-    pow = num / 26 | 0,
-    out = mod ? String.fromCharCode(64 + mod) : (--pow, 'Z');
-  return pow ? toLetter(pow) + out : out;
-};
+Array.prototype.distinct = function () {
+  return [...new Set(this)];
+}
 
-function incrementString(value: string) : string {
-  let carry: number = 1;
-  let res: string = '';
+if (!Array.prototype.last) {
+  Array.prototype.last = function () {
+    return this[this.length - 1];
+  };
+}
 
-  for (let i = value.length - 1; i >= 0; i--) {
-    let char = value.toUpperCase().charCodeAt(i);
-    char += carry;
-    if (char > 90) {
-      char = 65;
-      carry = 1;
-    } else {
-      carry = 0;
-    }
+export function isNumeric(str: string): boolean {
+  return !isNaN(str as any) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+    !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+}
 
-    res = String.fromCharCode(char) + res;
-
-    if (!carry) {
-      res = value.substring(0, i) + res;
-      break;
-    }
+export function getChildActivities(workflowModel: WorkflowModel, parentId?: string) {
+  if (parentId == null) {
+    const targetIds = new Set(workflowModel.connections.map(x => x.targetId));
+    return workflowModel.activities.filter(x => !targetIds.has(x.activityId));
+  } else {
+    const targetIds = new Set(workflowModel.connections.filter(x => x.sourceId === parentId).map(x => x.targetId));
+    return workflowModel.activities.filter(x => targetIds.has(x.activityId));
   }
-  if (carry) {
-    res = 'A' + res;
+}
+
+export function getInboundConnections(workflowModel: WorkflowModel, activityId: string) {
+  return workflowModel.connections.filter(x => x.targetId === activityId);
+}
+
+export function getOutboundConnections(workflowModel: WorkflowModel, activityId: string) {
+  return workflowModel.connections.filter(x => x.sourceId === activityId);
+}
+
+export function removeActivity(workflowModel: WorkflowModel, activityId: string): WorkflowModel {
+  const inboundConnections = getInboundConnections(workflowModel, activityId);
+  const outboundConnections = getOutboundConnections(workflowModel, activityId);
+  const connectionsToRemove = [...inboundConnections, ...outboundConnections];
+
+  return {
+    ...workflowModel,
+    activities: workflowModel.activities.filter(x => x.activityId != activityId),
+    connections: workflowModel.connections.filter(x => connectionsToRemove.indexOf(x) < 0)
+  };
+}
+
+export function removeConnection(workflowModel: WorkflowModel, sourceId: string, outcome: string): WorkflowModel {
+  return {
+    ...workflowModel,
+    connections: workflowModel.connections.filter(x => !(x.sourceId === sourceId && x.outcome === outcome))
+  };
+}
+
+
+export function findActivity(workflowModel: WorkflowModel, activityId: string) {
+  return workflowModel.activities.find(x => x.activityId === activityId);
+}
+
+export function addConnection(workflowModel: WorkflowModel, connection: ConnectionModel) {
+  return {
+    ...workflowModel,
+    connections: [...workflowModel.connections, connection]
+  };
+}
+
+export function setActivityDefinitionProperty(activityDefinition: ActivityDefinition, name: string, expression: string, syntax: string) {
+  setProperty(activityDefinition.properties, name, expression, syntax);
+}
+
+export function setActivityModelProperty(activityModel: ActivityModel, name: string, expression: string, syntax: string) {
+  setProperty(activityModel.properties, name, expression, syntax);
+}
+
+export function setProperty(properties: Array<ActivityDefinitionProperty>, name: string, expression: string, syntax?: string) {
+  let property: ActivityDefinitionProperty = properties.find(x => x.name == name);
+
+  if (!syntax)
+    syntax = 'Literal';
+
+  if (!property) {
+    const expressions = {};
+    expressions[syntax] = expression;
+    property = {name: name, expressions: expressions, syntax: syntax};
+    properties.push(property);
+  } else {
+    property.expressions[syntax] = expression;
+    property.syntax = syntax;
   }
-  return res;
 }
 
 export function getOrCreateProperty(activity: ActivityModel, name: string, defaultExpression?: () => string, defaultSyntax?: () => string): ActivityDefinitionProperty {
@@ -71,18 +129,13 @@ export function getOrCreateProperty(activity: ActivityModel, name: string, defau
     let syntax = defaultSyntax ? defaultSyntax() : undefined;
 
     if (!syntax)
-      syntax = SyntaxNames.Literal;
+      syntax = 'Literal';
 
     expressions[syntax] = defaultExpression ? defaultExpression() : undefined;
-    property = { name: name, expressions: expressions, syntax: null };
+    property = {name: name, expressions: expressions, syntax: null};
     activity.properties.push(property);
   }
 
-  return property;
-}
-export function getOrCreateNestedProperty(activity: ActivityModel, name: string, type: string, defaultExpression?: () => string, defaultSyntax?: () => string): NestedActivityDefinitionProperty {
-  var property = getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) as NestedActivityDefinitionProperty;
-  property.type = type;
   return property;
 }
 
@@ -93,92 +146,83 @@ export function parseJson(json: string): any {
   try {
     return JSON.parse(json);
   } catch (e) {
-    //console.warn(`Error parsing JSON: ${e}`);
-    //The Above never parses quite correctly,
-    e = e;
+    console.warn(`Error parsing JSON: ${e}`);
   }
   return undefined;
 }
 
+export function parseQuery(queryString?: string): any {
+
+  if (!queryString)
+    return {};
+
+  const query = {};
+  const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i].split('=');
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  }
+  return query;
+}
+
+export function queryToString(query: any): string {
+  const q = query || {};
+  return collection.map(q, (v, k) => `${k}=${v}`).join('&');
+}
+
 export function mapSyntaxToLanguage(syntax: string): any {
   switch (syntax) {
-    case SyntaxNames.Json:
+    case 'Json':
       return 'json';
-    case SyntaxNames.JavaScript:
+    case 'JavaScript':
       return 'javascript';
-    case SyntaxNames.Liquid:
+    case 'Liquid':
       return 'liquid';
-    case SyntaxNames.SQL:
+    case 'SQL':
       return 'sql';
-    case SyntaxNames.Literal:
+    case 'Literal':
     default:
       return 'plaintext';
   }
 }
 
-export function filterPropertiesByType(questionProperties: Array<HeActivityPropertyDescriptor>, questionType: string) {
-
-  const propertiesJson: string = JSON.stringify(questionProperties);
-  const properties: Array<HeActivityPropertyDescriptor> = JSON.parse(propertiesJson);
-
-
-  properties.forEach(p => {
-
-    if (p.conditionalActivityTypes != null && p.conditionalActivityTypes.length > 0) {
-      if (!p.conditionalActivityTypes.includes(questionType)) {
-        p.displayInDesigner = false;
-      }
-    }
-
-  });
-  const filteredProperties: Array<HeActivityPropertyDescriptor> = properties.filter(property => property.displayInDesigner == true);
-  return filteredProperties;
+export function htmlToElement(html: string): Element {
+  const template = document.createElement('template');
+  html = html.trim(); // Never return a text node of whitespace as the result.
+  template.innerHTML = html;
+  return template.content.firstElementChild;
 }
 
-export function updateNestedActivitiesByDescriptors(descriptors: Array<HeActivityPropertyDescriptor>, properties: Array<NestedProperty>, questionModel: NestedPropertyModel): Array<NestedProperty> {
-  let newProperties: Array<NestedProperty> = [];
-  descriptors.forEach(x => newProperties.push(createQuestionProperty(x, questionModel)));
-  const result = newProperties.map(x => {
-    const existingValue = properties.filter(y => x.descriptor.name == y.descriptor.name)[0];
-    if (existingValue != null) {
-      x.value = existingValue.value;
-    }
-    return x;
-  });
-  return result;
-
+export function htmlDecode(value) {
+  const textarea = htmlToElement("<textarea/>");
+  textarea.innerHTML = value;
+  return textarea.textContent;
 }
 
-export function createQuestionProperty(descriptor: HeActivityPropertyDescriptor, questionModel: NestedPropertyModel): NestedProperty {
-
-  let propertyValue: NestedActivityDefinitionProperty = {
-    syntax: descriptor.defaultSyntax,
-    value: descriptor.expectedOutputType,
-    name: descriptor.name,
-    expressions: getExpressionMap(descriptor.supportedSyntaxes),
-    type: ''
-  }
-  if (descriptor.name.toLowerCase() == 'id') {
-    propertyValue.expressions[SyntaxNames.Literal] = questionModel.value.value;
-  }
-  let property: NestedProperty = { value: propertyValue, descriptor: descriptor, }
-  return property;
+export function htmlEncode(value) {
+  const textarea = htmlToElement("<textarea/>");
+  textarea.textContent = value;
+  return textarea.innerHTML;
 }
 
-export function getExpressionMap(syntaxes: Array<string>): Map < string > {
-  if(syntaxes.length > 0) {
-  var value: Map<string> = {};
-  syntaxes.forEach(s => {
-    value[s] = "";
-  })
-  return value;
+export function durationToString(duration: Duration) {
+  return !!duration ? duration.asHours() > 1
+      ? `${duration.asHours().toFixed(3)} h`
+      : duration.asMinutes() > 1
+        ? `${duration.asMinutes().toFixed(3)} m`
+        : duration.asSeconds() > 1
+          ? `${duration.asSeconds().toFixed(3)} s`
+          : `${duration.asMilliseconds()} ms`
+    : null;
 }
-    else {
-  let value: Map<string> = {};
-  //value[SyntaxNames.Literal] = '';
-  return value;
+
+export function clip(el) {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
 }
-  }
 
 export async function awaitElement(selector) {
   while (document.querySelector(selector) === null) {
@@ -187,18 +231,12 @@ export async function awaitElement(selector) {
   return document.querySelector(selector);
 }
 
-export function onUpdateCustomExpression(event: CustomEvent<string>, property: NestedActivityDefinitionProperty, syntax: string, update: Function) {
-  property.expressions[syntax] = (event.currentTarget as HTMLInputElement).value.trim();
-  update();
+export interface Hash<TValue> {
+  [key: string]: TValue;
 }
 
-export function getUniversalUniqueId() {
-  return uuidv4();
-}
+export const stripActivityNameSpace = (name: string): string => {
+  const lastDotIndex = name.lastIndexOf('.');
+  return lastDotIndex < 0 ? name : name.substr(lastDotIndex + 1);
+};
 
-export function getWorkflowDefinitionIdFromUrl() {
-  var url_string = document.URL;
-  var n = url_string.lastIndexOf('/');
-  var workflowDef = url_string.substring(n + 1);
-  return workflowDef ?? '';
-}

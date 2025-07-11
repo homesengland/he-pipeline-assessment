@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "no-import-side-effect": false,
+    "linebreak-style": false,
+    "align": true,
+    "no-inferrable-types": false,
+    "quotemark": false,
+    "ordered-imports": false
+  }
+}

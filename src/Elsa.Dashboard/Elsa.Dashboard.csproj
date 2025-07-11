@@ -7,8 +7,8 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="src\components\common-properties\he-validation-property.tsx" />
-    <None Remove="src\nested-drivers\he-validation-driver.tsx" />
+    <None Remove="customSrc\src\components\common-properties\he-validation-property.tsx" />
+    <None Remove="customSrc\src\nested-drivers\he-validation-driver.tsx" />
     <None Remove="System.Security.Cryptography.Pkcs" />
     <None Remove="System.Drawing.Common" />
     <None Remove="System.Text.RegularExpressions" />
@@ -32,31 +32,31 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="src\components\interfaces\**" />
-    <Content Remove="src\components\interfaces\**" />
-    <EmbeddedResource Remove="src\components\interfaces\**" />
-    <None Remove="src\components\interfaces\**" />
+    <Compile Remove="customSrc\src\components\interfaces\**" />
+    <Content Remove="customSrc\src\components\interfaces\**" />
+    <EmbeddedResource Remove="customSrc\src\components\interfaces\**" />
+    <None Remove="customSrc\src\components\interfaces\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="RequestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="src\components\base-component.ts" />
-    <None Remove="src\components\common-properties\he-text-activity-property.tsx" />
-    <None Remove="src\components\common-properties\nested-properties\nested-property-list.tsx" />
-    <None Remove="src\components\display-toggle-component.ts" />
-    <None Remove="src\components\editors\he-monaco\he-monaco-utils.ts" />
-    <None Remove="src\constants\Constants.ts" />
-    <None Remove="src\functions\intellisenseGatherer.ts" />
-    <None Remove="src\functions\multiExpressionEditorUpdate.tsx" />
-    <None Remove="src\functions\updateModel.tsx" />
-    <None Remove="src\models\display-manager.ts" />
-    <None Remove="src\models\display-toggle.tsx" />
-    <None Remove="src\models\StoreConfig.ts" />
-    <None Remove="src\nested-drivers\display-managers\he-data-table-driver.tsx" />
-    <None Remove="src\nested-drivers\he-numeric-driver.tsx" />
-    <None Remove="src\nested-drivers\he-text-activity-driver.tsx" />
-    <None Remove="src\nested-drivers\he-text-group-driver.tsx" />
+    <None Remove="customSrc\src\components\base-component.ts" />
+    <None Remove="customSrc\src\components\common-properties\he-text-activity-property.tsx" />
+    <None Remove="customSrc\src\components\common-properties\nested-properties\nested-property-list.tsx" />
+    <None Remove="customSrc\src\components\display-toggle-component.ts" />
+    <None Remove="customSrc\src\components\editors\he-monaco\he-monaco-utils.ts" />
+    <None Remove="customSrc\src\constants\Constants.ts" />
+    <None Remove="customSrc\src\functions\intellisenseGatherer.ts" />
+    <None Remove="customSrc\src\functions\multiExpressionEditorUpdate.tsx" />
+    <None Remove="customSrc\src\functions\updateModel.tsx" />
+    <None Remove="customSrc\src\models\display-manager.ts" />
+    <None Remove="customSrc\src\models\display-toggle.tsx" />
+    <None Remove="customSrc\src\models\StoreConfig.ts" />
+    <None Remove="customSrc\src\nested-drivers\display-managers\he-data-table-driver.tsx" />
+    <None Remove="customSrc\src\nested-drivers\he-numeric-driver.tsx" />
+    <None Remove="customSrc\src\nested-drivers\he-text-activity-driver.tsx" />
+    <None Remove="customSrc\src\nested-drivers\he-text-group-driver.tsx" />
     <None Remove="wwwroot\Scripts\CustomElsa.js" />
     <None Remove="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
@@ -65,10 +65,10 @@
     <None Remove="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
     <None Remove="wwwroot\Scripts\Drivers\TextGroupDriver.js" />
     <None Remove="wwwroot\Scripts\Plugins\CustomPlugins.js" />
-    <None Remove="src\components\custom-input-property.tsx" />
-    <None Remove="src\components\custom-outcome-property.tsx" />
-    <None Remove="src\components\custom_outcome_list_property.tsx" />
-    <None Remove="src\models\activity-provider.ts" />
+    <None Remove="customSrc\src\components\custom-input-property.tsx" />
+    <None Remove="customSrc\src\components\custom-outcome-property.tsx" />
+    <None Remove="customSrc\src\components\custom_outcome_list_property.tsx" />
+    <None Remove="customSrc\src\models\activity-provider.ts" />
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\styles\assets\fonts\Roboto\LICENSE.txt" />
@@ -98,44 +98,44 @@
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\components\common-properties\he-validation-property.tsx" />
-    <TypeScriptCompile Include="src\components\display-toggle-component.ts">
+    <TypeScriptCompile Include="customSrc\src\components\common-properties\he-validation-property.tsx" />
+    <TypeScriptCompile Include="customSrc\src\components\display-toggle-component.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\components\common-properties\he-text-activity-property.tsx" />
-    <TypeScriptCompile Include="src\components\common-properties\nested-properties\nested-property-list.tsx" />
-    <TypeScriptCompile Include="src\components\base-component.ts" />
-    <TypeScriptCompile Include="src\components\editors\he-monaco\he-monaco-utils.ts" />
-    <TypeScriptCompile Include="src\nested-drivers\he-numeric-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-validation-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-text-group-driver.tsx" />
-    <TypeScriptCompile Include="src\utils\intellisenseGatherer.ts" />
-    <TypeScriptCompile Include="src\functions\multiExpressionEditorUpdate.tsx">
+    <TypeScriptCompile Include="customSrc\src\components\common-properties\he-text-activity-property.tsx" />
+    <TypeScriptCompile Include="customSrc\src\components\common-properties\nested-properties\nested-property-list.tsx" />
+    <TypeScriptCompile Include="customSrc\src\components\base-component.ts" />
+    <TypeScriptCompile Include="customSrc\src\components\editors\he-monaco\he-monaco-utils.ts" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-numeric-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-validation-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-text-group-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\utils\intellisenseGatherer.ts" />
+    <TypeScriptCompile Include="customSrc\src\functions\multiExpressionEditorUpdate.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\functions\updateModel.tsx">
+    <TypeScriptCompile Include="customSrc\src\functions\updateModel.tsx">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Include="src\functions\display-toggle.tsx" />
-    <TypeScriptCompile Include="src\models\StoreConfig.ts" />
-    <TypeScriptCompile Include="src\nested-drivers\he-data-table-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-text-activity-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-checkbox-options-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-script-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-radio-list-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-multi-text-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-multi-line-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-json-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-dropdown-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-dictionary-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-cron-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-check-list-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-single-line-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-checkbox-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-radio-options-driver.tsx" />
-    <TypeScriptCompile Include="src\nested-drivers\he-switch-cases-driver.tsx" />
-    <TypeScriptCompile Include="src\constants\constants.ts" />
-    <TypeScriptCompile Include="src\nested-drivers\display-managers\display-manager.ts" />
+    <TypeScriptCompile Include="customSrc\src\functions\display-toggle.tsx" />
+    <TypeScriptCompile Include="customSrc\src\models\StoreConfig.ts" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-data-table-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-text-activity-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-checkbox-options-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-script-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-radio-list-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-multi-text-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-multi-line-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-json-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-dropdown-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-dictionary-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-cron-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-check-list-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-single-line-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-checkbox-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-radio-options-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\he-switch-cases-driver.tsx" />
+    <TypeScriptCompile Include="customSrc\src\constants\constants.ts" />
+    <TypeScriptCompile Include="customSrc\src\nested-drivers\display-managers\display-manager.ts" />
     <TypeScriptCompile Include="wwwroot\Scripts\CustomElsa.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\ConditionalTextListPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\CustomSwitchPropertyDriver.js" />
@@ -144,10 +144,9 @@
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\TextActivityPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Drivers\QuestionPropertyDriver.js" />
     <TypeScriptCompile Include="wwwroot\Scripts\Plugins\CustomPlugins.js" />
-    <TypeScriptCompile Include="src\components\providers\question-provider\question-provider.tsx" />
+    <TypeScriptCompile Include="customSrc\src\components\providers\question-provider\question-provider.tsx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\http-clients\" />
     <Folder Include="www\" />
     <Folder Include="Views\" />
   </ItemGroup>
