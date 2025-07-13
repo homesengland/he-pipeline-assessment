@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges } from '@angular/core';
+import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
@@ -16,6 +16,8 @@ export class SwitchCaseProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
+  @ViewChild('multiExpressionEditor') multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  // multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   cases: Array<SwitchCase> = [];
 
   //// Correctly assigning values to cases at declaration time
@@ -41,7 +43,6 @@ export class SwitchCaseProperty {
   valueChange: EventEmitter<Array<any>>;
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
-  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
 
 
@@ -49,22 +50,23 @@ export class SwitchCaseProperty {
   //defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
   //isEncypted = model<boolean>(false);
   //currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax()] || '');
-  //fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');
+  // fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');
   //fieldName = computed(() => this.propertyDescriptor()?.name ?? 'default');
   //isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
 
 
-  /* This was already commented out by Cameron */
-  // context: IntellisenseContext = {
-  //   activityTypeName: this.activityModel().type,
-  //   propertyName: this.propertyDescriptor().name
-  // };
+  /* This could be commented out as it might not be used */
+   context: IntellisenseContext = {
+     activityTypeName: this.activityModel().type,
+     propertyName: this.propertyDescriptor().name
+   };
 
   expressions = computed(() => {
     const model = this.propertyModel();
     return model?.expressions ? { ...model.expressions } : {};
   });
-  Json: any;
+
+  json: any;
   activityIconProvider: any;
 
   constructor(activityIconProvider: ActivityIconProvider) {
@@ -104,15 +106,9 @@ export class SwitchCaseProperty {
     this.updatePropertyModel();
   }
 
-  //// original
-  //onCaseExpressionChanged(e: Event, switchCase: SwitchCase) {
-  //  const detail = (e as CustomEvent<string>).detail;
-  //  switchCase.expressions[switchCase.syntax] = detail;
-  //  this.updatePropertyModel();
-  //}
-
-  onCaseExpressionChanged(e: CustomEvent<string>, switchCase: SwitchCase) {
-    switchCase.expressions[switchCase.syntax] = e.detail;
+  onCaseExpressionChanged(e: Event, switchCase: SwitchCase) {
+    const detail = (e as CustomEvent<string>).detail;
+    switchCase.expressions[switchCase.syntax] = detail;
     this.updatePropertyModel();
   }
 
@@ -123,25 +119,9 @@ export class SwitchCaseProperty {
     this.updatePropertyModel();
   }
 
-  //// original
-  //onMultiExpressionEditorValueChanged(e: Event) {
-  //  const detail = (e as CustomEvent<string>).detail;
-  //  const json = detail;
-  //  const parsed = parseJson(json);
-
-  //  if (!parsed)
-  //    return;
-
-  //  if (!Array.isArray(parsed))
-  //    return;
-
-  //  this.propertyModel().expressions['Switch'] = json;
-  //  this.cases = parsed;
-
-  //}
-
-  onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
-    const json = e.detail;
+  onMultiExpressionEditorValueChanged(e: Event) {
+    const detail = (e as CustomEvent<string>).detail;
+    const json = detail;
     const parsed = parseJson(json);
 
     if (!parsed)
@@ -154,13 +134,8 @@ export class SwitchCaseProperty {
     this.cases = parsed;
 
   }
-
-  //// original
-  //onMultiExpressionEditorSyntaxChanged(e: Event) {
-  //  this.syntaxSwitchCount++;
-  //}
-
-  onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
+  
+  onMultiExpressionEditorSyntaxChanged(e: Event) {
     this.syntaxSwitchCount++;
   }
 

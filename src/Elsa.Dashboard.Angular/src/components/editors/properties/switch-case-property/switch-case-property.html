@@ -1,14 +1,11 @@
-﻿<property-editor
-  [(activityModel)]="activityModel"
-  [(propertyDescriptor)]="propertyDescriptor"
-  [(propertyModel)]="propertyModel"
->
 <div>
   <elsa-multi-expression-editor 
+    #multiExpressionEditor
     [label]="propertyDescriptor().label"
     [defultSyntax]="propertyDescriptor().defaultSyntax"
     [supportedSyntaxes]="propertyDescriptor().supportedSyntaxes"
-    [expressions]="expressions()"
+    context={context}
+    [expressions]="{ Json: json }"
     editor-height="20rem"
     (onExpressionChanged)="onMultiExpressionEditorValueChanged($event)"
     (onSyntaxChanged)="onMultiExpressionEditorSyntaxChanged($event)"
@@ -80,8 +77,5 @@
     </button>
   </elsa-multi-expression-editor>
 
-
-
-
 </div>
-</property-editor>
+
