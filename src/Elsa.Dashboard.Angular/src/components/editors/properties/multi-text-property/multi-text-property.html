@@ -1,27 +1,23 @@
+text-property/multi-text-property.html
 <property-editor
   [(activityModel)]="activityModel"
   [(propertyDescriptor)]="propertyDescriptor"
   [(propertyModel)]="propertyModel"
-  (onDefaultSyntaxValueChanged)="this.onDefaultSyntaxValueChanged($defaultSyntaxEvent)"
-  single-line="true"
+  (defaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
+  [singleLineMode]="true"
   [showLabel]="false"
 >
   <ng-container *ngIf="useDropdown; else tagsInput">
-    <ng-container *ngFor="let item of getSelectItems()">
-      <elsa-input-tags-dropdown
-        [dropdownValues]="propertyOptions"
-        [values]="item.value"
-        [fieldId]="propertyDescriptor().name"
-        [fieldName]="propertyDescriptor().name"
-        (valueChanged)="onValueChanged($event)"
-      >
-      </elsa-input-tags-dropdown>
-    </ng-container>
+    <input-tags-dropdown
+      [dropdownValues]="propertyOptions"
+      [values]="getSelectItems()"
+      [fieldId]="propertyDescriptor().name"
+      [fieldName]="propertyDescriptor().name"
+      (valueChanged)="onValueChanged($event)"
+    >
+    </input-tags-dropdown>
   </ng-container>
   <ng-template #tagsInput>
-    <ng-container *ngFor="let item of getSelectItems()">
-      <elsa-input-tags [value]="item.value" [fieldId]="propertyDescriptor().name" [fieldName]="propertyDescriptor().name" (valueChanged)="onValueChanged($event)">
-      </elsa-input-tags>
-    </ng-container>
+    <input-tags [values]="getSelectItems()" [fieldId]="propertyDescriptor().name" [fieldName]="propertyDescriptor().name" (valueChanged)="onValueChanged($event)"> </input-tags>
   </ng-template>
 </property-editor>
