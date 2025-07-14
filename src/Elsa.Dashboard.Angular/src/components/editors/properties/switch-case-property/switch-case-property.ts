@@ -16,8 +16,10 @@ export class SwitchCaseProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
+
   @ViewChild('multiExpressionEditor') multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   // multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+
   cases: Array<SwitchCase> = [];
 
   //// Correctly assigning values to cases at declaration time
