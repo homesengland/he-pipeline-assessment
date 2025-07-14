@@ -5,7 +5,7 @@
     [defultSyntax]="propertyDescriptor().defaultSyntax"
     [supportedSyntaxes]="propertyDescriptor().supportedSyntaxes"
     context={context}
-    [expressions]="propertyModel().expressions"
+    [expressions]="{ Json: json }"
     editor-height="20rem"
     (onExpressionChanged)="onMultiExpressionEditorValueChanged($event)"
     (onSyntaxChanged)="onMultiExpressionEditorSyntaxChanged($event)"

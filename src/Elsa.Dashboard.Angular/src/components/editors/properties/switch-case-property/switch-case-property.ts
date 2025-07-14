@@ -57,11 +57,11 @@ export class SwitchCaseProperty {
   //isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
 
 
-  /* This could be commented out as it might not be used */
-   context: IntellisenseContext = {
-     activityTypeName: this.activityModel().type,
-     propertyName: this.propertyDescriptor().name
-   };
+  ///* Below code commented out as it causes problems when setting the following code line in the multi-expression-editor: context={context} */
+  // context: IntellisenseContext = {
+  //   activityTypeName: this.activityModel().type,
+  //   propertyName: this.propertyDescriptor().name
+  // };
 
   expressions = computed(() => {
     const model = this.propertyModel();
