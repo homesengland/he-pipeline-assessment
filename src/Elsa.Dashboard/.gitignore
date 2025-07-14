@@ -2,6 +2,10 @@ dist/
 www/
 loader/
 
+**/wwwroot/elsa-workflows-studio
+**/wwwroot/monaco-editor/
+**/wwwroot/elsa-workflows.js
+
 *~
 *.sw[mnpcod]
 *.log

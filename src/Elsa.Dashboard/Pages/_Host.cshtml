@@ -14,10 +14,10 @@
 
 }
 <!DOCTYPE html>
-    <link rel="icon" type="image/png" sizes="32x32" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/images/favicon-16x16.png">
-    <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/assets/fonts/inter/inter.css">
-    <link rel="stylesheet" href="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/elsa-workflows-studio/assets/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/elsa-workflows-studio/assets/images/favicon-16x16.png">
+    <link rel="stylesheet" href="/elsa-workflows-studio/assets/fonts/inter/inter.css">
+    <link rel="stylesheet" href="/elsa-workflows-studio/elsa-workflows-studio.css">
 
     <script nonce="@nonceConfig.ElsaSetup" type="importmap">
         {
@@ -29,15 +29,15 @@
 
     <div class="" style="margin-left:0; margin-right:0;">
         <he-dashboard store-config="@Model.StoreConfig" data-dictionary="@Model.DictionaryResponse">
-            <elsa-studio-root server-url="@serverUrl" monaco-lib-path="_content/Elsa.Designer.Components.Web/monaco-editor/min">
+            <elsa-studio-root server-url="@serverUrl" monaco-lib-path="/monaco-editor/min">
                 <elsa-studio-dashboard></elsa-studio-dashboard>
             </elsa-studio-root>
         </he-dashboard>
     </div>
 
     @section Scripts {
-<script nonce="@nonceConfig.ElsaSetup" src="/_content/Elsa.Designer.Components.Web/monaco-editor/min/vs/loader.js"></script>
-<script nonce="@nonceConfig.ElsaSetup" type="module" src="/_content/Elsa.Designer.Components.Web/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
+<script nonce="@nonceConfig.ElsaSetup" src="/monaco-editor/min/vs/loader.js"></script>
+<script nonce="@nonceConfig.ElsaSetup" type="module" src="/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
 <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/build/custom-elsa.esm.js"></script>
 <script nonce="@nonceConfig.ElsaSetup" type="module" src="/Scripts/CustomElsa.js"></script>
 

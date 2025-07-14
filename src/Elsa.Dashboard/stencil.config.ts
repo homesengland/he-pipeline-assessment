@@ -35,6 +35,7 @@ export const config: Config = {
     },
     {
       type: 'www',
+      dir: 'dist',
       serviceWorker: null, // disable service workers,
       copy: [
         {src: 'assets', dest: 'build/assets'},
