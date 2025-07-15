@@ -141,14 +141,17 @@ export class SwitchCaseProperty {
     this.syntaxSwitchCount++;
   }
 
-  getCases():any {
-    return this.cases.map((switchCase, index) => {
+  getCases(): any {
+    return this.cases.map((switchCase: SwitchCase, index: number) => {
+      let expressionEditor = null;
+
       console.log("Index:", index);
       console.log("Name:", switchCase.name);
       console.log("Expressions:", switchCase.expressions);
       console.log("Expression:", switchCase.expressions[switchCase.syntax]);
       console.log("syntax:", switchCase.syntax);
       console.log("monacoLanguage:", mapSyntaxToLanguage(switchCase.syntax));
+
       return {
         index: index,
         expression: switchCase.expressions[switchCase.syntax],
@@ -160,4 +163,7 @@ export class SwitchCaseProperty {
       };
     });
   }
+
+  
+
 }
