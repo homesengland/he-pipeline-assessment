@@ -28,7 +28,7 @@
       </thead>
       <tbody>
         <ng-container *ngFor="let case of getCases()">
-        <tr>
+        <tr key={`case-${case.index}`}>
           <td class="elsa-py-2 elsa-pr-5">
             <input type="text" [value]="case.name" (onChange)="onCaseNameChanged($event, case)"
               class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
@@ -36,6 +36,8 @@
           <td class="elsa-py-2 pl-5">
             <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
             <expression-editor
+              key={`expression-editor-${case.index}-${this.syntaxSwitchCount}`}
+              #expressionEditor
               [expression]="case.expression[case.syntax]"
               [syntax]="case.syntax"
               [language]="case.monacoLanguage"

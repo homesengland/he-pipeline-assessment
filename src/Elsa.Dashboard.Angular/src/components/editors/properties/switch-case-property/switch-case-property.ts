@@ -18,7 +18,7 @@ export class SwitchCaseProperty {
   propertyModel = model<ActivityDefinitionProperty>();
 
   @ViewChild('multiExpressionEditor') multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
-  // multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  @ViewChild('expressionEditor') expressionEditor: HTMLElsaExpressionEditorElement;
 
   cases: Array<SwitchCase> = [];
 
@@ -163,7 +163,4 @@ export class SwitchCaseProperty {
       };
     });
   }
-
-  
-
 }
