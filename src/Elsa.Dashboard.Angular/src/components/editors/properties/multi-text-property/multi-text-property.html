@@ -5,11 +5,10 @@ text-property/multi-text-property.html
   [(propertyModel)]="propertyModel"
   (defaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
   [singleLineMode]="true"
-  [showLabel]="false"
 >
-  <ng-container *ngIf="useDropdown; else tagsInput">
+  <ng-container *ngIf="useDropdown()">
     <input-tags-dropdown
-      [dropdownValues]="propertyOptions"
+      [dropdownValues]="getPropertyOptions()"
       [values]="getSelectItems()"
       [fieldId]="propertyDescriptor().name"
       [fieldName]="propertyDescriptor().name"
@@ -17,7 +16,14 @@ text-property/multi-text-property.html
     >
     </input-tags-dropdown>
   </ng-container>
-  <ng-template #tagsInput>
-    <input-tags [values]="getSelectItems()" [fieldId]="propertyDescriptor().name" [fieldName]="propertyDescriptor().name" (valueChanged)="onValueChanged($event)"> </input-tags>
-  </ng-template>
+
+  <ng-container *ngIf="!useDropdown()">
+    <input-tags-dropdown
+      [values]="getSelectItems()"
+      [fieldId]="propertyDescriptor().name"
+      [fieldName]="propertyDescriptor().name"
+      (valueChanged)="onValueChanged($event)"
+    >
+    </input-tags-dropdown>
+  </ng-container>
 </property-editor>
