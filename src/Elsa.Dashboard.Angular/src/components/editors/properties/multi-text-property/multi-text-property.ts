@@ -1,6 +1,9 @@
 import { Component, EventEmitter, model, OnInit } from '@angular/core';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SelectList, SelectListItem, SyntaxNames } from 'src/models';
 import { PropertyEditor } from '../../property-editor/property-editor';
+import { ElsaClientService } from 'src/services/elsa-client';
+import { Store } from '@ngrx/store';
+import { getSelectListItems } from 'src/utils/selected-list-items';
 
 @Component({
   selector: 'multi-text-property',
@@ -20,12 +23,14 @@ export class MultiTextProperty implements OnInit {
     isFlagsEnum: false,
   };
 
-  constructor() {
+  constructor(private elsaClientService: ElsaClientService, private store: Store) {
     console.log('MultiTextProperty component initialized');
   }
 
   async ngOnInit(): Promise<void> {
     this.currentValue = this.propertyModel().expressions['Json'] || '[]';
+
+    this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
   }
 
   onValueChanged(values: Array<string | number | boolean | SelectListItem>) {
@@ -47,7 +52,7 @@ export class MultiTextProperty implements OnInit {
 
   createKeyValueOptions(options: Array<SelectListItem>) {
     if (options === null) return options;
-    return options.map(option => (typeof option === 'string' ? { text: option, value: option } : option));
+    return options.map(option => typeof option === 'string' ? { text: option, value: option } : option);
   }
 
   getSelectItems(): any {
