@@ -35,19 +35,7 @@
     <Compile Remove="RequestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Extensions\RequestHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="wwwroot\Scripts\Constants\CustomComponentTags.js" />
-    <None Include="wwwroot\Scripts\Constants\CustomPropertyUiHints.js" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    
-    <Folder Include="www\" />
-    <Folder Include="Views\" />
   </ItemGroup>
 </Project>
