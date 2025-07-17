@@ -21,6 +21,7 @@ export class WorkflowPlaceholder implements OnInit {
   dropDownActivityModel = signal<ActivityModel | null>(null);
   checkListActivityModel = signal<ActivityModel | null>(null);
   radioListActivityModel = signal<ActivityModel | null>(null);
+  multiTextActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
   intellisenseGatherer: IntellisenseService;
@@ -51,8 +52,9 @@ export class WorkflowPlaceholder implements OnInit {
     this.checkboxActivityModel.set(this.getCheckboxModel());
     this.jsonActivityModel.set(this.getJsonModel());
     this.dropDownActivityModel.set(this.getDropDownModel());
+    this.checkListActivityModel.set(this.getCheckListModel());
     this.radioListActivityModel.set(this.getRadioListModel());
-    this.checkListActivityModel.set(this.getDropDownModel());
+    this.multiTextActivityModel.set(this.getMultiTextModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
     const checkboxDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckboxDescriptor());
@@ -60,6 +62,7 @@ export class WorkflowPlaceholder implements OnInit {
     const dropdownDescriptor = signal<ActivityPropertyDescriptor>(this.getDropDownDescriptor());
     const checkListDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckListDescriptor());
     const radioListDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioListDescriptor());
+    const multiTextDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiTextDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);
     this.activityProperties.push(checkboxDescriptor);
@@ -67,6 +70,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.activityProperties.push(dropdownDescriptor);
     this.activityProperties.push(checkListDescriptor);
     this.activityProperties.push(radioListDescriptor);
+    this.activityProperties.push(multiTextDescriptor);
   }
 
   async ngOnInit() {
@@ -512,6 +516,69 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getMultiTextModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '',
+      type: 'MultiText',
+      name: 'TestMultiText',
+      displayName: 'Test Multi Text',
+      description: 'A Stub activity to display a multitext property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getDropDownDefinition());
+    return model;
+  }
+
+  getMultiTextDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestMultiText',
+      expressions: {
+        Json: '[]',
+      },
+      type: '',
+    };
+    return model;
+  }
+
+  getMultiTextDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: [],
+      expectedOutputType: 'string',
+      hasNestedProperties: false,
+      hasColletedProperties: false,
+      name: 'TestMultiText',
+      type: 'System.String',
+      uiHint: 'multi-text',
+      label: 'Test Label',
+      hint: 'Test Hint',
+      options: {
+        items: [
+          { text: 'Option 4', value: '4' },
+          { text: 'Option 5', value: '5' },
+          { text: 'Option 6', value: '6' },
+        ],
+        isFlagsEnum: false,
+      },
+      order: 0,
+      defaultValue: ['4'],
+      supportedSyntaxes: [],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+      defaultSyntax: 'Json',
+    };
+    return model;
+  }
+
   getActivityModel(activityType: string): Signal<ActivityModel> {
     switch (activityType) {
       case 'single-line':
@@ -528,6 +595,8 @@ export class WorkflowPlaceholder implements OnInit {
         return this.checkListActivityModel;
       case 'radio-list':
         return this.radioListActivityModel;
+      case 'multi-text':
+        return this.multiTextActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);
     }

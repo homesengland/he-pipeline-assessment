@@ -10,6 +10,7 @@ import { JsonDriver } from 'src/drivers/json-driver';
 import { DropDownDriver } from 'src/drivers/drop-down-driver';
 import { CheckListDriver } from 'src/drivers/check-list-driver';
 import { RadioListDriver } from 'src/drivers/radio-list-driver';
+import { MultiTextDriver } from 'src/drivers/multi-text-driver';
 
 export class DefaultDriversPlugin implements WorkflowPlugin {
   constructor() {
@@ -20,6 +21,7 @@ export class DefaultDriversPlugin implements WorkflowPlugin {
     this.addDriver('dropdown', () => new DropDownDriver());
     this.addDriver('check-list', () => new CheckListDriver());
     this.addDriver('radio-list', () => new RadioListDriver());
+    this.addDriver('multi-text', () => new MultiTextDriver());
   }
 
   addDriver<T extends PropertyDisplayDriver>(controlType: string, c: (workflowStudio: WorkflowStudio) => T) {

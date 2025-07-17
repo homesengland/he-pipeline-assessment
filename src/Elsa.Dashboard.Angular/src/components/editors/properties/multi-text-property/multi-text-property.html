@@ -1,15 +1,14 @@
-text-property/multi-text-property.html
 <property-editor
   [(activityModel)]="activityModel"
   [(propertyDescriptor)]="propertyDescriptor"
   [(propertyModel)]="propertyModel"
-  (defaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
+  (onDefaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
   [singleLineMode]="true"
   [showLabel]="false"
 >
   <ng-container *ngIf="useDropdown; else tagsInput">
     <input-tags-dropdown
-      [dropdownValues]="propertyOptions"
+      [dropdownValues]="getPropertyOptions"
       [values]="getSelectItems()"
       [fieldId]="propertyDescriptor().name"
       [fieldName]="propertyDescriptor().name"
