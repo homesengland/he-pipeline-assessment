@@ -48,6 +48,7 @@ import { JsonProperty } from './components/editors/properties/json-property/json
 import { DropDownProperty } from './components/editors/properties/drop-down-property/drop-down-property';
 import { CheckListProperty } from './components/editors/properties/check-list-property/check-list-property';
 import { RadioListProperty } from './components/editors/properties/radio-list-property/radio-list-property';
+import { MultiTextProperty } from './components/editors/properties/multi-text-property/multi-text-property';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { RadioListProperty } from './components/editors/properties/radio-list-pr
     JsonProperty,
     DropDownProperty,
     CheckListProperty,
-    RadioListProperty
+    RadioListProperty,
+    MultiTextProperty
   ],
   imports: [
     routing,
