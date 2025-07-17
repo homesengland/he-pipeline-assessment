@@ -1,0 +1,20 @@
+<div class="elsa-py-2 elsa-px-3 elsa-bg-white elsa-shadow-sm elsa-border elsa-border-gray-300 elsa-rounded-md">
+  <a
+    *ngFor="let value of currentValues"
+    href="#"
+    (click)="onDeleteTagClick($event, value)"
+    class="elsa-inline-block elsa-text-xs elsa-bg-blue-400 elsa-text-white elsa-py-2 elsa-px-3 elsa-mr-1 elsa-mb-1 elsa-rounded"
+  >
+    <span>{{ value }}</span>
+    <span class="elsa-text-white hover:elsa-text-white elsa-ml-1">&times;</span>
+  </a>
+  <input
+    type="text"
+    [id]="fieldId"
+    (keydown)="onInputKeyDown($event)"
+    (blur)="onInputBlur($event)"
+    class="elsa-tag-input elsa-inline-block elsa-text-sm elsa-outline-none focus:elsa-outline-none elsa-border-none shadow:none focus:elsa-border-none focus:elsa-border-transparent focus:shadow-none"
+    [placeholder]="placeHolder"
+  />
+  <input type="hidden" [name]="fieldName" [value]="currentValues | json" />
+</div>
