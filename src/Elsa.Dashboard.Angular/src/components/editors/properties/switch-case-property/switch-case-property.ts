@@ -19,26 +19,29 @@ export class SwitchCaseProperty {
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
   @ViewChild('multiExpressionEditor') multiExpressionEditor;
+  @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
 
   cases: Array<SwitchCase> = [];
   valueChange: EventEmitter<Array<any>>;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
-  //multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
+    
 
 
-
-  defaultSyntax = computed(() => this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Literal);
+  defaultSyntax = SyntaxNames.Json
   isEncypted = model<boolean>(false);
-  currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax()] || '');
+  currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax] || '');
   fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');
   fieldName = computed(() => this.propertyDescriptor()?.name ?? 'default');
   isReadOnly = computed(() => this.propertyDescriptor()?.isReadOnly ?? false);
-  monacoLanguage = computed(() => mapSyntaxToLanguage(this.defaultSyntax()));
-  // context: IntellisenseContext = {
-  //   activityTypeName: this.activityModel().type,
-  //   propertyName: this.propertyDescriptor().name
-  // };
+  monacoLanguage = computed(() => mapSyntaxToLanguage(this.defaultSyntax));
+  multiExpressionEditorExpressions = {Json: SyntaxNames.Json};
+
+  context: IntellisenseContext = {
+      activityTypeName: null,
+      propertyName: null
+    };
+
    expressions = computed(() => {
      const model = this.propertyModel();
      return model?.expressions ?? {};
@@ -56,13 +59,14 @@ export class SwitchCaseProperty {
     const propertyModel = this.propertyModel;
     const casesJson = propertyModel().expressions['Switch']
     this.cases = parseJson(casesJson) || [];
-    //this.expressions = propertyModel().expressions;
+    this.context.activityTypeName = this.activityModel()?.type;
+    this.context.propertyName = this.propertyDescriptor()?.name;
     
   }
 
   updatePropertyModel() {
     this.propertyModel().expressions['Switch'] = JSON.stringify(this.cases);
-    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
+    this.multiExpressionEditor.nativeElement.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -71,7 +75,7 @@ export class SwitchCaseProperty {
 
   onAddCaseClick() {
     const caseName = `Case ${this.cases.length + 1}`;
-    const newCase = {name: caseName, syntax: SyntaxNames.JavaScript, expressions: {[SyntaxNames.JavaScript]: 'test'}};
+    const newCase = {name: caseName, syntax: SyntaxNames.JavaScript, expressions: {[SyntaxNames.JavaScript]: ''}};
     this.cases = [...this.cases, newCase];
     this.updatePropertyModel();
   }
@@ -87,11 +91,11 @@ export class SwitchCaseProperty {
   }
 
   onCaseExpressionChanged(newValue: string, switchCase: SwitchCase) {
-    // switchCase.expressions[switchCase.syntax] = newValue;
-    // this.updatePropertyModel();
+     switchCase.expressions[switchCase.syntax] = newValue;
+     this.updatePropertyModel();
   }
 
-  onCaseSyntaxChanged(e: Event, switchCase: SwitchCase, expressionEditor: HTMLElsaExpressionEditorElement) {
+  onCaseSyntaxChanged(e: Event, switchCase: SwitchCase, expressionEditor: ExpressionEditor) {
     const select = e.currentTarget as HTMLSelectElement;
     switchCase.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
@@ -116,23 +120,5 @@ export class SwitchCaseProperty {
 
   onMultiExpressionEditorSyntaxChanged(e: Event) {
     this.syntaxSwitchCount++;
-  }
-
-  getCases():any {
-    return this.cases.map((switchCase, index) => {
-      console.log("Index:", index);
-      console.log("Name:", switchCase.name);
-      console.log("Expressions:", switchCase.expressions);
-      console.log("Expression:", switchCase.expressions[switchCase.syntax]);
-      console.log("syntax:", switchCase.syntax);
-      console.log("monacoLanguage:", mapSyntaxToLanguage(switchCase.syntax));
-      return {
-        index: index,
-        expression: "test",
-        syntax: "JavaScript",
-        monacoLanguage: "JavaScript",
-        name: switchCase.name
-      };
-    });
   }
 }

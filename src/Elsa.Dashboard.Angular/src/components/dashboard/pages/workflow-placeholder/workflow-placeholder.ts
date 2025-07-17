@@ -536,13 +536,13 @@ export class WorkflowPlaceholder implements OnInit {
 
   getSwitchCaseDefinition(): ActivityDefinitionProperty {
     const model: ActivityDefinitionProperty = {
-      syntax: undefined,
+      syntax: 'Javascript',
       value: 'string',
       name: 'TestSwitchCase',
       expressions: {
-        JavaScript: 'console.log("Hello Switch Case")'
+        Switch: '[{"name": "Case 1", "expressions": {"Javascript" : "JS Test"}, "syntax": "Javascript"}]'
       },
-      type: '',
+      type: 'Javascript',
     };
     return model;
   }
