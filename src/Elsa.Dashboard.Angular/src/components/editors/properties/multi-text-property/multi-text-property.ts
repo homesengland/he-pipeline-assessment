@@ -36,7 +36,33 @@ export class MultiTextProperty implements OnInit {
     this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
   }
 
-  onValueChanged(values: Array<string | number | boolean | SelectListItem>) {
+  //// original
+  //onValueChanged(values: Array<string | number | boolean | SelectListItem>) {
+  //  const newValues = values.map(item => {
+  //    if (typeof item === 'string') return item;
+  //    if (typeof item === 'number') return item.toString();
+  //    if (typeof item === 'boolean') return item.toString();
+  //    return item.value;
+  //  });
+
+  //  this.valueChange.emit(values);
+  //  this.currentValue = JSON.stringify(newValues);
+  //  this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue;
+  //}
+
+  // maf
+  onValueChanged(event: any) {
+
+    let values: Array<string | number | boolean | SelectListItem> = [];
+
+    if (event instanceof CustomEvent) {
+      values = event.detail;
+    } else if (Array.isArray(event)) {
+      values = event;
+    } else if (event && event.target && event.target.value) {
+      values = [event.target.value];
+    }
+
     const newValues = values.map(item => {
       if (typeof item === 'string') return item;
       if (typeof item === 'number') return item.toString();
@@ -49,13 +75,14 @@ export class MultiTextProperty implements OnInit {
     this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue;
   }
 
-  //// Aaron
+  //// original
   //onDefaultSyntaxValueChanged(event: CustomEvent<string>) {
   //  this.currentValue = event.detail;
   //}
 
-  onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.currentValue = e.detail;
+  // maf
+  onDefaultSyntaxValueChanged(e: Event) {
+    this.currentValue = (e as CustomEvent<string>).detail
   }
 
   createKeyValueOptions(options: Array<SelectListItem>) {
