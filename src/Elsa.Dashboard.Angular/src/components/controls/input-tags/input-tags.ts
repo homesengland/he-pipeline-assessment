@@ -2,7 +2,9 @@ import { Component, EventEmitter, Input, Output, signal, Signal } from '@angular
 
 @Component({
   selector: 'input-tags',
-  templateUrl: 'input-tags.css',
+  //templateUrl: 'input-tags.css',
+  templateUrl: './input-tags.html',
+  styleUrl: './input-tags.css',
   standalone: false,
 })
 export class InputTags {
