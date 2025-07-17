@@ -1,0 +1,22 @@
+<div class="elsa-py-2 elsa-px-3 elsa-bg-white elsa-shadow-sm elsa-border elsa-border-gray-300 elsa-rounded-md">
+  <a
+    *ngFor="let tag of currentValues"
+    href="#"
+    (click)="onDeleteTagClick($event, tag)"
+    class="elsa-inline-block elsa-text-xs elsa-bg-blue-400 elsa-text-white elsa-py-2 elsa-px-3 elsa-mr-1 elsa-mb-1 rounded"
+  >
+    <input type="hidden" [value]="tag.value" />
+    <span>{{ tag.text }}</span>
+    <span class="elsa-text-white hover:elsa-text-white elsa-ml-1">&times;</span>
+  </a>
+
+  <select
+    [id]="fieldId"
+    class="elsa-inline-block elsa-text-xs elsa-py-2 elsa-px-3 elsa-mr-1 elsa-mb-1 elsa-pr-8 elsa-border-gray-300 focus:elsa-outline-none focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-rounded"
+    (change)="onTagSelected($event)"
+  >
+    <option value="Add" disabled selected>{{ placeHolder }}</option>
+    <option *ngFor="let tag of dropdownItems" [value]="tag.value">{{ tag.text }}</option>
+  </select>
+  <input type="hidden" [name]="fieldName" [value]="valuesJson" />
+</div>
