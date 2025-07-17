@@ -560,14 +560,14 @@ export class WorkflowPlaceholder implements OnInit {
       hint: 'Test Hint',
       options: {
         items: [
-          { text: 'Option 4', value: '4' },
-          { text: 'Option 5', value: '5' },
-          { text: 'Option 6', value: '6' },
+          { text: 'Option 4', value: '1234' },
+          { text: 'Option 5', value: '56' },
+          { text: 'Option 6', value: '7' },
         ],
         isFlagsEnum: false,
       },
       order: 0,
-      defaultValue: ['4'],
+      defaultValue: null,
       supportedSyntaxes: [],
       isReadOnly: false,
       isBrowsable: true,

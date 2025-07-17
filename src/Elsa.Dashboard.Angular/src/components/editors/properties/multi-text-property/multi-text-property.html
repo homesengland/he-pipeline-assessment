@@ -5,7 +5,6 @@ text-property/multi-text-property.html
   [(propertyModel)]="propertyModel"
   (onDefaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
   [singleLineMode]="true"
-  [showLabel]="false"
 >
   <ng-container *ngIf="useDropdown; else tagsInput">
     <input-tags-dropdown
