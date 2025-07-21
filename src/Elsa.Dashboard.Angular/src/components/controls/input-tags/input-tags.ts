@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, Signal } from '@angular/core';
+import { Component, EventEmitter, Output, signal, Signal, input, output } from '@angular/core';
 
 @Component({
   selector: 'input-tags',
@@ -8,15 +8,22 @@ import { Component, EventEmitter, Input, Output, signal, Signal } from '@angular
   standalone: false,
 })
 export class InputTags {
-  @Input() fieldName?: string;
-  @Input() fieldId?: string;
-  @Input() placeHolder: string = 'Add tag';
-  @Input() set values(val: string[] | undefined) {
-    this.currentValues = val ?? [];
-  }
-  @Output() valueChanged = new EventEmitter<string[]>();
+  //@Input() fieldName?: string;
+  //@Input() fieldId?: string;
+  //@Input() placeHolder: string = 'Add tag';
+  //@Input() set values(val: string[] | undefined) {
+  //  this.currentValues = val ?? [];
+  //}
+  //@Output() valueChanged = new EventEmitter<string[]>();
 
+  //currentValues: string[] = [];
+
+  fieldName = input<string>(null);
+  fieldId = input<string>(null);
+  placeHolder: string = 'Add tag';
+  valueChanged = output<string[]>();
   currentValues: string[] = [];
+
 
   addItem(item: string) {
     const values = [...this.currentValues, item].filter((v, i, arr) => arr.indexOf(v) === i);
