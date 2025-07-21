@@ -7,12 +7,12 @@ import { SelectListItem } from 'src/models';
   standalone: false,
 })
 export class InputTagsDropdown {
-  @Input() fieldName?: string;
-  @Input() fieldId?: string;
-  @Input() placeHolder: string = 'Add tag';
-  @Input() values: Array<string | SelectListItem> = [];
-  @Input() dropdownValues: Array<SelectListItem> = [];
-  @Output() valueChanged = new EventEmitter<Array<SelectListItem>>();
+  fieldName?: string;
+  fieldId?: string;
+  placeHolder: string = 'Add tag';
+  values: Array<string | SelectListItem> = [];
+  dropdownValues: Array<SelectListItem> = [];
+  valueChanged = new EventEmitter<Array<SelectListItem>>();
 
   currentValues: Array<SelectListItem> = [];
 
