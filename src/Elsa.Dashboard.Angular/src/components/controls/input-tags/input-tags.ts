@@ -1,5 +1,5 @@
 import { Component, computed, model, EventEmitter, Output, signal, Signal, input, output, OnChanges, SimpleChanges } from '@angular/core';
-import { ActivityPropertyDescriptor } from '../../../models/domain';
+// import { ActivityPropertyDescriptor } from '../../../models/domain';
 
 @Component({
   selector: 'input-tags',
@@ -8,14 +8,13 @@ import { ActivityPropertyDescriptor } from '../../../models/domain';
   standalone: false,
 })
 export class InputTags {
-  propertyDescriptor = model<ActivityPropertyDescriptor>();
-  fieldName = computed(() => this.propertyDescriptor()?.name || 'default');
-  fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
+  fieldName = input<string>(null);
+  fieldId = input<string>(null);
   placeHolder: string = 'Add tag';
   values: Array<string> = [];
   valueChanged = output<string[]>();
   currentValues?: Array<string> = [];
-  // values = this.currentValues || [];
+  valuesJson: string = null;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['values']) {
@@ -29,6 +28,13 @@ export class InputTags {
 
   async ngOnInit(): Promise<void> {
     this.currentValues = this.values;
+
+    this.values = this.currentValues || [];
+
+    if (!Array.isArray(this.values))
+      this.values = [];
+
+    this.valuesJson = JSON.stringify(this.values);
   }
 
   addItem(item: string): void {
@@ -37,13 +43,13 @@ export class InputTags {
     this.valueChanged.emit(this.currentValues);
   }
 
-  onInputKeyDown(event: KeyboardEvent) {
-    if (event.key !== 'Enter')
+  onInputKeyDown(e: KeyboardEvent) {
+    if (e.key !== 'Enter')
       return;
 
-    event.preventDefault();
+    e.preventDefault();
 
-    const input = event.target as HTMLInputElement;
+    const input = e.target as HTMLInputElement;
     const value = input.value.trim();
 
     if (value.length == 0)

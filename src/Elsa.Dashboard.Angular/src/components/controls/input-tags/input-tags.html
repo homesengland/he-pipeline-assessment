@@ -10,11 +10,11 @@
   </a>
   <input
     type="text"
-    [id]="fieldId"
+    [id]="fieldId()"
     (keydown)="onInputKeyDown($event)"
     (blur)="onInputBlur($event)"
     class="elsa-tag-input elsa-inline-block elsa-text-sm elsa-outline-none focus:elsa-outline-none elsa-border-none shadow:none focus:elsa-border-none focus:elsa-border-transparent focus:shadow-none"
     [placeholder]="placeHolder"
   />
-  <input type="hidden" [name]="fieldName" [value]="currentValues | json" />
+  <input type="hidden" [name]="fieldName()" [value]="valuesJson" />
 </div>
