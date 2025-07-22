@@ -1,4 +1,4 @@
-import { Component, EventEmitter, model, computed, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, model, computed, OnInit, Output, output } from '@angular/core';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SelectList, SelectListItem, SyntaxNames } from 'src/models';
 import { PropertyEditor } from '../../property-editor/property-editor';
 import { ElsaClientService } from 'src/services/elsa-client';
@@ -21,6 +21,8 @@ export class MultiTextProperty implements OnInit {
   // valueChange = new EventEmitter<Array<string | number | boolean | SelectListItem>>();
 
   @Output() valueChange = new EventEmitter<Array<string | number | boolean | SelectListItem>>();
+
+  // value = output<Array<string | number | boolean | SelectListItem>>([]);
 
   selectList: SelectList = {
     items: [],
@@ -97,6 +99,7 @@ export class MultiTextProperty implements OnInit {
 
   useDropdown() {
     return !!this.propertyDescriptor().options && Array.isArray(this.propertyDescriptor().options) && this.propertyDescriptor().options.length > 0;
+    // return false;
   }
 
   getPropertyOptions() {

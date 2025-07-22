@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, input } from '@angular/core';
 import { SelectListItem } from 'src/models';
 
 @Component({
@@ -7,6 +7,8 @@ import { SelectListItem } from 'src/models';
   standalone: false,
 })
 export class InputTagsDropdown {
+  fieldName = input<string>(null);
+  fieldId = input<string>(null);
   placeHolder: string = 'Add tag';
   values: Array<string | SelectListItem> = [];
   dropdownValues: Array<SelectListItem> = [];

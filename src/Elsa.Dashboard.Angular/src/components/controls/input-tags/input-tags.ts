@@ -8,6 +8,8 @@ import { Component, computed, model, EventEmitter, Output, signal, Signal, input
   standalone: false,
 })
 export class InputTags {
+  fieldName = input<string>(null);
+  fieldId = input<string>(null);
   placeHolder: string = 'Add tag';
   values: Array<string> = [];
   valueChanged = output<string[]>();
