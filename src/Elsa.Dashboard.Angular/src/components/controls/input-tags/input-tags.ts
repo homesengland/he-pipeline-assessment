@@ -1,5 +1,4 @@
 import { Component, computed, model, EventEmitter, Output, signal, Signal, input, output, OnChanges, SimpleChanges } from '@angular/core';
-// import { ActivityPropertyDescriptor } from '../../../models/domain';
 
 @Component({
   selector: 'input-tags',

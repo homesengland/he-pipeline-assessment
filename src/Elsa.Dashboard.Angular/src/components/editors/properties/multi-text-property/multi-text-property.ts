@@ -18,11 +18,8 @@ export class MultiTextProperty implements OnInit {
   fieldName = computed(() => this.propertyDescriptor()?.name || 'default');
   serverUrl: string;
   currentValue?: string;
-  // valueChange = new EventEmitter<Array<string | number | boolean | SelectListItem>>();
-
-  @Output() valueChange = new EventEmitter<Array<string | number | boolean | SelectListItem>>();
-
-  // value = output<Array<string | number | boolean | SelectListItem>>([]);
+  /*@Output() valueChange = new EventEmitter<Array<string | number | boolean | SelectListItem>>();*/
+   valueChange = output<Array<string | number | boolean | SelectListItem>>();
 
   selectList: SelectList = {
     items: [],
@@ -39,22 +36,7 @@ export class MultiTextProperty implements OnInit {
     this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
   }
 
-  //// original
-  //onValueChanged(values: Array<string | number | boolean | SelectListItem>) {
-  //  const newValues = values.map(item => {
-  //    if (typeof item === 'string') return item;
-  //    if (typeof item === 'number') return item.toString();
-  //    if (typeof item === 'boolean') return item.toString();
-  //    return item.value;
-  //  });
-
-  //  this.valueChange.emit(values);
-  //  this.currentValue = JSON.stringify(newValues);
-  //  this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue;
-  //}
-
   onValueChanged(event: any) {
-
     let values: Array<string | number | boolean | SelectListItem> = [];
 
     if (event instanceof CustomEvent) {
@@ -66,9 +48,13 @@ export class MultiTextProperty implements OnInit {
     }
 
     const newValues = values.map(item => {
-      if (typeof item === 'string') return item;
-      if (typeof item === 'number') return item.toString();
-      if (typeof item === 'boolean') return item.toString();
+      if (typeof item === 'string')
+        return item;
+      if (typeof item === 'number')
+        return item.toString();
+      if (typeof item === 'boolean')
+        return item.toString();
+
       return item.value;
     });
 
@@ -76,11 +62,6 @@ export class MultiTextProperty implements OnInit {
     this.currentValue = JSON.stringify(newValues);
     this.propertyModel().expressions[SyntaxNames.Json] = this.currentValue;
   }
-
-  //// original
-  //onDefaultSyntaxValueChanged(event: CustomEvent<string>) {
-  //  this.currentValue = event.detail;
-  //}
 
   onDefaultSyntaxValueChanged(e: Event) {
     this.currentValue = (e as CustomEvent<string>).detail
@@ -99,7 +80,6 @@ export class MultiTextProperty implements OnInit {
 
   useDropdown() {
     return !!this.propertyDescriptor().options && Array.isArray(this.propertyDescriptor().options) && this.propertyDescriptor().options.length > 0;
-    // return false;
   }
 
   getPropertyOptions() {
