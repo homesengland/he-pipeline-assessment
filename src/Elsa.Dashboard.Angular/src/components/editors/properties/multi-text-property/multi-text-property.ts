@@ -84,7 +84,9 @@ export class MultiTextProperty implements OnInit {
   }
 
   createKeyValueOptions(options: Array<SelectListItem>) {
-    if (options === null) return options;
+    if (options === null)
+      return options;
+
     return options.map(option => typeof option === 'string' ? { text: option, value: option } : option);
   }
 
