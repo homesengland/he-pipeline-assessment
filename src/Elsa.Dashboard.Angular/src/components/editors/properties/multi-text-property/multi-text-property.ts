@@ -31,7 +31,7 @@ export class MultiTextProperty implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.currentValue = this.propertyModel().expressions['Json'] || '[]';
+    this.currentValue = this.propertyModel().expressions[SyntaxNames.Json] || '[]';
 
     this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
   }
