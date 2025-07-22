@@ -11,12 +11,12 @@
   </a>
 
   <select
-    [id]="fieldId"
+    [id]="fieldId()"
     class="elsa-inline-block elsa-text-xs elsa-py-2 elsa-px-3 elsa-mr-1 elsa-mb-1 elsa-pr-8 elsa-border-gray-300 focus:elsa-outline-none focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-rounded"
     (change)="onTagSelected($event)"
   >
     <option value="Add" disabled selected>{{ placeHolder }}</option>
     <option *ngFor="let tag of dropdownItems" [value]="tag.value">{{ tag.text }}</option>
   </select>
-  <input type="hidden" [name]="fieldName" [value]="valuesJson" />
+  <input type="hidden" [name]="fieldName()" [value]="valuesJson" />
 </div>

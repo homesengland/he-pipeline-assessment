@@ -14,6 +14,8 @@ export class MultiTextProperty implements OnInit {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
+  fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
+  fieldName = computed(() => this.propertyDescriptor()?.name || 'default');
 
   serverUrl: string;
   currentValue?: string;

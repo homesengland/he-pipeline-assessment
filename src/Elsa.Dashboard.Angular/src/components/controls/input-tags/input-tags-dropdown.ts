@@ -7,8 +7,6 @@ import { SelectListItem } from 'src/models';
   standalone: false,
 })
 export class InputTagsDropdown {
-  fieldName?: string;
-  fieldId?: string;
   placeHolder: string = 'Add tag';
   values: Array<string | SelectListItem> = [];
   dropdownValues: Array<SelectListItem> = [];

@@ -10,13 +10,13 @@ text-property/multi-text-property.html
     <input-tags-dropdown
       [dropdownValues]="getPropertyOptions"
       [values]="getSelectItems()"
-      [fieldId]="propertyDescriptor().name"
-      [fieldName]="propertyDescriptor().name"
+      [fieldId]="fieldId()"
+      [fieldName]="fieldName()"
       (valueChanged)="onValueChanged($event)"
     >
     </input-tags-dropdown>
   </ng-container>
   <ng-template #tagsInput>
-    <input-tags [values]="getSelectItems()" [fieldId]="propertyDescriptor().name" [fieldName]="propertyDescriptor().name" (valueChanged)="onValueChanged($event)"> </input-tags>
+    <input-tags [values]="getSelectItems()" [fieldId]="fieldId()" [fieldName]="fieldName()" (valueChanged)="onValueChanged($event)"> </input-tags>
   </ng-template>
 </property-editor>
