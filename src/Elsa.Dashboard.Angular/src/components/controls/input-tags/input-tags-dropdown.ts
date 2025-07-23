@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges, input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, input, output } from '@angular/core';
 import { SelectListItem } from 'src/models';
 
 @Component({
@@ -12,7 +12,9 @@ export class InputTagsDropdown {
   placeHolder: string = 'Add tag';
   values: Array<string | SelectListItem> = [];
   dropdownValues: Array<SelectListItem> = [];
-  valueChanged = new EventEmitter<Array<SelectListItem>>();
+  // valueChanged = new EventEmitter<Array<SelectListItem>>();
+  // valueChanged = output<string[] | SelectListItem>();
+  valueChanged = output<Array<SelectListItem>>();
 
   currentValues: Array<SelectListItem> = [];
 
@@ -28,27 +30,50 @@ export class InputTagsDropdown {
     this.currentValues = values.map(value => dropdownValues.find(tag => value === tag.value) || (typeof value === 'object' ? value : null)).filter((v): v is SelectListItem => !!v);
   }
 
-  get dropdownItems(): Array<SelectListItem> {
+  getDropdownItems(): Array<SelectListItem> {
     return (this.dropdownValues || []).filter(x => this.currentValues.findIndex(y => y.value === x.value) < 0);
   }
 
-  get valuesJson(): string {
+  getValuesJson(): string {
     return JSON.stringify(this.currentValues.map(tag => tag.value));
   }
 
-  onTagSelected(event: Event) {
+  //// Original
+  //onTagSelected(event: Event) {
+  //  event.preventDefault();
+  //  const input = event.target as HTMLSelectElement;
+  //  const selectedValue = input.value;
+  //  if (!selectedValue || selectedValue === 'Add') return;
+
+  //  const selectedTag = this.dropdownValues.find(tag => tag.value === selectedValue);
+  //  if (!selectedTag) return;
+
+  //  const values = [...this.currentValues, selectedTag].filter((tag, i, arr) => arr.findIndex(t => t.value === tag.value) === i);
+  //  this.currentValues = values;
+  //  input.value = 'Add';
+  //  this.valueChanged.emit(values);
+  //}
+
+  // Under test
+  onTagSelected(event: any): void {
     event.preventDefault();
+
     const input = event.target as HTMLSelectElement;
-    const selectedValue = input.value;
-    if (!selectedValue || selectedValue === 'Add') return;
+    const currentTag: SelectListItem = {
+      text: input.options[input.selectedIndex].text.trim(),
+      value: input.value
+    };
 
-    const selectedTag = this.dropdownValues.find(tag => tag.value === selectedValue);
-    if (!selectedTag) return;
+    if (!currentTag.value)
+      return;
 
-    const values = [...this.currentValues, selectedTag].filter((tag, i, arr) => arr.findIndex(t => t.value === tag.value) === i);
-    this.currentValues = values;
-    input.value = 'Add';
-    this.valueChanged.emit(values);
+    const values: Array<SelectListItem> = [...this.currentValues, currentTag];
+    // Ensure uniqueness by value
+    this.currentValues = Array.from(new Set(values.map(v => v.value)))
+      .map(val => values.find(v => v.value === val)!);
+
+    input.value = "Add";
+    this.valueChanged.emit(this.currentValues);
   }
 
   onDeleteTagClick(event: MouseEvent, tag: SelectListItem) {

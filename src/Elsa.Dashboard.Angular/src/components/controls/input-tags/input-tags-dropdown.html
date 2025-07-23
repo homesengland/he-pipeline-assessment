@@ -16,7 +16,7 @@
     (change)="onTagSelected($event)"
   >
     <option value="Add" disabled selected>{{ placeHolder }}</option>
-    <option *ngFor="let tag of dropdownItems" [value]="tag.value">{{ tag.text }}</option>
+    <option *ngFor="let tag of getDropdownItems()" [value]="tag.value">{{ tag.text }}</option>
   </select>
-  <input type="hidden" [name]="fieldName()" [value]="valuesJson" />
+  <input type="hidden" [name]="fieldName()" [value]="getValuesJson()" />
 </div>

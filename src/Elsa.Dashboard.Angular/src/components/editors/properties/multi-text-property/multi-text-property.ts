@@ -18,8 +18,7 @@ export class MultiTextProperty implements OnInit {
   fieldName = computed(() => this.propertyDescriptor()?.name || 'default');
   serverUrl: string;
   currentValue?: string;
-  /*@Output() valueChange = new EventEmitter<Array<string | number | boolean | SelectListItem>>();*/
-   valueChange = output<Array<string | number | boolean | SelectListItem>>();
+  valueChange = output<Array<string | number | boolean | SelectListItem>>();
 
   selectList: SelectList = {
     items: [],
