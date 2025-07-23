@@ -1,11 +1,13 @@
-﻿using Elsa.Runtime;
-using Elsa.Persistence.EntityFramework.Core.StartupTasks;
-using Microsoft.EntityFrameworkCore;
-using Elsa.Options;
-using Elsa.Persistence.EntityFramework.Core.Services;
-using Elsa.Persistence.EntityFramework.Core.Stores;
+﻿using Elsa.Options;
+using Elsa.Persistence;
 using Elsa.Persistence.EntityFramework.Core;
+using Elsa.Persistence.EntityFramework.Core.Services;
+using Elsa.Persistence.EntityFramework.Core.StartupTasks;
+using Elsa.Persistence.EntityFramework.Core.Stores;
+using Elsa.Runtime;
 using Elsa.Server.Stores;
+using Elsa.Server.Stores.ElsaStores;
+using Microsoft.EntityFrameworkCore;
 
 namespace Elsa.Server.Extensions
 {
@@ -218,6 +220,7 @@ namespace Elsa.Server.Extensions
             {
                 elsa.Services
                     .AddSingleton<IElsaContextFactory, ElsaContextFactory<TElsaContext>>()
+                    .AddScoped<ICustomWorkflowDefinitionStore, CachedEntityFrameworkWorkflowDefinitionStore>()
                     .AddScoped<CachedEntityFrameworkWorkflowDefinitionStore>()
                     .AddScoped<CachedEntityFrameworkWorkflowInstanceStore>()
                     .AddScoped<CachedEntityFrameworkWorkflowExecutionLogRecordStore>()
@@ -243,9 +246,10 @@ namespace Elsa.Server.Extensions
 
                     .AddSingleton<IElsaContextFactory, ElsaContextFactory<TElsaContext>>()
 
-                    .AddScoped<Elsa.Server.Stores.ElsaStores.EntityFrameworkWorkflowDefinitionStore>()
+                    .AddScoped<ICustomWorkflowDefinitionStore, Stores.ElsaStores.EntityFrameworkWorkflowDefinitionStore>()
+                    .AddScoped<Stores.ElsaStores.EntityFrameworkWorkflowDefinitionStore>()
 
-                    .AddScoped<EntityFrameworkWorkflowInstanceStore>()
+                    .AddScoped<Stores.ElsaStores.EntityFrameworkWorkflowInstanceStore>()
 
                     .AddScoped<EntityFrameworkWorkflowExecutionLogRecordStore>()
 
@@ -265,7 +269,7 @@ namespace Elsa.Server.Extensions
 
                     .UseWorkflowDefinitionStore(sp => sp.GetRequiredService<Elsa.Server.Stores.ElsaStores.EntityFrameworkWorkflowDefinitionStore>())
 
-                    .UseWorkflowInstanceStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowInstanceStore>())
+                    .UseWorkflowInstanceStore(sp => sp.GetRequiredService<Stores.ElsaStores.EntityFrameworkWorkflowInstanceStore>())
 
                     .UseWorkflowExecutionLogStore(sp => sp.GetRequiredService<EntityFrameworkWorkflowExecutionLogRecordStore>())
 

@@ -1,16 +1,20 @@
 ﻿using AutoMapper;
-using Elsa.Persistence.EntityFramework.Core.Services;
-using Elsa.Persistence.EntityFramework.Core;
-using Elsa.Persistence.Specifications;
-using Elsa.Persistence;
-using Elsa.Serialization;
-using Newtonsoft.Json;
-using System.Linq.Expressions;
 using Elsa.Models;
+using Elsa.Persistence;
+using Elsa.Persistence.EntityFramework.Core;
+using Elsa.Persistence.EntityFramework.Core.Services;
+using Elsa.Persistence.Specifications;
+using Elsa.Serialization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Elsa.Server.Stores.ElsaStores
 {
-        public class EntityFrameworkWorkflowDefinitionStore : ElsaContextEntityFrameworkStore<WorkflowDefinition>, IWorkflowDefinitionStore
+        public class EntityFrameworkWorkflowDefinitionStore : ElsaContextEntityFrameworkStore<WorkflowDefinition>, ICustomWorkflowDefinitionStore
         {
             private readonly IContentSerializer _contentSerializer;
 
@@ -62,5 +66,16 @@ namespace Elsa.Server.Stores.ElsaStores
                 entity.Channel = data.Channel;
             }
         }
+
+        public async Task OnUnpublishDefinitions(string definitionId, CancellationToken token)
+        {
+            ElsaContext dbContext = DbContextFactory.CreateDbContext();
+            await dbContext.WorkflowDefinitions
+                .Where(dbDefinition => dbDefinition.DefinitionId == definitionId)
+                .ExecuteUpdateAsync(setters => setters
+                .SetProperty(d => d.IsPublished, false)
+                .SetProperty(d => d.IsLatest, false));
+            await dbContext.SaveChangesAsync(token);
         }
+    }
     }
