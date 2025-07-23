@@ -540,7 +540,8 @@ export class WorkflowPlaceholder implements OnInit {
       value: 'string',
       name: 'TestMultiText',
       expressions: {
-        Json: '[]',
+        Json: "[\"123\"]",
+        Literal: ""
       },
       type: '',
     };

@@ -12,8 +12,6 @@ export class InputTagsDropdown {
   placeHolder: string = 'Add tag';
   values: Array<string | SelectListItem> = [];
   dropdownValues: Array<SelectListItem> = [];
-  // valueChanged = new EventEmitter<Array<SelectListItem>>();
-  // valueChanged = output<string[] | SelectListItem>();
   valueChanged = output<Array<SelectListItem>>();
 
   currentValues: Array<SelectListItem> = [];
@@ -38,42 +36,19 @@ export class InputTagsDropdown {
     return JSON.stringify(this.currentValues.map(tag => tag.value));
   }
 
-  //// Original
-  //onTagSelected(event: Event) {
-  //  event.preventDefault();
-  //  const input = event.target as HTMLSelectElement;
-  //  const selectedValue = input.value;
-  //  if (!selectedValue || selectedValue === 'Add') return;
-
-  //  const selectedTag = this.dropdownValues.find(tag => tag.value === selectedValue);
-  //  if (!selectedTag) return;
-
-  //  const values = [...this.currentValues, selectedTag].filter((tag, i, arr) => arr.findIndex(t => t.value === tag.value) === i);
-  //  this.currentValues = values;
-  //  input.value = 'Add';
-  //  this.valueChanged.emit(values);
-  //}
-
-  // Under test
-  onTagSelected(event: any): void {
+  onTagSelected(event: Event) {
     event.preventDefault();
-
     const input = event.target as HTMLSelectElement;
-    const currentTag: SelectListItem = {
-      text: input.options[input.selectedIndex].text.trim(),
-      value: input.value
-    };
+    const selectedValue = input.value;
+    if (!selectedValue || selectedValue === 'Add') return;
 
-    if (!currentTag.value)
-      return;
+    const selectedTag = this.dropdownValues.find(tag => tag.value === selectedValue);
+    if (!selectedTag) return;
 
-    const values: Array<SelectListItem> = [...this.currentValues, currentTag];
-    // Ensure uniqueness by value
-    this.currentValues = Array.from(new Set(values.map(v => v.value)))
-      .map(val => values.find(v => v.value === val)!);
-
-    input.value = "Add";
-    this.valueChanged.emit(this.currentValues);
+    const values = [...this.currentValues, selectedTag].filter((tag, i, arr) => arr.findIndex(t => t.value === tag.value) === i);
+    this.currentValues = values;
+    input.value = 'Add';
+    this.valueChanged.emit(values);
   }
 
   onDeleteTagClick(event: MouseEvent, tag: SelectListItem) {
