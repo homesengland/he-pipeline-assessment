@@ -6,6 +6,7 @@ using Elsa.Persistence.EntityFramework.Core.StartupTasks;
 using Elsa.Persistence.EntityFramework.Core.Stores;
 using Elsa.Runtime;
 using Elsa.Server.Stores;
+using Elsa.Server.Stores.Cache;
 using Elsa.Server.Stores.ElsaStores;
 using Microsoft.EntityFrameworkCore;
 
@@ -225,7 +226,8 @@ namespace Elsa.Server.Extensions
                     .AddScoped<CachedEntityFrameworkWorkflowInstanceStore>()
                     .AddScoped<CachedEntityFrameworkWorkflowExecutionLogRecordStore>()
                     .AddScoped<CachedEntityFrameworkBookmarkStore>()
-                    .AddScoped<CachedEntityFrameworkTriggerStore>();
+                    .AddScoped<CachedEntityFrameworkTriggerStore>()
+                    .AddScoped<IWorkflowDefinitionCache, WorkflowDefinitionCache>();
 
                 if (autoRunMigrations)
                     elsa.Services.AddStartupTask<RunMigrations>();

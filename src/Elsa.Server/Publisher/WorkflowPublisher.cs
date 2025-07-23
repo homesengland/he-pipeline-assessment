@@ -4,7 +4,9 @@ using Elsa.Persistence;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
 using Elsa.Persistence.Specifications.WorkflowInstances;
+using Elsa.Server.Models;
 using Elsa.Server.Stores.ElsaStores;
+using Elsa.Server.Stores.Specifications;
 using Elsa.Services;
 using MediatR;
 using NodaTime;
@@ -72,16 +74,8 @@ namespace Elsa.Server.Publisher
             var definitionId = workflowDefinition.DefinitionId;
 
             // Reset current latest and published definitions.
-            await _workflowDefinitionStore.OnUnpublishDefinitions(workflowDefinition.DefinitionId, cancellationToken);
-            //var publishedDefinitions = await _workflowDefinitionStore.FindManyAsync(new LatestOrPublishedWorkflowDefinitionIdSpecification(definitionId), cancellationToken: cancellationToken);
-            //List<WorkflowDefinition> publishedAndOrLatestDefinitions = publishedDefinitions.ToList();
+            await _workflowDefinitionStore.UnpublishAll(workflowDefinition.DefinitionId, cancellationToken);
 
-            //foreach (var publishedAndOrLatestDefinition in publishedAndOrLatestDefinitions)
-            //{
-            //    publishedAndOrLatestDefinition.IsPublished = false;
-            //    publishedAndOrLatestDefinition.IsLatest = false;
-            //    await _workflowDefinitionStore.SaveAsync(publishedAndOrLatestDefinition, cancellationToken);
-            //}
 
             if (workflowDefinition.IsPublished)
                 workflowDefinition.Version++;
@@ -119,7 +113,7 @@ namespace Elsa.Server.Publisher
             workflowDefinition = Initialize(workflowDefinition);
 
             await _mediator.Publish(new WorkflowDefinitionRetracting(workflowDefinition), cancellationToken);
-            await _workflowDefinitionStore.SaveAsync(workflowDefinition, cancellationToken);
+            await _workflowDefinitionStore.Unpublish(workflowDefinition, cancellationToken);
             await _mediator.Publish(new WorkflowDefinitionRetracted(workflowDefinition), cancellationToken);
             return workflowDefinition;
         }
@@ -165,17 +159,7 @@ namespace Elsa.Server.Publisher
         public async Task<WorkflowDefinition> SaveDraftAsync(WorkflowDefinition workflowDefinition, CancellationToken cancellationToken = default)
         {
             var draft = workflowDefinition;
-
-            var latestVersion = await _workflowDefinitionStore.FindByDefinitionIdAsync(
-                workflowDefinition.DefinitionId,
-                VersionOptions.Latest,
-                cancellationToken);
-
-            if (latestVersion != null)
-            {
-                latestVersion.IsLatest = false;
-                await _workflowDefinitionStore.SaveAsync(latestVersion, cancellationToken);
-            }
+            await _workflowDefinitionStore.RemoveLatest(draft, cancellationToken);
 
             draft.IsLatest = true;
             draft.IsPublished = false;

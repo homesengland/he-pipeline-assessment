@@ -5,6 +5,8 @@ using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
 using Elsa.Serialization;
+using Elsa.Server.Models;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
@@ -67,7 +69,7 @@ namespace Elsa.Server.Stores.ElsaStores
             }
         }
 
-        public async Task OnUnpublishDefinitions(string definitionId, CancellationToken token)
+        public async Task UnpublishAll(string definitionId, CancellationToken token)
         {
             ElsaContext dbContext = DbContextFactory.CreateDbContext();
             await dbContext.WorkflowDefinitions
@@ -77,5 +79,80 @@ namespace Elsa.Server.Stores.ElsaStores
                 .SetProperty(d => d.IsLatest, false));
             await dbContext.SaveChangesAsync(token);
         }
+
+        public async Task Unpublish(WorkflowDefinition definition, CancellationToken token)
+        {
+            ElsaContext dbContext = DbContextFactory.CreateDbContext();
+            await dbContext.WorkflowDefinitions
+                .Where(dbDefinition => dbDefinition.Id == definition.Id)
+                .ExecuteUpdateAsync(setters => setters
+                .SetProperty(d => d.IsPublished, false));
+            await dbContext.SaveChangesAsync(token);
+        }
+
+        public async Task RemoveLatest(WorkflowDefinition definition, CancellationToken token)
+        {
+            ElsaContext dbContext = DbContextFactory.CreateDbContext();
+            await dbContext.WorkflowDefinitions
+                .Where(dbDefinition => dbDefinition.DefinitionId == definition.DefinitionId)
+                .ExecuteUpdateAsync(setters => setters
+                .SetProperty(d => d.IsLatest, false));
+            await dbContext.SaveChangesAsync(token);
+        }
+
+        public Task Publish(WorkflowDefinition definition, CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<WorkflowDefinitionIdentifiers>> FindWorkflowDefinitionIdentifiersAsync(string definitionId, VersionOptions? options, CancellationToken cancellationToken = default)
+        {
+            ElsaContext dbContext = DbContextFactory.CreateDbContext();
+            if(options != null)
+            {
+                var identifiers = await dbContext.WorkflowDefinitions.Where(d => d.DefinitionId == definitionId).WithVersion(options.Value).Select(dbContext => new WorkflowDefinitionIdentifiers
+                {
+                    Id = dbContext.Id,
+                    DefinitionId = dbContext.DefinitionId,
+                    Version = dbContext.Version,
+                    IsLatest = dbContext.IsLatest,
+                    IsPublished = dbContext.IsPublished
+                }).ToListAsync();
+                return identifiers;
+            }
+            else
+            {
+                var identifiers = await dbContext.WorkflowDefinitions.Where(d => d.DefinitionId == definitionId).Select(dbContext => new WorkflowDefinitionIdentifiers
+                {
+                    Id = dbContext.Id,
+                    DefinitionId = dbContext.DefinitionId,
+                    Version = dbContext.Version,
+                    IsLatest = dbContext.IsLatest,
+                    IsPublished = dbContext.IsPublished
+                }).ToListAsync(cancellationToken);
+                return identifiers;
+            }
+        }
     }
+    public static class CustomWorkflowDefinitionVersionOptionsExtensions
+    {
+
+        public static Expression<Func<WorkflowDefinitionIdentifiers, bool>> WithVersion(this Expression<Func<WorkflowDefinitionIdentifiers, bool>> predicate, VersionOptions? version = default)
+        {
+            var versionOption = version ?? VersionOptions.Latest;
+
+            if (versionOption.IsDraft)
+                return predicate.And(x => !x.IsPublished);
+            if (versionOption.IsLatest)
+                return predicate.And(x => x.IsLatest);
+            if (versionOption.IsPublished)
+                return predicate.And(x => x.IsPublished);
+            if (versionOption.IsLatestOrPublished)
+                return predicate.And(x => x.IsPublished || x.IsLatest);
+            if (versionOption.Version > 0)
+                return predicate.And(x => x.Version == versionOption.Version);
+
+            return predicate;
+        }
     }
+}
