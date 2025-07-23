@@ -4,21 +4,10 @@
   [(propertyModel)]="propertyModel"
   (onDefaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
   [singleLineMode]="true">
-  <ng-container *ngIf="useDropdown()">
-    <input-tags-dropdown
-      [dropdownValues]="getPropertyOptions()"
-      [values]="getSelectItems()"
-      [fieldId]="fieldId()"
-      [fieldName]="fieldName()"
-      (valueChanged)="onValueChanged($event)">
-    </input-tags-dropdown>
-  </ng-container>
-  <ng-container *ngIf="!useDropdown()">
     <input-tags
       [values]="getSelectItems()"
       [fieldId]="fieldId()"
       [fieldName]="fieldName()"
       (valueChanged)="onValueChanged($event)">
-    </input-tags>
-  </ng-container>
+  </input-tags>
 </property-editor>

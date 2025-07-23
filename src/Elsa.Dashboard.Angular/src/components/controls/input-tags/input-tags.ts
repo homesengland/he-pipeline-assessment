@@ -1,4 +1,4 @@
-import { Component, computed, model, EventEmitter, Output, signal, Signal, input, output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, input, output, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'input-tags',

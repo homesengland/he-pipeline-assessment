@@ -1,6 +1,5 @@
-import { Component, EventEmitter, model, computed, OnInit, Output, output } from '@angular/core';
+import { Component, model, computed, OnInit, output } from '@angular/core';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SelectList, SelectListItem, SyntaxNames } from 'src/models';
-import { PropertyEditor } from '../../property-editor/property-editor';
 import { ElsaClientService } from 'src/services/elsa-client';
 import { Store } from '@ngrx/store';
 import { getSelectListItems } from 'src/utils/selected-list-items';
@@ -75,13 +74,5 @@ export class MultiTextProperty implements OnInit {
 
   getSelectItems(): any {
     return JSON.parse(this.currentValue || '[]');
-  }
-
-  useDropdown() {
-    return !!this.propertyDescriptor().options && Array.isArray(this.propertyDescriptor().options) && this.propertyDescriptor().options.length > 0;
-  }
-
-  getPropertyOptions() {
-    return this.createKeyValueOptions(this.selectList.items as Array<SelectListItem>);
   }
 }

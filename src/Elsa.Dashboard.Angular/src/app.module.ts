@@ -50,7 +50,6 @@ import { CheckListProperty } from './components/editors/properties/check-list-pr
 import { RadioListProperty } from './components/editors/properties/radio-list-property/radio-list-property';
 import { MultiTextProperty } from './components/editors/properties/multi-text-property/multi-text-property';
 import { InputTags } from './components/controls/input-tags/input-tags';
-import { InputTagsDropdown } from './components/controls/input-tags/input-tags-dropdown';
 
 @NgModule({
   declarations: [
@@ -94,7 +93,6 @@ import { InputTagsDropdown } from './components/controls/input-tags/input-tags-d
     RadioListProperty,
     MultiTextProperty,
     InputTags,
-    InputTagsDropdown,
   ],
   imports: [
     routing,
