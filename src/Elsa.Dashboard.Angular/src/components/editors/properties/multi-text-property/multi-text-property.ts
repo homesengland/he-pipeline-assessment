@@ -1,5 +1,6 @@
 import { Component, model, computed, OnInit, output } from '@angular/core';
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SelectList, SelectListItem, SyntaxNames } from 'src/models';
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SelectList, SelectListItem, SyntaxNames } from '../../../../models';
+import { PropertyEditor } from '../../property-editor/property-editor';
 import { ElsaClientService } from 'src/services/elsa-client';
 import { Store } from '@ngrx/store';
 import { getSelectListItems } from 'src/utils/selected-list-items';
