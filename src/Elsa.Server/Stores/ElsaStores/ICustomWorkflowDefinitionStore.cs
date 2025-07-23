@@ -12,7 +12,6 @@ namespace Elsa.Server.Stores.ElsaStores
         Task Unpublish(WorkflowDefinition definition, CancellationToken token);
 
         Task RemoveLatest(WorkflowDefinition definition, CancellationToken token);
-        Task Publish(WorkflowDefinition definition, CancellationToken token);
 
         Task<List<WorkflowDefinitionIdentifiers>> FindWorkflowDefinitionIdentifiersAsync(string definitionId, VersionOptions? options, CancellationToken cancellationToken = default);
     }

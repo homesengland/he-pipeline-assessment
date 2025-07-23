@@ -1,4 +1,5 @@
-﻿using Elsa.Models;
+﻿using Elsa.Activities.Workflows.Workflow;
+using Elsa.Models;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
 using Elsa.Server.Extensions;
@@ -14,6 +15,7 @@ namespace Elsa.Server.Stores.Cache
         Task<WorkflowDefinition?> GetDefinition(ISpecification<WorkflowDefinition> specification);
         void SaveDefinition(WorkflowDefinition workflowDefinition);
         void RemoveDefinition(WorkflowDefinition definition);
+        void RemoveDefinition(string definitionId);
     }
 
     public class WorkflowDefinitionCache : IWorkflowDefinitionCache
@@ -74,7 +76,15 @@ namespace Elsa.Server.Stores.Cache
         {
             string cacheKey = CacheKey(definition);
             var db = _cache.GetDatabase();
-            db.KeyDelete(cacheKey);
+            db.KeyDeleteAsync(cacheKey);
+        }
+
+        public void RemoveDefinition(string definitionId)
+        {
+            string keyPrefix = $"{_Key}:{definitionId}:*";
+            var db = _cache.GetDatabase();
+            var prepared = LuaScript.Prepare("for i, name in ipairs(redis.call('KEYS', @prefix)) do redis.call('DEL', name); end");
+            db.ScriptEvaluateAsync(prepared, new { prefix = keyPrefix });
         }
 
         private bool TryGetCacheKeyFromSpecification(ISpecification<WorkflowDefinition> specification, out string cacheKey)

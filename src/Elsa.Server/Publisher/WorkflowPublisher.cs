@@ -76,7 +76,6 @@ namespace Elsa.Server.Publisher
             // Reset current latest and published definitions.
             await _workflowDefinitionStore.UnpublishAll(workflowDefinition.DefinitionId, cancellationToken);
 
-
             if (workflowDefinition.IsPublished)
                 workflowDefinition.Version++;
             else

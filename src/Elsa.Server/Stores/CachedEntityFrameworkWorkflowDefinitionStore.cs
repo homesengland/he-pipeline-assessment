@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Elsa.Activities.Workflows.Workflow;
 using Elsa.Models;
+using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
@@ -7,6 +9,8 @@ using Elsa.Serialization;
 using Elsa.Server.Extensions;
 using Elsa.Server.Features.Dashboard;
 using Elsa.Server.Helpers;
+using Elsa.Server.Stores.Cache;
+using Google.Protobuf;
 using Newtonsoft.Json;
 using NodaTime;
 using NodaTime.Extensions;
@@ -14,11 +18,8 @@ using NodaTime.Serialization.JsonNet;
 using NodaTime.Serialization.SystemTextJson;
 using NodaTime.Xml;
 using StackExchange.Redis;
-using System.Text.Json;
-using Google.Protobuf;
-using Elsa.Activities.Workflows.Workflow;
 using System;
-using Elsa.Server.Stores.Cache;
+using System.Text.Json;
 
 namespace Elsa.Server.Stores
 {
@@ -39,21 +40,21 @@ namespace Elsa.Server.Stores
         {
             try
             {
-                //WorkflowDefinition? definition = await _workflowDefinitionCache.GetDefinition(specification);
-                //if (definition == null)
-                //{
+                WorkflowDefinition? definition = await _workflowDefinitionCache.GetDefinition(specification);
+                if (definition == null)
+                {
                     WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
                     if (workflowDefinition != null)
                     {
-                        //_workflowDefinitionCache.SaveDefinition(workflowDefinition);
+                        _workflowDefinitionCache.SaveDefinition(workflowDefinition);
                     }
                     return workflowDefinition;
-                //}
-                //else
-                //{
-                //    return definition;
-                //}
             }
+                else
+            {
+                return definition;
+            }
+        }
             catch (Exception ex)
             {
                 var errorString = ex.Message;
@@ -69,12 +70,12 @@ namespace Elsa.Server.Stores
                 try
                 {
                     await base.UpdateAsync(workflowDefinition, cancellationToken);
-                    //_workflowDefinitionCache.SaveDefinition(workflowDefinition);
+                    _workflowDefinitionCache.SaveDefinition(workflowDefinition);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError($"Error whilst updating workflow: {workflowDefinition.DefinitionId}.  Clearing from Cache");
-                   // _workflowDefinitionCache.RemoveDefinition(workflowDefinition);
+                    _workflowDefinitionCache.RemoveDefinition(workflowDefinition);
                     throw new Exception(ex.Message);
                 }
             }
@@ -85,7 +86,7 @@ namespace Elsa.Server.Stores
             if (workflowDefinition != null)
             {
                 await base.AddAsync(workflowDefinition, cancellationToken);
-               // _workflowDefinitionCache.AddDefinition(workflowDefinition);
+                _workflowDefinitionCache.AddDefinition(workflowDefinition);
             }
         }
 
@@ -94,7 +95,7 @@ namespace Elsa.Server.Stores
             if (workflowDefinition != null)
             {
                 await base.SaveAsync(workflowDefinition, cancellationToken);
-                //_workflowDefinitionCache.SaveDefinition(workflowDefinition);
+                _workflowDefinitionCache.SaveDefinition(workflowDefinition);
             }
         }
 
@@ -106,12 +107,24 @@ namespace Elsa.Server.Stores
         public override async Task DeleteAsync(WorkflowDefinition entity, CancellationToken cancellationToken = default)
         {
             await base.DeleteAsync(entity, cancellationToken);
-            //_workflowDefinitionCache.RemoveDefinition(entity);
+            _workflowDefinitionCache.RemoveDefinition(entity);
         }
 
         public override async Task<int> DeleteManyAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
         {
             return await base.DeleteManyAsync(specification, cancellationToken);
+        }
+
+        public override async Task UnpublishAll(string definitionId, CancellationToken token)
+        {
+            _workflowDefinitionCache.RemoveDefinition(definitionId);
+            await base.UnpublishAll(definitionId, token);
+        }
+
+        public override async Task Unpublish(WorkflowDefinition definition, CancellationToken token)
+        {
+            await base.Unpublish(definition, token);
+            _workflowDefinitionCache.RemoveDefinition(definition);
         }
 
         public override async Task<IEnumerable<WorkflowDefinition>> FindManyAsync(ISpecification<WorkflowDefinition> specification, IOrderBy<WorkflowDefinition>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default)

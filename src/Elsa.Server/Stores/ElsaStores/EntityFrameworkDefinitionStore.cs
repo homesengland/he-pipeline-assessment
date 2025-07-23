@@ -69,7 +69,7 @@ namespace Elsa.Server.Stores.ElsaStores
             }
         }
 
-        public async Task UnpublishAll(string definitionId, CancellationToken token)
+        public virtual async Task UnpublishAll(string definitionId, CancellationToken token)
         {
             ElsaContext dbContext = DbContextFactory.CreateDbContext();
             await dbContext.WorkflowDefinitions
@@ -80,7 +80,7 @@ namespace Elsa.Server.Stores.ElsaStores
             await dbContext.SaveChangesAsync(token);
         }
 
-        public async Task Unpublish(WorkflowDefinition definition, CancellationToken token)
+        public virtual async Task Unpublish(WorkflowDefinition definition, CancellationToken token)
         {
             ElsaContext dbContext = DbContextFactory.CreateDbContext();
             await dbContext.WorkflowDefinitions
@@ -90,7 +90,7 @@ namespace Elsa.Server.Stores.ElsaStores
             await dbContext.SaveChangesAsync(token);
         }
 
-        public async Task RemoveLatest(WorkflowDefinition definition, CancellationToken token)
+        public virtual async Task RemoveLatest(WorkflowDefinition definition, CancellationToken token)
         {
             ElsaContext dbContext = DbContextFactory.CreateDbContext();
             await dbContext.WorkflowDefinitions
@@ -98,11 +98,6 @@ namespace Elsa.Server.Stores.ElsaStores
                 .ExecuteUpdateAsync(setters => setters
                 .SetProperty(d => d.IsLatest, false));
             await dbContext.SaveChangesAsync(token);
-        }
-
-        public Task Publish(WorkflowDefinition definition, CancellationToken token)
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<List<WorkflowDefinitionIdentifiers>> FindWorkflowDefinitionIdentifiersAsync(string definitionId, VersionOptions? options, CancellationToken cancellationToken = default)
