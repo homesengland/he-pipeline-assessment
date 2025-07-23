@@ -1,9 +1,6 @@
 import { Component, model, computed, OnInit, output } from '@angular/core';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SelectList, SelectListItem, SyntaxNames } from '../../../../models';
 import { PropertyEditor } from '../../property-editor/property-editor';
-import { ElsaClientService } from 'src/services/elsa-client';
-import { Store } from '@ngrx/store';
-import { getSelectListItems } from 'src/utils/selected-list-items';
 
 @Component({
   selector: 'multi-text-property',
@@ -16,23 +13,15 @@ export class MultiTextProperty implements OnInit {
   propertyModel = model<ActivityDefinitionProperty>();
   fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
   fieldName = computed(() => this.propertyDescriptor()?.name || 'default');
-  serverUrl: string;
   currentValue?: string;
   valueChange = output<Array<string | number | boolean | SelectListItem>>();
 
-  selectList: SelectList = {
-    items: [],
-    isFlagsEnum: false
-  };
-
-  constructor(private elsaClientService: ElsaClientService, private store: Store) {
-    console.log('MultiTextProperty component initialized');
+  constructor() {
+    console.log('Setting property model', this.propertyModel());
   }
 
   async ngOnInit(): Promise<void> {
     this.currentValue = this.propertyModel().expressions[SyntaxNames.Json] || '[]';
-
-    this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
   }
 
   onValueChanged(event: any) {
