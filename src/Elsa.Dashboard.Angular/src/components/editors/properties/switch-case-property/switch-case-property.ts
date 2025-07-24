@@ -56,17 +56,30 @@ export class SwitchCaseProperty {
   }
 
   async ngOnInit(): Promise<void> {
-    const propertyModel = this.propertyModel;
-    const casesJson = propertyModel().expressions['Switch']
+    const propertyModel = this.propertyModel();
+    const casesJson = propertyModel?.expressions['Switch'] || '[]';
     this.cases = parseJson(casesJson) || [];
     this.context.activityTypeName = this.activityModel()?.type;
     this.context.propertyName = this.propertyDescriptor()?.name;
-    
+
+    if (this.multiExpressionEditor?.nativeElement) {
+      this.multiExpressionEditor.nativeElement.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
+    }
   }
 
   updatePropertyModel() {
-    this.propertyModel().expressions['Switch'] = JSON.stringify(this.cases);
-    this.multiExpressionEditor.nativeElement.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
+    const updatedExpressions = { ...this.propertyModel().expressions };
+
+    updatedExpressions['Switch'] = JSON.stringify(this.cases);
+
+    this.propertyModel.set({
+      ...this.propertyModel(),
+      expressions: updatedExpressions
+    });
+
+    if (this.multiExpressionEditor?.nativeElement) {
+      this.multiExpressionEditor.nativeElement.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
+    }
   }
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
@@ -107,15 +120,18 @@ export class SwitchCaseProperty {
     const json = detail;
     const parsed = parseJson(json);
 
-    if (!parsed)
+    if (!parsed || !Array.isArray(parsed))
       return;
 
-    if (!Array.isArray(parsed))
-      return;
+    const updatedExpressions = { ...this.propertyModel().expressions };
+    updatedExpressions['Switch'] = json;
 
-    this.propertyModel().expressions['Switch'] = json;
+    this.propertyModel.set({
+      ...this.propertyModel(),
+      expressions: updatedExpressions
+    });
+
     this.cases = parsed;
-
   }
 
   onMultiExpressionEditorSyntaxChanged(e: Event) {

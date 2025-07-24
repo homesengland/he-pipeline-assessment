@@ -21,9 +21,10 @@ export class WorkflowPlaceholder implements OnInit {
   dropDownActivityModel = signal<ActivityModel | null>(null);
   checkListActivityModel = signal<ActivityModel | null>(null);
   radioListActivityModel = signal<ActivityModel | null>(null);
-  switchCaseActivityModel = signal<ActivityModel | null>(null);
-  propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
-  propertyModel = signal<ActivityDefinitionProperty | null>(null);
+  switchCaseActivityModel = signal<ActivityModel>(this.getSwitchCaseModel());
+  switchCasePropertyDescriptor = signal<ActivityPropertyDescriptor>(this.getSwitchCaseDescriptor());
+  switchCasePropertyModel = signal<ActivityDefinitionProperty>(this.getSwitchCaseDefinition());
+
   intellisenseGatherer: IntellisenseService;
   intellisenseLoaded = signal<boolean>(false);
   options = {
@@ -62,6 +63,9 @@ export class WorkflowPlaceholder implements OnInit {
     const dropdownDescriptor = signal<ActivityPropertyDescriptor>(this.getDropDownDescriptor());
     const checkListDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckListDescriptor());
     const radioListDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioListDescriptor());
+    this.switchCaseActivityModel.set(this.getSwitchCaseModel());
+    this.switchCasePropertyDescriptor.set(this.getSwitchCaseDescriptor());
+    this.switchCasePropertyModel.set(this.getSwitchCaseDefinition());
     //const switchCaseDescriptor = signal<ActivityPropertyDescriptor>(this.getSwitchCaseDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);

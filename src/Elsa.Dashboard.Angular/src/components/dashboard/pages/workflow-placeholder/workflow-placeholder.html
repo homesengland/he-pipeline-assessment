@@ -1,7 +1,7 @@
 <monaco-editor [options]="options" [model]="model" [editorHeight]="'500px'"></monaco-editor>
-<switch-case-property [activityModel]="getSwitchCaseModel()"
-                      [propertyDescriptor]="getSwitchCaseDescriptor()"
-                      [propertyModel]="getSwitchCaseDefinition()">
+<switch-case-property   [activityModel]="switchCaseActivityModel()" 
+                        [propertyDescriptor]="switchCasePropertyDescriptor()"
+                        [propertyModel]="switchCasePropertyModel()">
 
 </switch-case-property>
 <div *ngFor="let activityProperty of activityProperties">
