@@ -1,0 +1,13 @@
+<property-editor
+  [(activityModel)]="activityModel"
+  [(propertyDescriptor)]="propertyDescriptor"
+  [(propertyModel)]="propertyModel"
+  (onDefaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
+  [singleLineMode]="true">
+    <input-tags
+      [values]="getSelectItems()"
+      [fieldId]="fieldId()"
+      [fieldName]="fieldName()"
+      (valueChanged)="onValueChanged($event)">
+  </input-tags>
+</property-editor>
