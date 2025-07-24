@@ -20,10 +20,10 @@
                 class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-border-gray-300 sm:elsa-text-sm elsa-rounded-md elsa-w-5/12"/>
         <div class="elsa-flex elsa-flex-row elsa-justify-between elsa-w-24">
           <button type="button" onClick={() => this.onRowDeleted(index)}>
-            {iconProvider.getIcon(IconName.TrashBinOutline, {color: IconColor.Gray, hoverColor: IconColor.Red})}
+            {"activityIconProvider.getIcon('TrashBinOutline', '{color: IconColor.Gray, hoverColor: IconColor.Red}')"}
           </button>
           {isLast && <button type="button" onClick={this.onRowAdded}>
-            {iconProvider.getIcon(IconName.Plus, {color: IconColor.Gray, hoverColor: IconColor.Green})}
+          {"activityIconProvider.getIcon('Plus', '{color: IconColor.Gray, hoverColor: IconColor.Green}')"}
           </button>}
         </div>
       </div>

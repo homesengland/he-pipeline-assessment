@@ -1,9 +1,7 @@
 import { Component, model, OnInit } from '@angular/core';
 import {ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SyntaxNames} from "../../../../models";
-import { ElsaClientService } from 'src/services/elsa-client';
-import { Store } from '@ngrx/store';
-// import Tunnel from "../../../../data/workflow-editor";
-import { IconColor, IconName, iconProvider } from '../../../../services/icon-provider';
+import { ActivityIconProvider } from 'src/services/activity-icon-provider';
+import { Map } from '../../../../utils/utils';
 
 @Component({
   selector: 'dictionary-property',
@@ -15,10 +13,11 @@ export class ElsaDictionaryProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
-  serverUrl: string;
   currentValue: [string, string][];
+  activityIconProvider: any;
 
-  constructor(private elsaClientService: ElsaClientService, private store: Store) {
+  constructor(activityIconProvider: ActivityIconProvider) {
+    this.activityIconProvider = activityIconProvider;
     console.log('Setting property model', this.propertyModel());
   }
 
