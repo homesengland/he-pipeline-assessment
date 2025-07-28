@@ -608,7 +608,7 @@ export class WorkflowPlaceholder implements OnInit {
       value: 'string',
       name: 'TestDictionary',
       expressions: {
-        Json: "[\"123\"]",
+        Json: '{"key1":"value1","key2":"value2"}',
         Literal: ""
       },
       type: '',

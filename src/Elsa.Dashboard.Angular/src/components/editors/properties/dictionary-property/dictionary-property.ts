@@ -1,6 +1,7 @@
-import { Component, model, OnInit } from '@angular/core';
+import { Component, model, OnInit, computed } from '@angular/core';
 import {ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SyntaxNames} from "../../../../models";
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
+import { PropertyEditor } from '../../property-editor/property-editor';
 import { Map } from '../../../../utils/utils';
 
 @Component({
@@ -8,22 +9,25 @@ import { Map } from '../../../../utils/utils';
   templateUrl: './dictionary-property.html',
   standalone: false,
 })
-export class ElsaDictionaryProperty {
+export class DictionaryProperty {
 
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
   currentValue: [string, string][];
   activityIconProvider: any;
+  fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
+  items: [string, string][];
 
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
     console.log('Setting property model', this.propertyModel());
   }
 
-  async componentWillLoad() {
+  async ngOnInit(): Promise<void> {
     this.currentValue = this.jsonToDictionary(this.propertyModel().expressions[SyntaxNames.Json] || null);
-    if (this.currentValue.length === 0) this.currentValue = [['', '']];
+    if (this.currentValue.length === 0)
+      this.currentValue = [['', '']];
   }
 
   jsonToDictionary = (json: string): [string, string][] => {
@@ -69,8 +73,9 @@ export class ElsaDictionaryProperty {
     this.propertyModel().expressions[SyntaxNames.Json] = this.dictionaryToJson(newValue);
   }
 
-  onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.currentValue = this.jsonToDictionary(e.detail);
+  onDefaultSyntaxValueChanged(e: Event) {
+    this.currentValue = this.jsonToDictionary((e as CustomEvent).detail);
+    
   }
 
   onKeyChanged(e: Event, index: number) {
@@ -83,5 +88,21 @@ export class ElsaDictionaryProperty {
     const input = e.currentTarget as HTMLInputElement;
     this.currentValue[index][1] = input.value
     this.propertyModel().expressions[SyntaxNames.Json] = this.dictionaryToJson(this.currentValue);
+  }
+
+  getItems(): any {
+    this.items = this.currentValue
+
+    return this.items.map((item, index) => {
+      let isLast = index === (this.items.length - 1);
+
+      return {
+        keyInputId: `${this.fieldId}_${index}_key`,
+        valueInputId: `${this.fieldId}_${index}_value`,
+        isLast: isLast,
+        value: item,
+        index: index,
+      };
+    });
   }
 }
