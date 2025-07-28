@@ -22,6 +22,7 @@ export class WorkflowPlaceholder implements OnInit {
   checkListActivityModel = signal<ActivityModel | null>(null);
   radioListActivityModel = signal<ActivityModel | null>(null);
   multiTextActivityModel = signal<ActivityModel | null>(null);
+  dictionaryActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
   intellisenseGatherer: IntellisenseService;
@@ -55,6 +56,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.checkListActivityModel.set(this.getCheckListModel());
     this.radioListActivityModel.set(this.getRadioListModel());
     this.multiTextActivityModel.set(this.getMultiTextModel());
+    this.dictionaryActivityModel.set(this.getDictionaryModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
     const checkboxDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckboxDescriptor());
@@ -63,6 +65,7 @@ export class WorkflowPlaceholder implements OnInit {
     const checkListDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckListDescriptor());
     const radioListDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioListDescriptor());
     const multiTextDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiTextDescriptor());
+    const dictionaryDescriptor = signal<ActivityPropertyDescriptor>(this.getDictionaryDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);
     this.activityProperties.push(checkboxDescriptor);
@@ -71,6 +74,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.activityProperties.push(checkListDescriptor);
     this.activityProperties.push(radioListDescriptor);
     this.activityProperties.push(multiTextDescriptor);
+    this.activityProperties.push(dictionaryDescriptor);
   }
 
   async ngOnInit() {
@@ -580,6 +584,70 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getDictionaryModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '',
+      type: 'Dictionary',
+      name: 'TestDictionary',
+      displayName: 'Test Dictionary',
+      description: 'A Stub activity to display a dictionary property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getDropDownDefinition());
+    return model;
+  }
+
+  getDictionaryDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestDictionary',
+      expressions: {
+        Json: "[\"123\"]",
+        Literal: ""
+      },
+      type: '',
+    };
+    return model;
+  }
+
+  getDictionaryDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: [],
+      expectedOutputType: 'string',
+      hasNestedProperties: false,
+      hasColletedProperties: false,
+      name: 'TestDictionary',
+      type: 'System.String',
+      uiHint: 'dictionary',
+      label: 'Test Label',
+      hint: 'Test Hint',
+      options: {
+        items: [
+          { text: 'Option 4', value: '1234' },
+          { text: 'Option 5', value: '56' },
+          { text: 'Option 6', value: '7' },
+        ],
+        isFlagsEnum: false,
+      },
+      order: 0,
+      defaultValue: null,
+      supportedSyntaxes: [],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+      defaultSyntax: 'Json',
+    };
+    return model;
+  }
+
   getActivityModel(activityType: string): Signal<ActivityModel> {
     switch (activityType) {
       case 'single-line':
@@ -597,6 +665,8 @@ export class WorkflowPlaceholder implements OnInit {
       case 'radio-list':
         return this.radioListActivityModel;
       case 'multi-text':
+        return this.multiTextActivityModel;
+      case 'dictionary':
         return this.multiTextActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);
