@@ -16,9 +16,11 @@
           <button type="button" (click)="onRowDeleted(item.index)">
             <span [innerHTML]="activityIconProvider.getIcon('TrashBinOutline', '{color: IconColor.Gray, hoverColor: IconColor.Red}')"></span>
           </button>
-          {item.isLast && <button type="button" (click)="onRowAdded">
-            <span [innerHTML]="activityIconProvider.getIcon('Plus', '{color: IconColor.Gray, hoverColor: IconColor.Green}')"></span>
-          </button>}
+          <ng-container *ngIf="item.IsLast">
+            <button type="button" (click)="onRowAdded">
+              <span [innerHTML]="activityIconProvider.getIcon('Plus', '{color: IconColor.Gray, hoverColor: IconColor.Green}')"></span>
+            </button>
+          </ng-container>
         </div>
       </div>
     </ng-container>
