@@ -6,22 +6,26 @@
     [singleLineMode]="true">
     <ng-container *ngFor="let item of getItems()">
       <div class="elsa-flex elsa-flex-row elsa-justify-between elsa-mb-2">
-        <input [id]="item.keyInputId" type="text" [value]="item.value" (change)="onKeyChanged($event, item.index)"
-        placeholder="Name"
-        class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-border-gray-300 sm:elsa-text-sm elsa-rounded-md elsa-w-5/12"/>
-        <input id={valueInputId} type="text" value={value} (change)="onValueChanged($event, item.index)"
-        placeholder="Value"
-        class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-border-gray-300 sm:elsa-text-sm elsa-rounded-md elsa-w-5/12"/>
+        <input [id]="item.keyInputId" type="text" [value]="item.key" (change)="onKeyChanged($event, item.index)"
+          placeholder="Name"
+          class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-border-gray-300 sm:elsa-text-sm elsa-rounded-md elsa-w-5/12"/>
+        <input [id]="item.valueInputId" type="text" [value]="item.value" (change)="onValueChanged($event, item.index)"
+          placeholder="Value"
+          class="disabled:elsa-opacity-50 disabled:elsa-cursor-not-allowed focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-border-gray-300 sm:elsa-text-sm elsa-rounded-md elsa-w-5/12"/>
         <div class="elsa-flex elsa-flex-row elsa-justify-between elsa-w-24">
           <button type="button" (click)="onRowDeleted(item.index)">
             <span [innerHTML]="activityIconProvider.getIcon('TrashBinOutline', '{color: IconColor.Gray, hoverColor: IconColor.Red}')"></span>
           </button>
-          <ng-container *ngIf="item.IsLast">
-            <button type="button" (click)="onRowAdded">
+          <ng-container *ngIf="item.isLast">
+            <button type="button" (click)="onRowAdded()">
               <span [innerHTML]="activityIconProvider.getIcon('Plus', '{color: IconColor.Gray, hoverColor: IconColor.Green}')"></span>
             </button>
           </ng-container>
+
         </div>
       </div>
     </ng-container>
 </property-editor>
+
+
+

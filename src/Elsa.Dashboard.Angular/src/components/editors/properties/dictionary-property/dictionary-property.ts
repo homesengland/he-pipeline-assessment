@@ -1,5 +1,5 @@
 import { Component, model, OnInit, computed } from '@angular/core';
-import {ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SyntaxNames} from "../../../../models";
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, SyntaxNames } from "../../../../models";
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { PropertyEditor } from '../../property-editor/property-editor';
 import { Map } from '../../../../utils/utils';
@@ -14,9 +14,9 @@ export class DictionaryProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
-  currentValue: [string, string][];
   activityIconProvider: any;
   fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
+  currentValue: [string, string][];
   items: [string, string][];
 
   constructor(activityIconProvider: ActivityIconProvider) {
@@ -26,8 +26,10 @@ export class DictionaryProperty {
 
   async ngOnInit(): Promise<void> {
     this.currentValue = this.jsonToDictionary(this.propertyModel().expressions[SyntaxNames.Json] || null);
-    if (this.currentValue.length === 0)
+    if (this.currentValue.length === 0) // 'currentValue == null' hence IF is FALSE, need to fix above expressions[SyntaxNames.Json] inorder to get default values
       this.currentValue = [['', '']];
+
+    this.currentValue = [['Key1', 'Value1']]; // Currently TESTING using hard-coding values
   }
 
   jsonToDictionary = (json: string): [string, string][] => {
@@ -95,12 +97,14 @@ export class DictionaryProperty {
 
     return this.items.map((item, index) => {
       let isLast = index === (this.items.length - 1);
+      let [key, value] = item;
 
       return {
         keyInputId: `${this.fieldId}_${index}_key`,
         valueInputId: `${this.fieldId}_${index}_value`,
         isLast: isLast,
-        value: item,
+        key: key,
+        value: value,
         index: index,
       };
     });

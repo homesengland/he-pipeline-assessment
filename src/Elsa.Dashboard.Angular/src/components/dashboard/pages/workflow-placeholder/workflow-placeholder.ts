@@ -408,7 +408,7 @@ export class WorkflowPlaceholder implements OnInit {
       saveWorkflowContext: undefined,
       propertyStorageProviders: undefined,
     };
-    model.properties.push(this.getDropDownDefinition());
+    model.properties.push(this.getCheckListDefinition());
     return model;
   }
 
@@ -534,7 +534,7 @@ export class WorkflowPlaceholder implements OnInit {
       saveWorkflowContext: undefined,
       propertyStorageProviders: undefined,
     };
-    model.properties.push(this.getDropDownDefinition());
+    model.properties.push(this.getMultiTextDefinition());
     return model;
   }
 
@@ -598,7 +598,7 @@ export class WorkflowPlaceholder implements OnInit {
       saveWorkflowContext: undefined,
       propertyStorageProviders: undefined,
     };
-    model.properties.push(this.getDropDownDefinition());
+    model.properties.push(this.getDictionaryDefinition());
     return model;
   }
 
@@ -608,8 +608,7 @@ export class WorkflowPlaceholder implements OnInit {
       value: 'string',
       name: 'TestDictionary',
       expressions: {
-        Json: '{"key1":"value1","key2":"value2"}',
-        Literal: ""
+        Json: '{"key1": "value1", "key2": "value2"}',
       },
       type: '',
     };
