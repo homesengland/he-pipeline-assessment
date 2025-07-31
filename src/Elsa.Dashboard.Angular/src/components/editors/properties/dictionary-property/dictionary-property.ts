@@ -17,19 +17,20 @@ export class DictionaryProperty {
   activityIconProvider: any;
   fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
   currentValue: [string, string][];
-  items: [string, string][];
-
+  items: any[] = []; // Will eventually contain all the properties needed to iterate and populate the HTML template
+  
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
     console.log('Setting property model', this.propertyModel());
   }
 
   async ngOnInit(): Promise<void> {
-    this.currentValue = this.jsonToDictionary(this.propertyModel().expressions[SyntaxNames.Json] || null);
-    if (this.currentValue.length === 0) // 'currentValue == null' hence IF is FALSE, need to fix above expressions[SyntaxNames.Json] inorder to get default values
+    const defaultSyntax = this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Json;
+    this.currentValue = this.jsonToDictionary(this.propertyModel()?.expressions[defaultSyntax] || null);
+    if (this.currentValue.length === 0)
       this.currentValue = [['', '']];
 
-    this.currentValue = [['Key1', 'Value1']]; // Currently TESTING using hard-coding values
+    this.updateItems();
   }
 
   jsonToDictionary = (json: string): [string, string][] => {
@@ -64,6 +65,7 @@ export class DictionaryProperty {
     //changing contents of array won't trigger state change,
     //need to update the reference by creating new array
     this.currentValue = [...this.currentValue, ['', '']];
+    this.updateItems();
   }
 
   onRowDeleted = (index: number) => {
@@ -73,6 +75,7 @@ export class DictionaryProperty {
 
     this.currentValue = newValue;
     this.propertyModel().expressions[SyntaxNames.Json] = this.dictionaryToJson(newValue);
+    this.updateItems();
   }
 
   onDefaultSyntaxValueChanged(e: Event) {
@@ -84,19 +87,19 @@ export class DictionaryProperty {
     const input = e.currentTarget as HTMLInputElement;
     this.currentValue[index][0] = input.value
     this.propertyModel().expressions[SyntaxNames.Json] = this.dictionaryToJson(this.currentValue);
+    this.updateItems();
   }
 
   onValueChanged(e: Event, index: number) {
     const input = e.currentTarget as HTMLInputElement;
     this.currentValue[index][1] = input.value
     this.propertyModel().expressions[SyntaxNames.Json] = this.dictionaryToJson(this.currentValue);
+    this.updateItems();
   }
 
-  getItems(): any {
-    this.items = this.currentValue
-
-    return this.items.map((item, index) => {
-      let isLast = index === (this.items.length - 1);
+  updateItems():any {
+    this.items = this.currentValue.map((item, index) => {
+      let isLast = index === (this.currentValue.length - 1);
       let [key, value] = item;
 
       return {

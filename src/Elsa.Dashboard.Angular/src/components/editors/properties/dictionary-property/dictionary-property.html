@@ -4,7 +4,7 @@
     [(activityModel)]="activityModel"
     (onDefaultSyntaxValueChanged)="onDefaultSyntaxValueChanged($event)"
     [singleLineMode]="true">
-    <ng-container *ngFor="let item of getItems()">
+    <ng-container *ngFor="let item of items">
       <div class="elsa-flex elsa-flex-row elsa-justify-between elsa-mb-2">
         <input [id]="item.keyInputId" type="text" [value]="item.key" (change)="onKeyChanged($event, item.index)"
           placeholder="Name"

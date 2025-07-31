@@ -608,6 +608,7 @@ export class WorkflowPlaceholder implements OnInit {
       value: 'string',
       name: 'TestDictionary',
       expressions: {
+        Literal: '123',
         Json: '{"key1": "value1", "key2": "value2"}',
       },
       type: '',
@@ -626,17 +627,10 @@ export class WorkflowPlaceholder implements OnInit {
       uiHint: 'dictionary',
       label: 'Test Label',
       hint: 'Test Hint',
-      options: {
-        items: [
-          { text: 'Option 4', value: '1234' },
-          { text: 'Option 5', value: '56' },
-          { text: 'Option 6', value: '7' },
-        ],
-        isFlagsEnum: false,
-      },
+      options: null,
       order: 0,
       defaultValue: null,
-      supportedSyntaxes: [],
+      supportedSyntaxes: ['Literal', 'Json'],
       isReadOnly: false,
       isBrowsable: true,
       isDesignerCritical: false,
