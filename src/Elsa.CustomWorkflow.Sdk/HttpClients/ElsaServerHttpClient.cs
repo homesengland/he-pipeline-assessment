@@ -53,6 +53,7 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
             request.Content = new StringContent(content, Encoding.UTF8, "application/json");
 
             var client = _httpClientFactory.CreateClient("ElsaServerClient");
+            client.Timeout = TimeSpan.FromSeconds(300);
             AddAccessTokenToRequest(client);
             using (var response = await client
                        .SendAsync(request)
