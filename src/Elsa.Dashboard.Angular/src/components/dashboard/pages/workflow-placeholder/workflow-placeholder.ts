@@ -607,9 +607,6 @@ export class WorkflowPlaceholder implements OnInit {
       syntax: undefined,
       value: 'string',
       name: 'TestDictionary',
-      //expressions: {
-      //  Json: '{"key1": "value1", "key2": "value2"}',
-      //},
       expressions: {},
       type: '',
     };
@@ -636,7 +633,6 @@ export class WorkflowPlaceholder implements OnInit {
       isDesignerCritical: false,
       disableWorkflowProviderSelection: false,
       considerValuesAsOutcomes: false,
-      defaultSyntax: 'Json',
     };
     return model;
   }
