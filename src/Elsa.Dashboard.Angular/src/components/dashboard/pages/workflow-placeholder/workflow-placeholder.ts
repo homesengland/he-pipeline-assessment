@@ -656,7 +656,7 @@ export class WorkflowPlaceholder implements OnInit {
       case 'multi-text':
         return this.multiTextActivityModel;
       case 'dictionary':
-        return this.multiTextActivityModel;
+        return this.dictionaryActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);
     }
