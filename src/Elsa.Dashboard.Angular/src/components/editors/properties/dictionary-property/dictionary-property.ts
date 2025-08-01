@@ -17,16 +17,15 @@ export class DictionaryProperty {
   activityIconProvider: any;
   fieldId = computed(() => this.propertyDescriptor()?.name || 'default');
   currentValue: [string, string][];
-  items: any[] = []; // Will eventually contain all the properties needed to iterate and populate the HTML template
-  
+  items: any[] = [];
+    
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
     console.log('Setting property model', this.propertyModel());
   }
 
   async ngOnInit(): Promise<void> {
-    const defaultSyntax = this.propertyDescriptor()?.defaultSyntax || SyntaxNames.Json;
-    this.currentValue = this.jsonToDictionary(this.propertyModel()?.expressions[defaultSyntax] || null);
+    this.currentValue = this.jsonToDictionary(this.propertyModel()?.expressions[SyntaxNames.Json] || null);
     if (this.currentValue.length === 0)
       this.currentValue = [['', '']];
 
@@ -80,7 +79,6 @@ export class DictionaryProperty {
 
   onDefaultSyntaxValueChanged(e: Event) {
     this.currentValue = this.jsonToDictionary((e as CustomEvent).detail);
-    
   }
 
   onKeyChanged(e: Event, index: number) {
