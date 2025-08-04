@@ -627,12 +627,13 @@ export class WorkflowPlaceholder implements OnInit {
       options: null,
       order: 0,
       defaultValue: null,
-      supportedSyntaxes: ['Json'],
+      supportedSyntaxes: [],
       isReadOnly: false,
       isBrowsable: true,
       isDesignerCritical: false,
       disableWorkflowProviderSelection: false,
       considerValuesAsOutcomes: false,
+      defaultSyntax: 'Json',
     };
     return model;
   }
