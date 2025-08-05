@@ -13,7 +13,7 @@ namespace Elsa.Server.Stores.Cache
         // Define methods for caching workflow definitions, e.g. Get, Set, Remove, etc.
         void AddDefinition(WorkflowDefinition workflowDefinition);
         Task<WorkflowDefinition?> GetDefinition(ISpecification<WorkflowDefinition> specification);
-        void SaveDefinition(WorkflowDefinition workflowDefinition);
+        Task SaveDefinition(WorkflowDefinition workflowDefinition);
         void RemoveDefinition(WorkflowDefinition definition);
         void RemoveDefinition(string definitionId);
     }
@@ -54,22 +54,26 @@ namespace Elsa.Server.Stores.Cache
             return JsonConvert.DeserializeObject<WorkflowDefinition>(workflowJson, _serializerSettings);
         }
 
-        public void SaveDefinition(WorkflowDefinition workflowDefinition)
+        public async Task SaveDefinition(WorkflowDefinition workflowDefinition)
         {
             var db = _cache.GetDatabase();
-            string cacheKey = CacheKey(workflowDefinition);
             string workflowJson = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
+            List<Task> tasklist = new List<Task>();
 
-
-            if (workflowDefinition.IsPublished && workflowDefinition.IsLatest)
+            if (workflowDefinition.IsLatest)
             {
                 string key = $"{_Key}:{workflowDefinition.DefinitionId}:Latest";
-                Task<bool> success = db.StringSetAsync(key, workflowJson, TimeSpan.FromHours(1));
+                tasklist.Add(db.StringSetAsync(key, workflowJson, TimeSpan.FromHours(1)));
             }
-            else
+            if (workflowDefinition.IsPublished)
             {
-                Task<bool> success = db.StringSetAsync(cacheKey, workflowJson, TimeSpan.FromHours(1));
+                string key = $"{_Key}:{workflowDefinition.DefinitionId}:Published";
+
+                tasklist.Add(db.StringSetAsync(key, workflowJson, TimeSpan.FromHours(1)));
             }
+                string cacheKey = CacheKey(workflowDefinition);
+                tasklist.Add(db.StringSetAsync(cacheKey, workflowJson, TimeSpan.FromHours(1)));
+            await Task.WhenAll(tasklist);
         }
 
         public void RemoveDefinition(WorkflowDefinition definition)
@@ -124,7 +128,7 @@ namespace Elsa.Server.Stores.Cache
 
         private string CacheKey(WorkflowDefinition workflow)
         {
-            string version = workflow.IsLatest ? "Latest" : workflow.Version.ToString();
+            string version = workflow.Version.ToString();
             string key = $"{_Key}:{workflow.DefinitionId}:{version}";
             return key;
         }

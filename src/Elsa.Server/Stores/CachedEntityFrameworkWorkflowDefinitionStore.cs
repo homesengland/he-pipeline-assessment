@@ -46,7 +46,7 @@ namespace Elsa.Server.Stores
                     WorkflowDefinition? workflowDefinition = await base.FindAsync(specification!, cancellationToken);
                     if (workflowDefinition != null)
                     {
-                        _workflowDefinitionCache.SaveDefinition(workflowDefinition);
+                        await _workflowDefinitionCache.SaveDefinition(workflowDefinition);
                     }
                     return workflowDefinition;
             }
@@ -70,7 +70,7 @@ namespace Elsa.Server.Stores
                 try
                 {
                     await base.UpdateAsync(workflowDefinition, cancellationToken);
-                    _workflowDefinitionCache.SaveDefinition(workflowDefinition);
+                    await _workflowDefinitionCache.SaveDefinition(workflowDefinition);
                 }
                 catch (Exception ex)
                 {
@@ -95,7 +95,7 @@ namespace Elsa.Server.Stores
             if (workflowDefinition != null)
             {
                 await base.SaveAsync(workflowDefinition, cancellationToken);
-                _workflowDefinitionCache.SaveDefinition(workflowDefinition);
+                await _workflowDefinitionCache.SaveDefinition(workflowDefinition);
             }
         }
 
