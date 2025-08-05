@@ -184,12 +184,13 @@ namespace Elsa.Server.Stores.ElsaStores
             CancellationToken cancellationToken = default)
         {
             var filter = MapSpecification(specification);
-            return await DoQuery(async dbContext =>
+            var data = await DoQuery(async dbContext =>
             {
-                var dbSet = dbContext.Set<T>();
-                var entity = await dbSet.AsNoTracking().FirstOrDefaultAsync(filter, cancellationToken);
+                var dbSet = dbContext.Set<T>().AsNoTracking();
+                var entity = await dbSet.FirstOrDefaultAsync(filter, cancellationToken);
                 return entity != null ? ReadShadowProperties(dbContext, entity) : default;
             }, cancellationToken);
+            return data;
         }
 
         protected ValueTask DoWorkOnSet(Func<DbSet<T>, ValueTask> work, CancellationToken cancellationToken) =>

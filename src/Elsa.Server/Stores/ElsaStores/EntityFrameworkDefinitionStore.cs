@@ -69,6 +69,32 @@ namespace Elsa.Server.Stores.ElsaStores
             }
         }
 
+        private WorkflowDefinition OnLoading(WorkflowDefinition entity, string? json)
+        {
+            var data = new
+            {
+                entity.Activities,
+                entity.Connections,
+                entity.Variables,
+                entity.ContextOptions,
+                entity.CustomAttributes,
+                entity.Channel
+            };
+
+            if (json != null)
+            {
+                data = JsonConvert.DeserializeAnonymousType(json, data, DefaultContentSerializer.CreateDefaultJsonSerializationSettings())!;
+
+                entity.Activities = data.Activities;
+                entity.Connections = data.Connections;
+                entity.Variables = data.Variables;
+                entity.ContextOptions = data.ContextOptions;
+                entity.CustomAttributes = data.CustomAttributes;
+                entity.Channel = data.Channel;
+            }
+            return entity;
+        }
+
         public virtual async Task UnpublishAll(string definitionId, CancellationToken token)
         {
             ElsaContext dbContext = DbContextFactory.CreateDbContext();
@@ -99,6 +125,74 @@ namespace Elsa.Server.Stores.ElsaStores
                 .SetProperty(d => d.IsLatest, false));
             await dbContext.SaveChangesAsync(token);
         }
+
+        //public virtual async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
+        //{
+        //    string? json = string.Empty;
+        //    var filter = MapSpecification(specification);
+        //    var data = await DoQuery(async dbContext =>
+        //    {
+        //        var dbSet = dbContext.Set<WorkflowDefinition>();
+        //        var entity = await dbSet.AsNoTracking().Include("Data").FirstOrDefaultAsync(filter, cancellationToken);
+        //        if(entity != null)
+        //        {
+        //            json = (string?)dbContext.Entry(entity).Property("Data").CurrentValue;
+        //        }
+        //        return entity != null ? OnLoading(entity, json) : default;
+        //    }, cancellationToken);
+        //    return data;
+        //}
+
+        public override async Task<WorkflowDefinition?> FindAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
+        {
+            var filter = MapSpecification(specification);
+            var data = await DoQuery(async dbContext =>
+            {
+                var dbSet = dbContext.Set<WorkflowDefinition>();
+
+                // Use a projection to get both the entity and its Data property
+                var result = await dbSet.AsNoTracking()
+                    .Where(filter)
+                    .Select(e => new
+                    {
+                        Entity = e,
+                        Data = EF.Property<string>(e, "Data")
+                    })
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (result == null)
+                    return null;
+
+                // Process the entity with the data
+                return OnLoading(result.Entity, result.Data);
+            }, cancellationToken);
+            return data;
+        }
+
+        //private async Task<WorkflowDefinition?> FindDefinitionAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
+        //{
+        //    var filter = MapSpecification(specification);
+        //    var data = await DoQuery(async dbContext =>
+        //    {
+        //        var dbSet = dbContext.Set<WorkflowDefinition>().AsNoTracking();
+        //        var entity = await dbSet.FirstOrDefaultAsync(filter, cancellationToken);
+        //        return entity;
+        //    }, cancellationToken);
+        //    return data;
+        //}
+
+        //private async Task<string> GetData(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
+        //{
+        //    var filter = MapSpecification(specification);
+        //    var data = await DoQuery(async dbContext =>
+        //    {
+        //        var json = await dbContext.
+        //        var dbSet = dbContext.Set<WorkflowDefinition>().AsNoTracking();
+        //        var entity = await dbSet.FirstOrDefaultAsync(filter, cancellationToken);
+        //        return entity != null ? dbContext.Entry(entity).Property("Data").CurrentValue as string : null;
+        //    }, cancellationToken);
+        //    return data ?? string.Empty;
+        //}
 
         public async Task<List<WorkflowDefinitionIdentifiers>> FindWorkflowDefinitionIdentifiersAsync(string definitionId, VersionOptions? options, CancellationToken cancellationToken = default)
         {
