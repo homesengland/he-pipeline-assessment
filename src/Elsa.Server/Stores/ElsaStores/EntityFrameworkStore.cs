@@ -162,7 +162,7 @@ namespace Elsa.Server.Stores.ElsaStores
                 if (paging != null)
                     queryable = queryable.Skip(paging.Skip).Take(paging.Take);
 
-                return (await queryable.ToListAsync(cancellationToken))
+                return (await queryable.AsNoTracking().ToListAsync(cancellationToken))
                     .Select(x => ReadShadowProperties(dbContext, x)).ToList();
             }, cancellationToken);
         }
@@ -187,7 +187,7 @@ namespace Elsa.Server.Stores.ElsaStores
             return await DoQuery(async dbContext =>
             {
                 var dbSet = dbContext.Set<T>();
-                var entity = await dbSet.FirstOrDefaultAsync(filter, cancellationToken);
+                var entity = await dbSet.AsNoTracking().FirstOrDefaultAsync(filter, cancellationToken);
                 return entity != null ? ReadShadowProperties(dbContext, entity) : default;
             }, cancellationToken);
         }
@@ -260,7 +260,7 @@ namespace Elsa.Server.Stores.ElsaStores
 
             return await DoQuery(async dbContext =>
             {
-                var dbSet = dbContext.Set<T>();
+                var dbSet = dbContext.Set<T>().AsNoTracking();
                 var queryable = dbSet.Where(filter);
 
                 if (orderBy != null)
@@ -288,6 +288,7 @@ namespace Elsa.Server.Stores.ElsaStores
                 var dbSet = dbContext.Set<WorkflowDefinition>();
 
                 var queryable = dbSet
+                    .AsNoTracking()
                     .Where(x => x.DefinitionId == specification.WorkflowDefinitionId)
                     .OrderByDescending(x=>x.Version)
                     .Select(x => new WorkflowDefinition()
@@ -315,7 +316,7 @@ namespace Elsa.Server.Stores.ElsaStores
 
             return await DoWork(async dbContext =>
             {
-                var dbSet = dbContext.Set<WorkflowDefinition>();
+                var dbSet = dbContext.Set<WorkflowDefinition>().AsNoTracking();
 
                 var queryable = dbSet
                     .Where(filter)
