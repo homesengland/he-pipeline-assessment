@@ -1,4 +1,4 @@
-﻿
+
 <div>
   <elsa-multi-expression-editor
     #multiExpressionEditor 
@@ -15,15 +15,15 @@
       <thead class="elsa-bg-gray-50">
         <tr>
           <th
-            class="elsa-w-3/12 elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-tracking-wider elsa-text-gray-500">
+            class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-3/12">
             Name
           </th>
           <th
-            class="elsa-w-8/12 elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-tracking-wider elsa-text-gray-500">
+            class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-8/12">
             Expression
           </th>
           <th
-            class="elsa-w-1/12 elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-tracking-wider elsa-text-gray-500">
+            class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
             &nbsp;</th>
         </tr>
       </thead>
@@ -32,10 +32,10 @@
         <tr>
           <td class="elsa-py-2 elsa-pr-5">
             <input type="text" [value]="case.name" (change)="onCaseNameChanged($event, case)"
-              class="elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md elsa-border-gray-300 focus:elsa-ring-blue-500 focus:elsa-border-blue-500 sm:elsa-text-sm" />
+              class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
           </td>
           <td class="pl-5 elsa-py-2">
-            <div class="elsa-relative elsa-mt-1 elsa-rounded-md elsa-shadow-sm">
+            <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
             <expression-editor
               #expressionEditor
               [expression]="case.expressions?.[case.syntax]"
@@ -47,7 +47,7 @@
             </expression-editor>
               <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center">
               <select (change)="onCaseSyntaxChanged($event, case, expressionEditor)"
-                      class="elsa-h-full elsa-rounded-md elsa-border-transparent elsa-bg-transparent elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-text-gray-500 focus:elsa-ring-blue-500 focus:elsa-border-blue-500 sm:elsa-text-sm">
+                      class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md">
                   <option *ngFor="let syntax of supportedSyntaxes"
                           [value]="syntax"
                           [textContent]="syntax"
@@ -57,9 +57,9 @@
               </div>
             </div>
           </td>
-          <td class="elsa-pr-2 elsa-pt-1 elsa-text-right">
+          <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
             <button type="button" (click)="onDeleteCaseClick(case)"
-                    class="elsa-mx-auto elsa-h-5 elsa-w-5 elsa-outline-none focus:elsa-outline-none">
+                    class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
               <span [innerHTML]="activityIconProvider.getIcon('TrashBin')"></span>
             </button>
           </td>
@@ -70,7 +70,7 @@
     </table>
 
     <button type="button" (click)="onAddCaseClick()"
-      class="elsa-mt-2 elsa-inline-flex elsa-items-center elsa-rounded-md elsa-border elsa-border-transparent elsa-bg-blue-600 elsa-px-4 elsa-py-2 elsa-text-sm elsa-font-medium elsa-text-white elsa-shadow-sm hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500">
+      class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
       <span [innerHTML]="activityIconProvider.getIcon('AddCase')"></span>
       Add Case
     </button>

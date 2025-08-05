@@ -1,9 +1,4 @@
 <monaco-editor [options]="options" [model]="model" [editorHeight]="'500px'"></monaco-editor>
-<switch-case-property   [activityModel]="switchCaseActivityModel()" 
-                        [propertyDescriptor]="switchCasePropertyDescriptor()"
-                        [propertyModel]="switchCasePropertyModel()">
-
-</switch-case-property>
 <div *ngFor="let activityProperty of activityProperties">
   <property-control [activity]="getActivityModel(activityProperty().uiHint)" [property]="activityProperty" [onUpdated]="" [isEncypted]="false"> </property-control>
 </div>

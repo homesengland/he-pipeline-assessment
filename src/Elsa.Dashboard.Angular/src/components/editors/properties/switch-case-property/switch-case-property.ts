@@ -67,20 +67,45 @@ export class SwitchCaseProperty {
     }
   }
 
+  // Maf's
   updatePropertyModel() {
-    const updatedExpressions = { ...this.propertyModel().expressions };
+    const updatedExpressions = { ...this.propertyModel().expressions }; 
 
-    updatedExpressions['Switch'] = JSON.stringify(this.cases);
+    let values = JSON.stringify(this.cases);
+    updatedExpressions['Switch'] = values;
 
     this.propertyModel.set({
       ...this.propertyModel(),
       expressions: updatedExpressions
-    });
+    }); // The property model gets updated correctly with 2 records, but the multiExpressionEditor below does not update its value and only has 1 record.
 
     if (this.multiExpressionEditor?.nativeElement) {
       this.multiExpressionEditor.nativeElement.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
     }
   }
+
+  //// Logic from the Guys
+  //updatePropertyModel() {
+  //  const updatedExpressions = { ...this.propertyModel().expressions };
+
+  //  updatedExpressions['Switch'] = JSON.stringify(this.cases);
+
+  //  this.propertyModel.set({
+  //    ...this.propertyModel(),
+  //    expressions: updatedExpressions
+  //  });
+
+  //  if (this.multiExpressionEditor?.nativeElement) {
+  //    this.multiExpressionEditor.nativeElement.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
+  //  }
+  //}
+
+  //// From Elsa core but updated to Angular
+  //updatePropertyModel() {
+  //  this.propertyModel().expressions['Switch'] = JSON.stringify(this.cases);
+  //  // this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);
+  //  this.multiExpressionEditor.expressions['Json'] = JSON.stringify(this.cases, null, 2);
+  //}
 
   onDefaultSyntaxValueChanged(e: CustomEvent) {
     this.cases = e.detail;
@@ -88,7 +113,7 @@ export class SwitchCaseProperty {
 
   onAddCaseClick() {
     const caseName = `Case ${this.cases.length + 1}`;
-    const newCase = {name: caseName, syntax: SyntaxNames.JavaScript, expressions: {[SyntaxNames.JavaScript]: ''}};
+    const newCase = { name: caseName, expressions: { [SyntaxNames.JavaScript]: '' }, syntax: SyntaxNames.JavaScript };
     this.cases = [...this.cases, newCase];
     this.updatePropertyModel();
   }

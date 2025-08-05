@@ -21,9 +21,9 @@ export class WorkflowPlaceholder implements OnInit {
   dropDownActivityModel = signal<ActivityModel | null>(null);
   checkListActivityModel = signal<ActivityModel | null>(null);
   radioListActivityModel = signal<ActivityModel | null>(null);
-  switchCaseActivityModel = signal<ActivityModel>(this.getSwitchCaseModel());
-  switchCasePropertyDescriptor = signal<ActivityPropertyDescriptor>(this.getSwitchCaseDescriptor());
-  switchCasePropertyModel = signal<ActivityDefinitionProperty>(this.getSwitchCaseDefinition());
+  switchCaseActivityModel = signal<ActivityModel | null>(null);
+  propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
+  propertyModel = signal<ActivityDefinitionProperty | null>(null);
 
   intellisenseGatherer: IntellisenseService;
   intellisenseLoaded = signal<boolean>(false);
@@ -53,9 +53,9 @@ export class WorkflowPlaceholder implements OnInit {
     this.checkboxActivityModel.set(this.getCheckboxModel());
     this.jsonActivityModel.set(this.getJsonModel());
     this.dropDownActivityModel.set(this.getDropDownModel());
-    this.radioListActivityModel.set(this.getRadioListModel());
     this.checkListActivityModel.set(this.getDropDownModel());
-    //this.switchCaseActivityModel.set(this.getSwitchCaseModel());
+    this.radioListActivityModel.set(this.getRadioListModel());
+    this.switchCaseActivityModel.set(this.getSwitchCaseModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
     const checkboxDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckboxDescriptor());
@@ -63,10 +63,7 @@ export class WorkflowPlaceholder implements OnInit {
     const dropdownDescriptor = signal<ActivityPropertyDescriptor>(this.getDropDownDescriptor());
     const checkListDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckListDescriptor());
     const radioListDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioListDescriptor());
-    this.switchCaseActivityModel.set(this.getSwitchCaseModel());
-    this.switchCasePropertyDescriptor.set(this.getSwitchCaseDescriptor());
-    this.switchCasePropertyModel.set(this.getSwitchCaseDefinition());
-    //const switchCaseDescriptor = signal<ActivityPropertyDescriptor>(this.getSwitchCaseDescriptor());
+    const switchCaseDescriptor = signal<ActivityPropertyDescriptor>(this.getSwitchCaseDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);
     this.activityProperties.push(checkboxDescriptor);
@@ -74,7 +71,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.activityProperties.push(dropdownDescriptor);
     this.activityProperties.push(checkListDescriptor);
     this.activityProperties.push(radioListDescriptor);
-    //this.activityProperties.push(switchCaseDescriptor);
+    this.activityProperties.push(switchCaseDescriptor);
   }
 
   async ngOnInit() {
@@ -546,6 +543,7 @@ export class WorkflowPlaceholder implements OnInit {
       expressions: {
         Switch: '[{"name": "Case 1", "expressions": {"Javascript" : "JS Test"}, "syntax": "Javascript"}]'
       },
+      //expressions: {},
       type: 'Javascript',
     };
     return model;
