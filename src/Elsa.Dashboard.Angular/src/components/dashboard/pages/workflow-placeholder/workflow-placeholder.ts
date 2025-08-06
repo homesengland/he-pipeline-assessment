@@ -569,7 +569,7 @@ export class WorkflowPlaceholder implements OnInit {
       isDesignerCritical: false,
       disableWorkflowProviderSelection: false,
       considerValuesAsOutcomes: false,
-      defaultSyntax: 'Json',
+      defaultSyntax: 'Javascript',
     };
     return model;
   }
