@@ -26,9 +26,7 @@ export class SwitchCaseProperty {
   valueChange: EventEmitter<Array<any>>;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   syntaxSwitchCount: number = 0;
-    
-
-
+  
   defaultSyntax = SyntaxNames.Json
   isEncypted = model<boolean>(false);
   currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax] || '');
