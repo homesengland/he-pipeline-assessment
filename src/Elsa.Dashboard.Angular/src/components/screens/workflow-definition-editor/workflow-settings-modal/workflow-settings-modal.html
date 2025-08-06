@@ -50,7 +50,7 @@
           [context]="formContext"
           [fieldName]="contextOptions?.contextType"
           label="Type"
-          [(value)]="contextOptions?.contextType ?? ''"
+          [(value)]="contextOptions.contextType"
           hint="The fully qualified workflow context type name."
           fieldId="workflowContextType"
         >
@@ -76,12 +76,13 @@
     <div class="elsa-flex elsa-px-8">
       <div class="elsa-space-y-8 elsa-w-full elsa-h-30">
         <monaco-editor
-        [value]="variablesValue"
-        [language]="variablesLanguage"
-        editorHeight="30em"
-        (propagateChange)="onMonacoValueChanged($any($event))"
-        #monacoVariablesEditor
-        (onInit)="onMonacoInit($event)">
+          [value]="variablesValue"
+          [language]="variablesLanguage"
+          editorHeight="30em"
+          (propagateChange)="onMonacoValueChanged($any($event))"
+          #monacoVariablesEditor
+          (onInit)="onMonacoInit($event)"
+        >
         </monaco-editor>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormContext } from 'src/Utils/forms';
 
 @Component({
@@ -14,6 +14,8 @@ export class FormTextInputComponent {
   @Input() hint?: string;
   @Input() fieldId?: string;
   @Input() readonlyField?: boolean;
+
+  @Output() valueChange = new EventEmitter<string>();
 
   onInput(event: Event) {
     const element = event.target as HTMLInputElement;

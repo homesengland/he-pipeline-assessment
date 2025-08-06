@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, signal, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { EventTypes, WorkflowContextOptions, WorkflowDefinition } from 'src/models';
+import { EventTypes, WorkflowContextFidelity, WorkflowContextOptions, WorkflowDefinition } from 'src/models';
 import { MonacoValueChangedArgs } from 'src/models/elsa-interfaces';
 import { eventBus } from 'src/services/event-bus';
 import { ModalDialog } from 'src/components/shared/modal-dialog/modal-dialog';
@@ -60,7 +60,11 @@ export class WorkflowSettingsModal implements OnInit {
       value: 'Activity',
     },
   ];
-  contextOptions: WorkflowContextOptions;
+
+  contextOptions: WorkflowContextOptions = {
+    contextType: '',
+    contextFidelity: WorkflowContextFidelity.Burst,
+  };
 
   constructor(private elsaClientService: ElsaClientService) {}
 
@@ -162,7 +166,7 @@ export class WorkflowSettingsModal implements OnInit {
     this.workflowDefinitionInternal.variables = e.value;
   }
 
-  async onMonacoInit(e:MonacoValueChangedArgs){
+  async onMonacoInit(e: MonacoValueChangedArgs) {
     console.log('Monaco editor initialized', e);
     await this.monacoVariablesEditor.addJsonLib();
     this.setLanguage(this.variablesLanguage);
@@ -170,7 +174,7 @@ export class WorkflowSettingsModal implements OnInit {
   }
 
   async setExpression(value: string) {
-    console.log("Setting expression in Monaco editor:", value);
+    console.log('Setting expression in Monaco editor:', value);
     await this.monacoVariablesEditor.setValue(value);
   }
   async setLanguage(language: string) {
@@ -197,5 +201,4 @@ export class WorkflowSettingsModal implements OnInit {
         return this.settingsTab;
     }
   }
-
 }
