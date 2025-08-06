@@ -22,6 +22,7 @@ export class SwitchCaseProperty {
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
 
   cases: Array<SwitchCase> = [];
+  case: SwitchCase;
   valueChange: EventEmitter<Array<any>>;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
   syntaxSwitchCount: number = 0;
