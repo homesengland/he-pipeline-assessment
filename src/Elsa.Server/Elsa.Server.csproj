@@ -46,7 +46,7 @@
     <PackageReference Include="System.Drawing.Common" />
     <PackageReference Include="Azure.Storage.Blobs" />
     <PackageReference Include="AutoMapper" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"/>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />

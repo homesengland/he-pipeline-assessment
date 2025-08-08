@@ -49,6 +49,7 @@ using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.Server.DataDictionaryAccessors;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
+using Elsa.Server.Stores.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -106,7 +107,6 @@ builder.Services
     );
 
 builder.Services.AddScoped<IWorkflowRegistry, WorkflowRegistry>();
-
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 

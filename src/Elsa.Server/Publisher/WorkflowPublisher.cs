@@ -1,19 +1,22 @@
 ﻿using Elsa.Events;
+using Elsa.Models;
+using Elsa.Persistence;
+using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
 using Elsa.Persistence.Specifications.WorkflowInstances;
-using Elsa.Persistence.Specifications;
-using Elsa.Persistence;
+using Elsa.Server.Models;
+using Elsa.Server.Stores.ElsaStores;
+using Elsa.Server.Stores.Specifications;
 using Elsa.Services;
 using MediatR;
 using NodaTime;
-using Elsa.Models;
 using Open.Linq.AsyncExtensions;
 
 namespace Elsa.Server.Publisher
 {
     public class WorkflowPublisher : IWorkflowPublisher
     {
-        private readonly IWorkflowDefinitionStore _workflowDefinitionStore;
+        private readonly ICustomWorkflowDefinitionStore _workflowDefinitionStore;
         private readonly IWorkflowInstanceStore _workflowInstanceStore;
         private readonly IIdGenerator _idGenerator;
         private readonly ICloner _cloner;
@@ -21,7 +24,7 @@ namespace Elsa.Server.Publisher
         private readonly IMediator _mediator;
 
         public WorkflowPublisher(
-            IWorkflowDefinitionStore workflowDefinitionStore,
+            ICustomWorkflowDefinitionStore workflowDefinitionStore,
             IWorkflowInstanceStore workflowInstanceStore,
             IIdGenerator idGenerator,
             ICloner cloner,
@@ -71,15 +74,7 @@ namespace Elsa.Server.Publisher
             var definitionId = workflowDefinition.DefinitionId;
 
             // Reset current latest and published definitions.
-            var publishedDefinitions = await _workflowDefinitionStore.FindManyAsync(new LatestOrPublishedWorkflowDefinitionIdSpecification(definitionId), cancellationToken: cancellationToken);
-            List<WorkflowDefinition> publishedAndOrLatestDefinitions = publishedDefinitions.ToList();
-
-            foreach (var publishedAndOrLatestDefinition in publishedAndOrLatestDefinitions)
-            {
-                publishedAndOrLatestDefinition.IsPublished = false;
-                publishedAndOrLatestDefinition.IsLatest = false;
-                await _workflowDefinitionStore.SaveAsync(publishedAndOrLatestDefinition, cancellationToken);
-            }
+            await _workflowDefinitionStore.UnpublishAll(workflowDefinition.DefinitionId, cancellationToken);
 
             if (workflowDefinition.IsPublished)
                 workflowDefinition.Version++;
@@ -117,7 +112,7 @@ namespace Elsa.Server.Publisher
             workflowDefinition = Initialize(workflowDefinition);
 
             await _mediator.Publish(new WorkflowDefinitionRetracting(workflowDefinition), cancellationToken);
-            await _workflowDefinitionStore.SaveAsync(workflowDefinition, cancellationToken);
+            await _workflowDefinitionStore.Unpublish(workflowDefinition, cancellationToken);
             await _mediator.Publish(new WorkflowDefinitionRetracted(workflowDefinition), cancellationToken);
             return workflowDefinition;
         }
@@ -163,17 +158,7 @@ namespace Elsa.Server.Publisher
         public async Task<WorkflowDefinition> SaveDraftAsync(WorkflowDefinition workflowDefinition, CancellationToken cancellationToken = default)
         {
             var draft = workflowDefinition;
-
-            var latestVersion = await _workflowDefinitionStore.FindByDefinitionIdAsync(
-                workflowDefinition.DefinitionId,
-                VersionOptions.Latest,
-                cancellationToken);
-
-            if (latestVersion != null)
-            {
-                latestVersion.IsLatest = false;
-                await _workflowDefinitionStore.SaveAsync(latestVersion, cancellationToken);
-            }
+            await _workflowDefinitionStore.RemoveLatest(draft, cancellationToken);
 
             draft.IsLatest = true;
             draft.IsPublished = false;
