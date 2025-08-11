@@ -61,12 +61,23 @@ export class WorkflowSettingsModal implements OnInit {
     },
   ];
 
-  contextOptions: WorkflowContextOptions = {
-    contextType: '',
-    contextFidelity: WorkflowContextFidelity.Burst,
-  };
 
   constructor(private elsaClientService: ElsaClientService) {}
+
+  initContextOptions() {
+    console.log("Initializing context options for workflow settings modal");
+    if (this.workflowDefinitionInternal.contextOptions == null || this.workflowDefinitionInternal.contextOptions == undefined) {
+      this.workflowDefinitionInternal.contextOptions = {
+        contextType: '',
+        contextFidelity: WorkflowContextFidelity.Burst
+      };
+    }
+    else {
+      this.workflowDefinitionInternal.contextOptions.contextFidelity = this.workflowDefinitionInternal.contextOptions.contextFidelity || WorkflowContextFidelity.Burst;
+      this.workflowDefinitionInternal.contextOptions.contextType = this.workflowDefinitionInternal.contextOptions.contextType || '';
+    }
+  }
+
 
   async getServerUrl(): Promise<string> {
     return this.serverUrl;
@@ -119,10 +130,14 @@ export class WorkflowSettingsModal implements OnInit {
   }
 
   async componentWillLoad() {
+    this.initContextOptions();
     this.handleWorkflowDefinitionChanged(this.workflowDefinition);
 
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
     this.workflowChannels = await client.workflowChannelsApi.list();
+    
+    console.log("Workflow settings loading");
+    console.log("settingsContextOptions", this.workflowDefinitionInternal.contextOptions);
   }
 
   // @Watch('workflowDefinition')

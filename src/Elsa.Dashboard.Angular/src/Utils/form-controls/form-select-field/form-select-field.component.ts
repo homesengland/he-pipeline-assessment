@@ -18,5 +18,6 @@ export class FormSelectFieldComponent {
   onChange(event: Event) {
     const element = event.target as HTMLSelectElement;
     this.context && this.context.updater({ ...this.context.model, [this.fieldName]: element.value });
+    this.context && this.context.updater({ ...this.context.model, [this.value]: element.value });
   }
 }

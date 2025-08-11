@@ -1,7 +1,7 @@
-<modal-dialog>
+﻿<modal-dialog>
   <div slot="content" class="elsa-py-8 elsa-pb-0">
     <form>
-      <div class="elsa-px-8 mb-8">
+      <div class="mb-8 elsa-px-8">
         <div class="elsa-border-b elsa-border-gray-200">
           <nav class="-elsa-mb-px elsa-flex elsa-space-x-8" aria-label="Tabs">
             <a
@@ -9,7 +9,7 @@
               href="#"
               (click)="onTabClick($event, tab)"
               [ngClass]="tab === selectedTab ? selectedClass : inactiveClass"
-              class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm"
+              class="elsa-whitespace-nowrap elsa-border-b-2 elsa-px-1 elsa-py-4 elsa-text-sm elsa-font-medium"
             >
               {{ tab }}
             </a>
@@ -25,14 +25,14 @@
           <button
             type="button"
             (click)="onSaveClick($event)"
-            class="elsa-ml-0 elsa-w-full elsa-inline-flex elsa-justify-center elsa-rounded-md elsa-border elsa-border-transparent elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-bg-blue-600 elsa-text-base elsa-font-medium elsa-text-white hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-ml-3 sm:elsa-w-auto sm:elsa-text-sm"
+            class="elsa-ml-0 elsa-inline-flex elsa-w-full elsa-justify-center elsa-rounded-md elsa-border elsa-border-transparent elsa-bg-blue-600 elsa-px-4 elsa-py-2 elsa-text-base elsa-font-medium elsa-text-white elsa-shadow-sm hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-ml-3 sm:elsa-w-auto sm:elsa-text-sm"
           >
             Save
           </button>
           <button
             type="button"
             (click)="onCancelClick()"
-            class="elsa-mt-3 elsa-w-full elsa-inline-flex elsa-justify-center elsa-rounded-md elsa-border elsa-border-gray-300 elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-bg-white elsa-text-base elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-mt-0 sm:elsa-ml-3 sm:elsa-w-auto sm:elsa-text-sm"
+            class="elsa-mt-3 elsa-inline-flex elsa-w-full elsa-justify-center elsa-rounded-md elsa-border elsa-border-gray-300 elsa-bg-white elsa-px-4 elsa-py-2 elsa-text-base elsa-font-medium elsa-text-gray-700 elsa-shadow-sm hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-mt-0 sm:elsa-ml-3 sm:elsa-w-auto sm:elsa-text-sm"
           >
             Cancel
           </button>
@@ -45,22 +45,22 @@
   <!-- Workflow Context Tab -->
   <ng-template #workflowContextTab>
     <div class="elsa-flex elsa-px-8">
-      <div class="elsa-space-y-8 elsa-w-full">
+      <div class="elsa-w-full elsa-space-y-8">
         <form-text-input
           [context]="formContext"
-          [fieldName]="contextOptions?.contextType"
+          [fieldName]="workflowDefinitionInternal.contextOptions.contextType"
           label="Type"
-          [(value)]="contextOptions.contextType"
+          [value]="workflowDefinitionInternal.contextOptions.contextType"
           hint="The fully qualified workflow context type name."
           fieldId="workflowContextType"
         >
         </form-text-input>
-        <div class="elsa-space-y-8 elsa-w-full">
+        <div class="elsa-w-full elsa-space-y-8">
           <form-select-field
             [context]="formContext"
-            [fieldName]="contextOptions?.contextFidelity"
+            [fieldName]="workflowDefinitionInternal.contextOptions.contextFidelity"
             label="Fidelity"
-            [value]="contextOptions?.contextFidelity"
+            [value]="workflowDefinitionInternal.contextOptions.contextFidelity"
             [options]="fidelityOptions"
             hint="The workflow context refresh fidelity controls the behavior of when to load and persist the workflow context."
             fieldId="workflowContextFidelity"
@@ -74,7 +74,7 @@
   <!-- Variables Tab -->
   <ng-template #variablesTab>
     <div class="elsa-flex elsa-px-8">
-      <div class="elsa-space-y-8 elsa-w-full elsa-h-30">
+      <div class="elsa-h-30 elsa-w-full elsa-space-y-8">
         <monaco-editor
           [value]="variablesValue"
           [language]="variablesLanguage"
@@ -91,7 +91,7 @@
   <!-- Advanced Tab -->
   <ng-template #advancedTab>
     <div class="elsa-flex elsa-px-8">
-      <div class="elsa-space-y-8 elsa-w-full">
+      <div class="elsa-w-full elsa-space-y-8">
         <form-text-input
           [context]="formContext"
           fieldName="tag"
@@ -101,7 +101,7 @@
           fieldId="tag"
         >
         </form-text-input>
-        <div class="elsa-space-y-8 elsa-w-full">
+        <div class="elsa-w-full elsa-space-y-8">
           <form-select-field
             [context]="formContext"
             fieldName="persistenceBehavior"
@@ -113,7 +113,7 @@
           >
           </form-select-field>
         </div>
-        <div class="elsa-space-y-8 elsa-w-full" *ngIf="workflowChannelOptions?.length > 0">
+        <div class="elsa-w-full elsa-space-y-8" *ngIf="workflowChannelOptions?.length > 0">
           <form-select-field
             [context]="formContext"
             fieldName="channel"
@@ -125,7 +125,7 @@
           >
           </form-select-field>
         </div>
-        <div class="elsa-space-y-8 elsa-w-full">
+        <div class="elsa-w-full elsa-space-y-8">
           <form-check-box
             [context]="formContext"
             fieldName="isSingleton"
@@ -143,7 +143,7 @@
   <!-- Settings Tab -->
   <ng-template #settingsTab>
     <div class="elsa-flex elsa-px-8">
-      <div class="elsa-space-y-8 elsa-w-full">
+      <div class="elsa-w-full elsa-space-y-8">
         <form-text-input
           [context]="formContext"
           fieldName="name"
@@ -152,7 +152,7 @@
           hint="The technical name of the workflow."
           fieldId="workflowName"
         ></form-text-input>
-        <div class="elsa-space-y-8 elsa-w-full">
+        <div class="elsa-w-full elsa-space-y-8">
           <form-text-input
             [context]="formContext"
             fieldName="displayName"
@@ -163,7 +163,7 @@
           >
           </form-text-input>
         </div>
-        <div class="elsa-space-y-8 elsa-w-full">
+        <div class="elsa-w-full elsa-space-y-8">
           <form-text-input [context]="formContext" fieldName="description" label="Description" [value]="workflowDefinition?.description ?? ''" fieldId="workflowDescription">
           </form-text-input>
         </div>
