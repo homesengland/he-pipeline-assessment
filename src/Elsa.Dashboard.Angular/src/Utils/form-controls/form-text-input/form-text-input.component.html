@@ -6,7 +6,7 @@
       [id]="fieldId"
       [name]="fieldName"
       [readonly]="readonlyField"
-      [value]="value"
+      [value]="value() ?? ''"
       (input)="onInput($event)"
       class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
     />

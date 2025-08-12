@@ -10,6 +10,7 @@ import { eventBus } from 'src/services/event-bus';
 export class WorkflowSettingsButton {
 
   async onShowWorkflowSettingsClick() {
+    console.log("Workflow Settings Button Clicked");
     await eventBus.emit(EventTypes.ShowWorkflowSettings);
   }
 }

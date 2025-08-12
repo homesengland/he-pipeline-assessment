@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, signal, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { EventTypes, WorkflowContextOptions, WorkflowDefinition } from 'src/models';
+import { EventTypes, WorkflowContextOptions, WorkflowDefinition, WorkflowContextFidelity } from 'src/models';
 import { MonacoValueChangedArgs } from 'src/models/elsa-interfaces';
 import { eventBus } from 'src/services/event-bus';
 import { ModalDialog } from 'src/components/shared/modal-dialog/modal-dialog';
@@ -8,6 +8,7 @@ import { ElsaClientService } from 'src/services/elsa-client';
 import { MarkerSeverity } from 'src/components/monaco/types';
 import { HTMLMonacoElement } from 'src/models/monaco-elements';
 import { Uri } from 'src/constants/constants';
+
 
 interface VariableDefinition {
   name?: string;
@@ -69,7 +70,10 @@ export class WorkflowSettingsModal implements OnInit {
   }
 
   get variablesValue(): string {
-    return this.workflowDefinitionInternal.variables || '{}';
+    if (!this.workflowDefinitionInternal?.variables) {
+      return '{}';
+    }
+    else return this.workflowDefinitionInternal.variables;
   }
 
   get variablesLanguage(): string {
@@ -113,8 +117,49 @@ export class WorkflowSettingsModal implements OnInit {
       ...this.workflowChannels.map(x => ({ text: x, value: x })),
     ];
   }
+  initContextOptions() {
+    if (this.workflowDefinition.contextOptions == null || this.workflowDefinition.contextOptions == undefined) {
+      this.workflowDefinition.contextOptions = {
+        contextType: '',
+        contextFidelity: WorkflowContextFidelity.Burst
+      }
+    }
+    else {
+      this.workflowDefinition.contextOptions.contextType = this.workflowDefinition.contextOptions.contextType || '';
+      this.workflowDefinition.contextOptions.contextFidelity = this.workflowDefinition.contextOptions.contextFidelity || WorkflowContextFidelity.Burst;
+    }
+  }
+
+  updateName(e: Event) {
+    console.log('NameEvent', e)
+    const element = e.target as HTMLInputElement;
+    this.workflowDefinitionInternal.name = element.value;
+    this.handleWorkflowDefinitionChanged(this.workflowDefinitionInternal);
+  }
+  updateDescription(e: Event) {
+    const element = e.target as HTMLInputElement;
+    console.log('DescriptionEvent', e)
+    this.workflowDefinitionInternal.description = element.value;
+    this.handleWorkflowDefinitionChanged(this.workflowDefinitionInternal);
+  }
+
+  updateContextType(e: Event) {
+    const element = e.target as HTMLInputElement;
+    this.workflowDefinitionInternal.contextOptions.contextType = element.value;
+    this.handleWorkflowDefinitionChanged(this.workflowDefinitionInternal);
+  }
+
+  updateContextFidelity(e: Event) {
+    const element = e.target as HTMLInputElement;
+    this.workflowDefinitionInternal.contextOptions.contextFidelity = element.value as WorkflowContextFidelity;
+    this.handleWorkflowDefinitionChanged(this.workflowDefinitionInternal);
+  }
+  updateChannelOptions(e: Event) {
+    console.log("Todo:", e);
+  }
 
   async componentWillLoad() {
+    this.initContextOptions();
     this.handleWorkflowDefinitionChanged(this.workflowDefinition);
 
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
@@ -135,6 +180,7 @@ export class WorkflowSettingsModal implements OnInit {
   // }
 
   componentDidLoad() {
+    console.log('WorkflowSettingsModal componentDidLoad called');
     eventBus.on(EventTypes.ShowWorkflowSettings, async () => await this.dialog.show());
   }
 

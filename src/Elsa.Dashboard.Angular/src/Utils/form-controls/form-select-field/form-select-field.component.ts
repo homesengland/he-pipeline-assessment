@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormContext, SelectOption } from 'src/Utils/forms';
 
 @Component({
@@ -7,7 +7,6 @@ import { FormContext, SelectOption } from 'src/Utils/forms';
   standalone: false,
 })
 export class FormSelectFieldComponent {
-  @Input() context: FormContext;
   @Input() fieldName: string;
   @Input() label: string;
   @Input() value: string;
@@ -15,8 +14,11 @@ export class FormSelectFieldComponent {
   @Input() hint?: string;
   @Input() fieldId?: string;
 
+  @Output() valueChanged: EventEmitter<string> = new EventEmitter<string>();
+
   onChange(event: Event) {
     const element = event.target as HTMLSelectElement;
-    this.context && this.context.updater({ ...this.context.model, [this.fieldName]: element.value });
+    this.valueChanged.emit(element.value);
+    //this.context && this.context.updater({ ...this.context.model, [this.fieldName]: element.value });
   }
 }

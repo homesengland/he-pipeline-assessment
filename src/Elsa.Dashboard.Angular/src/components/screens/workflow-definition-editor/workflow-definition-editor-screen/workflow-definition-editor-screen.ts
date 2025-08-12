@@ -24,7 +24,7 @@ import { ActivityStats, SaveWorkflowDefinitionRequest } from 'src/services/workf
 import { HTMLElsaConfirmDialogElement } from 'src/models/elsa-interfaces';
 import { eventBus } from 'src/services/event-bus';
 import { ElsaClientService } from 'src/services/elsa-client';
-import { downloadFromBlob } from 'src/utils/download';
+import { downloadFromBlob } from 'src/Utils/download';
 import { Location } from '@angular/common';
 import { AppStateActionGroup } from 'src/store/actions/app.state.actions';
 import { Store } from '@ngrx/store';

@@ -7,7 +7,6 @@ import { FormContext } from 'src/Utils/forms';
   standalone: false,
 })
 export class FormTextAreaComponent {
-  @Input() context: FormContext;
   @Input() fieldName: string;
   @Input() label: string;
   @Input() value: string;
@@ -16,6 +15,6 @@ export class FormTextAreaComponent {
 
   onInput(event: Event) {
     const element = event.target as HTMLTextAreaElement;
-    this.context && this.context.updater({ ...this.context.model, [this.fieldName]: element.value });
+    //this.context && this.context.updater({ ...this.context.model, [this.fieldName]: element.value });
   }
 }

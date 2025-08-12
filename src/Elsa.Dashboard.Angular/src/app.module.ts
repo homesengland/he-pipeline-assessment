@@ -52,6 +52,7 @@ import { PropertyControl } from './components/controls/property-control/property
 import { EditorComponent } from './components/monaco/editor.component';
 import { DiffEditorComponent } from './components/monaco/diff-editor.component';
 import { JsonProperty } from './components/editors/properties/json-property/json-property';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -108,6 +109,7 @@ import { JsonProperty } from './components/editors/properties/json-property/json
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
     BrowserAnimationsModule,
+    MatTabsModule,
   ],
   providers: [IntellisenseService, provideHttpClient(), { provide: MONACO_EDITOR_CONFIG, useValue: monacoConfig }],
   bootstrap: [WorkflowRoot],
