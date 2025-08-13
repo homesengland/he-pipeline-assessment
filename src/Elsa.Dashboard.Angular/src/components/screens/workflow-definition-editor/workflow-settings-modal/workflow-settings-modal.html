@@ -3,121 +3,16 @@
     <form>
       <div class="elsa-px-8 mb-8">
         <div class="elsa-border-b elsa-border-gray-200">
-          <!--<nav class="-elsa-mb-px elsa-flex elsa-space-x-8" aria-label="Tabs">
-            <mat-tab-group class="-elsa-mb-px elsa-flex elsa-space-x-8" aria-label="Tabs">
-              <mat-tab class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm" label="Settings">
-                <div class="elsa-flex elsa-px-8">
-                  <div class="elsa-space-y-8 elsa-w-full">
-                    <form-text-input fieldName="name"
-                                     label="Name"
-                                     [value]="workflowDefinition?.name ?? ''"
-                                     hint="The technical name of the workflow."
-                                     fieldId="workflowName"
-                                     valueChanged="updateName($event)"></form-text-input>
-                    <div class="elsa-space-y-8 elsa-w-full">
-                      <form-text-input fieldName="displayName"
-                                       label="Display Name"
-                                       [value]="workflowDefinition?.displayName ?? ''"
-                                       hint="A user-friendly display name of the workflow."
-                                       fieldId="workflowDisplayName"
-                                       valueChanged="updateDisplayName($event)">
-                      </form-text-input>
-                    </div>
-                    <div class="elsa-space-y-8 elsa-w-full">
-                      <form-text-input [context]="formContext" fieldName="description" label="Description" [value]="workflowDefinition?.description ?? ''" fieldId="workflowDescription">
-                      </form-text-input>
-                    </div>
-                  </div>
-                </div>
-              </mat-tab>
-              <mat-tab class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm" label="Variables">
-                <div class="elsa-flex elsa-px-8">
-                  <div class="elsa-space-y-8 elsa-w-full elsa-h-30">
-                    <monaco-editor [value]="variablesValue"
-                                   [language]="variablesLanguage"
-                                   editorHeight="30em"
-                                   (propagateChange)="onMonacoValueChanged($any($event))"
-                                   #monacoVariablesEditor
-                                   (onInit)="onMonacoInit($event)">
-                    </monaco-editor>
-                  </div>
-                </div>
-              </mat-tab>
-              <mat-tab class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm" label="Context">
-                <div class="elsa-flex elsa-px-8">
-                  <div class="elsa-space-y-8 elsa-w-full">
-                    <form-text-input [fieldName]="workflowDefinitionInternal?.contextOptions.contextType"
-                                     label="Type"
-                                     [value]="workflowDefinitionInternal?.contextOptions.contextType"
-                                     hint="The fully qualified workflow context type name."
-                                     fieldId="workflowContextType"
-                                     valueChanged="updateContextType($event)">
-                    </form-text-input>
-                    <div class="elsa-space-y-8 elsa-w-full">
-                      <form-select-field [fieldName]="workflowDefinitionInternal?.contextOptions.contextFidelity"
-                                         label="Fidelity"
-                                         [value]="workflowDefinitionInternal?.contextOptions.contextFidelity"
-                                         [options]="fidelityOptions"
-                                         hint="The workflow context refresh fidelity controls the behavior of when to load and persist the workflow context."
-                                         fieldId="workflowContextFidelity"
-                                         valueChanged="updateContextFidelity($event)">
-                      </form-select-field>
-                    </div>
-                  </div>
-                </div>
-              </mat-tab>
-              <mat-tab class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm" label="Advanced">
-                <div class="elsa-flex elsa-px-8">
-                  <div class="elsa-space-y-8 elsa-w-full">
-                    <form-text-input fieldName="tag"
-                                     label="Tag"
-                                     [value]="workflowDefinition?.tag ?? ''"
-                                     hint="Tags can be used to query workflow definitions with."
-                                     fieldId="tag">
-                    </form-text-input>
-                    <div class="elsa-space-y-8 elsa-w-full">
-                      <form-select-field fieldName="persistenceBehavior"
-                                         label="Persistence Behavior"
-                                         [value]="workflowDefinition?.persistenceBehavior"
-                                         [options]="persistenceBehaviorOptions"
-                                         hint="The persistence behavior controls how often a workflow instance is persisted during workflow execution."
-                                         fieldId="workflowContextFidelity">
-                      </form-select-field>
-                    </div>
-                    <div class="elsa-space-y-8 elsa-w-full" *ngIf="workflowChannelOptions?.length > 0">
-                      <form-select-field fieldName="channel"
-                                         label="Channel"
-                                         [value]="workflowDefinition?.channel"
-                                         [options]="workflowChannelOptions"
-                                         hint="Select a channel for this workflow to execute in."
-                                         fieldId="channel"
-                                         valueChanged="updateChannelOptions($event)">
-                      </form-select-field>
-                    </div>
-                    <div class="elsa-space-y-8 elsa-w-full">
-                      <form-check-box fieldName="isSingleton"
-                                      label="Singleton"
-                                      [value]="workflowDefinition?.isSingleton"
-                                      hint="Singleton workflows will only have one active instance executing at a time."
-                                      fieldId="isSingleton">
-                      </form-check-box>
-                    </div>
-                  </div>
-                </div>
-              </mat-tab>
-            </mat-tab-group>
-            </nav>-->
-
-            <nav class="-elsa-mb-px elsa-flex elsa-space-x-8" aria-label="Tabs">
-          <a *ngFor="let tab of tabs"
-             href="#"
-             (click)="onTabClick($event, tab)"
-             [ngClass]="tab === selectedTab ? selectedClass : inactiveClass"
-             class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm">
-           {{tab }}
-          </a>
-        </nav>
-      </div>
+          <nav class="-elsa-mb-px elsa-flex elsa-space-x-8" aria-label="Tabs">
+            <a *ngFor="let tab of tabs"
+               href="#"
+               (click)="onTabClick($event, tab)"
+               [ngClass]="tab === selectedTab ? selectedClass : inactiveClass"
+               class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm">
+              {{tab }}
+            </a>
+          </nav>
+        </div>
     </div>
              <!--Render selected tab content--> 
             <ng-container [ngTemplateOutlet]="renderSelectedTab()"></ng-container>
