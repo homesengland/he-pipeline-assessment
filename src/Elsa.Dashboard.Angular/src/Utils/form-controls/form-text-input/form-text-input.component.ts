@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, model } from '@angular/core';
+import { Component, Input, model } from '@angular/core';
 import { FormContext } from 'src/Utils/forms';
 
 @Component({
@@ -15,8 +15,6 @@ export class FormTextInputComponent {
   @Input() readonlyField?: boolean;
 
   value = model<string>('');
-
-  @Output() valueChanged: EventEmitter<string> = new EventEmitter<string>();
 
   onInput(event: Event) {
     console.log("Input Event");

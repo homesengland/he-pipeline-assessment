@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, model } from '@angular/core';
 import { FormContext } from 'src/Utils/forms';
 
 @Component({
@@ -9,15 +9,13 @@ import { FormContext } from 'src/Utils/forms';
 export class FormCheckBoxComponent {
   @Input() fieldName: string;
   @Input() label: string;
-  @Input() checked: boolean;
   @Input() hint?: string;
   @Input() fieldId?: string;
 
-  @Output() checkedChanged: EventEmitter<string> = new EventEmitter<string>();
+  checked = model<boolean>(false);
 
   onChange(event: Event) {
     const element = event.target as HTMLInputElement;
-    this.checkedChanged.emit(element.value);
-    //this.context && this.context.updater({ ...this.context.model, [this.fieldName]: element.checked });
+    this.checked.update(x => x = element.checked);
   }
 }

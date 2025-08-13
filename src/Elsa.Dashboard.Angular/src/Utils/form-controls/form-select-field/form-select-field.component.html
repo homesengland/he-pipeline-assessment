@@ -4,11 +4,11 @@
     <select
       [id]="fieldId"
       [name]="fieldName"
-      [value]="value"
+      [value]="value() ?? ''"
       (change)="onChange($event)"
       class="block focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-w-full elsa-shadow-sm sm:elsa-text-sm elsa-border-gray-300 elsa-rounded-md"
     >
-      <option *ngFor="let option of options" [value]="option.value" [selected]="option.value === value">
+      <option *ngFor="let option of options" [value]="option.value" [selected]="option.value === value()">
         {{ option.text }}
       </option>
     </select>
