@@ -296,6 +296,12 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
     if (!this.workflowInstance || this.workflowInstance.id !== this.workflowInstanceId) this.workflowInstance = await client.workflowInstancesApi.get(this.workflowInstanceId);
   }
 
+  async updateWorkflowSettings(workflowDefinition: WorkflowDefinition) {
+    console.log("WorkflowDefinitionEmitted", workflowDefinition);
+    await this.onUpdateWorkflowSettings(workflowDefinition);
+    //Todo.  Some save stuff
+  }
+
   async publishWorkflow() {
     this.publishing = true;
     await this.saveWorkflow(true);
