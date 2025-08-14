@@ -1,4 +1,4 @@
-import { Component, input, model, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
+import { Component, computed, input, model, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
 import { SyntaxNames } from '../../../constants/constants';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from '../../../models';
 import { MultiExpressionEditor } from '../multi-expression-editor/multi-expression-editor';
@@ -12,6 +12,12 @@ export class PropertyEditor implements OnInit, OnChanges {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
+
+  expressions = computed(() => {
+    const model = this.propertyModel();
+    return model?.expressions ? { ...model.expressions } : {};
+  });
+
   editorHeight = input<string>('10em');
   singleLineMode = input(false);
   context? = input<string>();
@@ -36,12 +42,35 @@ export class PropertyEditor implements OnInit, OnChanges {
   onExpressionChanged(expression: string) {
     let defaultSyntax = this.propertyDescriptor().defaultSyntax || SyntaxNames.Literal;
     let syntax = this.propertyModel().syntax || defaultSyntax;
-    let expressions = this.propertyModel().expressions;
-    expressions[syntax] = expression;
+    const expressions = {
+      ...this.propertyModel().expressions,
+      [syntax]: expression,
+    };
     this.propertyModel.update(x => ({ ...x, expressions: expressions }));
+    // Ensure the expressions object has a 'Json' property as required by updateActivityModel
+    this.updateActivityModel(syntax, expression);
 
     if (syntax != defaultSyntax) return;
 
     this.defaultSyntaxValueChanged.emit(expression);
+  }
+
+  private updateActivityModel(syntax: string, value: string) {
+    const updatedProperties = this.activityModel().properties.map(property =>
+      property.name === this.propertyDescriptor().name
+        ? {
+            ...property,
+            expressions: {
+              ...property.expressions,
+              [syntax]: value,
+            },
+            syntax: syntax,
+          }
+        : property,
+    );
+    this.activityModel.update(model => ({
+      ...model,
+      properties: updatedProperties,
+    }));
   }
 }

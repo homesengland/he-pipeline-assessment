@@ -1,0 +1,22 @@
+<property-editor [(activityModel)]="activityModel" [(propertyDescriptor)]="propertyDescriptor" [(propertyModel)]="propertyModel" (onDefaultSyntaxValueChanged)="this.onDefaultSyntaxValueChanged($defaultSyntaxEvent)" single-line="true" [showLabel]="false">
+  <div class="elsa-max-w-lg elsa-space-y-3 elsa-my-4">
+    <ng-container *ngFor="let item of getSelectItems()">
+      <div class="elsa-relative elsa-flex elsa-items-start">
+        <div class="elsa-flex elsa-items-center elsa-h-5">
+          <input
+            [id]="item.inputId"
+            type="radio"
+            [name]="fieldId()"
+            [checked]="item.isSelected"
+            [value]="item.value"
+            (click)="onCheckChanged($event)"
+            class="elsa-focus:ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300"
+          />
+        </div>
+        <div class="elsa-ml-3 elsa-text-sm">
+          <label htmlFor="{{item.inputId}}" class="elsa-font-medium elsa-text-gray-700">{{ item.text }}</label>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</property-editor>

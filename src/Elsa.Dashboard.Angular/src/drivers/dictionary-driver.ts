@@ -1,32 +1,31 @@
 import { PropertyDisplayDriver } from '../services/property-display-driver';
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from '../models';
-import { getOrCreateProperty } from '../utils/utils';
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from '../models';
+import { getOrCreateProperty, setActivityModelProperty } from '../utils/utils';
 import { Injectable, signal, Signal, Type } from '@angular/core';
-import { SingleLineProperty } from 'src/components/editors/properties/single-line-property/single-line-property';
-import { JsonProperty } from 'src/components/editors/properties/json-property/json-property';
+import { DictionaryProperty } from 'src/components/editors/properties/dictionary-property/dictionary-property';
 
 @Injectable({
   providedIn: 'root',
 })
-export class JsonDriver implements PropertyDisplayDriver {
+export class DictionaryDriver implements PropertyDisplayDriver {
   constructor() {
-    console.log('JsonDriver initialized');
+    console.log('DictionaryDriver initialized');
   }
 
   display(model: Signal<ActivityModel>, property: Signal<ActivityPropertyDescriptor>, onUpdated?: () => void, isEncrypted?: boolean) {
-    console.log('Json Driver Setup');
+    console.log('Dictionary Driver Setup');
     console.log('Activity Model', model());
     console.log('Property Model', property());
     const propertyModel = getOrCreateProperty(model(), property().name);
     const propertyModelSignal = signal<ActivityDefinitionProperty>(propertyModel);
 
-    console.log('property model for Json Driver', propertyModel);
+    console.log('property model for Dictionary Driver', propertyModel);
     return {
-      componentType: JsonProperty,
+      componentType: DictionaryProperty,
       inputs: {
         activityModel: model,
         propertyDescriptor: property,
-        propertyModel: propertyModelSignal,
+        propertyModel: propertyModelSignal
       },
     };
   }

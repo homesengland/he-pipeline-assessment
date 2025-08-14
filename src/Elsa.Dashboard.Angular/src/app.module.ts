@@ -23,6 +23,7 @@ import { ExpressionEditor } from './components/editors/expression-editor/express
 import { PropertyEditor } from './components/editors/property-editor/property-editor';
 import { SingleLineProperty } from './components/editors/properties/single-line-property/single-line-property';
 import { MultiLineProperty } from './components/editors/properties/multi-line-property/multi-line-property';
+import { CheckboxProperty } from './components/editors/properties/checkbox-property/checkbox-property';
 import { WorkflowPlaceholder } from './components/dashboard/pages/workflow-placeholder/workflow-placeholder';
 import { StoreModule } from '@ngrx/store';
 import { appStateReducer } from './store/reducers/app.state.reducers';
@@ -52,7 +53,12 @@ import { PropertyControl } from './components/controls/property-control/property
 import { EditorComponent } from './components/monaco/editor.component';
 import { DiffEditorComponent } from './components/monaco/diff-editor.component';
 import { JsonProperty } from './components/editors/properties/json-property/json-property';
-import { MatTabsModule } from '@angular/material/tabs';
+import { DropDownProperty } from './components/editors/properties/drop-down-property/drop-down-property';
+import { CheckListProperty } from './components/editors/properties/check-list-property/check-list-property';
+import { RadioListProperty } from './components/editors/properties/radio-list-property/radio-list-property';
+import { MultiTextProperty } from './components/editors/properties/multi-text-property/multi-text-property';
+import { InputTags } from './components/controls/input-tags/input-tags';
+import { DictionaryProperty } from './components/editors/properties/dictionary-property/dictionary-property';
 
 @NgModule({
   declarations: [
@@ -77,6 +83,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     PropertyEditor,
     SingleLineProperty,
     MultiLineProperty,
+    CheckboxProperty,
     ToastNotification,
     WorkflowInstanceJournalComponent,
     FlyoutPanelComponent,
@@ -98,6 +105,12 @@ import { MatTabsModule } from '@angular/material/tabs';
     FormSectionComponent,
     FormSelectFieldComponent,
     FormTextAreaComponent,
+    DropDownProperty,
+    CheckListProperty,
+    RadioListProperty,
+    MultiTextProperty,
+    InputTags,
+    DictionaryProperty
   ],
   imports: [
     routing,
