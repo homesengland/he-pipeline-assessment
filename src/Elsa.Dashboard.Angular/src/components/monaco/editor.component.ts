@@ -1,4 +1,4 @@
-import { MonacoValueChangedArgs } from './../../models/monaco-elements';
+import { MonacoValueChangedArgs } from '../../models/monaco-elements';
 import { ChangeDetectionStrategy, Component, forwardRef, inject, Input, output, NgZone } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fromEvent } from 'rxjs';

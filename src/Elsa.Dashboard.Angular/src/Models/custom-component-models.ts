@@ -1,4 +1,29 @@
-import { Map } from '../utils/utils'
+import { Map } from '../utils/utils';
+import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from './elsa-interfaces';
+
+export interface HeActivityPropertyDescriptor extends ActivityPropertyDescriptor {
+  name: string;
+  uiHint: string;
+  label?: string;
+  hint?: string;
+  options?: any;
+  category?: string;
+  defaultValue?: any;
+  defaultSyntax?: string;
+  supportedSyntaxes: Array<string>;
+  isReadOnly?: boolean;
+  isBrowsable?: boolean;
+  isDesignerCritical: boolean;
+  defaultWorkflowStorageProvider?: string;
+  disableWorkflowProviderSelection: boolean;
+  considerValuesAsOutcomes: boolean;
+  displayInDesigner: boolean;
+  conditionalActivityTypes?: Array<string>;
+  expectedOutputType: string;
+  hasNestedProperties: boolean;
+  hasColletedProperties: boolean;
+  nestedProperties: Array<HeActivityPropertyDescriptor>;
+}
 
 //Outcome Screens
 
@@ -23,9 +48,18 @@ export interface DataDictionaryGroup {
   IsArchived: boolean;
 }
 
-export interface DataDictionary{
+export interface DataDictionary {
   Id: number;
   Name: string;
   LegacyName: string;
   IsArchived: boolean;
+}
+
+export class NestedProperty {
+  value: NestedActivityDefinitionProperty;
+  descriptor: HeActivityPropertyDescriptor;
+}
+
+export interface NestedActivityDefinitionProperty extends ActivityDefinitionProperty {
+  type: string;
 }

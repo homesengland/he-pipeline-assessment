@@ -1,4 +1,4 @@
-import { WorkflowStudio } from '../models/';
+import { WorkflowStudio } from '../models';
 
 export interface FeatureConfig {
   enabled: boolean;
