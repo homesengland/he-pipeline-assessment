@@ -1,6 +1,7 @@
 import { ActivityDefinition, ActivityDefinitionProperty, ActivityModel, ConnectionModel, WorkflowModel } from '../models';
 import * as collection from 'lodash';
 import { Duration } from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 //import { createDocument } from "@stencil/core/mock-doc";
 
 declare global {
@@ -245,3 +246,7 @@ export const stripActivityNameSpace = (name: string): string => {
   const lastDotIndex = name.lastIndexOf('.');
   return lastDotIndex < 0 ? name : name.substring(lastDotIndex + 1);
 };
+
+export function getUniversalUniqueId() {
+  return uuidv4();
+}
