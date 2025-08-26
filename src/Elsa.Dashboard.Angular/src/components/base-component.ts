@@ -5,10 +5,10 @@ import {
   ActivityPropertyDescriptor,
   HTMLElsaMultiExpressionEditorElement,
   HTMLElsaExpressionEditorElement,
-} from '../../models/elsa-interfaces';
-import { NestedActivityDefinitionProperty } from '../../models/custom-component-models';
+} from '../models/elsa-interfaces';
+import { NestedActivityDefinitionProperty } from '../models/custom-component-models';
 import { getUniversalUniqueId, mapSyntaxToLanguage, parseJson } from 'src/utils/utils';
-import { SyntaxNames } from '../../constants/constants';
+import { SyntaxNames } from '../constants/constants';
 
 export interface ISharedComponent {
   activityModel: ActivityModel;

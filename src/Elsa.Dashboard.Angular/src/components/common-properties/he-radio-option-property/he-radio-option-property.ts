@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from '../../../models/elsa-interfaces';
 import { NestedActivityDefinitionProperty } from '../../../models/custom-component-models';
 import { SyntaxNames } from '../../../constants/constants';
-// import { SortableComponent } from '../base-component';
-// import { DisplayToggle } from '../display-toggle-component';
+import { SortableComponent } from 'src/components/sortable-component';
 
 @Component({
   selector: 'he-radio-option-property',
@@ -18,6 +17,6 @@ export class HeRadioOptionProperty {
   keyId: string;
   properties: NestedActivityDefinitionProperty[];
 
-  // private _base: SortableComponent;
+  private _base: SortableComponent;
   // private _toggle: DisplayToggle;
 }
