@@ -16,7 +16,7 @@ declare var monaco: any;
   host: {
     '[style.height]': 'editorHeight()',
     'class':
-      'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300 elsa-p-4',
+      'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [

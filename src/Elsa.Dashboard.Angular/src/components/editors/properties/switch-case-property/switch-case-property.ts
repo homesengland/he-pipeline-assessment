@@ -24,7 +24,7 @@ export class SwitchCaseProperty {
   cases: Array<SwitchCase> = [];
   case: SwitchCase;
   valueChange: EventEmitter<Array<any>>;
-  supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
+  supportedSyntaxes: Array<string> = [SyntaxNames.Liquid, SyntaxNames.JavaScript];
   syntaxSwitchCount: number = 0;
   
   defaultSyntax = SyntaxNames.Json

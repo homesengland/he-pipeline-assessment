@@ -28,7 +28,7 @@ export class WorkflowPlaceholder implements OnInit {
   intellisenseGatherer: IntellisenseService;
   intellisenseLoaded = signal<boolean>(false);
   options = {
-    theme: 'vs-dark',
+    theme: 'vs',
   };
   toggleLanguage = true;
   code: string;
