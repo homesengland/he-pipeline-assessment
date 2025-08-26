@@ -125,35 +125,3 @@ export class BaseComponent {
     this.UpdateProperties(parsed);
   }
 }
-
-// *** TODO: CREATE A NEW FILE FOR SORTABLE COMPONENT?? ***
-// export class SortableComponent extends BaseComponent implements AfterViewInit {
-//   @Input() component!: ISortableSharedComponent;
-
-//   ngAfterViewInit() {
-//     this.componentDidLoad();
-//   }
-
-//   componentDidLoad() {
-//     super.componentDidLoad();
-
-//     const dragEventHandler = this.onDragActivity.bind(this);
-//     Sortable.create(this.component.container, {
-//       animation: 150,
-//       handle: '.sortablejs-custom-handle',
-//       ghostClass: 'dragTarget',
-//       onEnd(evt) {
-//         dragEventHandler(evt.oldIndex, evt.newIndex);
-//       },
-//     });
-//   }
-
-//   onDragActivity(oldIndex: number, newIndex: number) {
-//     const propertiesJson = JSON.stringify(this.component.properties);
-//     let propertiesClone: Array<NestedActivityDefinitionProperty> = JSON.parse(propertiesJson);
-//     const activity = propertiesClone.splice(oldIndex, 1)[0];
-//     propertiesClone.splice(newIndex, 0, activity);
-//     this.component.properties = propertiesClone;
-//     this.updatePropertyModel();
-//   }
-// }
