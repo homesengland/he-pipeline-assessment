@@ -122,7 +122,6 @@ import { DictionaryProperty } from './components/editors/properties/dictionary-p
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
     BrowserAnimationsModule,
-    MatTabsModule,
   ],
   providers: [IntellisenseService, provideHttpClient(), { provide: MONACO_EDITOR_CONFIG, useValue: monacoConfig }],
   bootstrap: [WorkflowRoot],
