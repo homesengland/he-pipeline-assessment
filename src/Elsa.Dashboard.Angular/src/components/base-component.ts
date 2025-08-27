@@ -21,7 +21,7 @@ export interface ISharedComponent {
 }
 
 @Component({
-  selector: 'he-base-component',
+  selector: 'base-component',
   template: '',
 })
 export class BaseComponent {
