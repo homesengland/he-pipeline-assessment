@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor } from '../../../models/elsa-interfaces';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, HTMLElsaMultiExpressionEditorElement } from '../../../models/elsa-interfaces';
 import { NestedActivityDefinitionProperty } from '../../../models/custom-component-models';
 import { SyntaxNames } from '../../../constants/constants';
 import { SortableComponent } from 'src/components/sortable-component';
+import { DisplayToggle } from 'src/components/display-toggle.component';
+import { newOptionLetter, parseJson } from 'src/utils/utils';
+import { ActivityIconProvider } from 'src/services/activity-icon-provider';
+import { PropertyOutputTypes, RadioOptionsSyntax } from 'src/models/constants';
 
 @Component({
   selector: 'he-radio-option-property',
@@ -16,7 +20,76 @@ export class HeRadioOptionProperty {
   modelSyntax: string = SyntaxNames.Json;
   keyId: string;
   properties: NestedActivityDefinitionProperty[];
+  activityIconProvider: any; // Copied from workflow-instance-journal.ts, need to confirm correct implemenation.
 
   private _base: SortableComponent;
-  // private _toggle: DisplayToggle;
+  private _toggle: DisplayToggle;
+
+  @Output() expressionChanged = new EventEmitter<string>();
+
+  dictionary: { [key: string]: any } = {};
+
+  switchTextHeight: string = '';
+  editorHeight: string = '2.75em';
+
+  supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
+  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  syntaxSwitchCount: number = 0;
+  container: HTMLElement;
+  displayValue: string = 'table-row';
+  hiddenValue: string = 'none';
+
+  constructor(activityIconProvider: ActivityIconProvider) {
+    // Copied from workflow-instance-journal.ts, need to confirm correct implemenation.
+    this.activityIconProvider = activityIconProvider; // Copied from workflow-instance-journal.ts, need to confirm correct implemenation.
+    this._base = new SortableComponent();
+    this._toggle = new DisplayToggle();
+  }
+
+  ngOnInit() {
+    this._base.componentWillLoad();
+    // this._base.componentDidLoad(); **** // TODO: Presumed this wasn't needed as it's a stencil lifecycle hook and ngOnInit should handle initialisation logic.
+    this._base.componentWillRender();
+  }
+
+  onDefaultSyntaxValueChanged(e: CustomEvent) {
+    this.properties = e.detail;
+  }
+
+  onAddOptionClick() {
+    const optionName = newOptionLetter(this._base.IdentifierArray());
+    const newOption: NestedActivityDefinitionProperty = {
+      name: optionName,
+      syntax: SyntaxNames.Literal,
+      expressions: { [SyntaxNames.Literal]: '', [RadioOptionsSyntax.PrePopulated]: 'false' },
+      type: PropertyOutputTypes.Radio,
+    };
+    this.properties = [...this.properties, newOption];
+    this._base.updatePropertyModel();
+  }
+
+  onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
+    this.properties = this.properties.filter(x => x != switchCase);
+    this._base.updatePropertyModel();
+  }
+
+  onMultiExpressionEditorValueChanged(e: any) {
+    const json = e.detail;
+    const parsed = parseJson(json);
+
+    if (!parsed) return;
+
+    if (!Array.isArray(parsed)) return;
+
+    this.propertyModel.expressions[SyntaxNames.Json] = json;
+    this.properties = parsed;
+  }
+
+  onMultiExpressionEditorSyntaxChanged(e: any) {
+    this.syntaxSwitchCount++;
+  }
+
+  onToggleOptions(index: number) {
+    this._toggle.onToggleDisplay(index, this);
+  }
 }

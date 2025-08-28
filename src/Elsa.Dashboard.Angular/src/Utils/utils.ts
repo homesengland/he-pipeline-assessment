@@ -250,3 +250,39 @@ export const stripActivityNameSpace = (name: string): string => {
 export function getUniversalUniqueId() {
   return uuidv4();
 }
+
+export function newOptionLetter(options: string[]): string {
+  let highestValue: string = 'A';
+  if (options != null && options.length > 0) {
+    highestValue = options.sort().pop();
+    return incrementString(highestValue);
+  }
+  return highestValue;
+}
+
+function incrementString(value: string): string {
+  let carry: number = 1;
+  let res: string = '';
+
+  for (let i = value.length - 1; i >= 0; i--) {
+    let char = value.toUpperCase().charCodeAt(i);
+    char += carry;
+    if (char > 90) {
+      char = 65;
+      carry = 1;
+    } else {
+      carry = 0;
+    }
+
+    res = String.fromCharCode(char) + res;
+
+    if (!carry) {
+      res = value.substring(0, i) + res;
+      break;
+    }
+  }
+  if (carry) {
+    res = 'A' + res;
+  }
+  return res;
+}

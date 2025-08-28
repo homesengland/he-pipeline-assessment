@@ -9,7 +9,7 @@ export interface IDisplayToggle {
 @Injectable({
   providedIn: 'root',
 })
-export class DisplayToggleService {
+export class DisplayToggle {
   constructor() {}
 
   initialize(component: IDisplayToggle): void {
