@@ -91,11 +91,7 @@ export class WorkflowSettingsModal implements OnInit {
 
   async ngOnInit() {
     this.isModalVisible = false;
-    //eventBus.on(EventTypes.ShowWorkflowSettings, this.onShowSettingsModal);
     this.initContextOptions();
-    console.log("Loading", this.workflowDefinitionModel());
-    //this.handleWorkflowDefinitionInit(this.workflowDefinition());
-
     const client = await this.elsaClientService.createElsaClient(this.serverUrl);
     this.workflowChannels = await client.workflowChannelsApi.list();
     this.initialized = true;
@@ -104,11 +100,6 @@ export class WorkflowSettingsModal implements OnInit {
   ngAfterViewInit(): void {
     eventBus.on(EventTypes.ShowWorkflowSettings, this.onShowSettingsModal);
   }
-
-
-  //ngAfterViewChecked(): void {
-  //  this.workflowDefinition = this.workflowDefinition;
-  //}
 
   onShowSettingsModal = async () => {
     this.isModalVisible = true;
@@ -120,28 +111,10 @@ export class WorkflowSettingsModal implements OnInit {
     this.isModalVisible = false;
   }
 
-  //ngOnChanges(changes: SimpleChanges) {
-  //  if (changes['WorkflowDefinition'] && changes['WorkflowDefinition'].currentValue) {
-  //    this.handleWorkflowDefinitionChanged(changes['WorkflowDefinition'].currentValue);
-  //  }
-  //}
-
   revertChanges() {
     console.log("Reverting Changes", this.workflowDefinition())
     this.workflowDefinitionModel.set(this.workflowDefinition());
   }
-
-  //handleWorkflowDefinitionInit(newValue: WorkflowDefinition) {
-  //  this.workflowDefinition() = { ...newValue };
-  //  this.formContext = new FormContext(this.workflowDefinition, newValue => (this.workflowDefinition = newValue));
-  //  this.workflowChannelOptions = [
-  //    {
-  //      text: '',
-  //      value: null,
-  //    },
-  //    ...this.workflowChannels.map(x => ({ text: x, value: x })),
-  //  ];
-  //}
 
   handleSaveWorkflow() {
     this.onWorkflowDefinitionSettingsChanged.emit(this.workflowDefinitionModel());
