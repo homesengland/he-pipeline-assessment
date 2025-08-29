@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output, SimpleChanges, TemplateRef, ViewChild, model } from '@angular/core';
+import { Component, effect, input, signal, OnInit, EventEmitter, Output, SimpleChanges, TemplateRef, ViewChild, model } from '@angular/core';
 import { EventTypes, WorkflowContextOptions, WorkflowDefinition, WorkflowContextFidelity } from 'src/models';
 import { MonacoValueChangedArgs } from 'src/models/elsa-interfaces';
 import { eventBus } from 'src/services/event-bus';
@@ -37,18 +37,20 @@ const persistenceBehaviorOptionsConst: Array<SelectOption> = [
 export class WorkflowSettingsModal implements OnInit {
   @ViewChild(ModalDialog) dialog;
   @ViewChild('monacoVariablesEditor') monacoVariablesEditor: HTMLMonacoElement;
-  @Input() workflowDefinition;
+  workflowDefinition = input.required<WorkflowDefinition>();
+  workflowDefinitionModel = signal<WorkflowDefinition>(null);
   @Output() onWorkflowDefinitionSettingsChanged: EventEmitter<WorkflowDefinition> = new EventEmitter<WorkflowDefinition>();
 
+  baseWorkflowDefinitionJson: string = '';
   serverUrl: string;
   newVariable: VariableDefinition = {};
-  formContext: FormContext;
   workflowChannels: Array<string>;
   tabs = ['Settings', 'Variables', 'Workflow Context', 'Advanced'];
   selectedTab: string = 'Settings';
   inactiveClass = 'elsa-border-transparent elsa-text-gray-500 hover:elsa-text-gray-700 hover:elsa-border-gray-300';
   selectedClass = 'elsa-border-blue-500 elsa-text-blue-600';
   isModalVisible = false;
+  initialized = false;
   persistenceBehaviorOptions: Array<SelectOption> = persistenceBehaviorOptionsConst;
   workflowChannelOptions: Array<SelectOption>;
   fidelityOptions: Array<SelectOption> = [
@@ -63,31 +65,50 @@ export class WorkflowSettingsModal implements OnInit {
   ];
   contextOptions: WorkflowContextOptions;
 
-  constructor(private elsaClientService: ElsaClientService) {}
+  constructor(private elsaClientService: ElsaClientService) {
+    effect(() => {
+      console.log("Effect Occurring");
+      var jsonString = JSON.stringify(this.workflowDefinition());
+      var tempWorkflow: WorkflowDefinition = JSON.parse(jsonString);
+      this.workflowDefinitionModel.set(tempWorkflow);
+      });
+  }
 
   async getServerUrl(): Promise<string> {
     return this.serverUrl;
   }
 
   get variablesValue(): string {
-    if (!this.workflowDefinition?.variables) {
+    if (!this.workflowDefinitionModel().variables) {
       return '{}';
     }
-    else return this.workflowDefinition.variables;
+    else return this.workflowDefinitionModel().variables;
   }
 
   get variablesLanguage(): string {
     return 'json';
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.isModalVisible = false;
+    //eventBus.on(EventTypes.ShowWorkflowSettings, this.onShowSettingsModal);
+    this.initContextOptions();
+    console.log("Loading", this.workflowDefinitionModel());
+    //this.handleWorkflowDefinitionInit(this.workflowDefinition());
+
+    const client = await this.elsaClientService.createElsaClient(this.serverUrl);
+    this.workflowChannels = await client.workflowChannelsApi.list();
+    this.initialized = true;
+  }
+
+  ngAfterViewInit(): void {
     eventBus.on(EventTypes.ShowWorkflowSettings, this.onShowSettingsModal);
   }
 
-  ngAfterViewChecked(): void {
-    this.workflowDefinition = this.workflowDefinition;
-  }
+
+  //ngAfterViewChecked(): void {
+  //  this.workflowDefinition = this.workflowDefinition;
+  //}
 
   onShowSettingsModal = async () => {
     this.isModalVisible = true;
@@ -105,46 +126,48 @@ export class WorkflowSettingsModal implements OnInit {
   //  }
   //}
 
-  handleWorkflowDefinitionInit(newValue: WorkflowDefinition) {
-    this.workflowDefinition = { ...newValue };
-    this.formContext = new FormContext(this.workflowDefinition, newValue => (this.workflowDefinition = newValue));
-    this.workflowChannelOptions = [
-      {
-        text: '',
-        value: null,
-      },
-      ...this.workflowChannels.map(x => ({ text: x, value: x })),
-    ];
+  revertChanges() {
+    console.log("Reverting Changes", this.workflowDefinition())
+    this.workflowDefinitionModel.set(this.workflowDefinition());
   }
+
+  //handleWorkflowDefinitionInit(newValue: WorkflowDefinition) {
+  //  this.workflowDefinition() = { ...newValue };
+  //  this.formContext = new FormContext(this.workflowDefinition, newValue => (this.workflowDefinition = newValue));
+  //  this.workflowChannelOptions = [
+  //    {
+  //      text: '',
+  //      value: null,
+  //    },
+  //    ...this.workflowChannels.map(x => ({ text: x, value: x })),
+  //  ];
+  //}
 
   handleSaveWorkflow() {
-    this.onWorkflowDefinitionSettingsChanged.emit(this.workflowDefinition);
-  }
-
-  handleClearWorkflow() {
-    //this.handleWorkflowDefinitionInit(this.workflowDefinition);
+    this.onWorkflowDefinitionSettingsChanged.emit(this.workflowDefinitionModel());
   }
 
   initContextOptions() {
-    if (!this.workflowDefinition.contextOptions || this.workflowDefinition.contextOptions == undefined) {
-      this.workflowDefinition.conextOptions = {
-        contextType: '',
-        contextFidelity: WorkflowContextFidelity.Burst
-      };
+    let defaultContextOptions: WorkflowContextOptions = {
+      contextType: '',
+      contextFidelity: WorkflowContextFidelity.Burst
+    };
+    if (!this.workflowDefinitionModel().contextOptions || this.workflowDefinitionModel().contextOptions == undefined) {
+      this.workflowDefinitionModel.update(model => ({
+        ...model, contextOptions: defaultContextOptions
+
+      }));
     }
     else {
-      this.workflowDefinition.contextOptions.contextFidelity = this.workflowDefinition.contextOptions.contextFidelity || WorkflowContextFidelity.Burst;
-      this.workflowDefinition.contextOptions.contextType = this.workflowDefinition.contextOptions.contextType || '';
+      defaultContextOptions.contextFidelity = this.workflowDefinitionModel().contextOptions.contextFidelity || WorkflowContextFidelity.Burst;
+      defaultContextOptions.contextType = this.workflowDefinitionModel().contextOptions.contextType || '';
+
+      this.workflowDefinitionModel.update(model => ({
+        ...model, contextOptions: defaultContextOptions
+      }));
     }
   }
 
-  async componentWillLoad() {
-    this.initContextOptions();
-    this.handleWorkflowDefinitionInit(this.workflowDefinition);
-
-    const client = await this.elsaClientService.createElsaClient(this.serverUrl);
-    this.workflowChannels = await client.workflowChannelsApi.list();
-  }
 
   componentDidLoad() {
     console.log('WorkflowSettingsModal componentDidLoad called');
@@ -157,8 +180,9 @@ export class WorkflowSettingsModal implements OnInit {
   }
 
   async onCancelClick() {
-    this.handleClearWorkflow();
-    await this.dialog.hide();
+    this.revertChanges();
+    this.dialog.hide();
+    this.isModalVisible = false;
   }
 
   async onSaveClick(e: Event) {
@@ -174,7 +198,9 @@ export class WorkflowSettingsModal implements OnInit {
 
     if (errorCount > 0) return;
 
-    this.workflowDefinition.variables = e.value;
+    this.workflowDefinitionModel.update(model => ({
+      ...model, variables: e.value
+    }));
   }
 
   async onMonacoInit(e:MonacoValueChangedArgs){
