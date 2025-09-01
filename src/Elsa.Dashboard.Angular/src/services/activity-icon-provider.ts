@@ -32,8 +32,8 @@ export class ActivityIconProvider {
     this.registerWebhookIcons();
     this.registerWriteHttpResponseIcons();
     this.registerWriteLineIcons();
-    this.registerAddCaseIcons();
-    this.registerTrashBinIcons();
+    this.registerPlusIcons();
+    this.registerTrashBinOutlineIcons();
     this.registerOpenInDialogIcons();
   }
 
@@ -241,15 +241,15 @@ export class ActivityIconProvider {
     });
   }
 
-  private registerAddCaseIcons(): void {
-    this.register('AddCase', (colour: string) => {
-      return this.sanitizer.bypassSecurityTrustHtml(this.createAddCaseIconHtml(colour));
+  private registerPlusIcons(): void {
+    this.register('Plus', (colour: string) => {
+      return this.sanitizer.bypassSecurityTrustHtml(this.createPlusIconHtml(colour));
     });
   }
 
-  private registerTrashBinIcons(): void {
-        this.register('TrashBin', (colour: string) => {
-      return this.sanitizer.bypassSecurityTrustHtml(this.createTrashBinIcon(colour));
+  private registerTrashBinOutlineIcons(): void {
+    this.register('TrashBinOutline', (colour: string) => {
+      return this.sanitizer.bypassSecurityTrustHtml(this.createTrashBinOutlineIcon(colour));
     });
   }
 
@@ -522,7 +522,7 @@ export class ActivityIconProvider {
   </span>`;
   }
 
-    private createAddCaseIconHtml(colour: string): string {
+  private createPlusIconHtml(colour: string): string {
     return `
     <svg 
         class="${`elsa-mr-2 elsa-h-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
@@ -535,8 +535,8 @@ export class ActivityIconProvider {
       </svg>`;
   }
 
-  private createTrashBinIcon(colour: string): string {
-    return  `<svg 
+  private createTrashBinOutlineIcon(colour: string): string {
+    return `<svg 
         class="${`elsa-h-5 elsa-w-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
         width="24" height="24" viewBox="0 0 24 24"
         stroke-width="2" stroke="currentColor" fill="transparent" stroke-linecap="round"
@@ -550,8 +550,8 @@ export class ActivityIconProvider {
 
   private createOpenInDialogIcon(colour: string): string {
     return `<svg 
-        class="${`elsa-h-5 elsa-w-5 ${colour? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
-    </svg>`  
+        class="${`elsa-h-5 elsa-w-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
+    </svg>`
   }
 
   //#endregion

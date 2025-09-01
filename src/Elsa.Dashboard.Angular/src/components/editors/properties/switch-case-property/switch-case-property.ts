@@ -44,7 +44,6 @@ export class SwitchCaseProperty {
      const model = this.propertyModel();
      return model?.expressions ?? {};
    });
-  //expressions: any;
   Json: any;
   activityIconProvider: any;
 
