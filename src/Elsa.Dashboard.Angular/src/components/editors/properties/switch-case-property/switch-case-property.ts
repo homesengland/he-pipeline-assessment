@@ -22,7 +22,7 @@ export class SwitchCaseProperty {
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
 
   cases: Array<SwitchCase> = [];
-  case: SwitchCase;
+  // case: SwitchCase;
   valueChange: EventEmitter<Array<any>>;
   supportedSyntaxes: Array<string> = [SyntaxNames.Liquid, SyntaxNames.JavaScript];
   syntaxSwitchCount: number = 0;
@@ -56,7 +56,7 @@ export class SwitchCaseProperty {
 
   async ngOnInit(): Promise<void> {
     const propertyModel = this.propertyModel();
-    const casesJson = propertyModel?.expressions['Switch'] || '[]';
+    const casesJson = propertyModel?.expressions['Switch'];
     this.cases = parseJson(casesJson) || [];
     this.context.activityTypeName = this.activityModel()?.type;
     this.context.propertyName = this.propertyDescriptor()?.name;
@@ -97,14 +97,22 @@ export class SwitchCaseProperty {
   onDefaultSyntaxValueChanged(e: CustomEvent) {
     this.cases = e.detail;
   }
-  
+
+  //// ORIG code commented out
+  //onAddCaseClick() {
+  //  const caseName = `Case ${this.cases.length + 1}`;
+  //  this.case = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: {[SyntaxNames.JavaScript]: ''}};
+  //  this.cases = [...this.cases, this.case];
+  //  this.updatePropertyModel();
+  //}
+
   onAddCaseClick() {
     const caseName = `Case ${this.cases.length + 1}`;
-    this.case = { name: caseName, expressions: { [SyntaxNames.JavaScript]: '' }, syntax: SyntaxNames.JavaScript };
-    this.cases = [...this.cases, this.case];
+    const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: {[SyntaxNames.JavaScript]: ''}};
+    this.cases = [...this.cases, newCase];
     this.updatePropertyModel();
-
   }
+
 
   onDeleteCaseClick(switchCase: SwitchCase) {
     this.cases = this.cases.filter(x => x != switchCase);
