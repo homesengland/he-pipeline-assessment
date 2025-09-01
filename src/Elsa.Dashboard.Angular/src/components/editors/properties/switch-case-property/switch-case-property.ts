@@ -25,6 +25,7 @@ export class SwitchCaseProperty {
   valueChange: EventEmitter<Array<any>>;
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript];
   syntaxSwitchCount: number = 0;
+  activityIconProvider: any;
   
   defaultSyntax = SyntaxNames.Json
   isEncypted = model<boolean>(false);
@@ -44,8 +45,6 @@ export class SwitchCaseProperty {
      const model = this.propertyModel();
      return model?.expressions ?? {};
    });
-  Json: any;
-  activityIconProvider: any;
 
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
