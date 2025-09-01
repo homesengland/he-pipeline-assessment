@@ -55,10 +55,10 @@ export class WorkflowPlaceholder implements OnInit {
     this.checkboxActivityModel.set(this.getCheckboxModel());
     this.jsonActivityModel.set(this.getJsonModel());
     this.dropDownActivityModel.set(this.getDropDownModel());
-    this.multiTextActivityModel.set(this.getMultiTextModel());
     this.dictionaryActivityModel.set(this.getDictionaryModel());
     this.checkListActivityModel.set(this.getDropDownModel());
     this.radioListActivityModel.set(this.getRadioListModel());
+    this.multiTextActivityModel.set(this.getMultiTextModel());
     this.switchCaseActivityModel.set(this.getSwitchCaseModel());
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
@@ -607,24 +607,6 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
-   getSwitchCaseModel(): ActivityModel {
-    const model: ActivityModel = {
-      activityId: '',
-      type: 'SwitchCase',
-      name: 'TestSwitchCase',
-      displayName: 'Test Switch Case',
-      description: 'A Stub activity to display a switch case property',
-      outcomes: ['Done'],
-      properties: [],
-      persistWorkflow: true,
-      loadWorkflowContext: undefined,
-      saveWorkflowContext: undefined,
-      propertyStorageProviders: undefined,
-    };
-    model.properties.push(this.getSwitchCaseDefinition());
-    return model;
-  }
-
   getDictionaryDefinition(): ActivityDefinitionProperty {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
@@ -661,6 +643,24 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+  getSwitchCaseModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '',
+      type: 'SwitchCase',
+      name: 'TestSwitchCase',
+      displayName: 'Test Switch Case',
+      description: 'A Stub activity to display a switch case property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getSwitchCaseDefinition());
+    return model;
+  }
+
   getSwitchCaseDefinition(): ActivityDefinitionProperty {
     const model: ActivityDefinitionProperty = {
       syntax: 'Javascript',
@@ -682,7 +682,7 @@ export class WorkflowPlaceholder implements OnInit {
       hasColletedProperties: false,
       name: 'TestSwitchCase',
       type: 'System.String',
-      uiHint: 'switch-case',
+      uiHint: 'switch-case-builder',
       label: 'Test Label',
       hint: 'Test Hint',
       options: {},
@@ -719,7 +719,9 @@ export class WorkflowPlaceholder implements OnInit {
         return this.multiTextActivityModel;
       case 'dictionary':
         return this.dictionaryActivityModel;
-      case 'switch-case':
+      //case 'switch-case':
+      //  return this.switchCaseActivityModel;
+      case 'switch-case-builder':
         return this.switchCaseActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);

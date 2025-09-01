@@ -6,15 +6,15 @@ import { Map, mapSyntaxToLanguage, parseJson, newOptionNumber } from 'src/utils/
 import { SwitchCase } from './models';
 import { HTMLElsaExpressionEditorElement, HTMLElsaMultiExpressionEditorElement, IntellisenseContext } from 'src/models/elsa-interfaces';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
-import { EditorModel } from '../../../../components/monaco/types';
+import { EditorModel } from '../../../monaco/types';
 import { ExpressionEditor } from '../../expression-editor/expression-editor';
 
 @Component({
-  selector: 'switch-case-property',
-  templateUrl: './switch-case-property.html',
+  selector: 'switch-cases-property',
+  templateUrl: './switch-cases-property.html',
   standalone: false,
 })
-export class SwitchCaseProperty {
+export class SwitchCasesProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
