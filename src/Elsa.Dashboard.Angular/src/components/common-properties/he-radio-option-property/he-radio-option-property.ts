@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, HTMLElsaMultiExpressionEditorElement } from '../../../models/elsa-interfaces';
+import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, HTMLElsaMultiExpressionEditorElement, IntellisenseContext } from '../../../models/elsa-interfaces';
 import { NestedActivityDefinitionProperty } from '../../../models/custom-component-models';
 import { SyntaxNames } from '../../../constants/constants';
 import { SortableComponent } from 'src/components/sortable-component';
 import { DisplayToggle } from 'src/components/display-toggle.component';
-import { newOptionLetter, parseJson } from 'src/utils/utils';
+import { mapSyntaxToLanguage, newOptionLetter, parseJson } from 'src/utils/utils';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { PropertyOutputTypes, RadioOptionsSyntax } from 'src/models/constants';
 
@@ -91,5 +91,36 @@ export class HeRadioOptionProperty {
 
   onToggleOptions(index: number) {
     this._toggle.onToggleDisplay(index, this);
+  }
+
+  renderCaseEditor(radioOption: NestedActivityDefinitionProperty, index: number) {
+    const expression = radioOption.expressions[radioOption.syntax];
+    const syntax = radioOption.syntax;
+    const monacoLanguage = mapSyntaxToLanguage(syntax);
+    const prePopulatedSyntax = SyntaxNames.JavaScript;
+    const prePopulatedExpression = radioOption.expressions[RadioOptionsSyntax.PrePopulated];
+    const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
+    let colWidth = '100%';
+    const optionsDisplay = this._toggle.component.dictionary[index] ?? 'none';
+
+    return {
+      radioOption,
+      index,
+      expression,
+      syntax,
+      monacoLanguage,
+      prePopulatedSyntax,
+      prePopulatedExpression,
+      prePopulatedLanguage,
+      colWidth,
+      optionsDisplay,
+    };
+  }
+
+  get context(): IntellisenseContext {
+    return {
+      activityTypeName: this.activityModel.type,
+      propertyName: this.propertyDescriptor.name,
+    };
   }
 }

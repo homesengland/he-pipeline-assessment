@@ -10,6 +10,7 @@ export interface IDisplayToggle {
   providedIn: 'root',
 })
 export class DisplayToggle {
+  component: any; // feels like type of any goes against TypeScript but not sure if we should keep this like the original Stencil implementation or type it properly.
   constructor() {}
 
   initialize(component: IDisplayToggle): void {
