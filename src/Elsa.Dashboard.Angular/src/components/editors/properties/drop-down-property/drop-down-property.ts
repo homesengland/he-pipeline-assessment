@@ -66,7 +66,7 @@ export class DropDownProperty implements OnInit {
         runtimeSelectListProviderType: existingOptions.runtimeSelectListProviderType,
       };
       this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, { options: options } as ActivityPropertyDescriptor);
-     // console.log('Select list items:', this.selectList.items);
+     
       if (this.currentValue == undefined) {
         const defaultValue = this.propertyDescriptor().defaultValue;
         if (defaultValue) {
@@ -82,7 +82,7 @@ export class DropDownProperty implements OnInit {
       }
     } else {
       this.selectList = await getSelectListItems(this.elsaClientService, this.serverUrl, this.propertyDescriptor());
-     // console.log('Select list items:', this.selectList.items);
+     
       if (this.currentValue == undefined) {
         const defaultValue = this.propertyDescriptor().defaultValue;
         if (defaultValue) {
@@ -190,7 +190,6 @@ export class DropDownProperty implements OnInit {
   }
 
   getSelectItems(): any {
-    //console.log('Select list items:', this.selectList.items);
     return this.selectList.items.map(item => {
       return {
         text: item.text,
