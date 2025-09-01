@@ -245,3 +245,14 @@ export const stripActivityNameSpace = (name: string): string => {
   const lastDotIndex = name.lastIndexOf('.');
   return lastDotIndex < 0 ? name : name.substring(lastDotIndex + 1);
 };
+
+export function newOptionNumber(options: Array<number>): string {
+  let highestValue: number = 0;
+  if (Array.isArray(options) && options.length > 0) {
+    highestValue = options.sort(function (a, b) {
+      return a - b;
+    }).pop();
+  }
+  highestValue = highestValue + 1;
+  return highestValue.toString();
+}

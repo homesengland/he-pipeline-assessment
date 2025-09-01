@@ -543,7 +543,6 @@ export class WorkflowPlaceholder implements OnInit {
       expressions: {
         Switch: '[{"name": "Case 1", "expressions": {"Javascript" : "JS Test"}, "syntax": "Javascript"}]'
       },
-      //expressions: {},
       type: 'Javascript',
     };
     return model;

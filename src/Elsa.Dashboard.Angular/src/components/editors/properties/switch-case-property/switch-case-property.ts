@@ -2,7 +2,7 @@ import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, Si
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
-import { Map, mapSyntaxToLanguage, parseJson } from 'src/utils/utils';
+import { Map, mapSyntaxToLanguage, parseJson, newOptionNumber } from 'src/utils/utils';
 import { SwitchCase } from './models';
 import { HTMLElsaExpressionEditorElement, HTMLElsaMultiExpressionEditorElement, IntellisenseContext } from 'src/models/elsa-interfaces';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
@@ -22,7 +22,6 @@ export class SwitchCaseProperty {
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
 
   cases: Array<SwitchCase> = [];
-  // case: SwitchCase;
   valueChange: EventEmitter<Array<any>>;
   supportedSyntaxes: Array<string> = [SyntaxNames.Liquid, SyntaxNames.JavaScript];
   syntaxSwitchCount: number = 0;
@@ -98,21 +97,28 @@ export class SwitchCaseProperty {
     this.cases = e.detail;
   }
 
-  //// ORIG code commented out
-  //onAddCaseClick() {
-  //  const caseName = `Case ${this.cases.length + 1}`;
-  //  this.case = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: {[SyntaxNames.JavaScript]: ''}};
-  //  this.cases = [...this.cases, this.case];
-  //  this.updatePropertyModel();
-  //}
-
   onAddCaseClick() {
-    const caseName = `Case ${this.cases.length + 1}`;
-    const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: {[SyntaxNames.JavaScript]: ''}};
+    const caseIds = this.caseIds();
+    const id = newOptionNumber(caseIds);
+    const caseName = `Case ${id}`;
+    const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } };
     this.cases = [...this.cases, newCase];
     this.updatePropertyModel();
   }
 
+  caseIds(): Array<number> {
+    let activityIds: Array<number> = [];
+    if (this.cases.length > 0) {
+      activityIds = this.cases.map(function (v) {
+        const caseNumberMatch = v.name.match(/^Case\s(\d+$)/);
+        if (caseNumberMatch != null) {
+          return parseInt(caseNumberMatch[1]);
+        }
+        return 0;
+      });
+    }
+    return activityIds;
+  }
 
   onDeleteCaseClick(switchCase: SwitchCase) {
     this.cases = this.cases.filter(x => x != switchCase);
