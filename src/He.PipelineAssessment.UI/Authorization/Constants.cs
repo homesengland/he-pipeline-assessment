@@ -16,6 +16,13 @@
             public const string SensitiveRecordsViewer = "PipelineAssessment.SensitiveRecordsViewer";
         }
 
+        public static class BusinessArea
+        {
+            public const string MPP = "MPP";
+            public const string Investment = "Investment";
+            public const string Development = "Development";
+        }
+
         public static class AuthorizationPolicies
         {
             public const string AssignmentToPipelineAdminRoleRequired = "AssignmentToPipelineAdminRoleRequired";

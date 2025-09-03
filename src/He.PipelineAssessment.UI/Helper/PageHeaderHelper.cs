@@ -15,6 +15,8 @@ namespace He.PipelineAssessment.UI.Helper
             result.Reference = assessmentWorkflowInstance.Assessment.Reference;
             result.LocalAuthority = assessmentWorkflowInstance.Assessment.LocalAuthority;
             result.ProjectManager = assessmentWorkflowInstance.Assessment.ProjectManager;
+            result.AssessmentToolName = assessmentWorkflowInstance.AssessmentToolWorkflow?.AssessmentTool?.Name;
+            result.AssessmentToolWorkflowName = assessmentWorkflowInstance.AssessmentToolWorkflow?.Name;
         }
     }
 }
