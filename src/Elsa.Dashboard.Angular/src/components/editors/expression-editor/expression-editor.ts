@@ -105,8 +105,8 @@ export class ExpressionEditor implements OnInit {
   }
 
   async onMonacoValueChanged(e: MonacoValueChangedArgs) {
-    this.expression.set(e.value);
-    await this.expressionChanged.emit(e.value);
+     this.expression.set(e.value);
+     await this.expressionChanged.emit(e.value);
   }
 
   async onMonacoInit(e: MonacoValueChangedArgs) {

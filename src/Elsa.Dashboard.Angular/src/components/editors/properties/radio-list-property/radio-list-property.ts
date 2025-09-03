@@ -54,7 +54,6 @@ $defaultSyntaxEvent: CustomEvent;
   }
 
   getSelectItems(): any {
-    console.log('Select list items:', this.selectList.items);
     return this.selectList.items.map((item, index) => {
       return {
         text: item.text,
