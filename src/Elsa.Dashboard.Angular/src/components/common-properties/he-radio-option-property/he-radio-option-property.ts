@@ -39,6 +39,10 @@ export class HeRadioOptionProperty {
   displayValue: string = 'table-row';
   hiddenValue: string = 'none';
 
+  expressions = { Json: SyntaxNames.Json };
+  defaultSyntax = SyntaxNames.Json;
+  supportedSyntaxesForMultiExpressionEditor = [SyntaxNames.Json];
+
   constructor(activityIconProvider: ActivityIconProvider) {
     // Copied from workflow-instance-journal.ts, need to confirm correct implemenation.
     this.activityIconProvider = activityIconProvider; // Copied from workflow-instance-journal.ts, need to confirm correct implemenation.

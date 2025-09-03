@@ -2,10 +2,10 @@
   <multi-expression-editor
     #multiExpressionEditor
     [label]="propertyDescriptor.label"
-    [defaultSyntax]="syntaxNames.Json"
-    [supportedSyntaxes]="[syntaxNames.Json]"
+    [defaultSyntax]="defaultSyntax"
+    [supportedSyntaxes]="supportedSyntaxesForMultiExpressionEditor"
     [context]="context"
-    [expressions]="{ 'Json': json }"
+    [expressions]="expressions"
     editor-height="20rem"
     (expressionChanged)="onMultiExpressionEditorValueChanged($event)"
     (syntaxChanged)="onMultiExpressionEditorSyntaxChanged($event)"
