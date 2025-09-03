@@ -27,7 +27,8 @@ export class SwitchCasesProperty {
   syntaxSwitchCount: number = 0;
   activityIconProvider: any;
   
-  defaultSyntax = SyntaxNames.Json
+  defaultSyntax = SyntaxNames.Json;
+  supportedSyntaxForMultiExpressionEditor = [SyntaxNames.Json];
   isEncypted = model<boolean>(false);
   currentValue = computed(() => this.propertyModel()?.expressions[this.defaultSyntax] || '');
   fieldId = computed(() => this.propertyDescriptor()?.name ?? 'default');

@@ -1,10 +1,10 @@
 
 <div>
-  <elsa-multi-expression-editor
+  <multi-expression-editor
     #multiExpressionEditor 
     [label]="propertyDescriptor().label"
     [defaultSyntax]="defaultSyntax"
-    [supportedSyntaxes]="defaultSyntax"
+    [supportedSyntaxes]="supportedSyntaxForMultiExpressionEditor"
     [context]="context"
     [expressions]="multiExpressionEditorExpressions"
     editor-height="20rem"
@@ -71,5 +71,5 @@
       <span [innerHTML]="activityIconProvider.getIcon('Plus')"></span>
       Add Case
     </button>
-  </elsa-multi-expression-editor>
+  </multi-expression-editor>
 </div>
