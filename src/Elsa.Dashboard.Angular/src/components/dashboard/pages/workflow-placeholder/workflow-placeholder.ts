@@ -719,8 +719,6 @@ export class WorkflowPlaceholder implements OnInit {
         return this.multiTextActivityModel;
       case 'dictionary':
         return this.dictionaryActivityModel;
-      //case 'switch-case':
-      //  return this.switchCaseActivityModel;
       case 'switch-case-builder':
         return this.switchCaseActivityModel;
       default:
