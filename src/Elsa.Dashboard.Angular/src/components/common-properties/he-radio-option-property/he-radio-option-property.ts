@@ -41,7 +41,7 @@ export class HeRadioOptionProperty {
 
   expressions = { Json: SyntaxNames.Json };
   defaultSyntax = SyntaxNames.Json;
-  supportedSyntaxesForMultiExpressionEditor = [SyntaxNames.Json];
+  supportedSyntaxForMultiExpressionEditor = [SyntaxNames.Json];
 
   constructor(activityIconProvider: ActivityIconProvider) {
     // Copied from workflow-instance-journal.ts, need to confirm correct implemenation.
