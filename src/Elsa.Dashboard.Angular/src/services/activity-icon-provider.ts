@@ -569,4 +569,8 @@ export class ActivityIconProvider {
 
     return provider.call(this, colour);
   }
+
+  getOptions(options?: string) {
+    return options;
+  }
 }
