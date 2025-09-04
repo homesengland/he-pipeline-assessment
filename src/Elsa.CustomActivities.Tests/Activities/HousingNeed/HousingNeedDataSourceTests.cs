@@ -145,6 +145,8 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
         LaHouseNeedData laHouseNeedData,
         CustomActivities.Activities.HousingNeed.HousingNeedDataSource sut)
         {
+            sut.Output = null;
+            sut.OutputList = null;
             //Arrange
             sut.PreviousGssCodes = "E08000001";
             sut.PreviousLocalAuthorities = "Harrogate";
@@ -152,9 +154,18 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
             sut.LocalAuthorities = "North Yorkshire";
             sut.LocalAuthoritiesAlt = null;
             var context = new ActivityExecutionContext(default!, default!, default!, sut.Id, default, default);
-            laHouseNeedClient.Setup(x => x.GetLaHouseNeedData(sut.LocalAuthorities, sut.GssCodes, It.IsAny<string>())).ReturnsAsync((string?)null);
-            laHouseNeedClient.Setup(x => x.GetLaHouseNeedData(sut.PreviousLocalAuthorities, sut.PreviousGssCodes, null)).ReturnsAsync(dataString);
-            jsonHelperMock.Setup(x => x.JsonToLAHouseNeedData(dataString)).Returns(new List<LaHouseNeedData>() { laHouseNeedData });
+            laHouseNeedClient.Setup(x => x.GetLaHouseNeedData(
+                It.Is<string?>(x => x != null && x.Equals(sut.GssCodes)),
+                It.Is<string?>(x => x != null && x.Equals(sut.LocalAuthorities)),
+                It.IsAny<string>()))
+                .ReturnsAsync((string?)null);
+            laHouseNeedClient.Setup(x => x.GetLaHouseNeedData(
+                It.Is<string?>(x => x != null && x.Equals(sut.PreviousGssCodes)),
+                It.Is<string?>(x => x != null && x.Equals(sut.PreviousLocalAuthorities)),
+                null))
+                .ReturnsAsync(dataString); 
+            jsonHelperMock.Setup(x => x.JsonToLAHouseNeedData(It.Is<string>(x => x != null && x.Equals(dataString)))).Returns(new List<LaHouseNeedData>() { laHouseNeedData });
+
 
 
             //Act
@@ -167,6 +178,11 @@ namespace Elsa.CustomActivities.Tests.Activities.HousingNeed
             var outcomeResult = (OutcomeResult)combinedResult.Results.First(x => x.GetType() == typeof(OutcomeResult));
             Assert.Equal("Done", outcomeResult.Outcomes.First());
             Assert.Contains(combinedResult.Results, x => x.GetType() == typeof(SuspendResult));
+            // Verify the expected client call was made
+            laHouseNeedClient.Verify(x => x.GetLaHouseNeedData(
+                sut.PreviousGssCodes,
+                sut.PreviousLocalAuthorities,
+                null), Times.Once);
             Assert.Equal(laHouseNeedData, sut.Output);
             Assert.Null(sut.OutputList);
         }
