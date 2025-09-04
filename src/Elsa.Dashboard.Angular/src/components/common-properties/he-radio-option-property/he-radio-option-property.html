@@ -8,7 +8,13 @@
     [expressions]="expressions"
     editor-height="20rem"
     (expressionChanged)="onMultiExpressionEditorValueChanged($event)"
-    (syntaxChanged)="onMultiExpressionEditorSyntaxChanged($event)"
-  >
+    (syntaxChanged)="onMultiExpressionEditorSyntaxChanged($event)">
+      <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+      </table>
+      <button type="button" (click)="onAddOptionClick()"
+        class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
+        <span [innerHTML]="activityIconProvider.getIcon('Plus')"></span>
+        Add Answer
+      </button>
   </multi-expression-editor>
 </div>
