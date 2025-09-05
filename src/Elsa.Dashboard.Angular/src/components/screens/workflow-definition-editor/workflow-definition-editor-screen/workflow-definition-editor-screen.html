@@ -11,7 +11,6 @@
     [enableMultipleConnectionsFromSingleSource]="false"
     [selectedActivityIds]="[this.selectedActivityId]"
     (activityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
-    (activityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
     (activitySelected)="onActivitySelected($event)"
     (activityDeselected)="onActivityDeselected($event)"
     (workflowChanged)="onWorkflowChanged($event)"
@@ -29,7 +28,6 @@
     [enableMultipleConnectionsFromSingleSource]="false"
     [selectedActivityIds]="[this.selectedActivityId]"
     (activityContextMenuButtonClicked)="onActivityContextMenuButtonClicked($event)"
-    (activityContextMenuButtonTestClicked)="onActivityContextMenuButtonTestClicked($event)"
     (activitySelected)="onActivitySelected($event)"
     (activityDeselected)="onActivityDeselected($event)"
     class="elsa-flex-1"
@@ -108,5 +106,7 @@
       </div>
     </div>
   </div>
+  <workflow-settings-button></workflow-settings-button>
 </div>
 <activity-editor-modal></activity-editor-modal>
+<workflow-settings-modal (onWorkflowDefinitionSettingsChanged)="updateWorkflowSettings($event)" [workflowDefinition]="this.workflowDefinition"> </workflow-settings-modal>

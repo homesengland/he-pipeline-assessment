@@ -41,6 +41,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkflowDefinitionEditorScreen } from './components/screens/workflow-definition-editor/workflow-definition-editor-screen/workflow-definition-editor-screen';
 import { DesignerTree } from './components/designers/tree/designer-tree/designer-tree';
 import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
+import { ActivityEditorModal } from './components/screens/workflow-definition-editor/activity-editor-modal/activity-editor-modal';
+import { WorkflowSettingsButton } from './components/screens/workflow-definition-editor/buttons/workflow-settings-button/workflow-settings-button';
+import { WorkflowSettingsModal } from './components/screens/workflow-definition-editor/workflow-settings-modal/workflow-settings-modal';
+import { FormTextInputComponent } from 'src/Utils/form-controls/form-text-input/form-text-input.component';
+import { FormCheckBoxComponent } from 'src/Utils/form-controls/form-check-box/form-check-box.component';
+import { FormSectionComponent } from 'src/Utils/form-controls/form-section/form-section.component';
+import { FormSelectFieldComponent } from 'src/Utils/form-controls/form-select-field/form-select-field.component';
+import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/form-text-area.component';
 import { PropertyControl } from './components/controls/property-control/property-control';
 import { EditorComponent } from './components/monaco/editor.component';
 import { DiffEditorComponent } from './components/monaco/diff-editor.component';
@@ -89,6 +97,14 @@ import { DictionaryProperty } from './components/editors/properties/dictionary-p
     EditorComponent,
     DiffEditorComponent,
     JsonProperty,
+    ActivityEditorModal,
+    WorkflowSettingsButton,
+    WorkflowSettingsModal,
+    FormTextInputComponent,
+    FormCheckBoxComponent,
+    FormSectionComponent,
+    FormSelectFieldComponent,
+    FormTextAreaComponent,
     DropDownProperty,
     CheckListProperty,
     RadioListProperty,

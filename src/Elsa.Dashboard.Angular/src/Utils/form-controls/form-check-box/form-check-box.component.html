@@ -1,0 +1,16 @@
+<div class="elsa-relative elsa-flex elsa-items-start">
+  <div class="elsa-flex elsa-items-center elsa-h-5">
+    <input
+      [id]="fieldId"
+      [name]="fieldName"
+      type="checkbox"
+      [checked]="checked()"
+      (change)="onChange($event)"
+      class="focus:elsa-ring-blue-500 elsa-h-4 elsa-w-4 elsa-text-blue-600 elsa-border-gray-300 rounded"
+    />
+  </div>
+  <div class="elsa-ml-3 elsa-text-sm">
+    <label [for]="fieldId" class="elsa-font-medium elsa-text-gray-700">{{ label }}</label>
+    <p *ngIf="hint" class="elsa-text-gray-500">{{ hint }}</p>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+
+<modal-dialog>
+  <div slot="content" class="elsa-py-8 elsa-pb-0">
+    <form>
+      <div class="elsa-px-8 mb-8">
+        <div class="elsa-border-b elsa-border-gray-200">
+          <nav class="-elsa-mb-px elsa-flex elsa-space-x-8" aria-label="Tabs">
+            <a *ngFor="let tab of tabs"
+               href="#"
+               (click)="onTabClick($event, tab)"
+               [ngClass]="tab === selectedTab ? selectedClass : inactiveClass"
+               class="elsa-whitespace-nowrap elsa-py-4 elsa-px-1 elsa-border-b-2 elsa-font-medium elsa-text-sm">
+              {{tab }}
+            </a>
+          </nav>
+        </div>
+      </div>
+      <!--Render selected tab content-->
+      <ng-container [ngTemplateOutlet]="renderSelectedTab()"></ng-container>
+
+      <div class="elsa-pt-5">
+        <div class="elsa-bg-gray-50 elsa-px-4 elsa-py-3 sm:elsa-px-6 sm:elsa-flex sm:elsa-flex-row-reverse">
+          <button type="button"
+                  (click)="onSaveClick($event)"
+                  class="elsa-ml-0 elsa-w-full elsa-inline-flex elsa-justify-center elsa-rounded-md elsa-border elsa-border-transparent elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-bg-blue-600 elsa-text-base elsa-font-medium elsa-text-white hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-ml-3 sm:elsa-w-auto sm:elsa-text-sm">
+            Save
+          </button>
+          <button type="button"
+                  (click)="onCancelClick()"
+                  class="elsa-mt-3 elsa-w-full elsa-inline-flex elsa-justify-center elsa-rounded-md elsa-border elsa-border-gray-300 elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-bg-white elsa-text-base elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-mt-0 sm:elsa-ml-3 sm:elsa-w-auto sm:elsa-text-sm">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div slot="buttons"></div>
+  <!--Workflow Context Tab-->
+  <ng-template #workflowContextTab>
+    <div class="elsa-flex elsa-px-8">
+      <div class="elsa-space-y-8 elsa-w-full">
+        <form-text-input [fieldName]="workflowDefinitionModel().contextOptions.contextType"
+                         label="Type"
+                         [(value)]="workflowDefinitionModel().contextOptions.contextType"
+                         hint="The fully qualified workflow context type name."
+                         fieldId="workflowContextType">
+        </form-text-input>
+        <div class="elsa-space-y-8 elsa-w-full">
+          <form-select-field [fieldName]="workflowDefinitionModel().contextOptions.contextFidelity"
+                             label="Fidelity"
+                             [(value)]="workflowDefinitionModel().contextOptions.contextFidelity"
+                             [options]="fidelityOptions"
+                             hint="The workflow context refresh fidelity controls the behavior of when to load and persist the workflow context."
+                             fieldId="workflowContextFidelity">
+          </form-select-field>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <!--Variables Tab-->
+  <ng-template #variablesTab>
+    <div class="elsa-flex elsa-px-8">
+      <div class="elsa-space-y-8 elsa-w-full elsa-h-30">
+        <monaco-editor [(value)]="variablesValue"
+                       [language]="variablesLanguage"
+                       editorHeight="30em"
+                       (propagateChange)="onMonacoValueChanged($any($event))"
+                       #monacoVariablesEditor
+                       (onInit)="onMonacoInit($event)">
+        </monaco-editor>
+      </div>
+    </div>
+  </ng-template>
+  <!--Advanced Tab-->
+  <ng-template #advancedTab>
+    <div class="elsa-flex elsa-px-8">
+      <div class="elsa-space-y-8 elsa-w-full">
+        <form-text-input fieldName="tag"
+                         label="Tag"
+                         [(value)]="workflowDefinitionModel().tag"
+                         hint="Tags can be used to query workflow definitions with."
+                         fieldId="tag">
+        </form-text-input>
+        <div class="elsa-space-y-8 elsa-w-full">
+          <form-select-field fieldName="persistenceBehavior"
+                             label="Persistence Behavior"
+                             [(value)]="workflowDefinitionModel().persistenceBehavior"
+                             [options]="persistenceBehaviorOptions"
+                             hint="The persistence behavior controls how often a workflow instance is persisted during workflow execution."
+                             fieldId="workflowContextFidelity">
+          </form-select-field>
+        </div>
+        <div class="elsa-space-y-8 elsa-w-full" *ngIf="workflowChannelOptions?.length > 0">
+          <form-select-field fieldName="channel"
+                             label="Channel"
+                             [(value)]="workflowDefinitionModel().channel"
+                             [options]="workflowChannelOptions"
+                             hint="Select a channel for this workflow to execute in."
+                             fieldId="channel">
+          </form-select-field>
+        </div>
+        <div class="elsa-space-y-8 elsa-w-full">
+          <form-check-box fieldName="isSingleton"
+                          label="Singleton"
+                          [(checked)]="workflowDefinitionModel().isSingleton"
+                          hint="Singleton workflows will only have one active instance executing at a time."
+                          fieldId="isSingleton">
+          </form-check-box>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <!--Settings Tab-->
+  <ng-template #settingsTab>
+    <div class="elsa-flex elsa-px-8">
+      <div class="elsa-space-y-8 elsa-w-full">
+        <form-text-input fieldName="name"
+                         label="Name"
+                         [(value)]="workflowDefinitionModel().name"
+                         hint="The technical name of the workflow."
+                         fieldId="workflowName"></form-text-input>
+        <div class="elsa-space-y-8 elsa-w-full">
+          <form-text-input fieldName="displayName"
+                           label="Display Name"
+                           [(value)]="workflowDefinitionModel().displayName"
+                           hint="A user-friendly display name of the workflow."
+                           fieldId="workflowDisplayName">
+          </form-text-input>
+        </div>
+        <div class="elsa-space-y-8 elsa-w-full">
+          <form-text-input fieldName="description"
+                           label="Description"
+                           [(value)]="workflowDefinitionModel().description"
+                           fieldId="workflowDescription">
+          </form-text-input>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+</modal-dialog>

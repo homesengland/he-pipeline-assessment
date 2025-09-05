@@ -6,6 +6,7 @@ import { fromEvent } from 'rxjs';
 import { BaseEditor } from './base-editor';
 import { EditorModel } from './types';
 import { EditorVariables } from './monaco-utils';
+import { has } from 'lodash';
 
 declare var monaco: any;
 
@@ -82,7 +83,10 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
   }
 
   protected initMonaco(options: any, insideNg: boolean): void {
-    const hasModel = !!options.model;
+    var hasModel: boolean = false;
+    if (options && options.model) {
+      hasModel = true;
+    }
 
     if (hasModel) {
       const model = monaco.editor.getModel(options.model.uri || '');
@@ -153,5 +157,9 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
     for (const match of matches) {
       EditorVariables.push({ variableName: match[1], type: match[2] });
     }
+  }
+
+  async addJsonLib() {
+    monaco.languages.register({ id: 'json' });
   }
 }
