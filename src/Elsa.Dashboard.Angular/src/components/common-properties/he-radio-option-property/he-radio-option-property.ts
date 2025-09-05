@@ -147,7 +147,8 @@ export class HeRadioOptionProperty {
         json: json,
         radioOption: radioOption,
         syntaxSwitchCount: this.syntaxSwitchCount,
-        keyId: this.keyId
+        keyId: this.keyId,
+        index: index
       };
 
       //// OLD CODE
