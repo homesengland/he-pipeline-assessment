@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Output, model } from '@angular/core';
-// import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, HTMLElsaMultiExpressionEditorElement, IntellisenseContext } from '../../../models/elsa-interfaces';
+import { Component, EventEmitter, Output, model, ViewChild } from '@angular/core';
 import { ActivityModel } from '../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../models/domain';
-import { HTMLElsaMultiExpressionEditorElement, IntellisenseContext } from '../../../models/elsa-interfaces';
+import { HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../models/elsa-interfaces';
 import { NestedActivityDefinitionProperty } from '../../../models/custom-component-models';
 import { SyntaxNames } from '../../../constants/constants';
 import { SortableComponent } from 'src/components/sortable-component';
@@ -10,6 +9,8 @@ import { DisplayToggle } from 'src/components/display-toggle.component';
 import { mapSyntaxToLanguage, newOptionLetter, parseJson } from '../../../utils/utils';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { PropertyOutputTypes, RadioOptionsSyntax } from '../../../Models/constants';
+import { MultiExpressionEditor } from '../../editors/multi-expression-editor/multi-expression-editor';
+import { ExpressionEditor } from '../../editors/expression-editor/expression-editor';
 
 @Component({
   selector: 'he-radio-option-property',
@@ -25,8 +26,8 @@ export class HeRadioOptionProperty {
   properties: NestedActivityDefinitionProperty[];
   activityIconProvider: any;
 
-  private _base: SortableComponent;
-  private _toggle: DisplayToggle;
+  _base: SortableComponent;
+  _toggle: DisplayToggle;
 
   @Output() expressionChanged = new EventEmitter<string>();
 
@@ -37,13 +38,15 @@ export class HeRadioOptionProperty {
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   supportedSyntaxForMultiExpressionEditor = [SyntaxNames.Json];
-  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  // multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
   container: HTMLElement;
   displayValue: string = 'table-row';
   hiddenValue: string = 'none';
 
-  expressions = { Json: SyntaxNames.Json };
+  expressions = { Json: SyntaxNames.Json }; // THIS MOST LIKELY INCORRECT hence COMMENTED OUT, consider how to use the line below which is found within "getRenderCaseEditor()"
+  // json = JSON.stringify(this.properties[], null, 2);
+
   defaultSyntax = SyntaxNames.Json;
   
   context: IntellisenseContext = {
@@ -51,9 +54,15 @@ export class HeRadioOptionProperty {
     propertyName: this.propertyDescriptor().name
   };
 
+  @ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
+  @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
+  @ViewChild('prePopulatedExpressionEditor') prePopulatedExpressionEditor: ExpressionEditor;
+
+  radioOptionsSyntaxPrePopulated = RadioOptionsSyntax.PrePopulated;
+  onlyJavaScriptSyntaxes: string[] = this.supportedSyntaxes.filter(x => x === SyntaxNames.JavaScript);
+
   constructor(activityIconProvider: ActivityIconProvider) {
-    // Copied from workflow-instance-journal.ts, need to confirm correct implemenation.
-    this.activityIconProvider = activityIconProvider; // Copied from workflow-instance-journal.ts, need to confirm correct implemenation.
+    this.activityIconProvider = activityIconProvider;
     this._base = new SortableComponent();
     this._toggle = new DisplayToggle();
   }
@@ -64,6 +73,7 @@ export class HeRadioOptionProperty {
     this._base.componentWillRender();
   }
 
+  // THIS COPIED FUNCTION DOES NOT APPEAR TO BE USED IN THE ORIGINAL
   onDefaultSyntaxValueChanged(e: CustomEvent) {
     this.properties = e.detail;
   }
@@ -89,9 +99,11 @@ export class HeRadioOptionProperty {
     const json = e.detail;
     const parsed = parseJson(json);
 
-    if (!parsed) return;
+    if (!parsed)
+      return;
 
-    if (!Array.isArray(parsed)) return;
+    if (!Array.isArray(parsed))
+      return;
 
     this.propertyModel().expressions[SyntaxNames.Json] = json;
     this.properties = parsed;
@@ -105,30 +117,30 @@ export class HeRadioOptionProperty {
     this._toggle.onToggleDisplay(index, this);
   }
 
-  updateName(event: Event, option: NestedActivityDefinitionProperty) {
-    const input = event.target as HTMLInputElement;
-    option.name = input.value;
-    this._base.updatePropertyModel();
-  }
+  //updateName(event: Event, option: NestedActivityDefinitionProperty) {
+  //  const input = event.target as HTMLInputElement;
+  //  option.name = input.value;
+  //  this._base.updatePropertyModel();
+  //}
 
-  updateSyntax(event: Event, option: NestedActivityDefinitionProperty) {
-    const select = event.target as HTMLSelectElement;
-    option.syntax = select.value;
-    this._base.updatePropertyModel();
-  }
+  //updateSyntax(event: Event, option: NestedActivityDefinitionProperty, expressionEditor: ExpressionEditor) {
+  //  const select = event.target as HTMLSelectElement;
+  //  option.syntax = select.value;
+  //  this._base.updatePropertyModel();
+  //}
 
-  customUpdateExpression(value: string, option: NestedActivityDefinitionProperty, syntax: string) {
-    option.expressions[syntax] = value;
-    this._base.updatePropertyModel();
-  }
+  //customUpdateExpression(value: string, option: NestedActivityDefinitionProperty, syntax: string) {
+  //  option.expressions[syntax] = value;
+  //  this._base.updatePropertyModel();
+  //}
 
-  renderCaseEditor(): any {
+  getRenderCaseEditor(): any {
 
     const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
     const json = JSON.stringify(cases, null, 2);
 
-    return cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
+    cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
 
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
@@ -148,28 +160,12 @@ export class HeRadioOptionProperty {
         radioOption: radioOption,
         syntaxSwitchCount: this.syntaxSwitchCount,
         keyId: this.keyId,
-        index: index
+        index: index,
+        key: `expression-editor-${index}-${this.syntaxSwitchCount}_${this.keyId}`,
+        monacoLanguage: monacoLanguage,
+        prePopulatedExpression: prePopulatedExpression,
+        prePopulatedLanguage: prePopulatedLanguage
       };
-
-      //// OLD CODE
-      //let isSelected = this.selectList.isFlagsEnum;
-
-      //if (isSelected) {
-      //  isSelected = (parseInt(this.currentValue) & parseInt(item.value)) === parseInt(item.value);
-      //} else {
-      //  const selectedValues = parseJson(this.currentValue as string) || [];
-      //  isSelected = selectedValues.includes(item.value);
-      //}
-
-      //return {
-      //  text: item.text,
-      //  value: item.value,
-      //  inputId: `${this.fieldId}_${index}`,
-      //  isSelected: isSelected
-      //};
-
-
     });
   }
-
 }
