@@ -366,12 +366,24 @@ export interface PropertySettings {
 }
 
 export class SyntaxNames {
-  static readonly Literal = 'Literal';
-  static readonly JavaScript = 'JavaScript';
-  static readonly Liquid = 'Liquid';
-  static readonly Json = 'Json';
-  static Variable = 'Variable';
-  static Output = 'Output';
+  static readonly Literal = "Literal";
+  static readonly JavaScript = "JavaScript";
+  static readonly Liquid = "Liquid";
+  static readonly Json = "Json";
+  static readonly SQL = "SQL";
+  static readonly Switch = "Switch";
+  static readonly Question = "Question";
+  static readonly QuestionList = "QuestionList";
+  static readonly Checked = "Checked";
+  static readonly ConditionalTextList = 'ConditionalTextList';
+  static readonly TextActivity = 'TextActivity';
+  static readonly TextActivityList = 'TextActivityList';
+  static readonly DataDictionary = 'DataDictionary';
+  static readonly DataTable = 'DataTable';
+  static readonly InformationText = 'TextActivity';
+  static readonly GroupedInformationText = 'TextGroupActivity';
+  static Variable: string;
+  static Output: string;
 }
 
 export interface WorkflowTestActivityMessage {
