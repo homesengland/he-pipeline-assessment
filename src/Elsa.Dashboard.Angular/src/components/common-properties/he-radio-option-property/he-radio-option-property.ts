@@ -23,7 +23,7 @@ export class HeRadioOptionProperty {
   propertyModel = model<ActivityDefinitionProperty>();
   modelSyntax: string = SyntaxNames.Json;
   keyId: string = '1234'; // Setting a default keyId number since the original code doesn't seem to specify a keyId at all hence default is probably null
-  properties: NestedActivityDefinitionProperty[];
+  properties: NestedActivityDefinitionProperty[] = ;
   activityIconProvider: any;
 
   _base: SortableComponent;
@@ -38,21 +38,20 @@ export class HeRadioOptionProperty {
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   supportedSyntaxForMultiExpressionEditor = [SyntaxNames.Json];
-  // multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
   container: HTMLElement;
   displayValue: string = 'table-row';
   hiddenValue: string = 'none';
-
-  expressions = { Json: SyntaxNames.Json }; // THIS MOST LIKELY INCORRECT hence COMMENTED OUT, consider how to use the line below which is found within "getRenderCaseEditor()"
-  // json = JSON.stringify(this.properties[], null, 2);
-
   defaultSyntax = SyntaxNames.Json;
   
   context: IntellisenseContext = {
     activityTypeName: this.activityModel().type,
     propertyName: this.propertyDescriptor().name
   };
+
+  getExpressions() {
+    return { 'Json': JSON.stringify(this.properties ?? [], null, 2) };
+  }
 
   @ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
@@ -68,6 +67,7 @@ export class HeRadioOptionProperty {
   }
 
   ngOnInit() {
+
     this._base.componentWillLoad();
     // this._base.componentDidLoad(); **** // TODO: Presumed this wasn't needed as it's a stencil lifecycle hook and ngOnInit should handle initialisation logic.
     this._base.componentWillRender();
@@ -137,8 +137,6 @@ export class HeRadioOptionProperty {
   getRenderCaseEditor(): any {
 
     const cases = this.properties;
-    const supportedSyntaxes = this.supportedSyntaxes;
-    const json = JSON.stringify(cases, null, 2);
 
     cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
 
@@ -156,7 +154,6 @@ export class HeRadioOptionProperty {
       const optionsDisplay = this._toggle.component.dictionary[index] ?? "none";
 
       return {
-        json: json,
         radioOption: radioOption,
         syntaxSwitchCount: this.syntaxSwitchCount,
         keyId: this.keyId,

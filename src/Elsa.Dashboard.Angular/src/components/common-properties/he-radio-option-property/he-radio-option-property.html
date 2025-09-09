@@ -5,7 +5,7 @@
     [defaultSyntax]="defaultSyntax"
     [supportedSyntaxes]="supportedSyntaxForMultiExpressionEditor"
     [context]="context"
-    [expressions]="expressions"
+    [expressions]="getExpressions"
     editor-height="20rem"
     (expressionChanged)="onMultiExpressionEditorValueChanged($event)"
     (syntaxChanged)="onMultiExpressionEditorSyntaxChanged($event)">
