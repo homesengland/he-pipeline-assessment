@@ -161,7 +161,8 @@ export class HeRadioOptionProperty {
         key: `expression-editor-${index}-${this.syntaxSwitchCount}_${this.keyId}`,
         monacoLanguage: monacoLanguage,
         prePopulatedExpression: prePopulatedExpression,
-        prePopulatedLanguage: prePopulatedLanguage
+        prePopulatedLanguage: prePopulatedLanguage,
+        optionsDisplay: optionsDisplay
       };
     });
   }
