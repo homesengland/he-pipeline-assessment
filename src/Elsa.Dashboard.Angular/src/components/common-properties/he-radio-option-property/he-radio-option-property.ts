@@ -8,7 +8,7 @@ import { SortableComponent } from 'src/components/sortable-component';
 import { DisplayToggle } from 'src/components/display-toggle.component';
 import { mapSyntaxToLanguage, newOptionLetter, parseJson } from '../../../utils/utils';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
-import { PropertyOutputTypes, RadioOptionsSyntax } from '../../../Models/constants';
+import { PropertyOutputTypes, RadioOptionsSyntax } from '../../../models/constants';
 import { MultiExpressionEditor } from '../../editors/multi-expression-editor/multi-expression-editor';
 import { ExpressionEditor } from '../../editors/expression-editor/expression-editor';
 
@@ -23,7 +23,7 @@ export class HeRadioOptionProperty {
   propertyModel = model<ActivityDefinitionProperty>();
   modelSyntax: string = SyntaxNames.Json;
   keyId: string = '1234'; // Setting a default keyId number since the original code doesn't seem to specify a keyId at all hence default is probably null
-  properties: NestedActivityDefinitionProperty[] = ;
+  properties: NestedActivityDefinitionProperty[];
   activityIconProvider: any;
 
   _base: SortableComponent;
@@ -43,14 +43,14 @@ export class HeRadioOptionProperty {
   displayValue: string = 'table-row';
   hiddenValue: string = 'none';
   defaultSyntax = SyntaxNames.Json;
-  
+
   context: IntellisenseContext = {
     activityTypeName: this.activityModel().type,
-    propertyName: this.propertyDescriptor().name
+    propertyName: this.propertyDescriptor().name,
   };
 
   getExpressions() {
-    return { 'Json': JSON.stringify(this.properties ?? [], null, 2) };
+    return { Json: JSON.stringify(this.properties ?? [], null, 2) };
   }
 
   @ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
@@ -67,7 +67,6 @@ export class HeRadioOptionProperty {
   }
 
   ngOnInit() {
-
     this._base.componentWillLoad();
     // this._base.componentDidLoad(); **** // TODO: Presumed this wasn't needed as it's a stencil lifecycle hook and ngOnInit should handle initialisation logic.
     this._base.componentWillRender();
@@ -99,11 +98,9 @@ export class HeRadioOptionProperty {
     const json = e.detail;
     const parsed = parseJson(json);
 
-    if (!parsed)
-      return;
+    if (!parsed) return;
 
-    if (!Array.isArray(parsed))
-      return;
+    if (!Array.isArray(parsed)) return;
 
     this.propertyModel().expressions[SyntaxNames.Json] = json;
     this.properties = parsed;
@@ -135,11 +132,9 @@ export class HeRadioOptionProperty {
   //}
 
   getRenderCaseEditor(): any {
-
     const cases = this.properties;
 
     cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
-
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
@@ -150,8 +145,8 @@ export class HeRadioOptionProperty {
 
       let expressionEditor = null;
       let prePopulatedExpressionEditor = null;
-      let colWidth = "100%";
-      const optionsDisplay = this._toggle.component.dictionary[index] ?? "none";
+      let colWidth = '100%';
+      const optionsDisplay = this._toggle.component.dictionary[index] ?? 'none';
 
       return {
         radioOption: radioOption,
@@ -162,7 +157,8 @@ export class HeRadioOptionProperty {
         monacoLanguage: monacoLanguage,
         prePopulatedExpression: prePopulatedExpression,
         prePopulatedLanguage: prePopulatedLanguage,
-        optionsDisplay: optionsDisplay
+        optionsDisplay: optionsDisplay,
+        expression: expression,
       };
     });
   }

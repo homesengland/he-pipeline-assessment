@@ -728,7 +728,7 @@ export class WorkflowPlaceholder implements OnInit {
       case 'dictionary':
         return this.dictionaryActivityModel;
       case 'he-radio-options':
-        return this.dictionaryActivityModel;
+        return this.heRadioOptionActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);
     }
