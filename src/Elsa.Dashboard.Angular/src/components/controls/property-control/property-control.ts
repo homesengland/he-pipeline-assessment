@@ -25,7 +25,7 @@ export class PropertyControl implements OnInit {
   renderComponent() {
     this.container.clear();
     const componentInfo = propertyDisplayManager.display(this.activity, this.property, this.onUpdated, this.isEncypted);
-
+    console.log("Property Control, Creating Component:", componentInfo);
     const componentRef = this.container.createComponent(componentInfo.componentType);
     console.log('Component created:', componentRef);
     Object.keys(componentInfo.inputs).forEach(key => {

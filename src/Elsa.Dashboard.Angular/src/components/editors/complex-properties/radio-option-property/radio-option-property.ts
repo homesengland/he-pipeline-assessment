@@ -1,23 +1,23 @@
 import { Component, EventEmitter, Output, model, ViewChild } from '@angular/core';
-import { ActivityModel } from '../../../models';
-import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../models/domain';
-import { HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../models/elsa-interfaces';
-import { NestedActivityDefinitionProperty } from '../../../models/custom-component-models';
-import { SyntaxNames } from '../../../constants/constants';
+import { ActivityModel } from '../../../../models';
+import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
+import { HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../../models/elsa-interfaces';
+import { NestedActivityDefinitionProperty } from '../../../../models/custom-component-models';
+import { SyntaxNames } from '../../../../constants/constants'
 import { SortableComponent } from 'src/components/sortable-component';
 import { DisplayToggle } from 'src/components/display-toggle.component';
-import { mapSyntaxToLanguage, newOptionLetter, parseJson } from '../../../utils/utils';
+import { mapSyntaxToLanguage, newOptionLetter, parseJson } from '../../../../utils/utils';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
-import { PropertyOutputTypes, RadioOptionsSyntax } from '../../../models/constants';
-import { MultiExpressionEditor } from '../../editors/multi-expression-editor/multi-expression-editor';
-import { ExpressionEditor } from '../../editors/expression-editor/expression-editor';
+import { PropertyOutputTypes, RadioOptionsSyntax } from '../../../../models/constants';
+import { MultiExpressionEditor } from '../../../editors/multi-expression-editor/multi-expression-editor';
+import { ExpressionEditor } from '../../../editors/expression-editor/expression-editor';
 
 @Component({
-  selector: 'he-radio-option-property',
-  templateUrl: './he-radio-option-property.html',
+  selector: 'radio-option-property',
+  templateUrl: './radio-option-property.html',
   standalone: false,
 })
-export class HeRadioOptionProperty {
+export class RadioOptionProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();

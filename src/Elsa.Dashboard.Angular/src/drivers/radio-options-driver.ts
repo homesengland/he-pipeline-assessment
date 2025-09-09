@@ -2,18 +2,18 @@ import { PropertyDisplayDriver } from '../services/property-display-driver';
 import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from '../models';
 import { getOrCreateProperty, setActivityModelProperty } from '../utils/utils';
 import { Injectable, signal, Signal, Type } from '@angular/core';
-import { HeRadioOptionProperty } from 'src/components/common-properties/he-radio-option-property/he-radio-option-property';
+import { RadioOptionProperty } from 'src/components/editors/complex-properties/radio-option-property/radio-option-property';
 
 @Injectable({
   providedIn: 'root',
 })
-export class HeRadioOptionsDriver implements PropertyDisplayDriver {
+export class RadioOptionsDriver implements PropertyDisplayDriver {
   constructor() {
     console.log('HeRadioOptionsDriver initialized');
   }
 
   display(model: Signal<ActivityModel>, property: Signal<ActivityPropertyDescriptor>, onUpdated?: () => void, isEncrypted?: boolean) {
-    console.log('HeRadioOptions Driver Setup');
+    console.log('RadioOptions Driver Setup');
     console.log('Activity Model', model());
     console.log('Property Model', property());
     const propertyModel = getOrCreateProperty(model(), property().name);
@@ -21,7 +21,7 @@ export class HeRadioOptionsDriver implements PropertyDisplayDriver {
 
     console.log('property model for HeRadioOptions Driver', propertyModel);
     return {
-      componentType: HeRadioOptionProperty,
+      componentType: RadioOptionProperty,
       inputs: {
         activityModel: model,
         propertyDescriptor: property,

@@ -51,7 +51,8 @@ import { RadioListProperty } from './components/editors/properties/radio-list-pr
 import { MultiTextProperty } from './components/editors/properties/multi-text-property/multi-text-property';
 import { InputTags } from './components/controls/input-tags/input-tags';
 import { DictionaryProperty } from './components/editors/properties/dictionary-property/dictionary-property';
-import { HeRadioOptionProperty } from './components/common-properties/he-radio-option-property/he-radio-option-property';
+import { RadioOptionProperty } from './components/editors/complex-properties/radio-option-property/radio-option-property';
+
 
 @NgModule({
   declarations: [
@@ -96,7 +97,7 @@ import { HeRadioOptionProperty } from './components/common-properties/he-radio-o
     MultiTextProperty,
     InputTags,
     DictionaryProperty,
-    HeRadioOptionProperty,
+    RadioOptionProperty,
   ],
   imports: [
     routing,

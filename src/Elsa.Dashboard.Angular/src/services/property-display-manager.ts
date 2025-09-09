@@ -3,9 +3,6 @@ import { PropertyDisplayDriver } from './property-display-driver';
 import { NullPropertyDriver } from '../drivers/null-property-driver/null-property-driver';
 import { Map } from '../utils/utils';
 import { Signal } from '@angular/core';
-import { SingleLineDriver } from 'src/drivers/single-line-driver';
-import { MultiLineDriver } from 'src/drivers/multi-line-driver';
-import { CheckboxDriver } from 'src/drivers/checkbox-driver';
 /*import { SecretModel, SecretPropertyDescriptor } from "../modules/credential-manager/models/secret.model";*/
 
 export type PropertyDisplayDriverMap = Map<(elsaStudio: WorkflowStudio) => PropertyDisplayDriver>;
@@ -47,7 +44,8 @@ export class PropertyDisplayManager {
     return update(model, property, form);
   }
 
-  getDriver(type: string) : PropertyDisplayDriver {
+  getDriver(type: string): PropertyDisplayDriver {
+    console.log(`Getting driver for type: ${type}`);
     const driverFactory = this.drivers[type] || ((_: WorkflowStudio) => new NullPropertyDriver());
     return driverFactory(this.workflowStudio);
   }
