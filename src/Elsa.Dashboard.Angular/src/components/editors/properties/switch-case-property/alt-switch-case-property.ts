@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges, ViewChild} from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
@@ -8,11 +8,11 @@ import { HTMLElsaExpressionEditorElement, HTMLElsaMultiExpressionEditorElement, 
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 
 @Component({
-  selector: 'switch-case-property',
-  templateUrl: './switch-case-property.html',
+  selector: 'alt-switch-case-property',
+  templateUrl: './alt-switch-case-property.html',
   standalone: false,
 })
-export class SwitchCaseProperty {
+export class AltSwitchCaseProperty {
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
@@ -20,7 +20,7 @@ export class SwitchCaseProperty {
   @ViewChild('multiExpressionEditor') multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   @ViewChild('expressionEditor') expressionEditor: HTMLElsaExpressionEditorElement;
 
-  cases: Array<SwitchCase> = [];
+  cases = signal<Array<SwitchCase>>([]);
 
   //// Correctly assigning values to cases at declaration time
   //cases: Array<SwitchCase> = [
@@ -63,10 +63,10 @@ export class SwitchCaseProperty {
   //   propertyName: this.propertyDescriptor().name
   // };
 
-  expressions = computed(() => {
-    const model = this.propertyModel();
-    return model?.expressions ? { ...model.expressions } : {};
-  });
+  //expressions = computed(() => {
+  //  const model = this.propertyModel();
+  //  return model?.expressions ? { ...model.expressions } : {};
+  //});
 
   json: any;
   activityIconProvider: any;
@@ -79,7 +79,8 @@ export class SwitchCaseProperty {
   async ngOnInit(): Promise<void> {
     // const propertyModel = this.propertyModel();
     const casesJson = this.propertyModel().expressions[SyntaxNames.Switch]
-     this.cases = parseJson(casesJson) || [];
+    let parsedCases = parseJson(casesJson);
+     this.cases.set(parsedCases || []);
   }
 
   updatePropertyModel() {
@@ -92,15 +93,22 @@ export class SwitchCaseProperty {
   }
 
   onAddCaseClick() {
+    console.log("Adding Case")
     const caseName = `Case ${this.cases.length + 1}`;
-    const newCase = {name: caseName, syntax: SyntaxNames.JavaScript, expressions: {[SyntaxNames.JavaScript]: 'test'}};
-    this.cases = [...this.cases, newCase];
-    this.updatePropertyModel();
+    const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: 'test' } }
+    console.log(newCase);
+    this.cases.update(cases => [...cases, newCase]);
+    //this.updatePropertyModel();
+  }
+
+  onTestClick() {
+    console.log("This is a Test of the delete button");
   }
 
   onDeleteCaseClick(switchCase: SwitchCase) {
-    this.cases = this.cases.filter(x => x != switchCase);
-    this.updatePropertyModel();
+    console.log("Removing Case", switchCase);
+    //Not Being called.
+    this.cases.update(() => this.cases().filter(x => x != switchCase));
   }
 
   onCaseNameChanged(e: Event, switchCase: SwitchCase) {
@@ -132,8 +140,8 @@ export class SwitchCaseProperty {
     if (!Array.isArray(parsed))
       return;
 
-    this.propertyModel().expressions['Switch'] = json;
-    this.cases = parsed;
+    this.propertyModel().expressions[SyntaxNames.Switch] = json;
+    this.cases.set(parsed);
 
   }
   
@@ -141,10 +149,12 @@ export class SwitchCaseProperty {
     this.syntaxSwitchCount++;
   }
 
-
+  onMapSyntaxToLanguage(syntax: string): string {
+    return mapSyntaxToLanguage(syntax);
+  }
 
   getCases(): any {
-    return this.cases.map((switchCase: SwitchCase, index: number) => {
+    return this.cases().map((switchCase: SwitchCase, index: number) => {
       let expressionEditor = null;
 
       console.log("Index:", index);

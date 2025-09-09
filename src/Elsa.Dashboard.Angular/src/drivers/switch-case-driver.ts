@@ -3,6 +3,7 @@ import { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor }
 import { getOrCreateProperty } from '../utils/utils';
 import { Injectable, signal, Signal, Type } from '@angular/core';
 import { SwitchCaseProperty } from 'src/components/editors/properties/switch-case-property/switch-case-property';
+import { AltSwitchCaseProperty } from 'src/components/editors/properties/switch-case-property/alt-switch-case-property';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class SwitchCaseDriver implements PropertyDisplayDriver {
 
     console.log('property model for Switch Case Driver', propertyModel);
     return {
-      componentType: SwitchCaseProperty,
+      componentType: AltSwitchCaseProperty,
       inputs: {
         activityModel: model,
         propertyDescriptor: property,
