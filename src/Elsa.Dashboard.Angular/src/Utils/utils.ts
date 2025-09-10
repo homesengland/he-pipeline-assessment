@@ -127,7 +127,9 @@ export function setProperty(properties: Array<ActivityDefinitionProperty>, name:
 
 export function getOrCreateProperty(activity: ActivityModel, name: string, defaultExpression?: () => string, defaultSyntax?: () => string): ActivityDefinitionProperty {
   let property: ActivityDefinitionProperty | undefined = activity.properties?.find(x => x.name == name);
-
+  console.log('GetOrCreateProperty Called From Driver for Property:', name);
+  console.log("Activity Model in GetOrCreateProperty:", activity);
+  console.log("Existing Property Model in GetOrCreateProperty:", property);
   if (!property) {
     const expressions: Record<string, string> = {};
     const syntax = defaultSyntax?.() ?? 'Literal';
