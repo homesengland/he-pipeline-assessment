@@ -134,7 +134,7 @@ export class RadioOptionProperty {
   getRenderCaseEditor(): any {
     const cases = this.properties;
 
-    cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
+    return cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
