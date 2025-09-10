@@ -33,6 +33,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Remove="node_modules\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="src\components\interfaces\**" />
     <Content Remove="src\components\interfaces\**" />
     <EmbeddedResource Remove="src\components\interfaces\**" />

@@ -21,11 +21,11 @@
     "jsx": "react",
     "jsxFactory": "h"
   },
-  "include": [
-    "src"
-  ],
   "exclude": [
     "node_modules",
-    "src/index.html"
+    "**/node_modules/*"
+  ],
+  "include": [
+    "src/**/*"
   ]
 }
