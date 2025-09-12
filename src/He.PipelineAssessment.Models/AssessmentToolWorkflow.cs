@@ -17,10 +17,13 @@ namespace He.PipelineAssessment.Models
         public bool IsLast { get; set; }
         public string? Status { get; set; }
         public bool IsAmendable { get; set; }
+        public int? AssessmentFundId { get; set; }
 
         public virtual AssessmentTool AssessmentTool { get; set; } = null!;
         [JsonIgnore]
         public virtual List<TargetAssessmentToolWorkflow>? TargetAssessmentToolWorkflows { get; set; }
 
+        public virtual AssessmentFund? AssessmentFund { get; set; }
+        // need to add fundID
     }
 }
