@@ -34,12 +34,15 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<int> DeleteNextWorkflow(AssessmentToolInstanceNextWorkflow nextWorkflow);
 
         Task<int> SaveChanges();
-
         AssessmentToolWorkflow? GetAssessmentToolWorkflowByDefinitionId(string workflowDefinitionId);
         Task<int> DeleteIntervention(AssessmentIntervention intervention);
         Task<List<InterventionReason>> GetInterventionReasons(bool isVariation = false);
         Task<List<AssessmentIntervention>> GetOpenAssessmentInterventions(int assessmentId);
         Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmendment(int assessmentId, int order);
+        
+        Task <List<AssessmentFund>> GetAllFunds();
+        Task SaveFund(List<AssessmentFund> funds);
+        Task DeleteFund(int FundId);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -288,6 +291,40 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             context.Set<AssessmentToolInstanceNextWorkflow>().RemoveRange(nextWorkflows);
 
             await context.SaveChangesAsync();
+        }
+        
+        public async Task<List<AssessmentFund>> GetAllFunds()
+        {
+            return await context.Set<AssessmentFund>().ToListAsync();
+        }
+
+        public async Task SaveFund(List<AssessmentFund> funds)
+        {
+            foreach (var fund in funds)
+            {
+                if (fund.Id == 0)
+                {
+                    context.Set<AssessmentFund>().Add(fund);
+                }
+                else if (fund.Id != 0)
+                {
+                    context.Set<AssessmentFund>().Update(fund);
+                }
+                 await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteFund(int FundId)
+        {
+            AssessmentFund? fundToBeDeleted = await context.Set<AssessmentFund>()
+                .FirstOrDefaultAsync(fund => fund.Id == FundId);
+
+            if (fundToBeDeleted != null)
+            {
+                fundToBeDeleted.IsDisabled = true;
+                context.Set<AssessmentFund>().Update(fundToBeDeleted);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
