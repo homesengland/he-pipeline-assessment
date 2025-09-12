@@ -50,6 +50,7 @@ import { CheckListProperty } from './components/editors/properties/check-list-pr
 import { RadioListProperty } from './components/editors/properties/radio-list-property/radio-list-property';
 import { SwitchCaseProperty } from './components/editors/properties/switch-case-property/switch-case-property';
 import { AltSwitchCaseProperty } from "./components/editors/properties/switch-case-property/alt-switch-case-property";
+import { SwitchCaseRow } from "./components/editors/properties/switch-case-property/switch-case-row";
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { AltSwitchCaseProperty } from "./components/editors/properties/switch-ca
     CheckListProperty,
     RadioListProperty,
     SwitchCaseProperty,
-    AltSwitchCaseProperty
+    AltSwitchCaseProperty,
+    SwitchCaseRow
   ],
   imports: [
     routing,

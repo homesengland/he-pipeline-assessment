@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges, ViewChild} from '@angular/core';
+import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges, WritableSignal, ViewChild} from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
@@ -20,7 +20,7 @@ export class AltSwitchCaseProperty {
   @ViewChild('multiExpressionEditor') multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   @ViewChild('expressionEditor') expressionEditor: HTMLElsaExpressionEditorElement;
 
-  cases = signal<Array<SwitchCase>>([]);
+  cases: WritableSignal<SwitchCase>[] = [];
 
   //// Correctly assigning values to cases at declaration time
   //cases: Array<SwitchCase> = [
@@ -80,7 +80,7 @@ export class AltSwitchCaseProperty {
     // const propertyModel = this.propertyModel();
     const casesJson = this.propertyModel().expressions[SyntaxNames.Switch]
     let parsedCases = parseJson(casesJson);
-     this.cases.set(parsedCases || []);
+    this.cases = parsedCases.map((c: SwitchCase) => signal(c));
   }
 
   updatePropertyModel() {
@@ -95,9 +95,12 @@ export class AltSwitchCaseProperty {
   onAddCaseClick() {
     console.log("Adding Case")
     const caseName = `Case ${this.cases.length + 1}`;
-    const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: 'test' } }
-    console.log(newCase);
-    this.cases.update(cases => [...cases, newCase]);
+    const newCaseSignal = signal<SwitchCase>({
+      name: caseName,
+      syntax: SyntaxNames.JavaScript,
+      expressions: { [SyntaxNames.JavaScript]: '' }
+    });
+    this.cases.push(newCaseSignal);
     //this.updatePropertyModel();
   }
 
@@ -105,13 +108,13 @@ export class AltSwitchCaseProperty {
     console.log("This is a Test of the delete button");
   }
 
-  onDeleteCaseClick(switchCase: SwitchCase) {
-    console.log("Removing Case", switchCase);
-    //Not Being called.
-    this.cases.update(() => this.cases().filter(x => x != switchCase));
+  onDeleteCase(e: Event) {
+    console.log("Delete Click Event", e);
   }
 
   onCaseNameChanged(e: Event, switchCase: SwitchCase) {
+    console.log("Name Changed Event", e);
+    console.log("Switch Case", switchCase);
     switchCase.name = (e.currentTarget as HTMLInputElement).value.trim();
     this.updatePropertyModel();
   }
@@ -141,7 +144,7 @@ export class AltSwitchCaseProperty {
       return;
 
     this.propertyModel().expressions[SyntaxNames.Switch] = json;
-    this.cases.set(parsed);
+    //this.cases.set(parsed);
 
   }
   
@@ -151,28 +154,5 @@ export class AltSwitchCaseProperty {
 
   onMapSyntaxToLanguage(syntax: string): string {
     return mapSyntaxToLanguage(syntax);
-  }
-
-  getCases(): any {
-    return this.cases().map((switchCase: SwitchCase, index: number) => {
-      let expressionEditor = null;
-
-      console.log("Index:", index);
-      console.log("Name:", switchCase.name);
-      console.log("Expressions:", switchCase.expressions);
-      console.log("Expression:", switchCase.expressions[switchCase.syntax]);
-      console.log("syntax:", switchCase.syntax);
-      console.log("monacoLanguage:", mapSyntaxToLanguage(switchCase.syntax));
-
-      return {
-        index: index,
-        expression: switchCase.expressions[switchCase.syntax],
-        syntax: switchCase.syntax,
-        monacoLanguage: mapSyntaxToLanguage(switchCase.syntax),
-        name: switchCase.name,
-        //onNameChanged: (e: Event) => this.onCaseNameChanged(e, switchCase),
-        //onExpressionChanged: (e: CustomEvent<string>) => this.onCaseExpressionChanged(e, switchCase)
-      };
-    });
   }
 }
