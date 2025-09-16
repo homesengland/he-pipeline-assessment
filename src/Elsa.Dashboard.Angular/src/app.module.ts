@@ -43,7 +43,9 @@ import { DesignerTree } from './components/designers/tree/designer-tree/designer
 import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
 import { ActivityEditorModal } from './components/screens/workflow-definition-editor/activity-editor-modal/activity-editor-modal';
 import { WorkflowSettingsButton } from './components/screens/workflow-definition-editor/buttons/workflow-settings-button/workflow-settings-button';
-import { WorkflowSettingsModal } from './components/screens/workflow-definition-editor/workflow-settings-modal/workflow-settings-modal';
+import { WorkflowHelpButton } from './components/screens/workflow-definition-editor/buttons/workflow-help-button/workflow-help-button';
+import { WorkflowSettingsModal } from './components/screens/workflow-definition-editor/modals/workflow-settings-modal/workflow-settings-modal';
+import {WorkflowHelpModal} from './components/screens/workflow-definition-editor/modals/workflow-help-modal/workflow-help-modal';
 import { FormTextInputComponent } from 'src/Utils/form-controls/form-text-input/form-text-input.component';
 import { FormCheckBoxComponent } from 'src/Utils/form-controls/form-check-box/form-check-box.component';
 import { FormSectionComponent } from 'src/Utils/form-controls/form-section/form-section.component';
@@ -99,7 +101,9 @@ import { DictionaryProperty } from './components/editors/properties/dictionary-p
     JsonProperty,
     ActivityEditorModal,
     WorkflowSettingsButton,
+    WorkflowHelpButton,
     WorkflowSettingsModal,
+    WorkflowHelpModal,
     FormTextInputComponent,
     FormCheckBoxComponent,
     FormSectionComponent,
