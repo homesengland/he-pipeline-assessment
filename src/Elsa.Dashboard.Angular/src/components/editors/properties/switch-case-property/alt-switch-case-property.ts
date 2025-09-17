@@ -112,25 +112,39 @@ export class AltSwitchCaseProperty {
     console.log("Delete Click Event", e);
   }
 
-  onCaseNameChanged(e: Event, switchCase: SwitchCase) {
-    console.log("Name Changed Event", e);
-    console.log("Switch Case", switchCase);
-    switchCase.name = (e.currentTarget as HTMLInputElement).value.trim();
-    this.updatePropertyModel();
+  onDeleteCaseClick(e: Event) {
+    console.log("Delete Click Event", e);
   }
 
-  onCaseExpressionChanged(e: Event, switchCase: SwitchCase) {
-    const detail = (e as CustomEvent<string>).detail;
-    switchCase.expressions[switchCase.syntax] = detail;
-    this.updatePropertyModel();
+  onCaseSyntaxChanged(e: Event) {
+    console.log("Syntax Changed", e);
+  }
+  onCaseExpressionChanged(e: Event) {
+    console.log("Expression Changed", e);
+  }
+  onCaseNameChanged(e: Event) {
+    console.log("Name Changed", e);
   }
 
-  onCaseSyntaxChanged(e: Event, switchCase: SwitchCase, expressionEditor: HTMLElsaExpressionEditorElement) {
-    const select = e.currentTarget as HTMLSelectElement;
-    switchCase.syntax = select.value;
-    expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
-    this.updatePropertyModel();
-  }
+  //onCaseNameChanged(e: Event, switchCase: SwitchCase) {
+  //  console.log("Name Changed Event", e);
+  //  console.log("Switch Case", switchCase);
+  //  switchCase.name = (e.currentTarget as HTMLInputElement).value.trim();
+  //  this.updatePropertyModel();
+  //}
+
+  //onCaseExpressionChanged(e: Event, switchCase: SwitchCase) {
+  //  const detail = (e as CustomEvent<string>).detail;
+  //  switchCase.expressions[switchCase.syntax] = detail;
+  //  this.updatePropertyModel();
+  //}
+
+  //onCaseSyntaxChanged(e: Event, switchCase: SwitchCase, expressionEditor: HTMLElsaExpressionEditorElement) {
+  //  const select = e.currentTarget as HTMLSelectElement;
+  //  switchCase.syntax = select.value;
+  //  expressionEditor.language = mapSyntaxToLanguage(switchCase.syntax);
+  //  this.updatePropertyModel();
+  //}
 
   onMultiExpressionEditorValueChanged(e: Event) {
     const detail = (e as CustomEvent<string>).detail;
@@ -147,7 +161,7 @@ export class AltSwitchCaseProperty {
     //this.cases.set(parsed);
 
   }
-  
+
   onMultiExpressionEditorSyntaxChanged(e: Event) {
     this.syntaxSwitchCount++;
   }

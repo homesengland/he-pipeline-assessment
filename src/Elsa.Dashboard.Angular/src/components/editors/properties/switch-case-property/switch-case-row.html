@@ -1,9 +1,8 @@
 
 <tr>
   <td class="elsa-py-2 elsa-pr-5">
-    <input type="text" (onChange)="onNameChanged($event)"
-           class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
-  {{switchCase().name}}</td>
+    <input type="text" (onChange)="onNameChanged($event)" [(ngModel)]="switchCase().name"
+           class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" /></td>
   <td class="elsa-py-2 pl-5">
     <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm">
       <expression-editor 
@@ -24,7 +23,6 @@
                   [value]="syntax"
                   [textContent]="syntax"
                   [selected]="switchCase().syntax == syntax">
-            {{syntax}}
           </option>
         </select>
       </div>
@@ -33,8 +31,7 @@
   <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
     <button type="button" (onClick)="onDeleteCaseClick($event)"
             class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
-      <!--<span [innerHTML]="activityIconProvider.getIcon('TrashBin')"></span>-->
-      Trash
+      <span [innerHTML]="activityIconProvider.getIcon('TrashBin', 'black')"></span>
     </button>
   </td>
 </tr>

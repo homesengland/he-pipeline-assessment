@@ -51,6 +51,7 @@ import { RadioListProperty } from './components/editors/properties/radio-list-pr
 import { SwitchCaseProperty } from './components/editors/properties/switch-case-property/switch-case-property';
 import { AltSwitchCaseProperty } from "./components/editors/properties/switch-case-property/alt-switch-case-property";
 import { SwitchCaseRow } from "./components/editors/properties/switch-case-property/switch-case-row";
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -106,6 +107,7 @@ import { SwitchCaseRow } from "./components/editors/properties/switch-case-prope
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
     BrowserAnimationsModule,
+    FormsModule
   ],
   providers: [IntellisenseService, provideHttpClient(), { provide: MONACO_EDITOR_CONFIG, useValue: monacoConfig }],
   bootstrap: [WorkflowRoot],

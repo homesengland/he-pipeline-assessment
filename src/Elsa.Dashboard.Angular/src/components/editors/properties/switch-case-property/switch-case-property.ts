@@ -136,7 +136,7 @@ export class SwitchCaseProperty {
     this.cases = parsed;
 
   }
-  
+
   onMultiExpressionEditorSyntaxChanged(e: Event) {
     this.syntaxSwitchCount++;
   }

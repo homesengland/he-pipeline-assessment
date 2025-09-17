@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, input, model, OnChanges, OnInit, signal, SimpleChanges, ViewChild} from '@angular/core';
+import { Component, computed, EventEmitter, input, model, OnChanges, OnInit, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
