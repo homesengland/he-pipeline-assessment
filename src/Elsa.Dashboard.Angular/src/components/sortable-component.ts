@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, input } from '@angular/core';
 import { BaseComponent, ISharedComponent } from './base-component';
 import Sortable from 'sortablejs';
 import { NestedActivityDefinitionProperty } from 'src/models/custom-component-models';

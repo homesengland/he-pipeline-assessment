@@ -15,7 +15,8 @@ export interface ISharedComponent {
   propertyDescriptor: ActivityPropertyDescriptor;
   propertyModel: ActivityDefinitionProperty;
   modelSyntax: string;
-  properties: NestedActivityDefinitionProperty[];
+  properties: Array<NestedActivityDefinitionProperty>;
+  // expressionChanged: EventEmitter<string>;
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   keyId: string;
 }

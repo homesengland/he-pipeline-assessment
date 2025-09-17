@@ -668,18 +668,51 @@ export class WorkflowPlaceholder implements OnInit {
       value: 'string',
       name: 'TestRadioOption',
       expressions: {
-        Json: '[]'
+        Json: '[{"name":"A","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"},{"name":"B","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"}]'
       },
       type: '',
     };
     return model;
   }
 
+  //// ORIGINAL
+  //getRadioOptionDescriptor(): ActivityPropertyDescriptor {
+  //  const model: ActivityPropertyDescriptor = {
+  //    conditionalActivityTypes: [],
+  //    expectedOutputType: 'string',
+  //    hasNestedProperties: false,
+  //    hasColletedProperties: false,
+  //    name: 'TestRadioOption',
+  //    type: 'System.String',
+  //    uiHint: 'radio-options',
+  //    label: 'Test Label for Radio Options',
+  //    hint: 'Test Hint for Radio Options',
+  //    options: {
+  //      items: [
+  //        { text: 'Option 1', value: '1' },
+  //        { text: 'Option 2', value: '2' },
+  //        { text: 'Option 3', value: '3' },
+  //      ],
+  //      isFlagsEnum: false,
+  //    },
+  //    order: 0,
+  //    defaultValue: '1',
+  //    supportedSyntaxes: ['Json'],
+  //    isReadOnly: false,
+  //    isBrowsable: true,
+  //    isDesignerCritical: false,
+  //    disableWorkflowProviderSelection: false,
+  //    considerValuesAsOutcomes: false,
+  //    defaultSyntax: 'Json',
+  //  };
+  //  return model;
+  //}
+
   getRadioOptionDescriptor(): ActivityPropertyDescriptor {
     const model: ActivityPropertyDescriptor = {
-      conditionalActivityTypes: [],
-      expectedOutputType: 'string',
-      hasNestedProperties: false,
+      conditionalActivityTypes: ['RadioQuestion'],
+      expectedOutputType: 'radio',
+      hasNestedProperties: true,
       hasColletedProperties: false,
       name: 'TestRadioOption',
       type: 'System.String',
@@ -695,14 +728,14 @@ export class WorkflowPlaceholder implements OnInit {
         isFlagsEnum: false,
       },
       order: 0,
-      defaultValue: '1',
+      defaultValue: null,
       supportedSyntaxes: [],
       isReadOnly: false,
       isBrowsable: true,
       isDesignerCritical: false,
       disableWorkflowProviderSelection: false,
       considerValuesAsOutcomes: false,
-      defaultSyntax: 'Json',
+      defaultSyntax: null,
     };
     return model;
   }

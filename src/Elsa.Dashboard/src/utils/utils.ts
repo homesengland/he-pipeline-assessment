@@ -66,6 +66,10 @@ function incrementString(value: string) : string {
 export function getOrCreateProperty(activity: ActivityModel, name: string, defaultExpression?: () => string, defaultSyntax?: () => string): ActivityDefinitionProperty {
   let property: ActivityDefinitionProperty = activity.properties.find(x => x.name == name);
 
+  console.log('GetOrCreateProperty Called From Driver for Property:', name);
+  console.log("Activity Model in GetOrCreateProperty:", activity);
+  console.log("Existing Property Model in GetOrCreateProperty:", property);
+
   if (!property) {
     const expressions = {};
     let syntax = defaultSyntax ? defaultSyntax() : undefined;
@@ -83,6 +87,7 @@ export function getOrCreateProperty(activity: ActivityModel, name: string, defau
 export function getOrCreateNestedProperty(activity: ActivityModel, name: string, type: string, defaultExpression?: () => string, defaultSyntax?: () => string): NestedActivityDefinitionProperty {
   var property = getOrCreateProperty(activity, name, defaultExpression, defaultSyntax) as NestedActivityDefinitionProperty;
   property.type = type;
+  console.log('getOrCreateNestedProperty() called file utils.ts');
   return property;
 }
 
