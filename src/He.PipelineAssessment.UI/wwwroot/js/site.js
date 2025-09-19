@@ -60,22 +60,20 @@ summaryInputs.forEach(function (summaryInput) {
     inputsToTotal.forEach(function (input) {
 
         if (input.dataset.summary == 'false') {
+
+            //Update total box when first initialising
+            summaryInput.value = getTotalColumnValue(inputsToTotal);
+            summaryInput.value = numberWithCommas(summaryInput.value);
+            hiddenTotalInputs.forEach(hiddenInput => {
+                hiddenInput.value = getTotalColumnValue(inputsToTotal);
+
+                // format number
+                hiddenInput.value = numberWithCommas(summaryInput.value);
+            })
+
             input.addEventListener('keyup', function (event) {
                 // skip for arrow keys
                 if (event.which >= 37 && event.which <= 40) return;
-
-                summaryInput.value = getTotalColumnValue(inputsToTotal);
-
-                // format number
-                summaryInput.value = numberWithCommas(summaryInput.value);
-                hiddenTotalInputs.forEach(hiddenInput => {
-                    hiddenInput.value = getTotalColumnValue(inputsToTotal);
-
-                    // format number
-                    hiddenInput.value = numberWithCommas(summaryInput.value);
-                })
-            });
-            input.addEventListener('load', function (event) {
 
                 summaryInput.value = getTotalColumnValue(inputsToTotal);
 
