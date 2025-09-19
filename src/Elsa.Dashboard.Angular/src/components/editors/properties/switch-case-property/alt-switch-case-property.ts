@@ -93,6 +93,11 @@ export class AltSwitchCaseProperty {
     //this.context.update(x => ({ ...x, propertyName: this.propertyDescriptor().name }));
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    console.log("Changes Detected", changes);
+    // changes.prop contains the old and the new value...
+  }
+
   updatePropertyModel() {
     this.propertyModel().expressions[SyntaxNames.Switch] = JSON.stringify(this.cases);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.cases, null, 2);

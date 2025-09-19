@@ -13,8 +13,10 @@ declare var monaco: any;
   standalone: false,
   selector: 'monaco-editor',
   templateUrl: './editor.html',
+  styleUrl: './monaco.css',
   host: {
     '[style.height]': 'editorHeight()',
+    '[style.min-height]': 'editorHeight()',
     'class':
       'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300 elsa-p-4',
   },
