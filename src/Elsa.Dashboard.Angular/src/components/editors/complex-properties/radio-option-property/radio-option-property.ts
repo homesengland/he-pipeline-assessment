@@ -18,9 +18,9 @@ import { DisplayToggle, IDisplayToggle } from 'src/components/display-toggle.com
   standalone: false,
 })
 export class RadioOptionProperty implements ISortableSharedComponent, IDisplayToggle {
-  activityModel: ActivityModel;
-  propertyDescriptor: ActivityPropertyDescriptor;
-  propertyModel: ActivityDefinitionProperty;
+  activityModel = model<ActivityModel>();
+  propertyDescriptor = model<ActivityPropertyDescriptor>();
+  propertyModel = model<ActivityDefinitionProperty>();
   modelSyntax: string = SyntaxNames.Json;
   properties: NestedActivityDefinitionProperty[] = [];
   
@@ -79,7 +79,7 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
 
     // Safely initialize context after models are available
     this.context = {
-      activityTypeName: this.activityModel?.type ?? '',
+      activityTypeName: this.activityModel()?.type ?? '',
       propertyName: this.propertyDescriptor?.name ?? '',
     };
 
@@ -117,7 +117,7 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
     if (!Array.isArray(parsed))
       return;
 
-    this.propertyModel.expressions[SyntaxNames.Json] = json;
+    this.propertyModel().expressions[SyntaxNames.Json] = json;
     this.properties = parsed;
   }
 
@@ -137,7 +137,7 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   //  const updatedModel = {
   //    ...currentModel,
   //    expressions: {
-  //      ...currentModel.expressions,
+  //      ...currentModel().expressions,
   //      [SyntaxNames.Json]: json
   //    }
   //  };

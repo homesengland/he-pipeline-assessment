@@ -15,9 +15,9 @@ export interface ISortableSharedComponent extends ISharedComponent {
 }
 
 export interface ISharedComponent {
-  activityModel = model<ActivityModel>();
-  propertyDescriptor: ActivityPropertyDescriptor;
-  propertyModel: ActivityDefinitionProperty;
+  activityModel: ReturnType<typeof model<ActivityModel>>;
+  propertyDescriptor: ReturnType<typeof model<ActivityPropertyDescriptor>>;
+  propertyModel: ReturnType<typeof model<ActivityDefinitionProperty>>;
   modelSyntax: string;
   properties: Array<NestedActivityDefinitionProperty>;
   expressionChanged: EventEmitter<string>;
@@ -41,15 +41,15 @@ export class SortableComponent implements AfterViewInit {
   componentWillLoad() {
     if (this.component.propertyDescriptor != null) {
       if (
-        this.component.propertyDescriptor.defaultSyntax != null &&
-        this.component.propertyDescriptor.defaultSyntax != undefined &&
-        this.component.propertyDescriptor.defaultSyntax != ''
+        this.component.propertyDescriptor().defaultSyntax != null &&
+        this.component.propertyDescriptor().defaultSyntax != undefined &&
+        this.component.propertyDescriptor().defaultSyntax != ''
       ) {
-        this.component.modelSyntax = this.component.propertyDescriptor.defaultSyntax;
+        this.component.modelSyntax = this.component.propertyDescriptor().defaultSyntax;
       }
     }
     const propertyModel = this.component.propertyModel;
-    const modelJson = propertyModel.expressions[this.component.modelSyntax];
+    const modelJson = propertyModel().expressions[this.component.modelSyntax];
     this.component.properties = parseJson(modelJson) || [];
   }
 
@@ -58,7 +58,7 @@ export class SortableComponent implements AfterViewInit {
   }
 
   updatePropertyModel() {
-    this.component.propertyModel.expressions[this.component.modelSyntax] = JSON.stringify(this.component.properties);
+    this.component.propertyModel().expressions[this.component.modelSyntax] = JSON.stringify(this.component.properties);
     this.component.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.component.properties, null, 2);
     this.expressionChanged.emit(JSON.stringify(this.component.propertyModel));
   }
@@ -127,7 +127,7 @@ export class SortableComponent implements AfterViewInit {
 
     if (!Array.isArray(parsed)) return;
 
-    this.component.propertyModel.expressions[syntax] = json;
+    this.component.propertyModel().expressions[syntax] = json;
     this.UpdateProperties(parsed);
   }
 
