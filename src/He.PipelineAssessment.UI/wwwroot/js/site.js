@@ -75,6 +75,19 @@ summaryInputs.forEach(function (summaryInput) {
                     hiddenInput.value = numberWithCommas(summaryInput.value);
                 })
             });
+            input.addEventListener('load', function (event) {
+
+                summaryInput.value = getTotalColumnValue(inputsToTotal);
+
+                // format number
+                summaryInput.value = numberWithCommas(summaryInput.value);
+                hiddenTotalInputs.forEach(hiddenInput => {
+                    hiddenInput.value = getTotalColumnValue(inputsToTotal);
+
+                    // format number
+                    hiddenInput.value = numberWithCommas(summaryInput.value);
+                })
+            });
         }
 
     });
