@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, SimpleChanges, WritableSignal, ViewChild} from '@angular/core';
+import { Component, computed, EventEmitter, model, OnChanges, OnInit, signal, Signal, SimpleChanges, WritableSignal, ViewChild} from '@angular/core';
 import { ActivityModel, SyntaxNames } from '../../../../models';
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { PropertyEditor } from '../../property-editor/property-editor';
@@ -17,11 +17,12 @@ export class AltSwitchCaseProperty {
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
 
-  @ViewChild('multiExpressionEditor') multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
-  @ViewChild('expressionEditor') expressionEditor: HTMLElsaExpressionEditorElement;
+
+  @ViewChild('multiExpressionEditorRef') multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  @ViewChild('expressionEditorRef') expressionEditor: HTMLElsaExpressionEditorElement;
 
   cases: WritableSignal<SwitchCase>[] = [];
-
+  context: IntellisenseContext = { activityTypeName: '', propertyName: '' };
   //// Correctly assigning values to cases at declaration time
   //cases: Array<SwitchCase> = [
   //  {
@@ -80,7 +81,16 @@ export class AltSwitchCaseProperty {
     // const propertyModel = this.propertyModel();
     const casesJson = this.propertyModel().expressions[SyntaxNames.Switch]
     let parsedCases = parseJson(casesJson);
-    this.cases = parsedCases.map((c: SwitchCase) => signal(c));
+    console.log("On Init Switch Case");
+    this.context.activityTypeName = this.activityModel().type;
+    this.context.propertyName = this.propertyDescriptor().name;
+    if (parsedCases != null) {
+      this.cases = parsedCases.map((c: SwitchCase) => signal(c));
+    }
+
+
+    //this.context.update(x => ({ ...x, activityTypeName: this.activityModel().type }));
+    //this.context.update(x => ({ ...x, propertyName: this.propertyDescriptor().name }));
   }
 
   updatePropertyModel() {
@@ -114,12 +124,13 @@ export class AltSwitchCaseProperty {
 
   onDeleteCaseClick(e: Event) {
     console.log("Delete Click Event", e);
+    
   }
 
   onCaseSyntaxChanged(e: Event) {
     console.log("Syntax Changed", e);
   }
-  onCaseExpressionChanged(e: Event) {
+  onCaseExpressionChanged(e: string) {
     console.log("Expression Changed", e);
   }
   onCaseNameChanged(e: Event) {

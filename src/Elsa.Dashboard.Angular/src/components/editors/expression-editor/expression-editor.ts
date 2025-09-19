@@ -4,7 +4,7 @@ import { Component, ElementRef, input, Input, model, OnChanges, OnInit, output, 
 import { HTMLMonacoElement, MonacoValueChangedArgs } from '../../../models/monaco-elements';
 import { IntellisenseContext } from '../../../models';
 import { Uri } from '../../../constants/constants';
-import { selectJavaScriptTypeDefinitions, selectWorkflowDefinitionId } from '../../../store/selectors/app.state.selectors';
+import { selectJavaScriptTypeDefinitions, selectWorkflowDefinitionId, selectServerUrl } from '../../../store/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
 import { EditorModel } from 'src/components/monaco/types';
 
@@ -47,6 +47,9 @@ export class ExpressionEditor implements OnInit {
 
   async ngOnInit() {
     this.intellisenseGatherer = new IntellisenseService(this.store);
+    this.store.select(selectServerUrl).subscribe(data => {
+      this.serverUrl.set(data);
+    });
   }
 
   async ngAfterViewInit() {
