@@ -18,9 +18,9 @@ import { DisplayToggle, IDisplayToggle } from 'src/components/display-toggle.com
   standalone: false,
 })
 export class RadioOptionProperty implements ISortableSharedComponent, IDisplayToggle {
-  activityModel = model<ActivityModel>();
-  propertyDescriptor = model<ActivityPropertyDescriptor>();
-  propertyModel = model<ActivityDefinitionProperty>();
+  activityModel: ActivityModel;
+  propertyDescriptor: ActivityPropertyDescriptor;
+  propertyModel: ActivityDefinitionProperty;
   modelSyntax: string = SyntaxNames.Json;
   properties: NestedActivityDefinitionProperty[] = [];
   
@@ -79,8 +79,8 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
 
     // Safely initialize context after models are available
     this.context = {
-      activityTypeName: this.activityModel()?.type ?? '',
-      propertyName: this.propertyDescriptor()?.name ?? '',
+      activityTypeName: this.activityModel?.type ?? '',
+      propertyName: this.propertyDescriptor?.name ?? '',
     };
 
   }
@@ -111,27 +111,41 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
     const json = e.detail;
     const parsed = parseJson(json);
 
-    if (!parsed) return;
+    if (!parsed)
+      return;
 
-    if (!Array.isArray(parsed)) return;
+    if (!Array.isArray(parsed))
+      return;
 
-    //// 1A. ORIGINAL METHOD COMMENTED OUT AS IT MIGHT POTENTIALLY NOT WORK
-    // this.propertyModel().expressions[SyntaxNames.Json] = json;
-
-    // 1B. NEW EXPLICIY METHOD using .set() to update the signal value
-    const currentModel = this.propertyModel();
-    const updatedModel = {
-      ...currentModel,
-      expressions: {
-        ...currentModel.expressions,
-        [SyntaxNames.Json]: json
-      }
-    };
-    this.propertyModel.set(updatedModel);
-
-
+    this.propertyModel.expressions[SyntaxNames.Json] = json;
     this.properties = parsed;
   }
+
+  //onMultiExpressionEditorValueChanged(e: any) {
+  //  const json = e.detail;
+  //  const parsed = parseJson(json);
+
+  //  if (!parsed) return;
+
+  //  if (!Array.isArray(parsed)) return;
+
+  //  //// 1A. ORIGINAL METHOD COMMENTED OUT AS IT MIGHT POTENTIALLY NOT WORK
+  //  // this.propertyModel().expressions[SyntaxNames.Json] = json;
+
+  //  // 1B. NEW EXPLICIY METHOD using .set() to update the signal value
+  //  const currentModel = this.propertyModel;
+  //  const updatedModel = {
+  //    ...currentModel,
+  //    expressions: {
+  //      ...currentModel.expressions,
+  //      [SyntaxNames.Json]: json
+  //    }
+  //  };
+  //  this.propertyModel.set(updatedModel);
+
+
+  //  this.properties = parsed;
+  //}
 
   onMultiExpressionEditorSyntaxChanged(e: any) {
     this.syntaxSwitchCount++;

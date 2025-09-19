@@ -1,11 +1,19 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
-import {
-  ActivityDefinitionProperty,
-  ActivityModel,
-  ActivityPropertyDescriptor,
-  HTMLElsaMultiExpressionEditorElement,
-  HTMLElsaExpressionEditorElement,
-} from '../models/elsa-interfaces';
+
+//import {
+//  ActivityDefinitionProperty,
+//  ActivityModel,
+//  ActivityPropertyDescriptor,
+//  HTMLElsaMultiExpressionEditorElement,
+//  HTMLElsaExpressionEditorElement,
+//} from '../models/elsa-interfaces';
+
+import { ActivityModel } from '../models';
+import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../models/domain';
+import { MultiExpressionEditor } from '../components/editors/multi-expression-editor/multi-expression-editor';
+import { ExpressionEditor } from '../components/editors/expression-editor/expression-editor';
+
+
 import { NestedActivityDefinitionProperty } from '../models/custom-component-models';
 import { getUniversalUniqueId, mapSyntaxToLanguage, parseJson } from 'src/utils/utils';
 import { SyntaxNames } from '../constants/constants';
@@ -17,7 +25,7 @@ export interface ISharedComponent {
   modelSyntax: string;
   properties: Array<NestedActivityDefinitionProperty>;
   expressionChanged: EventEmitter<string>;
-  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  multiExpressionEditor: MultiExpressionEditor;
   keyId: string;
 }
 
@@ -93,7 +101,7 @@ export class BaseComponent {
     this.updatePropertyModel();
   }
 
-  UpdateSyntax(e: Event, property: NestedActivityDefinitionProperty, expressionEditor: HTMLElsaExpressionEditorElement) {
+  UpdateSyntax(e: Event, property: NestedActivityDefinitionProperty, expressionEditor: ExpressionEditor) {
     const select = e.target as HTMLSelectElement;
     property.syntax = select.value;
     expressionEditor.language = mapSyntaxToLanguage(property.syntax);
