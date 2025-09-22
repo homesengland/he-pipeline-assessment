@@ -61,7 +61,7 @@ summaryInputs.forEach(function (summaryInput) {
 
         if (input.dataset.summary == 'false') {
 
-            //Update total box when first initialising
+            //Update total input when first initialising
             summaryInput.value = getTotalColumnValue(inputsToTotal);
             summaryInput.value = numberWithCommas(summaryInput.value);
             hiddenTotalInputs.forEach(hiddenInput => {
