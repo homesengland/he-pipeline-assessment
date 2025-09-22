@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output, model, ViewChild, input, signal } from '@angular/core';
-import { ActivityModel } from '../../../../models';
-import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
-import { HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../../models/elsa-interfaces';
+// import { ActivityModel } from '../../../../models';
+// import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
+import { ActivityModel, ActivityDefinitionProperty, ActivityPropertyDescriptor, IntellisenseContext } from '../../../../models/elsa-interfaces';
 import { NestedActivityDefinitionProperty } from '../../../../models/custom-component-models';
 import { SyntaxNames } from '../../../../constants/constants'
 import { mapSyntaxToLanguage, newOptionLetter, parseJson } from '../../../../utils/utils';
@@ -49,16 +49,16 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
     expressions: {
       Json: '[{"name":"A","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"},{"name":"B","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"}]'
     },
-    type: '',
+    // type: '',
   });
 
   propertyDescriptor = model<ActivityPropertyDescriptor>({
-    conditionalActivityTypes: ['RadioQuestion'],
-    expectedOutputType: 'radio',
-    hasNestedProperties: true,
-    hasColletedProperties: false,
+    // conditionalActivityTypes: ['RadioQuestion'],
+    // expectedOutputType: 'radio',
+    // hasNestedProperties: true,
+    // hasColletedProperties: false,
     name: 'TestRadioOption',
-    type: 'System.String',
+    // type: 'System.String',
     uiHint: 'radio-options',
     label: 'Test Label for Radio Options',
     hint: 'Test Hint for Radio Options',
@@ -70,12 +70,12 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
       ],
       isFlagsEnum: false,
     },
-    order: 0,
+    // order: 0,
     defaultValue: null,
     supportedSyntaxes: [],
     isReadOnly: false,
-    isBrowsable: true,
-    isDesignerCritical: false,
+    //isBrowsable: true,
+    //isDesignerCritical: false,
     disableWorkflowProviderSelection: false,
     considerValuesAsOutcomes: false,
     defaultSyntax: null,

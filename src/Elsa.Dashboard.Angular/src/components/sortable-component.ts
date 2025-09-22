@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, Input, Output, EventEmitter, model } from '@angular/core';
 import Sortable from 'sortablejs';
-import { ActivityModel } from '../models';
-import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../models/domain';
+// import { ActivityModel } from '../models';
+// import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../models/domain';
+import { ActivityModel, ActivityDefinitionProperty, ActivityPropertyDescriptor } from 'src/models/elsa-interfaces';
 import { MultiExpressionEditor } from '../components/editors/multi-expression-editor/multi-expression-editor';
 import { ExpressionEditor } from '../components/editors/expression-editor/expression-editor';
 
