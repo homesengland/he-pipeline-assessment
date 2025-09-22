@@ -33,9 +33,10 @@ export class SortableComponent implements AfterViewInit {
   @Input() component!: ISortableSharedComponent;
   @Output() expressionChanged = new EventEmitter<string>();
 
-  // below is original base component code
+  // Below is original BaseComponent code
   ngOnInit() {
     this.componentWillLoad();
+    this.component.keyId = getUniversalUniqueId();
   }
 
   componentWillLoad() {
@@ -53,9 +54,9 @@ export class SortableComponent implements AfterViewInit {
     this.component.properties = parseJson(modelJson) || [];
   }
 
-  componentWillRender() {
-    this.component.keyId = getUniversalUniqueId();
-  }
+  //componentWillRender() {
+  //  this.component.keyId = getUniversalUniqueId();
+  //}
 
   updatePropertyModel() {
     this.component.propertyModel().expressions[this.component.modelSyntax] = JSON.stringify(this.component.properties);

@@ -18,15 +18,69 @@ import { DisplayToggle, IDisplayToggle } from 'src/components/display-toggle.com
   standalone: false,
 })
 export class RadioOptionProperty implements ISortableSharedComponent, IDisplayToggle {
-  activityModel = model<ActivityModel>();
-  propertyDescriptor = model<ActivityPropertyDescriptor>();
-  propertyModel = model<ActivityDefinitionProperty>();
+  // activityModel = model<ActivityModel>();
+  // propertyModel = model<ActivityDefinitionProperty>();
+  // propertyDescriptor = model<ActivityPropertyDescriptor>();
+  properties: Array<NestedActivityDefinitionProperty> = [];
   modelSyntax: string = SyntaxNames.Json;
-  properties: NestedActivityDefinitionProperty[] = [];
   @Output() expressionChanged = new EventEmitter<string>();
   @ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
   keyId: string = '1234'; // Setting a default keyId number since the original code doesn't seem to specify a keyId at all hence default is probably null
   container: HTMLElement;
+
+  activityModel = model<ActivityModel>({
+    activityId: '',
+    type: 'RadioOption',
+    name: 'TestRadioOption',
+    displayName: 'Test HeRadioOption',
+    description: 'A Stub activity to display a HeRadioOption property',
+    outcomes: ['Done'],
+    properties: [],
+    persistWorkflow: true,
+    loadWorkflowContext: undefined,
+    saveWorkflowContext: undefined,
+    propertyStorageProviders: undefined,
+  });
+
+  propertyModel = model<ActivityDefinitionProperty>({
+    syntax: undefined,
+    value: 'string',
+    name: 'TestRadioOption',
+    expressions: {
+      Json: '[{"name":"A","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"},{"name":"B","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"}]'
+    },
+    type: '',
+  });
+
+  propertyDescriptor = model<ActivityPropertyDescriptor>({
+    conditionalActivityTypes: ['RadioQuestion'],
+    expectedOutputType: 'radio',
+    hasNestedProperties: true,
+    hasColletedProperties: false,
+    name: 'TestRadioOption',
+    type: 'System.String',
+    uiHint: 'radio-options',
+    label: 'Test Label for Radio Options',
+    hint: 'Test Hint for Radio Options',
+    options: {
+      items: [
+        { text: 'Option 1', value: '1' },
+        { text: 'Option 2', value: '2' },
+        { text: 'Option 3', value: '3' },
+      ],
+      isFlagsEnum: false,
+    },
+    order: 0,
+    defaultValue: null,
+    supportedSyntaxes: [],
+    isReadOnly: false,
+    isBrowsable: true,
+    isDesignerCritical: false,
+    disableWorkflowProviderSelection: false,
+    considerValuesAsOutcomes: false,
+    defaultSyntax: null,
+  });
+
   
   activityIconProvider: any;
   _base: SortableComponent;
@@ -64,20 +118,17 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
 
-    //// Initialzing the signal to avoid null reference errors
-    //if (!this.propertyDescriptor()) {
-    //  this.propertyDescriptor.set({ name: '', label: '', uiHint: '', supportedSyntaxes: [], disableWorkflowProviderSelection: false });
-    //}
-
     this._base = new SortableComponent();
     this._toggle = new DisplayToggle();
+
+    
   }
 
   ngOnInit() {
 
     this._base.componentWillLoad();
     // this._base.componentDidLoad(); **** // TODO: Presumed this wasn't needed as it's a stencil lifecycle hook and ngOnInit should handle initialisation logic.
-    this._base.componentWillRender();
+    // this._base.componentWillRender();
 
     // Safely initialize context after models are available
     this.context = {
