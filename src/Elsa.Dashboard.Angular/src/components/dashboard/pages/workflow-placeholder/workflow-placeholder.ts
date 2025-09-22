@@ -23,7 +23,7 @@ export class WorkflowPlaceholder implements OnInit {
   radioListActivityModel = signal<ActivityModel | null>(null);
   multiTextActivityModel = signal<ActivityModel | null>(null);
   dictionaryActivityModel = signal<ActivityModel | null>(null);
-  RadioOptionActivityModel = signal<ActivityModel | null>(null);
+  radioOptionActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
   intellisenseGatherer: IntellisenseService;
@@ -58,7 +58,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.radioListActivityModel.set(this.getRadioListModel());
     this.multiTextActivityModel.set(this.getMultiTextModel());
     this.dictionaryActivityModel.set(this.getDictionaryModel());
-    this.RadioOptionActivityModel.set(this.getRadioOptionModel());
+    this.radioOptionActivityModel.set(this.getRadioOptionModel());
 
     
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
@@ -761,7 +761,7 @@ export class WorkflowPlaceholder implements OnInit {
       case 'dictionary':
         return this.dictionaryActivityModel;
       case 'radio-options':
-        return this.RadioOptionActivityModel;
+        return this.radioOptionActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);
     }

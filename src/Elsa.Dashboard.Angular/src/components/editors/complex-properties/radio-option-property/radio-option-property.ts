@@ -23,16 +23,14 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   propertyModel = model<ActivityDefinitionProperty>();
   modelSyntax: string = SyntaxNames.Json;
   properties: NestedActivityDefinitionProperty[] = [];
-  
+  @Output() expressionChanged = new EventEmitter<string>();
+  @ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
   keyId: string = '1234'; // Setting a default keyId number since the original code doesn't seem to specify a keyId at all hence default is probably null
   container: HTMLElement;
   
   activityIconProvider: any;
-
   _base: SortableComponent;
   _toggle: DisplayToggle;
-
-  @Output() expressionChanged = new EventEmitter<string>();
 
   dictionary: { [key: string]: any } = {};
 
@@ -56,8 +54,7 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   getExpressions() {
     return { Json: JSON.stringify(this.properties ?? [], null, 2) };
   }
-
-  @ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
+  
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
   @ViewChild('prePopulatedExpressionEditor') prePopulatedExpressionEditor: ExpressionEditor;
 
@@ -67,8 +64,13 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
 
-     this._base = new SortableComponent();
-     this._toggle = new DisplayToggle();
+    //// Initialzing the signal to avoid null reference errors
+    //if (!this.propertyDescriptor()) {
+    //  this.propertyDescriptor.set({ name: '', label: '', uiHint: '', supportedSyntaxes: [], disableWorkflowProviderSelection: false });
+    //}
+
+    this._base = new SortableComponent();
+    this._toggle = new DisplayToggle();
   }
 
   ngOnInit() {
