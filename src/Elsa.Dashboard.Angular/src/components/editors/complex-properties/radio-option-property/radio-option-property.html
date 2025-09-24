@@ -1,5 +1,29 @@
 <div>
   <multi-expression-editor>
-    <ng-template #multiExpressionEditor> </ng-template>
+    <ng-template
+      #multiExpressionEditor
+      [(label)]="propertyDescriptor().label"
+      [defaultSyntax]="SyntaxNames.Json"
+      [(supportedSyntaxes)]="SyntaxNames.Json"
+      [(context)]="context"
+      [expressions]="{ Json: json}"
+      editor-height="20rem"
+      (onExpressionChanged)="this.onMultiExpressionEditorValueChanged($event)"
+      (onSyntaxChanged)="this.onMultiExpressionEditorSyntaxChanged($event)"
+    ></ng-template>
+
+    <!-- **Convert the below for to use Angular instead of JSX syntax, add the rest of the render case editor html from the stencil renderCaseEditor method ** -->
+
+    <!-- <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200" #container>
+        {cases.map(renderCaseEditor)}
+    </table> -->
+
+    <!-- **Convert the below (copied from stencil) to use the activity Icon Provider instead **-->
+
+    <!-- <button type="button" (click)="onAddOptionClick($event)"
+        class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
+        <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
+        Add Answer
+    </button> -->
   </multi-expression-editor>
 </div>

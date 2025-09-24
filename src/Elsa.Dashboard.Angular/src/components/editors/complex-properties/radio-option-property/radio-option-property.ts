@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, model, ViewChild, Input, output } from '@angular/core';
+import { Component, EventEmitter, Output, model, ViewChild, Input, output, input, SimpleChanges } from '@angular/core';
 
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../../models/elsa-interfaces';
@@ -25,6 +25,7 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   modelSyntax: string = SyntaxNames.Json;
   keyId: string;
   properties: NestedActivityDefinitionProperty[] = [];
+  json: string = '';
 
   _base: SortableComponent;
   _toggle: DisplayToggle;
@@ -68,6 +69,12 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
     this._base.onComponentInitialised();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['properties']) {
+      this.updateJsonExpressionsVariable();
+    }
+  }
+
   onAddOptionClick() {
     const optionName = newOptionLetter(this._base.IdentifierArray());
     const newOption: NestedActivityDefinitionProperty = {
@@ -102,7 +109,11 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   }
 
   onToggleOptions(index: number) {
-    this._toggle.onToggleDisplay(index, this);
+    this._toggle.onToggleDisplay(index);
+  }
+
+  updateJsonExpressionsVariable() {
+    this.json = JSON.stringify(this.properties, null, 2);
   }
 
   getRenderCaseEditor(): any {
