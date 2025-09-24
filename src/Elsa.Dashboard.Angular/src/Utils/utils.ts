@@ -1,6 +1,7 @@
 import { ActivityDefinition, ActivityDefinitionProperty, ActivityModel, ConnectionModel, WorkflowModel } from '../models';
 import * as collection from 'lodash';
 import { Duration } from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 //import { createDocument } from "@stencil/core/mock-doc";
 
 declare global {
@@ -245,3 +246,43 @@ export const stripActivityNameSpace = (name: string): string => {
   const lastDotIndex = name.lastIndexOf('.');
   return lastDotIndex < 0 ? name : name.substring(lastDotIndex + 1);
 };
+
+export function getUniversalUniqueId() {
+  return uuidv4();
+}
+
+export function newOptionLetter(options: string[]): string {
+  let highestValue: string = 'A';
+  if (options != null && options.length > 0) {
+    highestValue = options.sort().pop();
+    return incrementString(highestValue);
+  }
+  return highestValue;
+}
+
+function incrementString(value: string): string {
+  let carry: number = 1;
+  let res: string = '';
+
+  for (let i = value.length - 1; i >= 0; i--) {
+    let char = value.toUpperCase().charCodeAt(i);
+    char += carry;
+    if (char > 90) {
+      char = 65;
+      carry = 1;
+    } else {
+      carry = 0;
+    }
+
+    res = String.fromCharCode(char) + res;
+
+    if (!carry) {
+      res = value.substring(0, i) + res;
+      break;
+    }
+  }
+  if (carry) {
+    res = 'A' + res;
+  }
+  return res;
+}

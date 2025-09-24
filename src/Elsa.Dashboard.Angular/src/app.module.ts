@@ -45,12 +45,12 @@ import { ActivityEditorModal } from './components/screens/workflow-definition-ed
 import { WorkflowSettingsButton } from './components/screens/workflow-definition-editor/buttons/workflow-settings-button/workflow-settings-button';
 import { WorkflowHelpButton } from './components/screens/workflow-definition-editor/buttons/workflow-help-button/workflow-help-button';
 import { WorkflowSettingsModal } from './components/screens/workflow-definition-editor/modals/workflow-settings-modal/workflow-settings-modal';
-import {WorkflowHelpModal} from './components/screens/workflow-definition-editor/modals/workflow-help-modal/workflow-help-modal';
-import { FormTextInputComponent } from 'src/Utils/form-controls/form-text-input/form-text-input.component';
-import { FormCheckBoxComponent } from 'src/Utils/form-controls/form-check-box/form-check-box.component';
-import { FormSectionComponent } from 'src/Utils/form-controls/form-section/form-section.component';
-import { FormSelectFieldComponent } from 'src/Utils/form-controls/form-select-field/form-select-field.component';
-import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/form-text-area.component';
+import { WorkflowHelpModal } from './components/screens/workflow-definition-editor/modals/workflow-help-modal/workflow-help-modal';
+import { FormTextInputComponent } from 'src/utils/form-controls/form-text-input/form-text-input.component';
+import { FormCheckBoxComponent } from 'src/utils/form-controls/form-check-box/form-check-box.component';
+import { FormSectionComponent } from 'src/utils/form-controls/form-section/form-section.component';
+import { FormSelectFieldComponent } from 'src/utils/form-controls/form-select-field/form-select-field.component';
+import { FormTextAreaComponent } from 'src/utils/form-controls/form-text-area/form-text-area.component';
 import { PropertyControl } from './components/controls/property-control/property-control';
 import { EditorComponent } from './components/monaco/editor.component';
 import { DiffEditorComponent } from './components/monaco/diff-editor.component';
@@ -61,6 +61,7 @@ import { RadioListProperty } from './components/editors/properties/radio-list-pr
 import { MultiTextProperty } from './components/editors/properties/multi-text-property/multi-text-property';
 import { InputTags } from './components/controls/input-tags/input-tags';
 import { DictionaryProperty } from './components/editors/properties/dictionary-property/dictionary-property';
+import { RadioOptionProperty } from './components/editors/complex-properties/radio-option-property/radio-option-property';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import { DictionaryProperty } from './components/editors/properties/dictionary-p
     RadioListProperty,
     MultiTextProperty,
     InputTags,
-    DictionaryProperty
+    DictionaryProperty,
+    RadioOptionProperty,
   ],
   imports: [
     routing,
