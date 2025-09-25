@@ -1,114 +1,69 @@
-import { Component, EventEmitter, Output, model, ViewChild, input, signal } from '@angular/core';
-// import { ActivityModel } from '../../../../models';
-// import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
-import { ActivityModel, ActivityDefinitionProperty, ActivityPropertyDescriptor, IntellisenseContext } from '../../../../models/elsa-interfaces';
+import { Component, EventEmitter, Output, model, ViewChild, Input, output, input, SimpleChanges, OnInit } from '@angular/core';
+
+import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
+import { HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../../models/elsa-interfaces';
+import { ActivityModel } from '../../../../models/view';
 import { NestedActivityDefinitionProperty } from '../../../../models/custom-component-models';
-import { SyntaxNames } from '../../../../constants/constants'
+import { SyntaxNames } from '../../../../constants/constants';
+import { ISortableSharedComponent, SortableComponent } from 'src/components/sortable-component';
+import { DisplayToggle, IDisplayToggle } from 'src/components/display-toggle.component';
 import { mapSyntaxToLanguage, newOptionLetter, parseJson } from '../../../../utils/utils';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { PropertyOutputTypes, RadioOptionsSyntax } from '../../../../models/constants';
 import { MultiExpressionEditor } from '../../../editors/multi-expression-editor/multi-expression-editor';
 import { ExpressionEditor } from '../../../editors/expression-editor/expression-editor';
-import { ISortableSharedComponent, SortableComponent } from 'src/components/sortable-component';
-import { DisplayToggle, IDisplayToggle } from 'src/components/display-toggle.component';
 
 @Component({
   selector: 'radio-option-property',
   templateUrl: './radio-option-property.html',
   standalone: false,
 })
-export class RadioOptionProperty implements ISortableSharedComponent, IDisplayToggle {
-  // activityModel = model<ActivityModel>();
-  // propertyModel = model<ActivityDefinitionProperty>();
-  // propertyDescriptor = model<ActivityPropertyDescriptor>();
-  properties: Array<NestedActivityDefinitionProperty> = [];
+export class RadioOptionProperty implements ISortableSharedComponent, IDisplayToggle, OnInit {
+  activityModel = model<ActivityModel>();
+  propertyDescriptor = model<ActivityPropertyDescriptor>();
+  propertyModel = model<ActivityDefinitionProperty>();
   modelSyntax: string = SyntaxNames.Json;
-  @Output() expressionChanged = new EventEmitter<string>();
-  @ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
-  keyId: string = '1234'; // Setting a default keyId number since the original code doesn't seem to specify a keyId at all hence default is probably null
-  container: HTMLElement;
+  keyId: string;
+  properties: NestedActivityDefinitionProperty[] = [];
+  json: string = '';
 
-  activityModel = model<ActivityModel>({
-    activityId: '',
-    type: 'RadioOption',
-    name: 'TestRadioOption',
-    displayName: 'Test HeRadioOption',
-    description: 'A Stub activity to display a HeRadioOption property',
-    outcomes: ['Done'],
-    properties: [],
-    persistWorkflow: true,
-    loadWorkflowContext: undefined,
-    saveWorkflowContext: undefined,
-    propertyStorageProviders: undefined,
-  });
-
-  propertyModel = model<ActivityDefinitionProperty>({
-    syntax: undefined,
-    value: 'string',
-    name: 'TestRadioOption',
-    expressions: {
-      Json: '[{"name":"A","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"},{"name":"B","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"}]'
-    },
-    // type: '',
-  });
-
-  propertyDescriptor = model<ActivityPropertyDescriptor>({
-    // conditionalActivityTypes: ['RadioQuestion'],
-    // expectedOutputType: 'radio',
-    // hasNestedProperties: true,
-    // hasColletedProperties: false,
-    name: 'TestRadioOption',
-    // type: 'System.String',
-    uiHint: 'radio-options',
-    label: 'Test Label for Radio Options',
-    hint: 'Test Hint for Radio Options',
-    options: {
-      items: [
-        { text: 'Option 1', value: '1' },
-        { text: 'Option 2', value: '2' },
-        { text: 'Option 3', value: '3' },
-      ],
-      isFlagsEnum: false,
-    },
-    // order: 0,
-    defaultValue: null,
-    supportedSyntaxes: [],
-    isReadOnly: false,
-    //isBrowsable: true,
-    //isDesignerCritical: false,
-    disableWorkflowProviderSelection: false,
-    considerValuesAsOutcomes: false,
-    defaultSyntax: null,
-  });
-
-  
-  activityIconProvider: any;
   _base: SortableComponent;
   _toggle: DisplayToggle;
 
+  activityIconProvider: ActivityIconProvider;
+  expressionChanged = output<string>();
   dictionary: { [key: string]: any } = {};
 
   switchTextHeight: string = '';
   editorHeight: string = '2.75em';
+  displayValue: string = 'table-row';
+  hiddenValue: string = 'none';
+  container: HTMLElement;
 
-  supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Literal];
+  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+
+  // defaultSyntax: string = SyntaxNames.Json;
+  defaultSyntax = SyntaxNames.Json;
+  supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
 
   supportedSyntaxForMultiExpressionEditor = [SyntaxNames.Json];
+
   stringifiedHardCodedJsonDataForExpressionPropertyInMultiExpressionEditor = {
     Json: "[{\"name\":\"A\",\"syntax\":\"JavaScript\",\"expressions\":{\"Literal\":\"\",\"PrePopulated\":\"true\"},\"type\":\"radio\"},{\"name\":\"B\",\"syntax\":\"Literal\",\"expressions\":{\"Literal\":\"\",\"PrePopulated\":\"false\"},\"type\":\"radio\"}]"
   };
 
   syntaxSwitchCount: number = 0;
-  displayValue: string = 'table-row';
-  hiddenValue: string = 'none';
-  defaultSyntax = SyntaxNames.Json;
 
+  //context: IntellisenseContext = {
+  //  activityTypeName: this.activityModel().type,
+  //  propertyName: this.propertyDescriptor().name,
+  //};
   context: IntellisenseContext;
 
   getExpressions() {
     return { Json: JSON.stringify(this.properties ?? [], null, 2) };
   }
-  
+
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
   @ViewChild('prePopulatedExpressionEditor') prePopulatedExpressionEditor: ExpressionEditor;
 
@@ -117,30 +72,24 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
 
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
-
     this._base = new SortableComponent();
     this._toggle = new DisplayToggle();
-
-    
   }
 
   ngOnInit() {
-
-    this._base.componentWillLoad();
-    // this._base.componentDidLoad(); **** // TODO: Presumed this wasn't needed as it's a stencil lifecycle hook and ngOnInit should handle initialisation logic.
-    // this._base.componentWillRender();
+    this._base.onComponentInitialised();
 
     // Safely initialize context after models are available
     this.context = {
       activityTypeName: this.activityModel()?.type ?? '',
-      propertyName: this.propertyDescriptor?.name ?? '',
+      propertyName: this.propertyDescriptor()?.name ?? '',
     };
-
   }
 
-  // THIS COPIED FUNCTION DOES NOT APPEAR TO BE USED IN THE ORIGINAL
-  onDefaultSyntaxValueChanged(e: CustomEvent) {
-    this.properties = e.detail;
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['properties']) {
+      this.updateJsonExpressionsVariable();
+    }
   }
 
   onAddOptionClick() {
@@ -164,69 +113,28 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
     const json = e.detail;
     const parsed = parseJson(json);
 
-    if (!parsed)
-      return;
+    if (!parsed) return;
 
-    if (!Array.isArray(parsed))
-      return;
+    if (!Array.isArray(parsed)) return;
 
     this.propertyModel().expressions[SyntaxNames.Json] = json;
     this.properties = parsed;
   }
-
-  //onMultiExpressionEditorValueChanged(e: any) {
-  //  const json = e.detail;
-  //  const parsed = parseJson(json);
-
-  //  if (!parsed) return;
-
-  //  if (!Array.isArray(parsed)) return;
-
-  //  //// 1A. ORIGINAL METHOD COMMENTED OUT AS IT MIGHT POTENTIALLY NOT WORK
-  //  // this.propertyModel().expressions[SyntaxNames.Json] = json;
-
-  //  // 1B. NEW EXPLICIY METHOD using .set() to update the signal value
-  //  const currentModel = this.propertyModel;
-  //  const updatedModel = {
-  //    ...currentModel,
-  //    expressions: {
-  //      ...currentModel().expressions,
-  //      [SyntaxNames.Json]: json
-  //    }
-  //  };
-  //  this.propertyModel.set(updatedModel);
-
-
-  //  this.properties = parsed;
-  //}
 
   onMultiExpressionEditorSyntaxChanged(e: any) {
     this.syntaxSwitchCount++;
   }
 
   onToggleOptions(index: number) {
-    this._toggle.onToggleDisplay(index, this);
+    this._toggle.onToggleDisplay(index);
   }
 
-  //updateName(event: Event, option: NestedActivityDefinitionProperty) {
-  //  const input = event.target as HTMLInputElement;
-  //  option.name = input.value;
-  //  this._base.updatePropertyModel();
-  //}
-
-  //updateSyntax(event: Event, option: NestedActivityDefinitionProperty, expressionEditor: ExpressionEditor) {
-  //  const select = event.target as HTMLSelectElement;
-  //  option.syntax = select.value;
-  //  this._base.updatePropertyModel();
-  //}
-
-  //customUpdateExpression(value: string, option: NestedActivityDefinitionProperty, syntax: string) {
-  //  option.expressions[syntax] = value;
-  //  this._base.updatePropertyModel();
-  //}
+  updateJsonExpressionsVariable() {
+    this.json = JSON.stringify(this.properties, null, 2);
+  }
 
   getRenderCaseEditor(): any {
-    const cases = this.properties ?? [];
+    const cases = this.properties;
 
     return cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
       const expression = radioOption.expressions[radioOption.syntax];

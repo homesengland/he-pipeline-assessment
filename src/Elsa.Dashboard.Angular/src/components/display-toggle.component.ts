@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
+import { Map } from 'src/utils/utils';
 
 export interface IDisplayToggle {
   dictionary: { [key: string]: string };
@@ -10,27 +11,25 @@ export interface IDisplayToggle {
   providedIn: 'root',
 })
 export class DisplayToggle {
-  component: any; // feels like type of any goes against TypeScript but not sure if we should keep this like the original Stencil implementation or type it properly.
-  constructor() {}
+  component: IDisplayToggle;
 
-  initialize(component: IDisplayToggle): void {
-    component.dictionary = {};
+  ngOnInit() {
+    this.component.dictionary = {};
   }
 
-  onToggleDisplay(index: any, component: IDisplayToggle): void {
-    const tempValue = this.toggleDictionaryDisplay(index, component);
-    component.dictionary = { ...component.dictionary, ...tempValue };
+  onToggleDisplay(index: any) {
+    let tempValue = this.toggleDictionaryDisplay(index, this.component.dictionary);
+    this.component.dictionary = { ...this.component.dictionary, tempValue };
   }
 
-  private toggleDictionaryDisplay(index: any, component: IDisplayToggle): { [key: string]: string } {
-    const dict = component.dictionary;
-    const tempValue = { ...dict };
-    const tableRowClass = dict[index];
+  private toggleDictionaryDisplay(index: any, dict: Map<string>): any {
+    let tempValue = Object.assign(dict);
+    let tableRowClass = dict[index];
     if (tableRowClass == null) {
-      tempValue[index] = component.displayValue;
+      tempValue[index] = this.component.displayValue;
     } else {
-      tempValue[index] = dict[index] === component.hiddenValue ? component.displayValue : component.hiddenValue;
+      dict[index] == this.component.hiddenValue ? (tempValue[index] = this.component.displayValue) : (tempValue[index] = this.component.hiddenValue);
     }
-    return { [index]: tempValue[index] };
+    return tempValue;
   }
 }
