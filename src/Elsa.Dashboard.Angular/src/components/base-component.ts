@@ -29,15 +29,13 @@ export interface ISharedComponent {
 //  keyId: string;
 //}
 
-@Component({
-  selector: 'base-component',
-  template: '',
-})
 export class BaseComponent {
-  component = input<ISharedComponent>();
   expressionChanged = output<string>();
 
-  ngOnInit() {
+  constructor(public component: ModelSignal<ISharedComponent>) {
+  }
+
+  OnInit() {
     this.onComponentInitialised();
     this.component().keyId = getUniversalUniqueId();
   }
