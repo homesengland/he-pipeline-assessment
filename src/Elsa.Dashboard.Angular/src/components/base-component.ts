@@ -6,15 +6,28 @@ import { NestedActivityDefinitionProperty } from '../models/custom-component-mod
 import { getUniversalUniqueId, mapSyntaxToLanguage, parseJson } from 'src/utils/utils';
 import { SyntaxNames } from '../constants/constants';
 
+// THIS DID NOT GENERATE ANY ERRORS IN THE CONSOLE
 export interface ISharedComponent {
   activityModel: ReturnType<typeof model<ActivityModel>>;
   propertyDescriptor: ReturnType<typeof model<ActivityPropertyDescriptor>>;
   propertyModel: ReturnType<typeof model<ActivityDefinitionProperty>>;
   modelSyntax: string;
   properties: NestedActivityDefinitionProperty[];
+  expressionChanged: ReturnType<typeof output<EventEmitter<string>>>;
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   keyId: string;
 }
+
+//export interface ISharedComponent {
+//  activityModel: ActivityModel;
+//  propertyDescriptor: ActivityPropertyDescriptor;
+//  propertyModel: ActivityDefinitionProperty;
+//  modelSyntax: string;
+//  properties: NestedActivityDefinitionProperty[];
+//  expressionChanged: EventEmitter<string>;
+//  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+//  keyId: string;
+//}
 
 @Component({
   selector: 'base-component',

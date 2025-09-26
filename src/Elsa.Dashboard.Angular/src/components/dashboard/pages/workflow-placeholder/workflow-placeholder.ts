@@ -648,7 +648,7 @@ export class WorkflowPlaceholder implements OnInit {
     const model: ActivityModel = {
       activityId: '',
       type: 'RadioOption',
-      name: 'TestRadioOption',
+      name: 'TestRadioOptionFromWorkflowPlaceholder',
       displayName: 'Test HeRadioOption',
       description: 'A Stub activity to display a HeRadioOption property',
       outcomes: ['Done'],
@@ -666,11 +666,43 @@ export class WorkflowPlaceholder implements OnInit {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
       value: 'string',
-      name: 'TestRadioOption',
+      name: 'TestRadioOptionFromWorkflowPlaceholder',
       expressions: {
         Json: '[{"name":"A","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"},{"name":"B","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"}]'
       },
       type: '',
+    };
+    return model;
+  }
+
+  getRadioOptionDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: ['RadioQuestion'],
+      expectedOutputType: 'radio',
+      hasNestedProperties: true,
+      hasColletedProperties: false,
+      name: 'TestRadioOptionFromWorkflowPlaceholder',
+      type: 'System.String',
+      uiHint: 'radio-options',
+      label: 'Test Label for Radio Options',
+      hint: 'Test Hint for Radio Options',
+      options: {
+        items: [
+          { text: 'Option 1', value: '1' },
+          { text: 'Option 2', value: '2' },
+          { text: 'Option 3', value: '3' },
+        ],
+        isFlagsEnum: false,
+      },
+      order: 0,
+      defaultValue: null,
+      supportedSyntaxes: [],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+      defaultSyntax: null,
     };
     return model;
   }
@@ -707,38 +739,6 @@ export class WorkflowPlaceholder implements OnInit {
   //  };
   //  return model;
   //}
-
-  getRadioOptionDescriptor(): ActivityPropertyDescriptor {
-    const model: ActivityPropertyDescriptor = {
-      conditionalActivityTypes: ['RadioQuestion'],
-      expectedOutputType: 'radio',
-      hasNestedProperties: true,
-      hasColletedProperties: false,
-      name: 'TestRadioOption',
-      type: 'System.String',
-      uiHint: 'radio-options',
-      label: 'Test Label for Radio Options',
-      hint: 'Test Hint for Radio Options',
-      options: {
-        items: [
-          { text: 'Option 1', value: '1' },
-          { text: 'Option 2', value: '2' },
-          { text: 'Option 3', value: '3' },
-        ],
-        isFlagsEnum: false,
-      },
-      order: 0,
-      defaultValue: null,
-      supportedSyntaxes: [],
-      isReadOnly: false,
-      isBrowsable: true,
-      isDesignerCritical: false,
-      disableWorkflowProviderSelection: false,
-      considerValuesAsOutcomes: false,
-      defaultSyntax: null,
-    };
-    return model;
-  }
 
   getActivityModel(activityType: string): Signal<ActivityModel> {
     switch (activityType) {
