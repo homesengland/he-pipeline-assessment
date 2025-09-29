@@ -27,13 +27,7 @@ namespace He.PipelineAssessment.UI.Features.Funds.FundsList
             try
             {
                 // COMMENT: get all funds from the assessment repository and store them in the funds variable.
-                var funds = await _assessmentRepository.GetAllFunds();
-
-                if (funds == null)
-                {
-                    _logger.LogError("Database returned null when retrieving list of funds.");
-                    funds = new List<AssessmentFund>();
-                }
+                List<AssessmentFund> funds = await _assessmentRepository.GetAllFunds();
 
                 // COMMENT: return a new FundsListResponse object containing the list of funds. 
                 return new FundsListResponse(funds);
