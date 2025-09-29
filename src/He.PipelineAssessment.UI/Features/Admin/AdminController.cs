@@ -46,7 +46,6 @@ namespace He.PipelineAssessment.UI.Features.Admin
         public async Task<IActionResult> AssessmentTool()
         {
             var assessmentTools = await _mediator.Send(new AssessmentToolQuery());
-
             return View("AssessmentTool", assessmentTools);
         }
 
