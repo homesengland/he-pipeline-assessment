@@ -34,6 +34,7 @@ export class ActivityIconProvider {
     this.registerWriteLineIcons();
     this.registerPlusIcons();
     this.registerTrashBinOutlineIcons();
+    this.registerSortIcons();
     this.registerOpenInDialogIcons();
   }
 
@@ -250,6 +251,12 @@ export class ActivityIconProvider {
   private registerTrashBinOutlineIcons(): void {
     this.register('TrashBinOutline', (colour: string) => {
       return this.sanitizer.bypassSecurityTrustHtml(this.createTrashBinOutlineIcon(colour));
+    });
+  }
+
+  private registerSortIcons(): void {
+    this.register('Sort', (colour: string) => {
+      return this.sanitizer.bypassSecurityTrustHtml(this.createSortIconHtml(colour));
     });
   }
 
@@ -548,10 +555,19 @@ export class ActivityIconProvider {
     </svg>`;
   }
 
+  private createSortIconHtml(colour: string): string {
+    return `
+    <svg
+      class="${`elsa-h-5 elsa-w-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
+      width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+      <path d="M15 20V5h3l-5.1-5L8 5h3v15zM2 0v15h-3l4.9 5L9 15H6V0z"/>
+    </svg>`;
+  }
+
   private createOpenInDialogIcon(colour: string): string {
     return `<svg 
         class="${`elsa-h-5 elsa-w-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
-    </svg>`
+    </svg>`;
   }
 
   //#endregion
@@ -568,5 +584,9 @@ export class ActivityIconProvider {
     }
 
     return provider.call(this, colour);
+  }
+
+  getOptions(options?: string) {
+    return options;
   }
 }

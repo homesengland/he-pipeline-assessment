@@ -12,6 +12,7 @@ import { CheckListDriver } from 'src/drivers/check-list-driver';
 import { RadioListDriver } from 'src/drivers/radio-list-driver';
 import { MultiTextDriver } from 'src/drivers/multi-text-driver';
 import { DictionaryDriver } from 'src/drivers/dictionary-driver';
+import { RadioOptionsDriver } from 'src/drivers/radio-options.driver';
 
 export class DefaultDriversPlugin implements WorkflowPlugin {
   constructor() {
@@ -24,9 +25,11 @@ export class DefaultDriversPlugin implements WorkflowPlugin {
     this.addDriver('radio-list', () => new RadioListDriver());
     this.addDriver('multi-text', () => new MultiTextDriver());
     this.addDriver('dictionary', () => new DictionaryDriver());
+    this.addDriver('radio-options', () => new RadioOptionsDriver());
   }
 
   addDriver<T extends PropertyDisplayDriver>(controlType: string, c: (workflowStudio: WorkflowStudio) => T) {
+    console.log('Adding Driver', controlType);
     propertyDisplayManager.addDriver(controlType, c);
   }
 }

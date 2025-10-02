@@ -23,6 +23,7 @@ export class WorkflowPlaceholder implements OnInit {
   radioListActivityModel = signal<ActivityModel | null>(null);
   multiTextActivityModel = signal<ActivityModel | null>(null);
   dictionaryActivityModel = signal<ActivityModel | null>(null);
+  radioOptionActivityModel = signal<ActivityModel | null>(null);
   propertyDescriptor = signal<ActivityPropertyDescriptor | null>(null);
   propertyModel = signal<ActivityDefinitionProperty | null>(null);
   intellisenseGatherer: IntellisenseService;
@@ -57,6 +58,8 @@ export class WorkflowPlaceholder implements OnInit {
     this.radioListActivityModel.set(this.getRadioListModel());
     this.multiTextActivityModel.set(this.getMultiTextModel());
     this.dictionaryActivityModel.set(this.getDictionaryModel());
+    this.radioOptionActivityModel.set(this.getRadioOptionModel());
+
     const singleLineDescriptor = signal<ActivityPropertyDescriptor>(this.getSingleLineDescriptor());
     const multiLineDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiLineDescriptor());
     const checkboxDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckboxDescriptor());
@@ -66,6 +69,7 @@ export class WorkflowPlaceholder implements OnInit {
     const radioListDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioListDescriptor());
     const multiTextDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiTextDescriptor());
     const dictionaryDescriptor = signal<ActivityPropertyDescriptor>(this.getDictionaryDescriptor());
+    const radioOptionDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioOptionDescriptor());
     this.activityProperties.push(singleLineDescriptor);
     this.activityProperties.push(multiLineDescriptor);
     this.activityProperties.push(checkboxDescriptor);
@@ -75,6 +79,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.activityProperties.push(radioListDescriptor);
     this.activityProperties.push(multiTextDescriptor);
     this.activityProperties.push(dictionaryDescriptor);
+    this.activityProperties.push(radioOptionDescriptor);
   }
 
   async ngOnInit() {
@@ -481,7 +486,7 @@ export class WorkflowPlaceholder implements OnInit {
       value: 'string',
       name: 'TestRadioList',
       expressions: {
-        Json: '[]'
+        Json: '[]',
       },
       type: '',
     };
@@ -544,8 +549,8 @@ export class WorkflowPlaceholder implements OnInit {
       value: 'string',
       name: 'TestMultiText',
       expressions: {
-        Json: "[\"123\"]",
-        Literal: ""
+        Json: '["123"]',
+        Literal: '',
       },
       type: '',
     };
@@ -622,8 +627,8 @@ export class WorkflowPlaceholder implements OnInit {
       name: 'TestDictionary',
       type: 'System.String',
       uiHint: 'dictionary',
-      label: 'Test Label',
-      hint: 'Test Hint',
+      label: 'Test Label for Dictionary',
+      hint: 'Test Hint for Dictionary',
       options: null,
       order: 0,
       defaultValue: null,
@@ -634,6 +639,69 @@ export class WorkflowPlaceholder implements OnInit {
       disableWorkflowProviderSelection: false,
       considerValuesAsOutcomes: false,
       defaultSyntax: 'Json',
+    };
+    return model;
+  }
+
+  getRadioOptionModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '',
+      type: 'RadioOption',
+      name: 'TestRadioOptionFromWorkflowPlaceholder',
+      displayName: 'Test RadioOption',
+      description: 'A Stub activity to display a HeRadioOption property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getRadioOptionDefinition());
+    return model;
+  }
+
+  getRadioOptionDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestRadioOptionFromWorkflowPlaceholder',
+      expressions: {
+        Json: '[{"name":"A","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"},{"name":"B","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"}]',
+      },
+      type: '',
+    };
+    return model;
+  }
+
+  getRadioOptionDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: ['RadioQuestion'],
+      expectedOutputType: 'radio',
+      hasNestedProperties: true,
+      hasColletedProperties: false,
+      name: 'TestRadioOptionFromWorkflowPlaceholder',
+      type: 'System.String',
+      uiHint: 'radio-options',
+      label: 'Test Label for Radio Options',
+      hint: 'Test Hint for Radio Options',
+      options: {
+        items: [
+          { text: 'Option 1', value: '1' },
+          { text: 'Option 2', value: '2' },
+          { text: 'Option 3', value: '3' },
+        ],
+        isFlagsEnum: false,
+      },
+      order: 0,
+      defaultValue: null,
+      supportedSyntaxes: [],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+      defaultSyntax: null,
     };
     return model;
   }
@@ -658,6 +726,8 @@ export class WorkflowPlaceholder implements OnInit {
         return this.multiTextActivityModel;
       case 'dictionary':
         return this.dictionaryActivityModel;
+      case 'radio-options':
+        return this.radioOptionActivityModel;
       default:
         throw new Error(`Unknown activity type: ${activityType}`);
     }
