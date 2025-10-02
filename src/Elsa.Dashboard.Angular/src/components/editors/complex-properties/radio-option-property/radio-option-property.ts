@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Output, model, ViewChild, Input, output, input, SimpleChanges, OnInit, ModelSignal, AfterViewInit, ElementRef } from '@angular/core';
 
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
-import { HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../../models/elsa-interfaces';
+import { HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../../models/elsa-interfaces';
+import { MultiExpressionEditor } from '../../../editors/multi-expression-editor/multi-expression-editor';
 import { ActivityModel } from '../../../../models/view';
 import { NestedActivityDefinitionProperty } from '../../../../models/custom-component-models';
 import { SyntaxNames } from '../../../../constants/constants';
@@ -10,7 +11,6 @@ import { SyntaxNames } from '../../../../constants/constants';
 import { mapSyntaxToLanguage, newOptionLetter, parseJson, getUniversalUniqueId, Map } from '../../../../utils/utils';
 import { ActivityIconProvider } from 'src/services/activity-icon-provider';
 import { PropertyOutputTypes, RadioOptionsSyntax } from '../../../../models/constants';
-// import { MultiExpressionEditor } from '../../../editors/multi-expression-editor/multi-expression-editor';
 import { ExpressionEditor } from '../../../editors/expression-editor/expression-editor';
 // import { ISharedComponent } from '../../../base-component';
 import Sortable from 'sortablejs';
@@ -62,7 +62,7 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   editorHeight: string = '2.75em';
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
-  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  @ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
   syntaxSwitchCount: number = 0;
   // container: HTMLElement; //// From previous Sortable Component
   @ViewChild('containerTable', { static: false }) container: ElementRef<HTMLTableElement>;
@@ -84,7 +84,6 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
     return { Json: JSON.stringify(this.properties ?? [], null, 2) };
   }
 
-  //@ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
   @ViewChild('prePopulatedExpressionEditor') prePopulatedExpressionEditor: ExpressionEditor;
   
