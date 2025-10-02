@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, model, ViewChild, Input, output, input, SimpleChanges, OnInit, ModelSignal, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Output, model, ViewChild, Input, output, input, SimpleChanges, OnInit, ModelSignal, AfterViewInit, ElementRef } from '@angular/core';
 
 import { ActivityDefinitionProperty, ActivityPropertyDescriptor } from '../../../../models/domain';
 import { HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement, IntellisenseContext } from '../../../../models/elsa-interfaces';
@@ -64,7 +64,8 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
   multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
   syntaxSwitchCount: number = 0;
-  container: HTMLElement;
+  // container: HTMLElement; //// From previous Sortable Component
+  @ViewChild('containerTable', { static: false }) container: ElementRef<HTMLTableElement>;
   displayValue: string = 'table-row';
   hiddenValue: string = 'none';
   
@@ -86,7 +87,7 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   //@ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
   @ViewChild('prePopulatedExpressionEditor') prePopulatedExpressionEditor: ExpressionEditor;
-
+  
   radioOptionsSyntaxPrePopulated = RadioOptionsSyntax.PrePopulated;
   onlyJavaScriptSyntaxes: string[] = this.supportedSyntaxes.filter(x => x === SyntaxNames.JavaScript);
 
@@ -112,7 +113,7 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Presuming this is the correct lifecycle hook to use instead of Stencil's componentDidLoad, confirm if this is correct
     const dragEventHandler = this.onDragActivity.bind(this);
-    Sortable.create(this.container, {
+    Sortable.create(this.container.nativeElement, {
       animation: 150,
       handle: '.sortablejs-custom-handle',
       ghostClass: 'dragTarget',
@@ -154,19 +155,7 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
     this.updatePropertyModel();
   }
 
-  //onMultiExpressionEditorValueChanged(e: any) {
-  //  const json = e.detail;
-  //  const parsed = parseJson(json);
-
-  //  if (!parsed) return;
-
-  //  if (!Array.isArray(parsed)) return;
-
-  //  this.propertyModel().expressions[SyntaxNames.Json] = json;
-  //  this.properties = parsed;
-  //}
-
-  onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
+  onMultiExpressionEditorValueChanged(e: any) {
     const json = e.detail;
     const parsed = parseJson(json);
 

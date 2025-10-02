@@ -11,7 +11,9 @@
     (syntaxChanged)="this.onMultiExpressionEditorSyntaxChanged($event)"
   >
 
-    <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+    <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200"
+      #containerTable
+    >
       <ng-container *ngFor="let caseEditor of getRenderCaseEditor()">
         <tbody [attr.key]="caseEditor.keyId">
           <tr>
