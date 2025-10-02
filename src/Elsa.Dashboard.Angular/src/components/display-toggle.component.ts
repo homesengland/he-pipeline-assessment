@@ -1,15 +1,15 @@
 import { Component, Injectable } from '@angular/core';
 import { Map } from 'src/utils/utils';
 
-export interface IDisplayToggle {
-  dictionary: { [key: string]: string };
-  displayValue: string;
-  hiddenValue: string;
-}
+//export interface IDisplayToggle {
+//  dictionary: { [key: string]: string };
+//  displayValue: string;
+//  hiddenValue: string;
+//}
 
-@Injectable({
-  providedIn: 'root',
-})
+//@Injectable({
+//  providedIn: 'root',
+//})
 export class DisplayToggle {
   component: IDisplayToggle;
 
