@@ -47,20 +47,20 @@ export interface IDisplayToggle {
 })
 export class RadioOptionProperty implements ISortableSharedComponent, IDisplayToggle, OnInit, AfterViewInit {
 
-  //// TECHNIQUE 1 - Appears our initialisation of values isn't correctly happening here (NOT GETTING ANY ERRORS IN THE CONSOLE)
-  //activityModel = model<ActivityModel>();
-  //propertyDescriptor = model<ActivityPropertyDescriptor>();
-  //propertyModel = model<ActivityDefinitionProperty>();
-  //modelSyntax: string = SyntaxNames.Json;
-  //properties: NestedActivityDefinitionProperty[] = [];
-  //// expressionChanged: ReturnType<typeof output<EventEmitter<string>>>;
-  //expressionChanged: ReturnType<typeof output<string>>;
-  //multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
-  //keyId: string;
-  //container: HTMLElement;
+  // TECHNIQUE 1 - Appears our initialisation of values isn't correctly happening here (NOT GETTING ANY ERRORS IN THE CONSOLE)
+  activityModel = model<ActivityModel>();
+  propertyDescriptor = model<ActivityPropertyDescriptor>();
+  propertyModel = model<ActivityDefinitionProperty>();
+  modelSyntax: string = SyntaxNames.Json;
+  properties: NestedActivityDefinitionProperty[] = [];
+  // expressionChanged: ReturnType<typeof output<EventEmitter<string>>>;
+  expressionChanged: ReturnType<typeof output<string>>;
+  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  keyId: string;
+  container: HTMLElement;
 
-  //component: ModelSignal<ISortableSharedComponent>;
-  //toggleComponent: IDisplayToggle
+  component: ModelSignal<ISortableSharedComponent>;
+  toggleComponent: IDisplayToggle
 
   //// TECHNIQUE 3 - Here we're creating the component signal and trying to initialise properties in the interface which are signals also
   //component = input<ISortableSharedComponent>({
