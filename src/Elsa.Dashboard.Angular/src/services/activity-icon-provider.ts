@@ -32,6 +32,9 @@ export class ActivityIconProvider {
     this.registerWebhookIcons();
     this.registerWriteHttpResponseIcons();
     this.registerWriteLineIcons();
+    this.registerAddCaseIcons();
+    this.registerTrashBinIcons();
+    this.registerOpenInDialogIcons();
     this.registerPlusIcons();
     this.registerTrashBinOutlineIcons();
     this.registerOpenInDialogIcons();
@@ -250,6 +253,18 @@ export class ActivityIconProvider {
   private registerTrashBinOutlineIcons(): void {
     this.register('TrashBinOutline', (colour: string) => {
       return this.sanitizer.bypassSecurityTrustHtml(this.createTrashBinOutlineIcon(colour));
+    });
+  }
+
+  private registerAddCaseIcons(): void {
+    this.register('AddCase', (colour: string) => {
+      return this.sanitizer.bypassSecurityTrustHtml(this.createAddCaseIconHtml(colour));
+    });
+  }
+
+  private registerTrashBinIcons(): void {
+        this.register('TrashBin', (colour: string) => {
+      return this.sanitizer.bypassSecurityTrustHtml(this.createTrashBinIcon(colour));
     });
   }
 
@@ -522,6 +537,38 @@ export class ActivityIconProvider {
   </span>`;
   }
 
+    private createAddCaseIconHtml(colour: string): string {
+    return `
+    <svg 
+        class="${`elsa-mr-2 elsa-h-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
+        width="24" height="24" viewBox="0 0 24 24"
+        stroke-width="2" stroke="currentColor" fill="transparent" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>`;
+  }
+
+  private createTrashBinIcon(colour: string): string {
+    return  `<svg 
+        class="${`elsa-h-5 elsa-w-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
+        width="24" height="24" viewBox="0 0 24 24"
+        stroke-width="2" stroke="currentColor" fill="transparent" stroke-linecap="round"
+        stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        <line x1="10" y1="11" x2="10" y2="17"/>
+        <line x1="14" y1="11" x2="14" y2="17"/>
+    </svg>`;
+  }
+
+  private createOpenInDialogIcon(colour: string): string {
+    return `<svg 
+        class="${`elsa-h-5 elsa-w-5 ${colour? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
+    </svg>`  
+  }
+
   private createPlusIconHtml(colour: string): string {
     return `
     <svg 
@@ -546,12 +593,6 @@ export class ActivityIconProvider {
         <line x1="10" y1="11" x2="10" y2="17"/>
         <line x1="14" y1="11" x2="14" y2="17"/>
     </svg>`;
-  }
-
-  private createOpenInDialogIcon(colour: string): string {
-    return `<svg 
-        class="${`elsa-h-5 elsa-w-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
-    </svg>`
   }
 
   //#endregion

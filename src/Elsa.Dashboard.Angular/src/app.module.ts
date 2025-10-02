@@ -58,6 +58,10 @@ import { JsonProperty } from './components/editors/properties/json-property/json
 import { DropDownProperty } from './components/editors/properties/drop-down-property/drop-down-property';
 import { CheckListProperty } from './components/editors/properties/check-list-property/check-list-property';
 import { RadioListProperty } from './components/editors/properties/radio-list-property/radio-list-property';
+import { SwitchCaseProperty } from './components/editors/properties/switch-case-property/switch-case-property';
+import { AltSwitchCaseProperty } from "./components/editors/properties/switch-case-property/alt-switch-case-property";
+import { SwitchCaseRow } from "./components/editors/properties/switch-case-property/switch-case-row";
+import { FormsModule } from '@angular/forms';
 import { MultiTextProperty } from './components/editors/properties/multi-text-property/multi-text-property';
 import { InputTags } from './components/controls/input-tags/input-tags';
 import { DictionaryProperty } from './components/editors/properties/dictionary-property/dictionary-property';
@@ -112,6 +116,9 @@ import { DictionaryProperty } from './components/editors/properties/dictionary-p
     DropDownProperty,
     CheckListProperty,
     RadioListProperty,
+    SwitchCaseProperty,
+    AltSwitchCaseProperty,
+    SwitchCaseRow,
     MultiTextProperty,
     InputTags,
     DictionaryProperty
@@ -126,6 +133,7 @@ import { DictionaryProperty } from './components/editors/properties/dictionary-p
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
     BrowserAnimationsModule,
+    FormsModule
   ],
   providers: [IntellisenseService, provideHttpClient(), { provide: MONACO_EDITOR_CONFIG, useValue: monacoConfig }],
   bootstrap: [WorkflowRoot],

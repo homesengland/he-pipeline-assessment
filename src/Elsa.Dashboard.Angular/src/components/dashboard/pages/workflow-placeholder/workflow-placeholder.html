@@ -1,4 +1,18 @@
-<monaco-editor [options]="options" [model]="model" [editorHeight]="'500px'"></monaco-editor>
-<div *ngFor="let activityProperty of activityProperties">
-  <property-control [activity]="getActivityModel(activityProperty().uiHint)" [property]="activityProperty" [onUpdated]="" [isEncypted]="false"> </property-control>
+<div style="padding:20px; margin:20px;">
+  <h2>Monaco Editor:</h2>
+  <br />
+  <monaco-editor [options]="options" [model]="model" [editorHeight]="'500px'"></monaco-editor>
+  <br />
+  <hr />
+  <br />
+  <br />
+  <div *ngFor="let activityProperty of activityProperties">
+    <h2>{{activityProperty().name}}:</h2>
+    <property-control [activity]="getActivityModel(activityProperty().uiHint)" [property]="activityProperty" [onUpdated]="" [isEncypted]="false"> </property-control>
+    <br />
+    <hr />
+    <br />
+    <br />
+  </div>
 </div>
+

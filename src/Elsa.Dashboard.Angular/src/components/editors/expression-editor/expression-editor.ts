@@ -1,10 +1,10 @@
 import { toSignal } from '@angular/core/rxjs-interop';
 import { IntellisenseService } from '../../../services/intellisense-service';
-import { Component, ElementRef, input, Input, model, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild, computed, effect } from '@angular/core';
+import { Component, ElementRef, input, Input, model, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild, computed, effect, Signal } from '@angular/core';
 import { HTMLMonacoElement, MonacoValueChangedArgs } from '../../../models/monaco-elements';
 import { IntellisenseContext } from '../../../models';
 import { Uri } from '../../../constants/constants';
-import { selectJavaScriptTypeDefinitions, selectWorkflowDefinitionId } from '../../../store/selectors/app.state.selectors';
+import { selectJavaScriptTypeDefinitions, selectWorkflowDefinitionId, selectServerUrl } from '../../../store/selectors/app.state.selectors';
 import { Store } from '@ngrx/store';
 import { EditorModel } from 'src/components/monaco/types';
 
@@ -27,7 +27,7 @@ export class ExpressionEditor implements OnInit {
   intellisenseGatherer: IntellisenseService;
   options: any;
   theme: string = 'vs';
-  model: EditorModel;
+  model: Signal<EditorModel> = computed(() => { return { language: this.language(), value: this.expression() } });
   @ViewChild('monacoContainer') monacoEditor!: HTMLMonacoElement;
 
   private isUpdating = false;
@@ -39,14 +39,14 @@ export class ExpressionEditor implements OnInit {
       }
     });
     this.options = this.getOptions();
-    this.model = {
-      language: this.language(),
-      value: this.expression(),
-    };
+    console.log("Expression Editor - getting Options", this.options);
   }
 
   async ngOnInit() {
     this.intellisenseGatherer = new IntellisenseService(this.store);
+    this.store.select(selectServerUrl).subscribe(data => {
+      this.serverUrl.set(data);
+    });
   }
 
   async ngAfterViewInit() {
@@ -79,7 +79,7 @@ export class ExpressionEditor implements OnInit {
 
     let options = defaultOptions;
 
-    if (this.singleLineMode) {
+    if (this.singleLineMode()) {
       options = {
         ...defaultOptions,
         ...{
@@ -105,8 +105,9 @@ export class ExpressionEditor implements OnInit {
   }
 
   async onMonacoValueChanged(e: MonacoValueChangedArgs) {
-    this.expression.set(e.value);
-    await this.expressionChanged.emit(e.value);
+    console.log("Monaco Value Changed");
+     this.expression.set(e.value);
+     await this.expressionChanged.emit(e.value);
   }
 
   async onMonacoInit(e: MonacoValueChangedArgs) {
