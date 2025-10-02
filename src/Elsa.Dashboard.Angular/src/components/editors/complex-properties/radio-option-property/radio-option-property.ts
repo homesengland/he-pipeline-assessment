@@ -53,122 +53,30 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
   modelSyntax: string = SyntaxNames.Json;
+  keyId: string;
   properties: NestedActivityDefinitionProperty[] = [];
   // expressionChanged: ReturnType<typeof output<EventEmitter<string>>>;
   expressionChanged: ReturnType<typeof output<string>>;
-  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
-  keyId: string;
-  container: HTMLElement;
-
-  // component: ModelSignal<ISortableSharedComponent>;
-  // toggleComponent: IDisplayToggle
-
-  //// TECHNIQUE 3 - Here we're creating the component signal and trying to initialise properties in the interface which are signals also
-  //component = input<ISortableSharedComponent>({
-
-  //  activityModel: model<ActivityModel>({
-  //    activityId: '',
-  //    type: 'RadioOption',
-  //    name: 'TestRadioOption',
-  //    displayName: 'Test HeRadioOption',
-  //    description: 'A Stub activity to display a HeRadioOption property',
-  //    outcomes: ['Done'],
-  //    properties: [],
-  //    persistWorkflow: true,
-  //    loadWorkflowContext: undefined,
-  //    saveWorkflowContext: undefined,
-  //    propertyStorageProviders: undefined,
-  //  }),
-  //  propertyDescriptor: model<ActivityPropertyDescriptor>({
-  //    // conditionalActivityTypes: ['RadioQuestion'],
-  //    // expectedOutputType: 'radio',
-  //    // hasNestedProperties: true,
-  //    // hasColletedProperties: false,
-  //    name: 'TestRadioOption',
-  //    // type: 'System.String',
-  //    uiHint: 'radio-options',
-  //    label: 'Test Label for Radio Options',
-  //    hint: 'Test Hint for Radio Options',
-  //    options: {
-  //      items: [
-  //        { text: 'Option 1', value: '1' },
-  //        { text: 'Option 2', value: '2' },
-  //        { text: 'Option 3', value: '3' },
-  //      ],
-  //      isFlagsEnum: false,
-  //    },
-  //    // order: 0,
-  //    defaultValue: null,
-  //    supportedSyntaxes: [],
-  //    isReadOnly: false,
-  //    //isBrowsable: true,
-  //    //isDesignerCritical: false,
-  //    disableWorkflowProviderSelection: false,
-  //    considerValuesAsOutcomes: false,
-  //    defaultSyntax: null,
-  //  }),
-  //  propertyModel: model<ActivityDefinitionProperty>({
-  //    syntax: undefined,
-  //    value: 'string',
-  //    name: 'TestRadioOption',
-  //    expressions: {
-  //      Json: '[{"name":"A","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"},{"name":"B","syntax":"Literal","expressions":{"Literal":"","PrePopulated":"false"},"type":"radio"}]'
-  //    },
-  //  }),
-  //  modelSyntax: '',
-
-  //  // properties: [],
-  //  properties: [
-  //    {
-  //      name: 'A',
-  //      syntax: SyntaxNames.Literal,
-  //      expressions: { [SyntaxNames.Literal]: '', [RadioOptionsSyntax.PrePopulated]: 'false' },
-  //      type: PropertyOutputTypes.Radio,
-  //    },
-  //    {
-  //      name: 'B',
-  //      syntax: SyntaxNames.Literal,
-  //      expressions: { [SyntaxNames.Literal]: '', [RadioOptionsSyntax.PrePopulated]: 'false' },
-  //      type: PropertyOutputTypes.Radio,
-  //    }
-  //  ],
-
-  //  expressionChanged: output<string>(),
-
-  //  // multiExpressionEditor: HTMLElsaMultiExpressionEditorElement,
-  //  // @ViewChild('multiExpressionEditor') multiExpressionEditor: HTMLElsaMultiExpressionEditorElement,
-
-  //  keyId: '',
-
-  //  // container: HTMLElement,
-
-  //});
-
-  // _base: SortableComponent;
-  // _toggle: DisplayToggle;
-    
-  json: string = '';
-
-  activityIconProvider: ActivityIconProvider;
-  
   dictionary: Map<string> = {};
-  displayValue: string = 'table-row';
-  hiddenValue: string = 'none';
 
   switchTextHeight: string = '';
   editorHeight: string = '2.75em';
-  
-  defaultSyntax = SyntaxNames.Json; // This is used on the multi expression editor to set the default syntax
 
   supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Literal];
-
+  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  syntaxSwitchCount: number = 0;
+  container: HTMLElement;
+  displayValue: string = 'table-row';
+  hiddenValue: string = 'none';
+  
+    
+  json: string = '';
+  activityIconProvider: ActivityIconProvider;
+  defaultSyntax = SyntaxNames.Json; // This is used on the multi expression editor to set the default syntax
   supportedSyntaxForMultiExpressionEditor = [SyntaxNames.Json];
-
   stringifiedHardCodedJsonDataForExpressionPropertyInMultiExpressionEditor = {
     Json: "[{\"name\":\"A\",\"syntax\":\"JavaScript\",\"expressions\":{\"Literal\":\"\",\"PrePopulated\":\"true\"},\"type\":\"radio\"},{\"name\":\"B\",\"syntax\":\"Literal\",\"expressions\":{\"Literal\":\"\",\"PrePopulated\":\"false\"},\"type\":\"radio\"}]"
   };
-
-  syntaxSwitchCount: number = 0;
 
   context: IntellisenseContext;
 
