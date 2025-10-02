@@ -308,6 +308,8 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
     const cases = this.properties;
     //const cases = this.component().properties;
 
+
+
     return cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
@@ -323,13 +325,12 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
       const optionsDisplay = this.dictionary[index] ?? 'none';
 
       return {
+        keyId: this.keyId,
         radioOption: radioOption,
         syntaxSwitchCount: this.syntaxSwitchCount,
-        keyId: this.keyId,
-        //keyId: this.component().keyId,
-        index: index,
         key: `expression-editor-${index}-${this.syntaxSwitchCount}_${this.keyId}`,
-        //key: `expression-editor-${index}-${this.syntaxSwitchCount}_${this.component().keyId}`,
+        index: index,
+        
         monacoLanguage: monacoLanguage,
         prePopulatedExpression: prePopulatedExpression,
         prePopulatedLanguage: prePopulatedLanguage,
