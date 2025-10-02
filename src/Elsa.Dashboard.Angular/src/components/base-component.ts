@@ -1,10 +1,10 @@
-import { Component, Output, EventEmitter, Input, ModelSignal, output, input, model } from '@angular/core';
-import { ActivityDefinitionProperty, HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement } from '../models/elsa-interfaces';
-import { ActivityModel } from '../models/view';
-import { ActivityPropertyDescriptor } from '../models/domain';
-import { NestedActivityDefinitionProperty } from '../models/custom-component-models';
-import { getUniversalUniqueId, mapSyntaxToLanguage, parseJson } from 'src/utils/utils';
-import { SyntaxNames } from '../constants/constants';
+//import { Component, Output, EventEmitter, Input, ModelSignal, output, input, model } from '@angular/core';
+//import { ActivityDefinitionProperty, HTMLElsaMultiExpressionEditorElement, HTMLElsaExpressionEditorElement } from '../models/elsa-interfaces';
+//import { ActivityModel } from '../models/view';
+//import { ActivityPropertyDescriptor } from '../models/domain';
+//import { NestedActivityDefinitionProperty } from '../models/custom-component-models';
+//import { getUniversalUniqueId, mapSyntaxToLanguage, parseJson } from 'src/utils/utils';
+//import { SyntaxNames } from '../constants/constants';
 
 // THIS DID NOT GENERATE ANY ERRORS IN THE CONSOLE
 //export interface ISharedComponent {

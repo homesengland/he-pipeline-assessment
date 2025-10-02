@@ -1,8 +1,8 @@
-import { AfterViewInit, ModelSignal, Component, Input } from '@angular/core';
-import { ISharedComponent } from './base-component';
-import { BaseComponent } from './base-component';
-import Sortable from 'sortablejs';
-import { NestedActivityDefinitionProperty } from 'src/models/custom-component-models';
+//import { AfterViewInit, ModelSignal, Component, Input } from '@angular/core';
+//import { ISharedComponent } from './base-component';
+//import { BaseComponent } from './base-component';
+//import Sortable from 'sortablejs';
+//import { NestedActivityDefinitionProperty } from 'src/models/custom-component-models';
 
 //export interface ISortableSharedComponent extends ISharedComponent {
 //  container: HTMLElement;

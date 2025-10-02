@@ -15,37 +15,38 @@ import { ExpressionEditor } from '../../../editors/expression-editor/expression-
 // import { ISharedComponent } from '../../../base-component';
 import Sortable from 'sortablejs';
 
-// From previous Sortable Component
-export interface ISortableSharedComponent extends ISharedComponent {
-  container: HTMLElement;
-}
+//// From previous Sortable Component
+//export interface ISortableSharedComponent extends ISharedComponent {
+//  container: HTMLElement;
+//}
 
-// From previous Base Component
-export interface ISharedComponent {
-  activityModel: ReturnType<typeof model<ActivityModel>>;
-  propertyDescriptor: ReturnType<typeof model<ActivityPropertyDescriptor>>;
-  propertyModel: ReturnType<typeof model<ActivityDefinitionProperty>>;
-  modelSyntax: string;
-  properties: NestedActivityDefinitionProperty[];
-  // expressionChanged: ReturnType<typeof output<EventEmitter<string>>>;
-  expressionChanged: ReturnType<typeof output<string>>;
-  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
-  keyId: string;
-}
+//// From previous Base Component
+//export interface ISharedComponent {
+//  activityModel: ReturnType<typeof model<ActivityModel>>;
+//  propertyDescriptor: ReturnType<typeof model<ActivityPropertyDescriptor>>;
+//  propertyModel: ReturnType<typeof model<ActivityDefinitionProperty>>;
+//  modelSyntax: string;
+//  properties: NestedActivityDefinitionProperty[];
+//  // expressionChanged: ReturnType<typeof output<EventEmitter<string>>>;
+//  expressionChanged: ReturnType<typeof output<string>>;
+//  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+//  keyId: string;
+//}
 
-// From previous Display Toggle Component
-export interface IDisplayToggle {
-  dictionary: { [key: string]: string };
-  displayValue: string;
-  hiddenValue: string;
-}
+//// From previous Display Toggle Component
+//export interface IDisplayToggle {
+//  // dictionary: { [key: string]: string };
+//  dictionary: Map<string>;
+//  displayValue: string;
+//  hiddenValue: string;
+//}
 
 @Component({
   selector: 'radio-option-property',
   templateUrl: './radio-option-property.html',
   standalone: false,
 })
-export class RadioOptionProperty implements ISortableSharedComponent, IDisplayToggle, OnInit, AfterViewInit {
+export class RadioOptionProperty implements OnInit, AfterViewInit {
 
   // TECHNIQUE 1 - Appears our initialisation of values isn't correctly happening here (NOT GETTING ANY ERRORS IN THE CONSOLE)
   activityModel = model<ActivityModel>();
@@ -59,8 +60,8 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   keyId: string;
   container: HTMLElement;
 
-  component: ModelSignal<ISortableSharedComponent>;
-  toggleComponent: IDisplayToggle
+  // component: ModelSignal<ISortableSharedComponent>;
+  // toggleComponent: IDisplayToggle
 
   //// TECHNIQUE 3 - Here we're creating the component signal and trying to initialise properties in the interface which are signals also
   //component = input<ISortableSharedComponent>({
@@ -142,25 +143,20 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   //  // container: HTMLElement,
 
   //});
-  
-
-  
-
-
-    
-  json: string = '';
 
   // _base: SortableComponent;
   // _toggle: DisplayToggle;
+    
+  json: string = '';
 
   activityIconProvider: ActivityIconProvider;
   
-  dictionary: { [key: string]: any } = {};
+  dictionary: Map<string> = {};
+  displayValue: string = 'table-row';
+  hiddenValue: string = 'none';
 
   switchTextHeight: string = '';
   editorHeight: string = '2.75em';
-  displayValue: string = 'table-row';
-  hiddenValue: string = 'none';
   
   defaultSyntax = SyntaxNames.Json; // This is used on the multi expression editor to set the default syntax
 
@@ -195,8 +191,6 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
     // this._base = new SortableComponent(this.sortableComponent);
     // this._toggle = new DisplayToggle();
 
-    
-
     console.log('Constructor executed');
   }
 
@@ -211,14 +205,14 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
     };
 
     this.onComponentInitialised();
-    this.component().keyId = getUniversalUniqueId();
+    this.keyId = getUniversalUniqueId();
   }
 
   // 1. CODE FROM SORTABLE COMPONENT
   ngAfterViewInit() {
     // Presuming this is the correct lifecycle hook to use instead of Stencil's componentDidLoad, confirm if this is correct
     const dragEventHandler = this.onDragActivity.bind(this);
-    Sortable.create(this.component().container, {
+    Sortable.create(this.container, {
       animation: 150,
       handle: '.sortablejs-custom-handle',
       ghostClass: 'dragTarget',
@@ -229,11 +223,11 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   }
 
   onDragActivity(oldIndex: number, newIndex: number) {
-    const propertiesJson = JSON.stringify(this.component().properties); // Get component.properties and makes a copy of this converting from JSON object to string
+    const propertiesJson = JSON.stringify(this.properties); // Get component.properties and makes a copy of this converting from JSON object to string
     let propertiesClone: Array<NestedActivityDefinitionProperty> = JSON.parse(propertiesJson); // Parse the string back to an array of NestedActivityDefinitionProperty
     const activity = propertiesClone.splice(oldIndex, 1)[0]; // Removes the activity at oldIndex and stores it in activity variable
     propertiesClone.splice(newIndex, 0, activity); // Inserts the activity at newIndex
-    this.component().properties = propertiesClone; // Assigns the modified array back to component.properties
+    this.properties = propertiesClone; // Assigns the modified array back to component.properties
     this.updatePropertyModel(); // Updates the property model to reflect the changes
   }
 
@@ -294,25 +288,25 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
 
   // 2. CODE FROM BASE COMPONENT
   onComponentInitialised() {
-    if (this.component().propertyDescriptor() != null) {
+    if (this.propertyDescriptor() != null) {
       if (
-        this.component().propertyDescriptor().defaultSyntax != null &&
-        this.component().propertyDescriptor().defaultSyntax != undefined &&
-        this.component().propertyDescriptor().defaultSyntax != ''
+        this.propertyDescriptor().defaultSyntax != null &&
+        this.propertyDescriptor().defaultSyntax != undefined &&
+        this.propertyDescriptor().defaultSyntax != ''
       ) {
-        this.component().modelSyntax = this.component().propertyDescriptor().defaultSyntax;
+        this.modelSyntax = this.propertyDescriptor().defaultSyntax;
       }
     }
-    const propertyModel = this.component().propertyModel();
-    const modelJson = propertyModel.expressions[this.component().modelSyntax];
-    this.component().properties = parseJson(modelJson) || [];
+    const propertyModel = this.propertyModel();
+    const modelJson = propertyModel.expressions[this.modelSyntax];
+    this.properties = parseJson(modelJson) || [];
   }
 
   updatePropertyModel() {
-    this.component().propertyModel().expressions[this.component().modelSyntax] = JSON.stringify(this.component().properties);
-    this.component().multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.component().properties, null, 2);
+    this.propertyModel().expressions[this.modelSyntax] = JSON.stringify(this.properties);
+    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.properties, null, 2);
     // this.expressionChanged.emit(JSON.stringify(this.component().propertyModel));
-    this.expressionChanged.emit(JSON.stringify(this.component().propertyModel()));
+    this.expressionChanged.emit(JSON.stringify(this.propertyModel()));
 
   }
 
@@ -360,8 +354,8 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
 
   IdentifierArray(): Array<string> {
     let propertyIdentifiers: Array<string> = [];
-    if (this.component().properties?.length > 0) {
-      propertyIdentifiers = this.component().properties.map(function (v) {
+    if (this.properties?.length > 0) {
+      propertyIdentifiers = this.properties.map(function (v) {
         return v.name;
       });
     }
@@ -370,7 +364,7 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
   }
 
   UpdateProperties(parsed: Array<NestedActivityDefinitionProperty>) {
-    this.component().properties = parsed;
+    this.properties = parsed;
   }
 
   OnMultiExpressionEditorValueChanged(e: CustomEvent<string>, syntax: string = SyntaxNames.Json): any {
@@ -381,23 +375,23 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
 
     if (!Array.isArray(parsed)) return;
 
-    this.component().propertyModel().expressions[syntax] = json;
+    this.propertyModel().expressions[syntax] = json;
     this.UpdateProperties(parsed);
   }
 
   // 3. CODE FROM DISPLAY TOGGLE COMPONENT
   onToggleDisplay(index: any) {
-    let tempValue = this.toggleDictionaryDisplay(index, this.toggleComponent.dictionary);
-    this.toggleComponent.dictionary = { ...this.toggleComponent.dictionary, tempValue };
+    let tempValue = this.toggleDictionaryDisplay(index, this.dictionary);
+    this.dictionary = { ...this.dictionary, tempValue };
   }
 
   private toggleDictionaryDisplay(index: any, dict: Map<string>): any {
     let tempValue = Object.assign(dict);
     let tableRowClass = dict[index];
     if (tableRowClass == null) {
-      tempValue[index] = this.toggleComponent.displayValue;
+      tempValue[index] = this.displayValue;
     } else {
-      dict[index] == this.toggleComponent.hiddenValue ? (tempValue[index] = this.toggleComponent.displayValue) : (tempValue[index] = this.toggleComponent.hiddenValue);
+      dict[index] == this.hiddenValue ? (tempValue[index] = this.displayValue) : (tempValue[index] = this.hiddenValue);
     }
     return tempValue;
   }
@@ -418,7 +412,7 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
       let expressionEditor = null;
       let prePopulatedExpressionEditor = null;
       let colWidth = '100%';
-      const optionsDisplay = this.toggleComponent.dictionary[index] ?? 'none';
+      const optionsDisplay = this.dictionary[index] ?? 'none';
 
       return {
         radioOption: radioOption,
@@ -436,5 +430,4 @@ export class RadioOptionProperty implements ISortableSharedComponent, IDisplayTo
       };
     });
   }
-
 }
