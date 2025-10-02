@@ -20,6 +20,7 @@ export const EventTypes = {
   },
   ShowActivityPicker: 'show-activity-picker',
   ShowWorkflowSettings: 'show-workflow-settings',
+  ShowWorkflowHelp: 'show-workflow-help',
   ActivityPicked: 'activity-picked',
   UpdateActivity: 'update-activity',
   UpdateActivityProperties: 'update-activity-properties',

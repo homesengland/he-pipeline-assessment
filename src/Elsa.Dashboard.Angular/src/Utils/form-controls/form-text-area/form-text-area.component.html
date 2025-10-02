@@ -1,0 +1,14 @@
+<div>
+  <label [for]="fieldId" class="block elsa-text-sm elsa-font-medium elsa-text-gray-700">{{ label }}</label>
+  <div class="elsa-mt-1">
+    <textarea
+      [id]="fieldId"
+      [name]="fieldName"
+      [value]="value() ?? ''"
+      (input)="onInput($event)"
+      rows="3"
+      class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300"
+    ></textarea>
+  </div>
+  <p *ngIf="hint" class="elsa-mt-2 elsa-text-sm elsa-text-gray-500">{{ hint }}</p>
+</div>

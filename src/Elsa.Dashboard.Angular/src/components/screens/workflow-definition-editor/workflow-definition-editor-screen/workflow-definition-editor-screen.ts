@@ -24,7 +24,7 @@ import { ActivityStats, SaveWorkflowDefinitionRequest } from 'src/services/workf
 import { HTMLElsaConfirmDialogElement } from 'src/models/elsa-interfaces';
 import { eventBus } from 'src/services/event-bus';
 import { ElsaClientService } from 'src/services/elsa-client';
-import { downloadFromBlob } from 'src/utils/download';
+import { downloadFromBlob } from 'src/Utils/download';
 import { Location } from '@angular/common';
 import { AppStateActionGroup } from 'src/store/actions/app.state.actions';
 import { Store } from '@ngrx/store';
@@ -296,6 +296,12 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
     if (!this.workflowInstance || this.workflowInstance.id !== this.workflowInstanceId) this.workflowInstance = await client.workflowInstancesApi.get(this.workflowInstanceId);
   }
 
+  async updateWorkflowSettings(workflowDefinition: WorkflowDefinition) {
+    console.log("WorkflowDefinitionEmitted", workflowDefinition);
+    await this.onUpdateWorkflowSettings(workflowDefinition);
+    //Todo.  Some save stuff
+  }
+
   async publishWorkflow() {
     this.publishing = true;
     await this.saveWorkflow(true);
@@ -530,10 +536,6 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
     };
   }
 
-  async onShowWorkflowSettingsClick() {
-    await eventBus.emit(EventTypes.ShowWorkflowSettings);
-  }
-
   async onDeleteClicked() {
     const result = await this.confirmDialog.show('DeleteConfirmationModel.Title', 'DeleteConfirmationModel.Message');
 
@@ -751,6 +753,10 @@ export class WorkflowDefinitionEditorScreen implements OnInit {
               ${icon}
             </button>
           </div>`;
+  };
+
+  openWorkflowSettingsModal = async => {
+    console.log('showWorkflowSettingsClick');
   };
 
   get selectedActivities(): string[] {
