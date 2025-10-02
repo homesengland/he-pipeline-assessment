@@ -10,12 +10,10 @@ namespace He.PipelineAssessment.UI.Features.Funds.FundsList
 {
     public class FundsListRequestHandler : IRequestHandler<FundsListRequest, FundsListResponse>
     {
-        // COMMENT: private field to hold an instance of the assessment repository interface.
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ILogger<FundsListRequestHandler> _logger;
 
 
-        // COMMENT: Constructor:
         public FundsListRequestHandler(IAssessmentRepository assessmentRepository, ILogger<FundsListRequestHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
@@ -26,7 +24,6 @@ namespace He.PipelineAssessment.UI.Features.Funds.FundsList
         {
             try
             {
-                // COMMENT: get all funds from the assessment repository and store them in the funds variable.
                 var funds = await _assessmentRepository.GetAllFunds();
 
                 if (funds == null)
@@ -35,7 +32,6 @@ namespace He.PipelineAssessment.UI.Features.Funds.FundsList
                     funds = new List<AssessmentFund>();
                 }
 
-                // COMMENT: return a new FundsListResponse object containing the list of funds. 
                 return new FundsListResponse(funds);
             }
             catch (Exception e)

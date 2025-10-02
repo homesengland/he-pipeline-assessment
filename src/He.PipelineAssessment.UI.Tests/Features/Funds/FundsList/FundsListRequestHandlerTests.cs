@@ -83,9 +83,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Funds.FundsList
             FundsListRequestHandler sut)
         {
             // Arrange
-            // COMMENT: Tells the mock repo to return an empty list of assessment funds when the GetAllFunds method is called.
-            //COMMENT: A new list of assessment funds means that the list is empty because no funds have been added to it.
-            // COMMENT: Setup is basically used to override the original GetAllFunds in the Handle method in the FundsListRequestHandler class.
             repo.Setup(x => x.GetAllFunds()).ReturnsAsync(new List<AssessmentFund>());
 
             // Act
@@ -138,17 +135,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Funds.FundsList
             FundsListRequestHandler sut)
         {
             // Arrange
-            // COMMENT: Tells the mock repo to throw an exception when the GetAllFunds method is called.
             // COMMENT: ThrowsAsync is used to simulate/fake an exception being thrown in asynchronously.
             repo.Setup(x => x.GetAllFunds()).ThrowsAsync(new Exception("Database error"));
 
             // Act 
-            // COMMENT: ThrowsAsync<ApplicationException> means that we expect an ApplicationException to be thrown when the Handle method is called
-            // because the GetAllFunds method in the Handle method is set up to throw an application exception.
             var exception = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(fundsListRequest, CancellationToken.None));
 
             //Assert
-            // COMMENT: this has 2 parameters - the expected value and the actual value.
             Assert.Equal("Unable to get list of funds.", exception.Message);
         }
 
