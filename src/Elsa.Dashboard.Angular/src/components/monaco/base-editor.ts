@@ -22,7 +22,7 @@ export abstract class BaseEditor implements AfterViewInit, OnDestroy {
     }
   }
   padding = input<string>('elsa-pt-1.5 elsa-pl-1');
-  editorHeight = input<string>('100%');
+  editorHeight = input<string>('5em');
 
   get insideNg(): boolean {
     return this._insideNg;

@@ -15,9 +15,20 @@
 <span class="govuk-caption-l">@Model.Reference</span>
 <h1 class="govuk-heading-l">@Model.SiteName</h1>
 
-<p class="govuk-body">@Model.LocalAuthority</p>
-<p class="govuk-body">@Model.CounterParty</p>
-<p class="govuk-body">@Model.ProjectManager</p>
+<table class="govuk-body">
+    <tr>
+        <td><b>Local Authority: </b></td>
+        <td>@Model.LocalAuthority</td>
+    </tr>
+    <tr>
+        <td><b>Partner: </b></td>
+        <td>@Model.CounterParty</td>
+    </tr>
+    <tr>
+        <td><b>Project: </b></td>
+        <td>@Model.ProjectManager</td>
+    </tr>
+</table>
 
 <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">

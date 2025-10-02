@@ -1,4 +1,4 @@
-import { EditorComponent } from './../components/monaco/editor.component';
+import { EditorComponent } from '../components/monaco/editor.component';
 import { Component } from '@angular/core';
 import { ExpressionEditor } from '../components/editors/expression-editor/expression-editor';
 

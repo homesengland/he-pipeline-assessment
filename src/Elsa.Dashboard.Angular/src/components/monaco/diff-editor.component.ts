@@ -10,6 +10,7 @@ declare var monaco: any;
   standalone: false,
   selector: 'ngx-monaco-diff-editor',
   templateUrl: './diff-editor.html',
+  styleUrl: './monaco.css',
   styles: [`
     :host {
       display: block;
