@@ -118,7 +118,7 @@ import { DictionaryProperty } from './components/editors/properties/dictionary-p
     RadioListProperty,
     SwitchCaseProperty,
     AltSwitchCaseProperty,
-    SwitchCaseRow
+    SwitchCaseRow,
     MultiTextProperty,
     InputTags,
     DictionaryProperty

@@ -595,12 +595,6 @@ export class ActivityIconProvider {
     </svg>`;
   }
 
-  private createOpenInDialogIcon(colour: string): string {
-    return `<svg 
-        class="${`elsa-h-5 elsa-w-5 ${colour ? `elsa-text-${colour}-500` : ''} ${colour ? `hover:elsa-text-${colour}-500` : ''}`}"
-    </svg>`
-  }
-
   //#endregion
 
   register(activityType: string, iconProvider: (colour: string) => SafeHtml): void {
