@@ -6,5 +6,5 @@
   (propagateChange)="onMonacoValueChanged($any($event))"
   (onInit)="onMonacoInit($event)"
   #monacoContainer
-  [model]="model"
+  [model]="model()"
 ></monaco-editor>

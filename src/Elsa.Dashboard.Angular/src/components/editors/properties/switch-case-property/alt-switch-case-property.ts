@@ -182,7 +182,8 @@ export class AltSwitchCaseProperty {
     this.syntaxSwitchCount++;
   }
 
-  onMapSyntaxToLanguage(syntax: string): string {
+  mapSyntaxToLanguage(syntax: string): string {
+    console.log("Syntax to Language - Switchcase", syntax)
     return mapSyntaxToLanguage(syntax);
   }
 }

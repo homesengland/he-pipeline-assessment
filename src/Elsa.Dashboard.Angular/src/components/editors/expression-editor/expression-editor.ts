@@ -1,6 +1,6 @@
 import { toSignal } from '@angular/core/rxjs-interop';
 import { IntellisenseService } from '../../../services/intellisense-service';
-import { Component, ElementRef, input, Input, model, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild, computed, effect } from '@angular/core';
+import { Component, ElementRef, input, Input, model, OnChanges, OnInit, output, signal, SimpleChanges, ViewChild, computed, effect, Signal } from '@angular/core';
 import { HTMLMonacoElement, MonacoValueChangedArgs } from '../../../models/monaco-elements';
 import { IntellisenseContext } from '../../../models';
 import { Uri } from '../../../constants/constants';
@@ -27,7 +27,7 @@ export class ExpressionEditor implements OnInit {
   intellisenseGatherer: IntellisenseService;
   options: any;
   theme: string = 'vs';
-  model: EditorModel;
+  model: Signal<EditorModel> = computed(() => { return { language: this.language(), value: this.expression() } });
   @ViewChild('monacoContainer') monacoEditor!: HTMLMonacoElement;
 
   private isUpdating = false;
@@ -39,10 +39,7 @@ export class ExpressionEditor implements OnInit {
       }
     });
     this.options = this.getOptions();
-    this.model = {
-      language: this.language(),
-      value: this.expression(),
-    };
+    console.log("Expression Editor - getting Options", this.options);
   }
 
   async ngOnInit() {
@@ -82,7 +79,7 @@ export class ExpressionEditor implements OnInit {
 
     let options = defaultOptions;
 
-    if (this.singleLineMode) {
+    if (this.singleLineMode()) {
       options = {
         ...defaultOptions,
         ...{

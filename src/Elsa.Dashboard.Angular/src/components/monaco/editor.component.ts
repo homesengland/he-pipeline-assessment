@@ -12,8 +12,8 @@ declare var monaco: any;
 @Component({
   standalone: false,
   selector: 'monaco-editor',
-  templateUrl: './editor.html',
-  styleUrl: './monaco.css',
+  templateUrl: 'editor.html',
+  styleUrl: 'monaco.css',
   host: {
     '[style.height]': 'editorHeight()',
     '[style.min-height]': 'editorHeight()',
