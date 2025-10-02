@@ -48,7 +48,6 @@ import Sortable from 'sortablejs';
 })
 export class RadioOptionProperty implements OnInit, AfterViewInit {
 
-  // TECHNIQUE 1 - Appears our initialisation of values isn't correctly happening here (NOT GETTING ANY ERRORS IN THE CONSOLE)
   activityModel = model<ActivityModel>();
   propertyDescriptor = model<ActivityPropertyDescriptor>();
   propertyModel = model<ActivityDefinitionProperty>();
@@ -82,7 +81,6 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
 
   getExpressions() {
     return { Json: JSON.stringify(this.properties ?? [], null, 2) };
-    // return { Json: JSON.stringify(this.component().properties ?? [], null, 2) };
   }
 
   //@ViewChild('multiExpressionEditor') multiExpressionEditor: MultiExpressionEditor;
@@ -92,12 +90,8 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   radioOptionsSyntaxPrePopulated = RadioOptionsSyntax.PrePopulated;
   onlyJavaScriptSyntaxes: string[] = this.supportedSyntaxes.filter(x => x === SyntaxNames.JavaScript);
 
-  // expressionChanged = output<string>();
-
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
-    // this._base = new SortableComponent(this.sortableComponent);
-    // this._toggle = new DisplayToggle();
 
     console.log('Constructor executed');
   }
@@ -108,8 +102,6 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
     this.context = {
       activityTypeName: this.activityModel()?.type ?? '',
       propertyName: this.propertyDescriptor()?.name ?? '',
-      //activityTypeName: this.component().activityModel()?.type ?? '',
-      //propertyName: this.component().propertyDescriptor()?.name ?? '',
     };
 
     this.onComponentInitialised();
@@ -154,19 +146,27 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
       type: PropertyOutputTypes.Radio,
     };
     this.properties = [...this.properties, newOption];
-    // this.component().properties = [...this.component().properties, newOption];
-    // this._base.updatePropertyModel();
     this.updatePropertyModel();
   }
 
   onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
     this.properties = this.properties.filter(x => x != switchCase);
-    //this.component().properties = this.component().properties.filter(x => x != switchCase);
-    // this._base.updatePropertyModel();
     this.updatePropertyModel();
   }
 
-  onMultiExpressionEditorValueChanged(e: any) {
+  //onMultiExpressionEditorValueChanged(e: any) {
+  //  const json = e.detail;
+  //  const parsed = parseJson(json);
+
+  //  if (!parsed) return;
+
+  //  if (!Array.isArray(parsed)) return;
+
+  //  this.propertyModel().expressions[SyntaxNames.Json] = json;
+  //  this.properties = parsed;
+  //}
+
+  onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
     const json = e.detail;
     const parsed = parseJson(json);
 
@@ -176,8 +176,6 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
 
     this.propertyModel().expressions[SyntaxNames.Json] = json;
     this.properties = parsed;
-    //this.component().propertyModel().expressions[SyntaxNames.Json] = json;
-    //this.component().properties = parsed;
   }
 
   onMultiExpressionEditorSyntaxChanged(e: any) {
@@ -185,13 +183,11 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   }
 
   onToggleOptions(index: number) {
-    // this._toggle.onToggleDisplay(index);
     this.onToggleDisplay(index);
   }
 
   updateJsonExpressionsVariable() {
     this.json = JSON.stringify(this.properties, null, 2);
-    //this.json = JSON.stringify(this.component().properties, null, 2);
   }
 
   // 2. CODE FROM BASE COMPONENT
@@ -213,7 +209,6 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   updatePropertyModel() {
     this.propertyModel().expressions[this.modelSyntax] = JSON.stringify(this.properties);
     this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.properties, null, 2);
-    // this.expressionChanged.emit(JSON.stringify(this.component().propertyModel));
     this.expressionChanged.emit(JSON.stringify(this.propertyModel()));
 
   }
