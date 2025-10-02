@@ -306,7 +306,7 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
 
   getRenderCaseEditor(): any {
     const cases = this.properties;
-    //const cases = this.component().properties;
+    const supportedSyntaxes = this.supportedSyntaxes;
 
 
 
@@ -316,7 +316,7 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
       const monacoLanguage = mapSyntaxToLanguage(syntax);
       const prePopulatedSyntax = SyntaxNames.JavaScript;
       const prePopulatedExpression = radioOption.expressions[RadioOptionsSyntax.PrePopulated];
-
+           
       const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
 
       let expressionEditor = null;
@@ -330,12 +330,14 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
         syntaxSwitchCount: this.syntaxSwitchCount,
         key: `expression-editor-${index}-${this.syntaxSwitchCount}_${this.keyId}`,
         index: index,
+        supportedSyntaxes: supportedSyntaxes,
         
         monacoLanguage: monacoLanguage,
         prePopulatedExpression: prePopulatedExpression,
         prePopulatedLanguage: prePopulatedLanguage,
         optionsDisplay: optionsDisplay,
         expression: expression,
+        prePopulatedExpressionEditor: prePopulatedExpressionEditor,
       };
     });
   }
