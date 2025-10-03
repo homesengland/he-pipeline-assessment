@@ -55,7 +55,8 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   keyId: string;
   properties: NestedActivityDefinitionProperty[] = [];
   // expressionChanged: ReturnType<typeof output<EventEmitter<string>>>;
-  expressionChanged: ReturnType<typeof output<string>>;
+  // expressionChanged: ReturnType<typeof output<string>>;
+  expressionChanged: EventEmitter<string> = new EventEmitter<string>();
   dictionary: Map<string> = {};
 
   switchTextHeight: string = '';
@@ -68,27 +69,29 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   @ViewChild('containerTable', { static: false }) container: ElementRef<HTMLTableElement>;
   displayValue: string = 'table-row';
   hiddenValue: string = 'none';
-  
-    
-  json: string = '';
+
   activityIconProvider: ActivityIconProvider;
   defaultSyntax = SyntaxNames.Json; // This is used on the multi expression editor to set the default syntax
   supportedSyntaxForMultiExpressionEditor = [SyntaxNames.Json];
-  stringifiedHardCodedJsonDataForExpressionPropertyInMultiExpressionEditor = {
-    Json: "[{\"name\":\"A\",\"syntax\":\"JavaScript\",\"expressions\":{\"Literal\":\"\",\"PrePopulated\":\"true\"},\"type\":\"radio\"},{\"name\":\"B\",\"syntax\":\"Literal\",\"expressions\":{\"Literal\":\"\",\"PrePopulated\":\"false\"},\"type\":\"radio\"}]"
-  };
+  json: string = '';
+  //stringifiedHardCodedJsonDataForExpressionPropertyInMultiExpressionEditor = {
+  //  Json: "[{\"name\":\"A\",\"syntax\":\"JavaScript\",\"expressions\":{\"Literal\":\"\",\"PrePopulated\":\"true\"},\"type\":\"radio\"},{\"name\":\"B\",\"syntax\":\"Literal\",\"expressions\":{\"Literal\":\"\",\"PrePopulated\":\"false\"},\"type\":\"radio\"}]"
+  //};
 
   context: IntellisenseContext;
 
-  getExpressions() {
-    return { Json: JSON.stringify(this.properties ?? [], null, 2) };
-  }
+  //// I don't think this function is used, therefore commented out
+  //getExpressions() {
+  //  return { Json: JSON.stringify(this.properties ?? [], null, 2) };
+  //}
 
   @ViewChild('expressionEditor') expressionEditor: ExpressionEditor;
   @ViewChild('prePopulatedExpressionEditor') prePopulatedExpressionEditor: ExpressionEditor;
-  
+
   radioOptionsSyntaxPrePopulated = RadioOptionsSyntax.PrePopulated;
   onlyJavaScriptSyntaxes: string[] = this.supportedSyntaxes.filter(x => x === SyntaxNames.JavaScript);
+
+  caseEditors: any[] = [];
 
   constructor(activityIconProvider: ActivityIconProvider) {
     this.activityIconProvider = activityIconProvider;
@@ -106,6 +109,8 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
 
     this.onComponentInitialised();
     this.keyId = getUniversalUniqueId();
+
+    this.updateCaseEditors();
   }
 
   // 1. CODE FROM SORTABLE COMPONENT
@@ -133,6 +138,7 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['properties']) {
+      this.updateCaseEditors();
       this.updateJsonExpressionsVariable();
     }
   }
@@ -147,11 +153,19 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
     };
     this.properties = [...this.properties, newOption];
     this.updatePropertyModel();
+    this.updateCaseEditors();
   }
 
-  onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
-    this.properties = this.properties.filter(x => x != switchCase);
-    this.updatePropertyModel();
+  //onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
+  //  console.log('Delete clicked', switchCase);
+  //  this.properties = this.properties.filter(x => x != switchCase);
+  //  this.updatePropertyModel();
+  //  this.updateCaseEditors();
+  //}
+
+  onDeleteOptionClick(e: Event) {
+    console.log("Delete Click Event", e);
+
   }
 
   onMultiExpressionEditorValueChanged(e: any) {
@@ -287,19 +301,57 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
     return tempValue;
   }
 
-  getRenderCaseEditor(): any {
+  //getRenderCaseEditor(): any {
+  //  const cases = this.properties;
+  //  const supportedSyntaxes = this.supportedSyntaxes;
+  //  const json = JSON.stringify(cases, null, 2);
+
+
+  //  return cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
+  //    const expression = radioOption.expressions[radioOption.syntax];
+  //    const syntax = radioOption.syntax;
+  //    const monacoLanguage = mapSyntaxToLanguage(syntax);
+  //    const prePopulatedSyntax = SyntaxNames.JavaScript;
+  //    const prePopulatedExpression = radioOption.expressions[RadioOptionsSyntax.PrePopulated];
+
+  //    const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
+
+  //    let expressionEditor = null;
+  //    let prePopulatedExpressionEditor = null;
+  //    let colWidth = '100%';
+  //    const optionsDisplay = this.dictionary[index] ?? 'none';
+
+  //    return {
+  //      keyId: this.keyId,
+  //      radioOption: radioOption,
+  //      syntaxSwitchCount: this.syntaxSwitchCount,
+  //      key: `expression-editor-${index}-${this.syntaxSwitchCount}_${this.keyId}`,
+  //      index: index,
+  //      supportedSyntaxes: supportedSyntaxes,
+
+  //      monacoLanguage: monacoLanguage,
+  //      prePopulatedExpression: prePopulatedExpression,
+  //      prePopulatedLanguage: prePopulatedLanguage,
+  //      optionsDisplay: optionsDisplay,
+  //      expression: expression,
+  //      prePopulatedExpressionEditor: prePopulatedExpressionEditor,
+  //    };
+  //  });
+  //}
+
+  // Added this method:
+  private updateCaseEditors() {
     const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
-
-
-
-    return cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
+    this.json = JSON.stringify(cases, null, 2);
+    this.caseEditors = cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
+      const radioOptionObject = radioOption;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
       const prePopulatedSyntax = SyntaxNames.JavaScript;
       const prePopulatedExpression = radioOption.expressions[RadioOptionsSyntax.PrePopulated];
-           
+
       const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
 
       let expressionEditor = null;
@@ -309,12 +361,12 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
 
       return {
         keyId: this.keyId,
-        radioOption: radioOption,
+        radioOption: radioOptionObject,
         syntaxSwitchCount: this.syntaxSwitchCount,
         key: `expression-editor-${index}-${this.syntaxSwitchCount}_${this.keyId}`,
         index: index,
         supportedSyntaxes: supportedSyntaxes,
-        
+
         monacoLanguage: monacoLanguage,
         prePopulatedExpression: prePopulatedExpression,
         prePopulatedLanguage: prePopulatedLanguage,
