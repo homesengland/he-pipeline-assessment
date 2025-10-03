@@ -21,6 +21,7 @@ export class WorkflowPlaceholder implements OnInit {
   dropDownActivityModel = signal<ActivityModel | null>(null);
   checkListActivityModel = signal<ActivityModel | null>(null);
   radioListActivityModel = signal<ActivityModel | null>(null);
+  switchCaseActivityModel = signal<ActivityModel | null>(null);
   multiTextActivityModel = signal<ActivityModel | null>(null);
   dictionaryActivityModel = signal<ActivityModel | null>(null);
   radioOptionActivityModel = signal<ActivityModel | null>(null);
@@ -56,6 +57,8 @@ export class WorkflowPlaceholder implements OnInit {
     this.dropDownActivityModel.set(this.getDropDownModel());
     this.checkListActivityModel.set(this.getCheckListModel());
     this.radioListActivityModel.set(this.getRadioListModel());
+    this.checkListActivityModel.set(this.getDropDownModel());
+    this.switchCaseActivityModel.set(this.getSwitchCaseModel());
     this.multiTextActivityModel.set(this.getMultiTextModel());
     this.dictionaryActivityModel.set(this.getDictionaryModel());
     this.radioOptionActivityModel.set(this.getRadioOptionModel());
@@ -68,6 +71,7 @@ export class WorkflowPlaceholder implements OnInit {
     const dropdownDescriptor = signal<ActivityPropertyDescriptor>(this.getDropDownDescriptor());
     const checkListDescriptor = signal<ActivityPropertyDescriptor>(this.getCheckListDescriptor());
     const radioListDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioListDescriptor());
+    const switchCaseDescriptor = signal<ActivityPropertyDescriptor>(this.getSwitchCaseDescriptor());
     const multiTextDescriptor = signal<ActivityPropertyDescriptor>(this.getMultiTextDescriptor());
     const dictionaryDescriptor = signal<ActivityPropertyDescriptor>(this.getDictionaryDescriptor());
     const heRadioOptionDescriptor = signal<ActivityPropertyDescriptor>(this.getRadioOptionDescriptor());
@@ -78,6 +82,7 @@ export class WorkflowPlaceholder implements OnInit {
     this.activityProperties.push(dropdownDescriptor);
     this.activityProperties.push(checkListDescriptor);
     this.activityProperties.push(radioListDescriptor);
+    this.activityProperties.push(switchCaseDescriptor);
     this.activityProperties.push(multiTextDescriptor);
     this.activityProperties.push(dictionaryDescriptor);
     this.activityProperties.push(heRadioOptionDescriptor);
@@ -608,6 +613,62 @@ export class WorkflowPlaceholder implements OnInit {
     return model;
   }
 
+   getSwitchCaseModel(): ActivityModel {
+    const model: ActivityModel = {
+      activityId: '',
+      type: 'SwitchCase',
+      name: 'TestSwitchCase',
+      displayName: 'Test Switch Case',
+      description: 'A Stub activity to display a switch case property',
+      outcomes: ['Done'],
+      properties: [],
+      persistWorkflow: true,
+      loadWorkflowContext: undefined,
+      saveWorkflowContext: undefined,
+      propertyStorageProviders: undefined,
+    };
+    model.properties.push(this.getSwitchCaseDefinition());
+    return model;
+  }
+
+  getSwitchCaseDefinition(): ActivityDefinitionProperty {
+    const model: ActivityDefinitionProperty = {
+      syntax: undefined,
+      value: 'string',
+      name: 'TestSwitchCase',
+      expressions: {
+        JavaScript: 'console.log("Hello Switch Case")'
+      },
+      type: '',
+    };
+    return model;
+  }
+
+  getSwitchCaseDescriptor(): ActivityPropertyDescriptor {
+    const model: ActivityPropertyDescriptor = {
+      conditionalActivityTypes: [],
+      expectedOutputType: 'string',
+      hasNestedProperties: false,
+      hasColletedProperties: false,
+      name: 'TestSwitchCase',
+      type: 'System.String',
+      uiHint: 'switch-case',
+      label: 'Test Label',
+      hint: 'Test Hint',
+      options: {},
+      order: 0,
+      defaultValue: '',
+      supportedSyntaxes: [],
+      isReadOnly: false,
+      isBrowsable: true,
+      isDesignerCritical: false,
+      disableWorkflowProviderSelection: false,
+      considerValuesAsOutcomes: false,
+      defaultSyntax: 'Json',
+    };
+    return model;
+  }
+
   getDictionaryDefinition(): ActivityDefinitionProperty {
     const model: ActivityDefinitionProperty = {
       syntax: undefined,
@@ -756,6 +817,8 @@ export class WorkflowPlaceholder implements OnInit {
         return this.checkListActivityModel;
       case 'radio-list':
         return this.radioListActivityModel;
+      case 'switch-case':
+        return this.switchCaseActivityModel;
       case 'multi-text':
         return this.multiTextActivityModel;
       case 'dictionary':

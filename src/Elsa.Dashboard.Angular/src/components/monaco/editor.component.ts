@@ -6,15 +6,18 @@ import { fromEvent } from 'rxjs';
 import { BaseEditor } from './base-editor';
 import { EditorModel } from './types';
 import { EditorVariables } from './monaco-utils';
+import { has } from 'lodash';
 
 declare var monaco: any;
 
 @Component({
   standalone: false,
   selector: 'monaco-editor',
-  templateUrl: './editor.html',
+  templateUrl: 'editor.html',
+  styleUrl: 'monaco.css',
   host: {
     '[style.height]': 'editorHeight()',
+    '[style.min-height]': 'editorHeight()',
     'class':
       'elsa-monaco-editor-host elsa-border focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300 elsa-p-4',
   },
@@ -82,7 +85,10 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
   }
 
   protected initMonaco(options: any, insideNg: boolean): void {
-    const hasModel = !!options.model;
+    var hasModel: boolean = false;
+    if (options && options.model) {
+      hasModel = true;
+    }
 
     if (hasModel) {
       const model = monaco.editor.getModel(options.model.uri || '');
@@ -153,5 +159,9 @@ export class EditorComponent extends BaseEditor implements ControlValueAccessor 
     for (const match of matches) {
       EditorVariables.push({ variableName: match[1], type: match[2] });
     }
+  }
+
+  async addJsonLib() {
+    monaco.languages.register({ id: 'json' });
   }
 }

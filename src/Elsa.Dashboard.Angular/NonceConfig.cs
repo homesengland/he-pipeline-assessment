@@ -54,12 +54,13 @@ namespace Elsa.Dashboard
             return this.nonces[name];
         }
 
-        private static string GenerateNonce(int byteCount)
-        {
-            var byteArray = new byte[byteCount];
-            randomNumberGenerator.GetBytes(byteArray);
+    private static string GenerateNonce(int byteCount)
+    {
+      var byteArray = new byte[byteCount];
+      randomNumberGenerator.GetBytes(byteArray);
 
-            return BitConverter.ToString(byteArray, 0).Replace("-", string.Empty, false, CultureInfo.InvariantCulture);
-        }
+      string nonce = BitConverter.ToString(byteArray, 0).Replace("-", string.Empty, false, CultureInfo.InvariantCulture);
+      return nonce.Replace(" ", "");
     }
+  }
 }

@@ -41,6 +41,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { WorkflowDefinitionEditorScreen } from './components/screens/workflow-definition-editor/workflow-definition-editor-screen/workflow-definition-editor-screen';
 import { DesignerTree } from './components/designers/tree/designer-tree/designer-tree';
 import { WorkflowDefinitionEdit } from './components/dashboard/pages/workflow-definitions-edit/workflow-definitions-edit';
+import { ActivityEditorModal } from './components/screens/workflow-definition-editor/activity-editor-modal/activity-editor-modal';
+import { WorkflowSettingsButton } from './components/screens/workflow-definition-editor/buttons/workflow-settings-button/workflow-settings-button';
+import { WorkflowHelpButton } from './components/screens/workflow-definition-editor/buttons/workflow-help-button/workflow-help-button';
+import { WorkflowSettingsModal } from './components/screens/workflow-definition-editor/modals/workflow-settings-modal/workflow-settings-modal';
+import {WorkflowHelpModal} from './components/screens/workflow-definition-editor/modals/workflow-help-modal/workflow-help-modal';
+import { FormTextInputComponent } from 'src/Utils/form-controls/form-text-input/form-text-input.component';
+import { FormCheckBoxComponent } from 'src/Utils/form-controls/form-check-box/form-check-box.component';
+import { FormSectionComponent } from 'src/Utils/form-controls/form-section/form-section.component';
+import { FormSelectFieldComponent } from 'src/Utils/form-controls/form-select-field/form-select-field.component';
+import { FormTextAreaComponent } from 'src/Utils/form-controls/form-text-area/form-text-area.component';
 import { PropertyControl } from './components/controls/property-control/property-control';
 import { EditorComponent } from './components/monaco/editor.component';
 import { DiffEditorComponent } from './components/monaco/diff-editor.component';
@@ -48,6 +58,10 @@ import { JsonProperty } from './components/editors/properties/json-property/json
 import { DropDownProperty } from './components/editors/properties/drop-down-property/drop-down-property';
 import { CheckListProperty } from './components/editors/properties/check-list-property/check-list-property';
 import { RadioListProperty } from './components/editors/properties/radio-list-property/radio-list-property';
+import { SwitchCaseProperty } from './components/editors/properties/switch-case-property/switch-case-property';
+import { AltSwitchCaseProperty } from "./components/editors/properties/switch-case-property/alt-switch-case-property";
+import { SwitchCaseRow } from "./components/editors/properties/switch-case-property/switch-case-row";
+import { FormsModule } from '@angular/forms';
 import { MultiTextProperty } from './components/editors/properties/multi-text-property/multi-text-property';
 import { InputTags } from './components/controls/input-tags/input-tags';
 import { DictionaryProperty } from './components/editors/properties/dictionary-property/dictionary-property';
@@ -91,9 +105,22 @@ import { RadioOptionProperty } from './components/editors/complex-properties/rad
     EditorComponent,
     DiffEditorComponent,
     JsonProperty,
+    ActivityEditorModal,
+    WorkflowSettingsButton,
+    WorkflowHelpButton,
+    WorkflowSettingsModal,
+    WorkflowHelpModal,
+    FormTextInputComponent,
+    FormCheckBoxComponent,
+    FormSectionComponent,
+    FormSelectFieldComponent,
+    FormTextAreaComponent,
     DropDownProperty,
     CheckListProperty,
     RadioListProperty,
+    SwitchCaseProperty,
+    AltSwitchCaseProperty,
+    SwitchCaseRow,
     MultiTextProperty,
     InputTags,
     DictionaryProperty,
@@ -109,6 +136,7 @@ import { RadioOptionProperty } from './components/editors/complex-properties/rad
     CommonModule,
     StoreModule.forRoot({ appState: appStateReducer }),
     BrowserAnimationsModule,
+    FormsModule
   ],
   providers: [IntellisenseService, provideHttpClient(), { provide: MONACO_EDITOR_CONFIG, useValue: monacoConfig }],
   bootstrap: [WorkflowRoot],
