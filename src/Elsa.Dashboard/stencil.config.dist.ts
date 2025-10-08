@@ -20,7 +20,7 @@ export const config: Config = {
       copy: [{ src: 'assets', dest: 'assets' }],
     },
     {
-      type: 'dist-custom-elements-bundle',
+      type: 'dist',
     },
     {
       type: 'docs-readme',

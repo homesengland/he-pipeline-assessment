@@ -1,31 +1,23 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
-import {Service} from 'axios-middleware';
+// Removed axios in favor of Fetch API
 import * as collection from 'lodash/collection';
 import {eventBus} from '../../../services/event-bus';
+import { createBaseFetch, fetchJson, sendJson } from '../../../services/fetch-client';
 import {EventTypes} from "../../../models";
 import {WorkflowSettings} from "../models";
 
 
-let _httpClient: AxiosInstance = null;
+let _fetchWithBase: ((input: string, init?: RequestInit) => Promise<Response>) | null = null;
 let _elsaWorkflowSettingsClient: ElsaWorkflowSettingsClient = null;
 
-export const createHttpClient = function(baseAddress: string) : AxiosInstance
-{
-  if(!!_httpClient)
-    return _httpClient;
-
-  const config: AxiosRequestConfig = {
-    baseURL: baseAddress
-  };
-
-  eventBus.emit(EventTypes.HttpClientConfigCreated, this, {config});
-
-  const httpClient = axios.create(config);
-  const service = new Service(httpClient);
-
-  eventBus.emit(EventTypes.HttpClientCreated, this, {service, httpClient});
-
-  return _httpClient = httpClient;
+export const createHttpClient = function(baseAddress: string)  {
+  if(_fetchWithBase)
+    return _fetchWithBase;
+  const config = { baseURL: baseAddress };
+  eventBus.emit(EventTypes.HttpClientConfigCreated, this, { config });
+  const fetchWithBase = createBaseFetch(baseAddress);
+  eventBus.emit(EventTypes.HttpClientCreated, this, { fetch: fetchWithBase });
+  _fetchWithBase = fetchWithBase;
+  return fetchWithBase;
 }
 
 export const createElsaWorkflowSettingsClient = async function (serverUrl: string): Promise<ElsaWorkflowSettingsClient> {
@@ -33,20 +25,19 @@ export const createElsaWorkflowSettingsClient = async function (serverUrl: strin
   if (!!_elsaWorkflowSettingsClient)
     return _elsaWorkflowSettingsClient;
 
-  const httpClient: AxiosInstance = await createHttpClient(serverUrl);
+  const httpClient = await createHttpClient(serverUrl);
 
   _elsaWorkflowSettingsClient = {
     workflowSettingsApi: {
       list: async () => {
-        const response = await httpClient.get<Array<WorkflowSettings>>(`v1/workflow-settings`);
-        return response.data;
+        return await fetchJson<Array<WorkflowSettings>>(httpClient, `v1/workflow-settings`);
       },
       save: async request => {
-        const response = await httpClient.post<WorkflowSettings>('v1/workflow-settings', request);
-        return response.data;
+        return await sendJson<WorkflowSettings>(httpClient, 'POST', 'v1/workflow-settings', request);
       },
       delete: async id => {
-        await httpClient.delete(`v1/workflow-settings/${id}`);
+        const resp = await httpClient(`v1/workflow-settings/${id}`, { method: 'DELETE' });
+        if(!resp.ok) throw new Error('Failed to delete workflow settings');
       },
     }
   }

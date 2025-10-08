@@ -1,5 +1,4 @@
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, RedirectLoginOptions} from '@auth0/auth0-spa-js';
-import {Service} from 'axios-middleware';
 import {eventBus, ElsaPlugin} from "../../services";
 import { EventTypes } from "../../models";
 import { Browser } from '@capacitor/browser';
@@ -12,7 +11,7 @@ export class Auth0Plugin implements ElsaPlugin {
     this.options = options;
 
     eventBus.on(EventTypes.Root.Initializing, this.initialize)
-    eventBus.on(EventTypes.HttpClientCreated, this.configureAuthMiddleware);
+  eventBus.on(EventTypes.HttpClientCreated, this.configureAuthMiddleware);
   }
 
   private initialize = async () => {
@@ -58,20 +57,17 @@ export class Auth0Plugin implements ElsaPlugin {
   };
 
   private configureAuthMiddleware = async (e: any) => {
-
-    const service: Service = e.service;
+    const register = e.registerRequestInterceptor;
+    if(!register)
+      return; // Older event payload; no interceptor mechanism
     const auth0 = this.auth0;
-
-    service.register({
-      async onRequest(request) {
-
-        // Get a (cached) access token.
-        const token = await auth0.getTokenSilently();
-
-        if(!!token)
-          request.headers = {...request.headers, 'Authorization': `Bearer ${token}`};
-        return request;
+    register(async (url, init) => {
+      const token = await auth0.getTokenSilently().catch(() => null);
+      if(token) {
+        const headers = { ...(init.headers || {}) as Record<string,string>, 'Authorization': `Bearer ${token}` };
+        return [url, { ...init, headers }];
       }
+      return [url, init];
     });
   };
 }

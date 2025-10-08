@@ -1,5 +1,6 @@
-import { AxiosInstance } from "axios";
+// Removed Axios in favor of Fetch API
 import { createHttpClient } from '../../../services';
+import { fetchJson } from '../../../services/fetch-client';
 
 let _elsaOauth2Client: ElsaOauth2Client = null;
 
@@ -8,13 +9,16 @@ export const createElsaOauth2Client = async function (serverUrl: string): Promis
   if (!!_elsaOauth2Client)
     return _elsaOauth2Client;
 
-  const httpClient: AxiosInstance = await createHttpClient(serverUrl);
+  const httpClient = await createHttpClient(serverUrl);
 
   _elsaOauth2Client = {
     oauth2Api: {
       getUrl: async secretId => {
-        const response = await httpClient.get<string>(`v1/oauth2/url/${secretId}`);
-        return response.data;
+        // The endpoint returns plain text (string URL). Use fetchJson fallback if it's JSON; otherwise text.
+        const resp = await httpClient(`v1/oauth2/url/${secretId}`);
+        if(!resp.ok) throw new Error('Failed to get oauth2 url');
+        const text = await resp.text();
+        return text;
       }
     }
   }

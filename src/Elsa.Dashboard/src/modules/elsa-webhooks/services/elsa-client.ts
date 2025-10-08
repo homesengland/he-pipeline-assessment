@@ -1,30 +1,22 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
-import {Service} from 'axios-middleware';
+// Removed axios in favor of Fetch API
 import * as collection from 'lodash/collection';
 import {eventBus} from '../../../services/event-bus';
+import { createBaseFetch, fetchJson, sendJson } from '../../../services/fetch-client';
 import {EventTypes, PagedList} from "../../../models";
 import {WebhookDefinition, WebhookDefinitionSummary} from "../models";
 
-let _httpClient: AxiosInstance = null;
+let _fetchWithBase: ((input: string, init?: RequestInit) => Promise<Response>) | null = null;
 let _elsaWebhooksClient: ElsaWebhooksClient = null;
 
-export const createHttpClient = function(baseAddress: string) : AxiosInstance
-{
-  if(!!_httpClient)
-    return _httpClient;
-
-  const config: AxiosRequestConfig = {
-    baseURL: baseAddress
-  };
-
-  eventBus.emit(EventTypes.HttpClientConfigCreated, this, {config});
-
-  const httpClient = axios.create(config);
-  const service = new Service(httpClient);
-
-  eventBus.emit(EventTypes.HttpClientCreated, this, {service, httpClient});
-
-  return _httpClient = httpClient;
+export const createHttpClient = function(baseAddress: string)  {
+  if(_fetchWithBase)
+    return _fetchWithBase;
+  const config = { baseURL: baseAddress };
+  eventBus.emit(EventTypes.HttpClientConfigCreated, this, { config });
+  const fetchWithBase = createBaseFetch(baseAddress);
+  eventBus.emit(EventTypes.HttpClientCreated, this, { fetch: fetchWithBase });
+  _fetchWithBase = fetchWithBase;
+  return fetchWithBase;
 }
 
 export const createElsaWebhooksClient = function (serverUrl: string): ElsaWebhooksClient {
@@ -32,28 +24,25 @@ export const createElsaWebhooksClient = function (serverUrl: string): ElsaWebhoo
   if (!!_elsaWebhooksClient)
     return _elsaWebhooksClient;
 
-  const httpClient: AxiosInstance = createHttpClient(serverUrl);
+  const httpClient = createHttpClient(serverUrl);
 
   _elsaWebhooksClient = {
     webhookDefinitionsApi: {
       list: async (page?: number, pageSize?: number) => {
-        const response = await httpClient.get<PagedList<WebhookDefinitionSummary>>(`v1/webhook-definitions`);
-        return response.data;
+        return await fetchJson<PagedList<WebhookDefinitionSummary>>(httpClient, `v1/webhook-definitions`);
       },
       getByWebhookId: async (webhookId: string) => {
-        const response = await httpClient.get<WebhookDefinition>(`v1/webhook-definitions/${webhookId}`);
-        return response.data;
+        return await fetchJson<WebhookDefinition>(httpClient, `v1/webhook-definitions/${webhookId}`);
       },
       save: async request => {
-        const response = await httpClient.post<WebhookDefinition>('v1/webhook-definitions', request);
-        return response.data;
+        return await sendJson<WebhookDefinition>(httpClient, 'POST', 'v1/webhook-definitions', request);
       },
       update: async request => {
-        const response = await httpClient.put<WebhookDefinition>('v1/webhook-definitions', request);
-        return response.data;
+        return await sendJson<WebhookDefinition>(httpClient, 'PUT', 'v1/webhook-definitions', request);
       },
       delete: async webhookId => {
-        await httpClient.delete(`v1/webhook-definitions/${webhookId}`);
+        const resp = await httpClient(`v1/webhook-definitions/${webhookId}`, { method: 'DELETE' });
+        if(!resp.ok) throw new Error('Failed to delete webhook definition');
       },
     }
   }

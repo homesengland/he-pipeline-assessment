@@ -17,7 +17,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/elsa-workflows-studio/assets/images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/elsa-workflows-studio/assets/images/favicon-16x16.png">
     <link rel="stylesheet" href="/elsa-workflows-studio/assets/fonts/inter/inter.css">
-    <link rel="stylesheet" href="/elsa-workflows-studio/elsa-workflows-studio.css">
+<link rel="stylesheet" @nonceConfig.ElsaSetup href="/elsa-workflows-studio/elsa-workflows-studio.css">
 
     <script nonce="@nonceConfig.ElsaSetup" type="importmap">
         {
@@ -37,24 +37,24 @@
 
     @section Scripts {
 <script nonce="@nonceConfig.ElsaSetup" src="/monaco-editor/min/vs/loader.js"></script>
-<script nonce="@nonceConfig.ElsaSetup" type="module" src="/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
+    <script nonce="@nonceConfig.ElsaSetup" type="module" src="/elsa-workflows-studio/elsa-workflows-studio.esm.js"></script>
 <script nonce="@nonceConfig.ElsaSetup" type="module" src="/static/build/custom-elsa.esm.js"></script>
 <script nonce="@nonceConfig.ElsaSetup" type="module" src="/Scripts/CustomElsa.js"></script>
 
 <script nonce="@nonceConfig.ElsaSetup" type="module">
     import { InitCustomElsa } from "InitCustomElsa"
     var elsaStudioRoot = document.querySelector('elsa-studio-root');
-    let customActivities = @Html.Raw(Model.JsonResponse)
+    let customActivities = @Html.Raw(Model.JsonResponse);
 
-            const auth0ClientOptions = {
+        const auth0ClientOptions = {
             clientId: '@clientId',
-        domain: '@domain',
-        audience: '@audience',
-                scope: 'all',
-        //useRefreshTokens: true,
-        cacheKey: "@@auth0Key",
-        salt: "imahappypotato"
-    }
+            domain: '@domain',
+            audience: '@audience',
+                    scope: 'all',
+            //useRefreshTokens: true,
+            cacheKey: "@@auth0Key",
+            salt: "imahappypotato"
+        };
 
     InitCustomElsa(elsaStudioRoot, customActivities, auth0ClientOptions)
 </script>

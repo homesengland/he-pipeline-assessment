@@ -1,10 +1,9 @@
-import axios from "axios";
 import state from '../stores/store';
 import { createAuth0Client } from '@auth0/auth0-spa-js';
 import { StoreStatus } from "../constants/constants";
 export class IntellisenseGatherer {
     constructor() {
-        this._httpClient = null;
+    this._fetchWithAuth = null;
         this._baseUrl = null;
         this.context = {
             activityTypeName: "",
@@ -73,30 +72,32 @@ export class IntellisenseGatherer {
         state.javaScriptTypeDefinitions = intellisense;
     }
     async getJavaScriptTypeDefinitions(workflowDefinitionId, context) {
-        let httpClient = await this.createHttpClient();
-        const response = await httpClient.post(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
-        return response.data;
+        const fetchWithAuth = await this.createHttpClient();
+        const resp = await fetchWithAuth(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+            body: JSON.stringify(context)
+        });
+        if (!resp.ok)
+            throw new Error('Failed to fetch type definitions');
+        return await resp.text();
     }
     async createHttpClient() {
         await this.getAuth0Client();
-        if (!!this._httpClient) {
-            return this._httpClient;
+        if (!!this._fetchWithAuth) {
+            return this._fetchWithAuth;
         }
         const token = await this.auth0.getTokenSilently();
-        let config;
-        if (!!token) {
-            config = {
-                baseURL: this._baseUrl,
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` }
-            };
-        }
-        else {
-            config = {
-                baseURL: this._baseUrl,
-                headers: { 'Content-Type': `application/json; charset=UTF-8` },
-            };
-        }
-        this._httpClient = axios.create(config);
-        return this._httpClient;
+        const defaultHeaders = { 'Content-Type': 'application/json; charset=UTF-8' };
+        if (token)
+            defaultHeaders['Authorization'] = `Bearer ${token}`;
+        const base = this._baseUrl;
+        const fetchWithAuth = (input, init = {}) => {
+            const url = input.startsWith('http') ? input : `${base}${input}`;
+            const headers = Object.assign(Object.assign({}, defaultHeaders), (init.headers || {}));
+            return fetch(url, Object.assign(Object.assign({}, init), { headers }));
+        };
+        this._fetchWithAuth = fetchWithAuth;
+        return fetchWithAuth;
     }
 }

@@ -32,10 +32,19 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="src\custom\components\widget\**" />
+    <Content Remove="src\custom\components\widget\**" />
+    <EmbeddedResource Remove="src\custom\components\widget\**" />
+    <None Remove="src\custom\components\widget\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Remove="RequestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Elsa.CustomInfrastructure\Elsa.CustomInfrastructure.csproj" />
     <ProjectReference Include="..\Elsa.CustomWorkflow.Sdk\Elsa.CustomWorkflow.Sdk.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\elsa-workflows-studio\" />
   </ItemGroup>
 </Project>

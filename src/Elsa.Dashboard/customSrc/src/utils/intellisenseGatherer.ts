@@ -1,12 +1,12 @@
 import { IntellisenseContext } from "../models/elsa-interfaces";
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+// Removed axios import, using Fetch API instead
 import state from '../stores/store';
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
 import { StoreStatus } from "../constants/constants";
 
 
 export class IntellisenseGatherer {
-  private _httpClient: AxiosInstance = null;
+  private _fetchWithAuth: ((input: string, init?: RequestInit) => Promise<Response>) | null = null;
   private _baseUrl: string = null;
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
@@ -95,34 +95,35 @@ export class IntellisenseGatherer {
 
 
   private async getJavaScriptTypeDefinitions(workflowDefinitionId: string, context?: IntellisenseContext): Promise<string> {
-    let httpClient = await this.createHttpClient();
-    const response = await httpClient.post<string>(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
-    return response.data;
+    const fetchWithAuth = await this.createHttpClient();
+    const url = `v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`;
+    const response = await fetchWithAuth(url, {
+      method: 'POST',
+      body: JSON.stringify(context),
+    });
+    if (!response.ok) throw new Error('Failed to fetch type definitions');
+    return await response.text();
   }
 
-  private async createHttpClient(): Promise<AxiosInstance> {
-
+  private async createHttpClient(): Promise<(input: string, init?: RequestInit) => Promise<Response>> {
     await this.getAuth0Client();
-
-    if (!!this._httpClient) {
-      return this._httpClient;
+    if (this._fetchWithAuth) {
+      return this._fetchWithAuth;
     }
     const token = await this.auth0.getTokenSilently();
-
-    let config: AxiosRequestConfig;
-    if (!!token) {
-      config = {
-        baseURL: this._baseUrl,
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` }
-      };
-    } else {
-      config = {
-        baseURL: this._baseUrl,
-        headers: { 'Content-Type': `application/json; charset=UTF-8` },
-      };
+    const defaultHeaders: Record<string, string> = {
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    if (token) {
+      defaultHeaders['Authorization'] = `Bearer ${token}`;
     }
-    this._httpClient = axios.create(config);
-
-    return this._httpClient;
+    const baseUrl = this._baseUrl;
+    const fetchWithAuth = (input: string, init: RequestInit = {}) => {
+      const url = input.startsWith('http') ? input : `${baseUrl}${input}`;
+      const headers = { ...defaultHeaders, ...(init.headers || {}) };
+      return fetch(url, { ...init, headers });
+    };
+    this._fetchWithAuth = fetchWithAuth;
+    return fetchWithAuth;
   }
 }

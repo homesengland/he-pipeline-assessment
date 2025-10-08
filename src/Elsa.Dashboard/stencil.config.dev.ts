@@ -4,7 +4,7 @@ export const config: Config = {
   namespace: 'elsa-workflows-studio',
   outputTargets: [
     {
-      type: 'www',
+      type: 'dist',
       serviceWorker: null, // disable service workers,
       copy: [
         {src: 'assets', dest: 'build/assets'},

@@ -44,6 +44,7 @@ export const config: Config = {
       ]
     },
   ],
+  enableCache: true, //Added to try and improve performance
   globalStyle: 'src/globals/tailwind.css',
   plugins: tailwindDev
     ? []

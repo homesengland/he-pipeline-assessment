@@ -1,7 +1,7 @@
 ﻿import {PluginManager, ActivityIconProvider, ConfirmDialogService, PropertyDisplayManager} from "../services";
 import {ElsaClient, ToastNotificationService} from "../services";
 import EventBus from "../services/custom-event-bus";
-import {AxiosInstance} from "axios";
+// Removed AxiosInstance import; using a fetch factory instead
 import {ActivityDefinitionProperty} from "./domain";
 import {ActivityModel} from "./view";
 
@@ -14,7 +14,7 @@ export interface ElsaStudio {
   pluginManager: PluginManager;
   propertyDisplayManager: PropertyDisplayManager;
   elsaClientFactory: () => Promise<ElsaClient>;
-  httpClientFactory: () => Promise<AxiosInstance>;
+  httpClientFactory: () => Promise<(input: string, init?: RequestInit) => Promise<Response>>;
   eventBus: EventBus;
   activityIconProvider: ActivityIconProvider;
   confirmDialogService: ConfirmDialogService;

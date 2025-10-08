@@ -1,6 +1,6 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
-import {Service} from 'axios-middleware';
+// Removed axios & axios-middleware in favor of Fetch API
 import * as collection from 'lodash/collection';
+import { createBaseFetch, fetchJson, sendJson, sendFormData, fetchBlob } from './fetch-client';
 import {eventBus} from './event-bus';
 import {
   ActivityDefinition,
@@ -26,23 +26,49 @@ import {
   WorkflowStorageDescriptor
 } from "../models";
 
-let _httpClient: AxiosInstance = null;
+let _fetchWithBase: ((input: string, init?: RequestInit) => Promise<Response>) | null = null;
 let _elsaClient: ElsaClient = null;
 
-export const createHttpClient = async function (baseAddress: string): Promise<AxiosInstance> {
-  if (!!_httpClient)
-    return _httpClient;
+export const createHttpClient = async function (baseAddress: string): Promise<(input: string, init?: RequestInit) => Promise<Response>> {
+  if (_fetchWithBase)
+    return _fetchWithBase;
 
-  const config: AxiosRequestConfig = {
-    baseURL: baseAddress
+  // Ensure the base address ends with a single trailing slash for consistent URL joining.
+  const normalizedBase = baseAddress ? (baseAddress.endsWith('/') ? baseAddress : baseAddress + '/') : '/';
+  const config = { baseURL: normalizedBase };
+  await eventBus.emit(EventTypes.HttpClientConfigCreated, this, { config });
+
+  const requestInterceptors: Array<(url: string, init: RequestInit) => Promise<[string, RequestInit]> | [string, RequestInit]> = [];
+
+  const applyInterceptors = async (url: string, init: RequestInit): Promise<[string, RequestInit]> => {
+    let currentUrl = url;
+    let currentInit: RequestInit = init;
+    for (const interceptor of requestInterceptors) {
+      const result = await interceptor(currentUrl, currentInit);
+      currentUrl = result[0];
+      currentInit = result[1];
+    }
+    return [currentUrl, currentInit];
   };
-  _httpClient = axios.create(config);
-  const service = new Service(_httpClient);
 
-  await eventBus.emit(EventTypes.HttpClientConfigCreated, this, {config});
-  await eventBus.emit(EventTypes.HttpClientCreated, this, {service, _httpClient});
+  const fetchWithBase = async (input: string, init: RequestInit = {}) => {
+    if (input.startsWith('http')) {
+      const [outUrl, outInit] = await applyInterceptors(input, init);
+      return fetch(outUrl, outInit);
+    }
+    const relative = input.startsWith('/') ? input.slice(1) : input;
+    const url = normalizedBase + relative;
+    const [outUrl, outInit] = await applyInterceptors(url, init);
+    return fetch(outUrl, outInit);
+  };
 
-  return _httpClient;
+  const registerRequestInterceptor = (fn: (url: string, init: RequestInit) => Promise<[string, RequestInit]> | [string, RequestInit]) => {
+    requestInterceptors.push(fn);
+  };
+
+  await eventBus.emit(EventTypes.HttpClientCreated, this, { fetch: fetchWithBase, registerRequestInterceptor });
+  _fetchWithBase = fetchWithBase;
+  return fetchWithBase;
 }
 
 export const createElsaClient = async function (serverUrl: string): Promise<ElsaClient> {
@@ -50,13 +76,16 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
   if (!!_elsaClient)
     return _elsaClient;
 
-  const httpClient: AxiosInstance = await createHttpClient(serverUrl);
+  const httpClient = await createHttpClient(serverUrl);
+  const getJson = <T>(url: string) => fetchJson<T>(httpClient, url);
+  const sendJsonReq = <T>(method: string, url: string, body?: any) => sendJson<T>(httpClient, method, url, body);
+  const postFormData = <T>(url: string, form: FormData) => sendFormData<T>(httpClient, url, form, 'POST');
+  const postGetBlob = (url: string) => fetchBlob(httpClient, 'POST', url);
 
   _elsaClient = {
     activitiesApi: {
       list: async () => {
-        const response = await httpClient.get<Array<ActivityDescriptor>>('v1/activities');
-        return response.data;
+        return await getJson<Array<ActivityDescriptor>>('v1/activities');
       }
     },
     workflowDefinitionsApi: {
@@ -76,27 +105,23 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
-        const response = await httpClient.get<PagedList<WorkflowDefinitionSummary>>(`v1/workflow-definitions${queryStringText}`);
-
-        return response.data;
+        return await getJson<PagedList<WorkflowDefinitionSummary>>(`v1/workflow-definitions${queryStringText}`);
       },
       getMany: async (ids: Array<string>, versionOptions?: VersionOptions) => {
         const versionOptionsString = getVersionOptionsString(versionOptions);
-        const response = await httpClient.get<ListModel<WorkflowDefinitionSummary>>(`v1/workflow-definitions?ids=${ids.join(',')}&version=${versionOptionsString}`);
-        return response.data.items;
+        const response = await getJson<ListModel<WorkflowDefinitionSummary>>(`v1/workflow-definitions?ids=${ids.join(',')}&version=${versionOptionsString}`);
+        return response.items;
       },
       getVersionHistory: async (definitionId: string): Promise<Array<WorkflowDefinitionVersion>> => {
-        const response = await httpClient.get<ListModel<WorkflowDefinitionVersion>>(`v1/workflow-definitions/${definitionId}/history`);
-        return response.data.items;
+        const response = await getJson<ListModel<WorkflowDefinitionVersion>>(`v1/workflow-definitions/${definitionId}/history`);
+        return response.items;
       },
       getByDefinitionAndVersion: async (definitionId: string, versionOptions: VersionOptions) => {
         const versionOptionsString = getVersionOptionsString(versionOptions);
-        const response = await httpClient.get<WorkflowDefinition>(`v1/workflow-definitions/${definitionId}/${versionOptionsString}`);
-        return response.data;
+        return await getJson<WorkflowDefinition>(`v1/workflow-definitions/${definitionId}/${versionOptionsString}`);
       },
       save: async request => {
-        const response = await httpClient.post<WorkflowDefinition>('v1/workflow-definitions', request);
-        return response.data;
+  return await sendJsonReq<WorkflowDefinition>('POST','v1/workflow-definitions', request);
       },
       delete: async (definitionId, versionOptions?: VersionOptions) => {
 
@@ -107,29 +132,26 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
           path = `${path}/${versionOptionsString}`;
         }
 
-        await httpClient.delete(path);
+        await httpClient(path, { method: 'DELETE' });
       },
       retract: async workflowDefinitionId => {
-        const response = await httpClient.post<WorkflowDefinition>(`v1/workflow-definitions/${workflowDefinitionId}/retract`);
-        return response.data;
+  return await sendJsonReq<WorkflowDefinition>('POST', `v1/workflow-definitions/${workflowDefinitionId}/retract`);
       },
       publish: async workflowDefinitionId => {
-        const response = await httpClient.post<WorkflowDefinition>(`v1/workflow-definitions/${workflowDefinitionId}/publish`);
-        return response.data;
+  return await sendJsonReq<WorkflowDefinition>('POST', `v1/workflow-definitions/${workflowDefinitionId}/publish`);
       },
       revert: async (workflowDefinitionId, version) => {
-        const response = await httpClient.post<WorkflowDefinition>(`v1/workflow-definitions/${workflowDefinitionId}/revert/${version}`);
-        return response.data;
+  return await sendJsonReq<WorkflowDefinition>('POST', `v1/workflow-definitions/${workflowDefinitionId}/revert/${version}`);
       },
       export: async (workflowDefinitionId, versionOptions): Promise<ExportWorkflowResponse> => {
         const versionOptionsString = getVersionOptionsString(versionOptions);
-        const response = await httpClient.post(`v1/workflow-definitions/${workflowDefinitionId}/${versionOptionsString}/export`, null, {
-          responseType: 'blob'
-        });
-
-        const contentDispositionHeader = response.headers["content-disposition"]; // Only available if the Elsa Server exposes the "Content-Disposition" header.
-        const fileName = contentDispositionHeader ? contentDispositionHeader.split(";")[1].split("=")[1] : `workflow-definition-${workflowDefinitionId}.json`;
-        const data = response.data;
+  const blob = await postGetBlob(`v1/workflow-definitions/${workflowDefinitionId}/${versionOptionsString}/export`);
+        // Fetch lower-cases headers via get() API
+        // Content-Disposition may not be exposed unless configured on CORS
+        const resp = new Response(blob); // placeholder to reuse logic if needed
+        const contentDispositionHeader = resp.headers.get('content-disposition');
+        const fileName = contentDispositionHeader ? contentDispositionHeader.split(';')[1].split('=')[1] : `workflow-definition-${workflowDefinitionId}.json`;
+        const data = blob;
 
         return {
           fileName: fileName,
@@ -139,33 +161,23 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
       import: async (workflowDefinitionId, file: File): Promise<WorkflowDefinition> => {
         const formData = new FormData();
         formData.append("file", file);
-        const response = await httpClient.post<WorkflowDefinition>(`v1/workflow-definitions/${workflowDefinitionId}/import`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-        return response.data;
+  return await postFormData<WorkflowDefinition>(`v1/workflow-definitions/${workflowDefinitionId}/import`, formData);
       },
       restore: async (file: File): Promise<void> => {
         const formData = new FormData();
         formData.append("file", file);
-        await httpClient.post(`v1/workflow-definitions/restore`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+        await httpClient(`v1/workflow-definitions/restore`, { method: 'POST', body: formData });
       }
     },
     workflowTestApi: {
       execute: async (request) => {
-        const response = await httpClient.post<WorkflowTestExecuteResponse>(`v1/workflow-test/execute`, request);
-        return response.data;
+  return await sendJsonReq<WorkflowTestExecuteResponse>('POST', `v1/workflow-test/execute`, request);
       },
       restartFromActivity: async (request) => {
-        await httpClient.post<void>(`v1/workflow-test/restartFromActivity`, request);
+  await sendJsonReq<void>('POST', `v1/workflow-test/restartFromActivity`, request);
       },
       stop: async (request) => {
-        await httpClient.post<void>(`v1/workflow-test/stop`, request);
+  await sendJsonReq<void>('POST', `v1/workflow-test/stop`, request);
       }
     },
     workflowRegistryApi: {
@@ -182,8 +194,7 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
-        const response = await httpClient.get<PagedList<WorkflowBlueprintSummary>>(`v1/workflow-registry/by-provider/${providerName}${queryStringText}`);
-        return response.data;
+        return await getJson<PagedList<WorkflowBlueprintSummary>>(`v1/workflow-registry/by-provider/${providerName}${queryStringText}`);
       },
       listAll: async (versionOptions?: VersionOptions): Promise<Array<WorkflowBlueprintSummary>> => {
         const queryString = {
@@ -192,8 +203,7 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
-        const response = await httpClient.get<Array<WorkflowBlueprintSummary>>(`v1/workflow-registry${queryStringText}`);
-        return response.data;
+        return await getJson<Array<WorkflowBlueprintSummary>>(`v1/workflow-registry${queryStringText}`);
       },
       findManyByDefinitionVersionIds: async (definitionVersionIds: Array<string>): Promise<Array<WorkflowBlueprintSummary>> => {
 
@@ -201,14 +211,12 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
           return [];
 
         const idsQuery = definitionVersionIds.join(",")
-        const response = await httpClient.get<Array<WorkflowBlueprintSummary>>(`v1/workflow-registry/by-definition-version-ids?ids=${idsQuery}`);
-        return response.data;
+        return await getJson<Array<WorkflowBlueprintSummary>>(`v1/workflow-registry/by-definition-version-ids?ids=${idsQuery}`);
       },
 
       get: async (id: string, versionOptions: VersionOptions) => {
         const versionOptionsString = getVersionOptionsString(versionOptions);
-        const response = await httpClient.get<WorkflowBlueprint>(`v1/workflow-registry/${id}/${versionOptionsString}`);
-        return response.data;
+        return await getJson<WorkflowBlueprint>(`v1/workflow-registry/${id}/${versionOptionsString}`);
       }
     },
     workflowInstancesApi: {
@@ -238,35 +246,31 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
-        const response = await httpClient.get<PagedList<WorkflowInstanceSummary>>(`v1/workflow-instances${queryStringText}`);
-        return response.data;
+        return await getJson<PagedList<WorkflowInstanceSummary>>(`v1/workflow-instances${queryStringText}`);
       },
       get: async id => {
-        const response = await httpClient.get(`v1/workflow-instances/${id}`);
-        return response.data;
+        return await getJson<WorkflowInstance>(`v1/workflow-instances/${id}`);
       },
       cancel: async id => {
-        await httpClient.post(`v1/workflow-instances/${id}/cancel`);
+  await sendJsonReq<void>('POST', `v1/workflow-instances/${id}/cancel`);
       },
       delete: async id => {
-        await httpClient.delete(`v1/workflow-instances/${id}`);
+        await httpClient(`v1/workflow-instances/${id}`, { method: 'DELETE' });
       },
       retry: async id => {
-        await httpClient.post(`v1/workflow-instances/${id}/retry`, {runImmediately: false});
+  await sendJsonReq<void>('POST', `v1/workflow-instances/${id}/retry`, { runImmediately: false });
       },
       bulkCancel: async request => {
-        const response = await httpClient.post(`v1/workflow-instances/bulk/cancel`, request);
-        return response.data;
+  return await sendJsonReq<any>('POST', `v1/workflow-instances/bulk/cancel`, request);
       },
       bulkDelete: async request => {
-        const response = await httpClient.delete(`v1/workflow-instances/bulk`, {
-          data: request
-        });
-        return response.data;
+        // Emulate axios delete with body (not standard, but some servers allow). Using fetch with method DELETE and JSON body.
+        const resp = await httpClient(`v1/workflow-instances/bulk`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) });
+        if(!resp.ok) throw new Error('DELETE bulk workflow-instances failed');
+        return await resp.json();
       },
       bulkRetry: async request => {
-        const response = await httpClient.post(`v1/workflow-instances/bulk/retry`, request);
-        return response.data;
+  return await sendJsonReq<any>('POST', `v1/workflow-instances/bulk/retry`, request);
       }
     },
     workflowExecutionLogApi: {
@@ -281,76 +285,67 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
 
         const queryStringItems = collection.map(queryString, (v, k) => `${k}=${v}`);
         const queryStringText = queryStringItems.length > 0 ? `?${queryStringItems.join('&')}` : '';
-        const response = await httpClient.get(`v1/workflow-instances/${workflowInstanceId}/execution-log${queryStringText}`);
-        return response.data;
+        return await getJson<PagedList<WorkflowExecutionLogRecord>>(`v1/workflow-instances/${workflowInstanceId}/execution-log${queryStringText}`);
       }
     },
     scriptingApi: {
       getJavaScriptTypeDefinitions: async (workflowDefinitionId: string, context?: IntellisenseContext): Promise<string> => {
-        const response = await httpClient.post<string>(`v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
-        return response.data;
+  return await sendJsonReq<string>('POST', `v1/scripting/javascript/type-definitions/${workflowDefinitionId}?t=${new Date().getTime()}`, context);
       }
     },
     designerApi: {
       runtimeSelectItemsApi: {
         get: async (providerTypeName: string, context?: any): Promise<SelectList> => {
-          const response = await httpClient.post('v1/designer/runtime-select-list', {
-            providerTypeName: providerTypeName,
-            context: context
+          return await sendJsonReq<SelectList>('POST', 'v1/designer/runtime-select-list', {
+            providerTypeName,
+            context
           });
-          return response.data;
         }
       }
     },
     activityStatsApi: {
       get: async (workflowInstanceId: string, activityId?: any): Promise<ActivityStats> => {
-        const response = await httpClient.get(`v1/workflow-instances/${workflowInstanceId}/activity-stats/${activityId}`);
-        return response.data;
+        return await getJson<ActivityStats>(`v1/workflow-instances/${workflowInstanceId}/activity-stats/${activityId}`);
       }
     },
     workflowStorageProvidersApi: {
       list: async () => {
-        const response = await httpClient.get<Array<WorkflowStorageDescriptor>>('v1/workflow-storage-providers');
-        return response.data;
+        return await getJson<Array<WorkflowStorageDescriptor>>('v1/workflow-storage-providers');
       }
     },
     workflowProvidersApi: {
       list: async () => {
-        const response = await httpClient.get<Array<WorkflowProviderDescriptor>>('v1/workflow-providers');
-        return response.data;
+        return await getJson<Array<WorkflowProviderDescriptor>>('v1/workflow-providers');
       }
     },
     workflowChannelsApi: {
       list: async () => {
-        const response = await httpClient.get<Array<string>>('v1/workflow-channels');
-        return response.data;
+        return await getJson<Array<string>>('v1/workflow-channels');
       }
     },
     featuresApi: {
       list: async () => {
-        const response = await httpClient.get<FeaturesModel>('v1/features');
-        return response.data.features;
+        const response = await getJson<FeaturesModel>('v1/features');
+        return response.features;
       }
     },
     versionApi: {
       get: async () => {
-        const response = await httpClient.get<VersionModel>('v1/version');
-        return response.data.version;
+        const response = await getJson<VersionModel>('v1/version');
+        return response.version;
       }
     },
     authenticationApi:{
       getUserDetails: async () => {
-        const response = await httpClient.get<UserDetail>('v1/elsaAuthentication/userinfo');
-        if("text/html; charset=utf-8" !== response.headers['content-type'] && response.data.isAuthenticated)
-          {
-            return response.data;
-          }else{
-            return null;
-          }
+        const resp = await httpClient('v1/elsaAuthentication/userinfo');
+        if(!resp.ok) return null;
+        const contentType = resp.headers.get('content-type');
+        if(contentType === 'text/html; charset=utf-8') return null;
+        const data: UserDetail = await resp.json();
+        return data.isAuthenticated ? data : null;
       },
       getAuthenticationConfguration: async () => {
-        const response = await httpClient.get<AuthenticationConfguration>('v1/ElsaAuthentication/options');
-        return response.data;
+        return await getJson<AuthenticationConfguration>('v1/ElsaAuthentication/options');
       }
     }
   }
