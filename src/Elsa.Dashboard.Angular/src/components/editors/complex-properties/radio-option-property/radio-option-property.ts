@@ -57,7 +57,7 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   // expressionChanged: ReturnType<typeof output<EventEmitter<string>>>;
   // expressionChanged: ReturnType<typeof output<string>>;
   expressionChanged: EventEmitter<string> = new EventEmitter<string>();
-  dictionary: Map<string> = {};
+  
 
   switchTextHeight: string = '';
   editorHeight: string = '2.75em';
@@ -67,6 +67,10 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   syntaxSwitchCount: number = 0;
   // container: HTMLElement; //// From previous Sortable Component
   @ViewChild('containerTable', { static: false }) container: ElementRef<HTMLTableElement>;
+
+  // Variables from display-toggle.component.ts
+  // dictionary: Map<string> = {};
+  public dictionary: { [key: string]: any } = {};
   displayValue: string = 'table-row';
   hiddenValue: string = 'none';
 
@@ -156,16 +160,11 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
     this.updateCaseEditors();
   }
 
-  //onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
-  //  console.log('Delete clicked', switchCase);
-  //  this.properties = this.properties.filter(x => x != switchCase);
-  //  this.updatePropertyModel();
-  //  this.updateCaseEditors();
-  //}
-
-  onDeleteOptionClick(e: Event) {
-    console.log("Delete Click Event", e);
-
+  onDeleteOptionClick(switchCase: NestedActivityDefinitionProperty) {
+    console.log('Delete clicked', switchCase);
+    this.properties = this.properties.filter(x => x != switchCase);
+    this.updatePropertyModel();
+    this.updateCaseEditors();
   }
 
   onMultiExpressionEditorValueChanged(e: any) {
@@ -185,6 +184,8 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
   }
 
   onToggleOptions(index: number) {
+    console.log(`Clicked Options and the current index is ${index}`); // THIS FUNCTION IS BEING CALLED from the click event
+
     this.onToggleDisplay(index);
   }
 
@@ -344,13 +345,14 @@ export class RadioOptionProperty implements OnInit, AfterViewInit {
     const cases = this.properties;
     const supportedSyntaxes = this.supportedSyntaxes;
     this.json = JSON.stringify(cases, null, 2);
+
     this.caseEditors = cases.map((radioOption: NestedActivityDefinitionProperty, index: number) => {
       const expression = radioOption.expressions[radioOption.syntax];
       const syntax = radioOption.syntax;
-      const radioOptionObject = radioOption;
       const monacoLanguage = mapSyntaxToLanguage(syntax);
       const prePopulatedSyntax = SyntaxNames.JavaScript;
       const prePopulatedExpression = radioOption.expressions[RadioOptionsSyntax.PrePopulated];
+      const radioOptionObject = radioOption;
 
       const prePopulatedLanguage = mapSyntaxToLanguage(prePopulatedSyntax);
 

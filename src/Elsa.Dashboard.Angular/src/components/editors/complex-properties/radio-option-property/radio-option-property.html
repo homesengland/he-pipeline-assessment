@@ -6,8 +6,8 @@
                            [context]="context"
                            [expressions]="{ Json: json }"
                            editor-height="20rem"
-                           (expressionChanged)="this.onMultiExpressionEditorValueChanged($event)"
-                           (syntaxChanged)="this.onMultiExpressionEditorSyntaxChanged($event)">
+                           (expressionChanged)="onMultiExpressionEditorValueChanged($event)"
+                           (syntaxChanged)="onMultiExpressionEditorSyntaxChanged($event)">
 
     <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200"
            #containerTable>
@@ -19,11 +19,11 @@
             </th>
             <td></td>
             <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
-              <button type="button"
-                      (click)="onDeleteOptionClick($event)"
-                      class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+                <button type="button"
+                      (click)="onDeleteOptionClick(caseEditor.radioOption)"
+                        class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
                 <span [innerHTML]="activityIconProvider.getIcon('TrashBinOutline', null)"></span>
-              </button>
+                </button>
             </td>
           </tr>
           <tr>
