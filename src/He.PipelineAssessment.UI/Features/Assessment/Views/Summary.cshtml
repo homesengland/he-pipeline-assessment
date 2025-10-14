@@ -12,7 +12,16 @@
 }
 
 @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
-<span class="govuk-caption-l">@Model.Reference - @Model.SensitiveStatus</span>
+
+@if(Model.SensitiveStatus != null)
+{
+    <span class="govuk-caption-l">@Model.Reference - @Model.SensitiveStatus</span>
+} 
+else
+{
+    <span class="govuk-caption-l">@Model.Reference</span>
+}
+
 <h1 class="govuk-heading-l">@Model.SiteName</h1>
 
 <table class="govuk-body">
