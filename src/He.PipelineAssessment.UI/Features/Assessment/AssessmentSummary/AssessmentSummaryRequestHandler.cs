@@ -113,6 +113,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     StagesHistory = stagesHistory,
                     LocalAuthority = dbAssessment.LocalAuthority,
                     ProjectManager = dbAssessment.ProjectManager,
+                    SensitiveStatus = dbAssessment.SensitiveStatus,
                     Interventions = interventions,
                     BusinessArea = dbAssessment.BusinessArea,
                     HasValidBusinessArea = hasValidBusinessArea,
