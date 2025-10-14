@@ -12,7 +12,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public string Reference { get; set; } = null!;
         public string? LocalAuthority { get; set; }
         public string? BusinessArea { get; set; }
-        public string? ProjectManager { get; set; }   
+        public string? ProjectManager { get; set; }
+        public string? SensitiveStatus { get; set; }
         public bool HasValidBusinessArea { get; set; }
         public List<string>? BusinessAreaMessage { get; set; }
         public IEnumerable<AssessmentSummaryStage> Stages { get; set; } = null!;
