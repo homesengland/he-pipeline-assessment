@@ -2,7 +2,7 @@ import {Component, Event, h, Host, Method, Prop, State, Watch} from '@stencil/co
 import {eventBus} from '../../../../../../services/event-bus';
 import {EventTypes, WebhookDefinition} from "../../../../models";
 import {createElsaWebhooksClient, SaveWebhookDefinitionRequest} from "../../../../services/elsa-client";
-import {RouterHistory} from '@stencil/router';
+import {RouterHistory} from '@stencil-community/router';
 import {checkBox, FormContext, textArea, textInput} from "../../../../../../utils/forms";
 import Tunnel from "../../../../../../data/dashboard";
 
@@ -43,12 +43,12 @@ export class ElsaWebhookDefinitionEditorScreen {
   }
 
   @Watch('webhookId')
-  async webhookIdChangedHandler(newValue: string) {    
-    
+  async webhookIdChangedHandler(newValue: string) {
+
     const webhookId = newValue;
     let webhookDefinition: WebhookDefinition = ElsaWebhookDefinitionEditorScreen.createWebhookDefinition();
-    webhookDefinition.id = webhookId;    
-    const client = createElsaWebhooksClient(this.serverUrl);
+    webhookDefinition.id = webhookId;
+  const client = await createElsaWebhooksClient(this.serverUrl);
 
     if (webhookId && webhookId.length > 0) {
       try {
@@ -76,16 +76,16 @@ export class ElsaWebhookDefinitionEditorScreen {
   }
 
   async saveWebhook() {
-    
+
     if (!this.serverUrl || this.serverUrl.length == 0)
       return;
 
-    const client = createElsaWebhooksClient(this.serverUrl);
-    
+  const client = await createElsaWebhooksClient(this.serverUrl);
+
     let webhookDefinition = this.webhookDefinitionInternal;
 
     const request: SaveWebhookDefinitionRequest = {
-      id: webhookDefinition.id || this.webhookId,      
+      id: webhookDefinition.id || this.webhookId,
       name: webhookDefinition.name,
       path: webhookDefinition.path,
       description: webhookDefinition.description,
@@ -104,9 +104,9 @@ export class ElsaWebhookDefinitionEditorScreen {
       this.saving = false;
       this.saved = true;
       setTimeout(() => this.saved = false, 500);
-    } 
+    }
     catch (e) {
-      console.error(e);    
+      console.error(e);
       this.saving = false;
       this.saved = false;
       this.networkError = e.message;
@@ -131,24 +131,24 @@ export class ElsaWebhookDefinitionEditorScreen {
     document.location.pathname = path;
   }
 
-  async onSaveClicked(e: Event) {    
+  async onSaveClicked(e: Event) {
     e.preventDefault();
-    
+
     await this.saveWebhook();
-    eventBus.emit(EventTypes.WebhookSaved, this, this.webhookDefinitionInternal);    
+    eventBus.emit(EventTypes.WebhookSaved, this, this.webhookDefinitionInternal);
 
     const anchor = e.currentTarget as HTMLAnchorElement;
 
-    this.sleep(1000).then(() => { 
+    this.sleep(1000).then(() => {
       this.navigate(`/webhook-definitions`);
     });
-  } 
+  }
 
   render() {
 
     return (
       <Host class="elsa-flex elsa-flex-col elsa-w-full" ref={el => this.el = el}>
-        
+
           <form onSubmit={e => this.onSaveClicked(e)}>
             <div class="elsa-px-8 mb-8">
               <div class="elsa-border-b elsa-border-gray-200">
@@ -159,13 +159,13 @@ export class ElsaWebhookDefinitionEditorScreen {
             {this.renderCanvas()}
 
           </form>
-        
+
       </Host>
     );
   }
 
   renderWebhookFields() {
-        
+
     const webhookDefinition = this.webhookDefinitionInternal;
     const formContext = this.formContext;
 
@@ -193,7 +193,7 @@ export class ElsaWebhookDefinitionEditorScreen {
                     </div>
 
                     <div class="elsa-col-span-4">
-                      {textInput(formContext, 'path', 'Path', webhookDefinition.path, 'The path of the webhook.', 'webhookPath')}                  
+                      {textInput(formContext, 'path', 'Path', webhookDefinition.path, 'The path of the webhook.', 'webhookPath')}
                     </div>
 
                     <div class="elsa-col-span-4">
@@ -216,7 +216,7 @@ export class ElsaWebhookDefinitionEditorScreen {
                       Save
                     </button>
                 </div>
-                
+
               </div>
             </section>
           </div>
@@ -239,7 +239,7 @@ export class ElsaWebhookDefinitionEditorScreen {
         </div>
       </div>
     );
-  }  
+  }
 
   renderSavingIndicator() {
 

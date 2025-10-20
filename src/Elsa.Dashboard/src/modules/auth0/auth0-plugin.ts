@@ -1,5 +1,4 @@
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, RedirectLoginOptions} from '@auth0/auth0-spa-js';
-import {Service} from 'axios-middleware';
 import {eventBus, ElsaPlugin} from "../../services";
 import { EventTypes } from "../../models";
 import { Browser } from '@capacitor/browser';
@@ -58,18 +57,14 @@ export class Auth0Plugin implements ElsaPlugin {
   };
 
   private configureAuthMiddleware = async (e: any) => {
-
-    const service: Service = e.service;
+    const service = e.service;
     const auth0 = this.auth0;
-
     service.register({
       async onRequest(request) {
-
-        // Get a (cached) access token.
         const token = await auth0.getTokenSilently();
-
-        if(!!token)
-          request.headers = {...request.headers, 'Authorization': `Bearer ${token}`};
+        if (token) {
+          request.headers = { ...(request.headers || {}), 'Authorization': `Bearer ${token}` };
+        }
         return request;
       }
     });

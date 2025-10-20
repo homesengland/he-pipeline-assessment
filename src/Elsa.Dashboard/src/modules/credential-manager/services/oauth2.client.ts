@@ -1,5 +1,4 @@
-import { AxiosInstance } from "axios";
-import { createHttpClient } from '../../../services';
+import { createHttpClient } from '../../../services/elsa-client';
 
 let _elsaOauth2Client: ElsaOauth2Client = null;
 
@@ -8,7 +7,7 @@ export const createElsaOauth2Client = async function (serverUrl: string): Promis
   if (!!_elsaOauth2Client)
     return _elsaOauth2Client;
 
-  const httpClient: AxiosInstance = await createHttpClient(serverUrl);
+  const httpClient = await createHttpClient(serverUrl);
 
   _elsaOauth2Client = {
     oauth2Api: {

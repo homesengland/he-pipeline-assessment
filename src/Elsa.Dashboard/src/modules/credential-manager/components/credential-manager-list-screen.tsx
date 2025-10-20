@@ -1,5 +1,5 @@
 import { Component, h, Prop, State } from "@stencil/core";
-import { RouterHistory } from "@stencil/router";
+import { RouterHistory } from "@stencil-community/router";
 import {  eventBus } from "../../..";
 import { WebhookDefinitionSummary } from "../../elsa-webhooks/models";
 import Tunnel from "../../../data/dashboard";

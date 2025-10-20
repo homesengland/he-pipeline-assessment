@@ -81,7 +81,7 @@ export class ElsaContextMenu {
                     data-transition-enter-start="elsa-transform elsa-opacity-0 elsa-scale-95"
                     data-transition-leave="elsa-transition elsa-ease-in elsa-duration-75"
                     data-transition-leave-start="elsa-transform elsa-opacity-100 elsa-scale-100"
-                    data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"            
+                    data-transition-leave-end="elsa-transform elsa-opacity-0 elsa-scale-95"
                     class={`hidden ${originClass} elsa-z-10 elsa-absolute elsa-mt-2 elsa-w-56 elsa-rounded-md elsa-shadow-lg elsa-bg-white elsa-ring-1 elsa-ring-black elsa-ring-opacity-5`}>
             <div class="elsa-py-1" role="menu" aria-orientation="vertical">
                 {this.renderItems()}
@@ -94,7 +94,7 @@ export class ElsaContextMenu {
             const selectedCssClass = item.isSelected ? "elsa-bg-blue-600 hover:elsa-bg-blue-700 elsa-text-white" : "hover:elsa-bg-gray-100 elsa-text-gray-700 hover:elsa-text-gray-900";
 
             return !!item.url
-                ? <stencil-route-link onClick={e => this.closeContextMenu()} url={item.url} anchorClass={`elsa-block elsa-px-4 elsa-py-2 elsa-text-sm ${selectedCssClass} elsa-cursor-pointer`} role="menuitem">{item.text}</stencil-route-link>
+                ? <elsa-nav-link onClick={e => this.closeContextMenu()} url={item.url} anchorClass={`elsa-block elsa-px-4 elsa-py-2 elsa-text-sm ${selectedCssClass} elsa-cursor-pointer`} role="menuitem">{item.text}</elsa-nav-link>
                 : <a href="#" onClick={e => this.onItemClick(e, item)} class={`elsa-block elsa-px-4 elsa-py-2 elsa-text-sm ${selectedCssClass}`} role="menuitem">{item.text}</a>;
         })
     }

@@ -1,5 +1,5 @@
 import { Component, Event, EventEmitter, h, Host, Listen, Method, Prop, State, Watch } from '@stencil/core';
-import { injectHistory, RouterHistory } from '@stencil/router';
+import { injectHistory, RouterHistory } from '@stencil-community/router';
 import {
   ActivityDefinition,
   ActivityDescriptor,

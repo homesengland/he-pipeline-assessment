@@ -1,5 +1,5 @@
 import {Component, Prop, h} from '@stencil/core';
-import {MatchResults} from '@stencil/router';
+import {MatchResults} from '@stencil-community/router';
 
 @Component({
   tag: 'elsa-studio-workflow-definitions-edit',
@@ -7,7 +7,7 @@ import {MatchResults} from '@stencil/router';
 })
 export class ElsaStudioWorkflowDefinitionsEdit {
   @Prop() match: MatchResults;
-  
+
   id?: string;
 
   componentWillLoad() {

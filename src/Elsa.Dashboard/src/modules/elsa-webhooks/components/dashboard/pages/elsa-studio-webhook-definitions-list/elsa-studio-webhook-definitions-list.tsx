@@ -14,7 +14,7 @@ export class ElsaStudioWebhookDefinitionsList {
   @Prop() culture: string;
   @Prop() basePath: string;
   private i18next: i18n;
-  
+
   async componentWillLoad() {
     this.i18next = await loadTranslations(this.culture, resources);
   }
@@ -22,7 +22,7 @@ export class ElsaStudioWebhookDefinitionsList {
   render() {
     const basePath = this.basePath;
     const IntlMessage = GetIntlMessage(this.i18next);
-    
+
     return (
       <div>
         <div class="elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white">
@@ -32,10 +32,10 @@ export class ElsaStudioWebhookDefinitionsList {
             </h1>
           </div>
           <div class="elsa-mt-4 elsa-flex sm:elsa-mt-0 sm:elsa-ml-4">
-            <stencil-route-link url={`${basePath}/webhook-definitions/new`}
-                                class="elsa-order-0 elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-order-1 sm:elsa-ml-3">
+            <elsa-nav-link url={`${basePath}/webhook-definitions/new`}
+                                anchorClass="elsa-order-0 elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-order-1 sm:elsa-ml-3">
               <IntlMessage label="CreateButton"/>
-            </stencil-route-link>
+            </elsa-nav-link>
           </div>
         </div>
 

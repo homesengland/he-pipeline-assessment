@@ -1,5 +1,5 @@
 import {Component, h, Listen, Prop} from '@stencil/core';
-import {RouterHistory} from "@stencil/router";
+import {RouterHistory} from "@stencil-community/router";
 import {leave, toggle} from 'el-transition'
 import {MenuItem} from "./models";
 

@@ -1,7 +1,6 @@
 //Have to use link here, as importing directly from Node Modules is causing siginificant issues - and for some reason the global script import on a cshtml page
 //is also not registering the method.
-import { createAuth0Client } from 'https://unpkg.com/@auth0/auth0-spa-js@2.1.3/dist/auth0-spa-js.production.esm.js';
-import { Service } from 'https://cdn.jsdelivr.net/npm/axios-middleware@0.4.0/dist/axios-middleware.esm.js';
+import { createAuth0Client } from 'https://unpkg.com/@auth0/auth0-spa-js@2.7.0/dist/auth0-spa-js.production.esm.js';
 
 export class Auth0Plugin {
   options;  //Auth0ClientOptions
@@ -66,22 +65,30 @@ export class Auth0Plugin {
   };
 
   configureAuthMiddleware = async (e) => {
+    if (!this.auth0) return;
+    const token = await this.auth0.getTokenSilently().catch(() => null);
 
-    let service = new Service();
-    if (e != null && e != undefined && e.service != null && e.service != undefined) {
-      service = e.service;
+    // Event payload from fetch-client emits { service, httpClient }.
+    // service.register(fn) -> adds interceptor; if missing, fall back to httpClient.use.
+    const fallbackClient = e && e.httpClient;
+    let registerFn = null;
+    if (e && e.service && typeof e.service.register === 'function') {
+      registerFn = (interceptor) => e.service.register(interceptor);
+    } else if (fallbackClient && typeof fallbackClient.use === 'function') {
+      registerFn = (interceptor) => fallbackClient.use(interceptor);
     }
-    const auth0 = this.auth0;
-    const token = await auth0.getTokenSilently();
 
-    service.register({
+    if (!registerFn) {
+      console.warn('[Auth0Plugin] No compatible http client service found in event payload.');
+      return;
+    }
+
+    registerFn({
       async onRequest(request) {
-        // Get a (cached) access token.
-        if (request.data == null) {
-          request.data = "{}";
-        }
-        if (!!token) {
-          request.headers = { ...request.headers, 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` };
+        if (token) {
+          request.headers = { ...(request.headers || {}), 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json; charset=UTF-8' };
+        } else {
+          request.headers = { ...(request.headers || {}), 'Content-Type': 'application/json; charset=UTF-8' };
         }
         return request;
       }

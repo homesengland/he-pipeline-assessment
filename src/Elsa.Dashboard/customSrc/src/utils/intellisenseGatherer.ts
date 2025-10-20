@@ -1,12 +1,12 @@
 import { IntellisenseContext } from "../models/elsa-interfaces";
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { createFetchHttpClient, HttpClient } from '../../../src/services/http/fetch-client';
 import state from '../stores/store';
 import { createAuth0Client, Auth0Client, Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
 import { StoreStatus } from "../constants/constants";
 
 
 export class IntellisenseGatherer {
-  private _httpClient: AxiosInstance = null;
+  private _httpClient: HttpClient = null;
   private _baseUrl: string = null;
   private auth0: Auth0Client;
   private options: Auth0ClientOptions;
@@ -100,7 +100,7 @@ export class IntellisenseGatherer {
     return response.data;
   }
 
-  private async createHttpClient(): Promise<AxiosInstance> {
+  private async createHttpClient(): Promise<HttpClient> {
 
     await this.getAuth0Client();
 
@@ -109,19 +109,17 @@ export class IntellisenseGatherer {
     }
     const token = await this.auth0.getTokenSilently();
 
-    let config: AxiosRequestConfig;
-    if (!!token) {
-      config = {
-        baseURL: this._baseUrl,
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` }
-      };
-    } else {
-      config = {
-        baseURL: this._baseUrl,
-        headers: { 'Content-Type': `application/json; charset=UTF-8` },
-      };
-    }
-    this._httpClient = axios.create(config);
+    this._httpClient = await createFetchHttpClient(this._baseUrl);
+    this._httpClient.use({
+      async onRequest(cfg) {
+        if (token) {
+          cfg.headers = { ...(cfg.headers || {}), 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json; charset=UTF-8' };
+        } else {
+          cfg.headers = { ...(cfg.headers || {}), 'Content-Type': 'application/json; charset=UTF-8' };
+        }
+        return cfg;
+      }
+    });
 
     return this._httpClient;
   }

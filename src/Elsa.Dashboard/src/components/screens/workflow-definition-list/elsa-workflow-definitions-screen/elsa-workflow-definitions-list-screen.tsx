@@ -1,7 +1,7 @@
 import {Component, Event, h, Method, Prop, State} from '@stencil/core';
 import {createElsaClient} from "../../../../services";
 import {PagedList, VersionOptions, WorkflowDefinitionSummary} from "../../../../models";
-import {injectHistory, LocationSegments, RouterHistory} from "@stencil/router";
+import {injectHistory, LocationSegments, RouterHistory} from "@stencil-community/router";
 import {i18n} from "i18next";
 import {loadTranslations} from "../../../i18n/i18n-loader";
 import {resources} from "./localizations";
@@ -232,13 +232,13 @@ export class ElsaWorkflowDefinitionsListScreen {
                 <tr>
                   <td class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
                     <div class="elsa-flex elsa-items-center elsa-space-x-3 lg:elsa-pl-2">
-                      <stencil-route-link url={editUrl} anchorClass="elsa-truncate hover:elsa-text-gray-600"><span>{workflowDisplayName}</span></stencil-route-link>
+                      <elsa-nav-link url={editUrl} anchorClass="elsa-truncate hover:elsa-text-gray-600"><span>{workflowDisplayName}</span></elsa-nav-link>
                     </div>
                   </td>
 
                   <td class="elsa-px-6 elsa-py-3 elsa-text-sm elsa-leading-5 elsa-text-gray-500 elsa-font-medium">
                     <div class="elsa-flex elsa-items-center elsa-space-x-3 lg:elsa-pl-2">
-                      <stencil-route-link url={instancesUrl} anchorClass="elsa-truncate hover:elsa-text-gray-600"><IntlMessage label="Instances"/></stencil-route-link>
+                      <elsa-nav-link url={instancesUrl} anchorClass="elsa-truncate hover:elsa-text-gray-600"><IntlMessage label="Instances"/></elsa-nav-link>
                     </div>
                   </td>
 

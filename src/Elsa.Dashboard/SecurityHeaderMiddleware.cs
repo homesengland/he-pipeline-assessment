@@ -31,18 +31,18 @@ namespace Elsa.Dashboard
       var elsaServer = _configuration["Urls:ElsaServer"];
       var oAuthToken = "https://*.homesengland.org.uk";
       var oAuthToken2 = "https://*.auth0.com";
-      var auth0Script = "https://unpkg.com/@auth0/auth0-spa-js@1.1.1/dist/auth0-spa-js.production.esm.js";
-      var axios = "https://cdn.jsdelivr.net/npm/axios-middleware@0.3.1/dist/axios-middleware.esm.js";
+      var unpkgDomain = "https://unpkg.com";
+      var auth0Script = "https://unpkg.com/@auth0/auth0-spa-js@2.7.0/dist/auth0-spa-js.production.esm.js";
 
-      var connectSrc = $"connect-src 'self' {elsaServer} {govUkSetupNonce} {oAuthToken} {oAuthToken2} {auth0Script} {axios};";
+      var connectSrc = $"connect-src 'self' {elsaServer} {govUkSetupNonce} {oAuthToken} {oAuthToken2} {unpkgDomain} {auth0Script};";
+      var scriptSrc = $"script-src 'self' 'strict-dynamic' '{govUkSetupNonce}' '{elsaSetupNonce}' 'unsafe-eval' {unpkgDomain} {auth0Script};";
       var defaultSrc = $"default-src 'self';";
-      var scriptSrc = $"script-src 'self' 'strict-dynamic' '{govUkSetupNonce}' '{elsaSetupNonce}' 'unsafe-eval';";
       var styleSrcElem = $"style-src-elem 'self' 'unsafe-inline';";
       var styleSrc = $"style-src 'self' 'unsafe-inline';";
       var imgSrc = $"img-src 'self' data: https://unpkg.com/benteststencil@0.0.16/;";
 
       var fontSrc = $"font-src 'self';";
-      var frameSrc = $"frame-src 'self' {oAuthToken} {axios} {oAuthToken2};";
+      var frameSrc = $"frame-src 'self' {oAuthToken} {oAuthToken2};";
 
       SetHeader(context, "Content-Security-Policy", $"{connectSrc} {defaultSrc} {scriptSrc} {styleSrcElem} {styleSrc} {imgSrc} {fontSrc} {frameSrc}");
       SetHeader(context, "X-Frame-Options", "DENY");

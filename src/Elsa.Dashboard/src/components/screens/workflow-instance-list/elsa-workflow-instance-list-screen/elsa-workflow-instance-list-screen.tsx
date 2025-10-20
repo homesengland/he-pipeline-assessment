@@ -1,5 +1,5 @@
 import {Component, h, Method, Prop, State, Watch} from '@stencil/core';
-import { injectHistory, LocationSegments, RouterHistory } from "@stencil/router";
+import { injectHistory, LocationSegments, RouterHistory } from "@stencil-community/router";
 import { MenuItem } from "../../../controls/elsa-context-menu/models";
 import * as collection from 'lodash/collection';
 import * as array from 'lodash/array';
@@ -612,19 +612,19 @@ export class ElsaWorkflowInstanceListScreen {
                   </td>
                   <td
                     class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
-                    <stencil-route-link url={instanceViewUrl}
-                                        anchorClass="elsa-truncate hover:elsa-text-gray-600">{workflowInstance.id}</stencil-route-link>
+                    <elsa-nav-link url={instanceViewUrl}
+                                        anchorClass="elsa-truncate hover:elsa-text-gray-600">{workflowInstance.id}</elsa-nav-link>
                   </td>
                   <td
                     class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900">
-                    <stencil-route-link url={correlationListViewUrl}
-                                        anchorClass="elsa-truncate hover:elsa-text-gray-600">{correlationId}</stencil-route-link>
+                    <elsa-nav-link url={correlationListViewUrl}
+                                        anchorClass="elsa-truncate hover:elsa-text-gray-600">{correlationId}</elsa-nav-link>
                   </td>
                   <td
                     class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900 elsa-text-left">
-                    <stencil-route-link url={blueprintViewUrl} anchorClass="elsa-truncate hover:elsa-text-gray-600">
+                    <elsa-nav-link url={blueprintViewUrl} anchorClass="elsa-truncate hover:elsa-text-gray-600">
                       {displayName}
-                    </stencil-route-link>
+                    </elsa-nav-link>
                   </td>
                   <td
                     class="hidden md:elsa-table-cell elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-right elsa-text-sm elsa-leading-5 elsa-text-gray-500 elsa-uppercase">
@@ -632,8 +632,8 @@ export class ElsaWorkflowInstanceListScreen {
                   </td>
                   <td
                     class="elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-font-medium elsa-text-gray-900 elsa-text-left">
-                    <stencil-route-link url={instanceViewUrl}
-                                        anchorClass="elsa-truncate hover:elsa-text-gray-600">{instanceName}</stencil-route-link>
+                    <elsa-nav-link url={instanceViewUrl}
+                                        anchorClass="elsa-truncate hover:elsa-text-gray-600">{instanceName}</elsa-nav-link>
                   </td>
                   <td
                     class="hidden md:elsa-table-cell elsa-px-6 elsa-py-3 elsa-whitespace-no-wrap elsa-text-sm elsa-leading-5 elsa-text-gray-500 elsa-text-right">

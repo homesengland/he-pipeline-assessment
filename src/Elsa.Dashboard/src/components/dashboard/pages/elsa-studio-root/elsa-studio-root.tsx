@@ -13,7 +13,7 @@ import {
   propertyDisplayManager,
   featuresDataManager
 } from "../../../../services";
-import {AxiosInstance} from "axios";
+import { HttpClient } from '../../../../services'; // Using fetch-based HttpClient interface
 import {EventTypes} from "../../../../models";
 import {ToastNotificationOptions} from "../../../shared/elsa-toast-notification/elsa-toast-notification";
 import {getOrCreateProperty, htmlToElement} from "../../../../utils/utils";
@@ -72,8 +72,8 @@ export class ElsaStudioRoot {
   async componentWillLoad() {
     state.useX6Graphs = this.useX6Graphs;
 
-    const elsaClientFactory: () => Promise<ElsaClient> = () => createElsaClient(this.serverUrl);
-    const httpClientFactory: () => Promise<AxiosInstance> = () => createHttpClient(this.serverUrl);
+  const elsaClientFactory: () => Promise<ElsaClient> = () => createElsaClient(this.serverUrl);
+  const httpClientFactory: () => Promise<HttpClient> = () => createHttpClient(this.serverUrl);
 
     if (this.config) {
       await fetch(`${document.location.origin}/${this.config}`)

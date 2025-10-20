@@ -30,10 +30,10 @@ export class ElsaStudioWorkflowRegistry {
             </h1>
           </div>
           <div class="elsa-mt-4 elsa-flex sm:elsa-mt-0 sm:elsa-ml-4">
-            <stencil-route-link url={`${basePath}/workflow-definitions/new`}
-                                class="elsa-order-0 elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-order-1 sm:elsa-ml-3">
+            <elsa-nav-link url={`${basePath}/workflow-definitions/new`}
+                                anchorClass="elsa-order-0 elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-order-1 sm:elsa-ml-3">
               {t('CreateButton')}
-            </stencil-route-link>
+            </elsa-nav-link>
           </div>
         </div>
 

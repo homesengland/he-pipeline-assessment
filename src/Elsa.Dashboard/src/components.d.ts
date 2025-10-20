@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { ActivityDefinitionProperty, ActivityDeletedArgs, ActivityDescriptor, ActivityModel, ActivityPropertyDescriptor, ElsaStudio, IntellisenseContext, OrderBy, SelectListItem, VersionOptions, WorkflowBlueprint, WorkflowDefinition, WorkflowDefinitionVersion, WorkflowExecutionLogRecord, WorkflowFault, WorkflowInstance, WorkflowModel, WorkflowStatus } from "./models";
-import { LocationSegments, MatchResults, RouterHistory } from "@stencil/router";
+import { LocationSegments, MatchResults, RouterHistory } from "@stencil-community/router";
 import { MenuItem } from "./components/controls/elsa-context-menu/models";
 import { VNode } from "@stencil/core";
 import { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from "./components/designers/tree/elsa-designer-tree/models";
@@ -17,6 +17,18 @@ import { PagerData } from "./components/controls/elsa-pager/elsa-pager";
 import { ToastNotificationOptions } from "./components/shared/elsa-toast-notification/elsa-toast-notification";
 import { WebhookDefinition } from "./modules/elsa-webhooks/models";
 import { ActivityStats } from ".";
+export { ActivityDefinitionProperty, ActivityDeletedArgs, ActivityDescriptor, ActivityModel, ActivityPropertyDescriptor, ElsaStudio, IntellisenseContext, OrderBy, SelectListItem, VersionOptions, WorkflowBlueprint, WorkflowDefinition, WorkflowDefinitionVersion, WorkflowExecutionLogRecord, WorkflowFault, WorkflowInstance, WorkflowModel, WorkflowStatus } from "./models";
+export { LocationSegments, MatchResults, RouterHistory } from "@stencil-community/router";
+export { MenuItem } from "./components/controls/elsa-context-menu/models";
+export { VNode } from "@stencil/core";
+export { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from "./components/designers/tree/elsa-designer-tree/models";
+export { DropdownButtonItem, DropdownButtonOrigin } from "./components/controls/elsa-dropdown-button/models";
+export { MonacoValueChangedArgs } from "./components/controls/elsa-monaco/elsa-monaco";
+export { Map } from "./utils/utils";
+export { PagerData } from "./components/controls/elsa-pager/elsa-pager";
+export { ToastNotificationOptions } from "./components/shared/elsa-toast-notification/elsa-toast-notification";
+export { WebhookDefinition } from "./modules/elsa-webhooks/models";
+export { ActivityStats } from ".";
 export namespace Components {
     interface ElsaActivityEditorModal {
         "culture": string;
@@ -44,6 +56,9 @@ export namespace Components {
     }
     interface ElsaContextMenu {
         "history": RouterHistory;
+        /**
+          * @default []
+         */
         "menuItems": Array<MenuItem>;
     }
     interface ElsaControl {
@@ -79,11 +94,23 @@ export namespace Components {
         "activityContextTestMenu"?: ActivityContextMenuState;
         "connectionContextMenu"?: ActivityContextMenuState;
         "enableMultipleConnectionsFromSingleSource": boolean;
+        /**
+          * @default LayoutDirection.TopBottom
+         */
         "layoutDirection": LayoutDirection;
+        /**
+          * @default WorkflowDesignerMode.Edit
+         */
         "mode": WorkflowDesignerMode;
+        /**
+          * @default {     activities: [],     connections: [],     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst   }
+         */
         "model": WorkflowModel;
         "removeActivity": (activity: ActivityModel) => Promise<void>;
         "removeSelectedActivities": () => Promise<void>;
+        /**
+          * @default []
+         */
         "selectedActivityIds": Array<string>;
         "showActivityEditor": (activity: ActivityModel, animate: boolean) => Promise<void>;
     }
@@ -94,9 +121,18 @@ export namespace Components {
         "serverUrl": string;
     }
     interface ElsaDropdownButton {
+        /**
+          * @default " elsa-w-full elsa-bg-white elsa-border elsa-border-gray-300 elsa-rounded-md elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-inline-flex elsa-justify-center elsa-text-sm elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500"
+         */
         "btnClass"?: string;
         "icon"?: any;
+        /**
+          * @default []
+         */
         "items": Array<DropdownButtonItem>;
+        /**
+          * @default DropdownButtonOrigin.TopLeft
+         */
         "origin": DropdownButtonOrigin;
         "text": string;
     }
@@ -108,35 +144,74 @@ export namespace Components {
     }
     interface ElsaExpressionEditor {
         "context"?: IntellisenseContext;
+        /**
+          * @default '6em'
+         */
         "editorHeight": string;
         "expression": string;
         "language": string;
+        /**
+          * @default false
+         */
         "opensModal": boolean;
         "padding": string;
         "serverUrl": string;
         "setExpression": (value: string) => Promise<void>;
+        /**
+          * @default false
+         */
         "singleLineMode": boolean;
         "workflowDefinitionId": string;
     }
     interface ElsaFlyoutPanel {
+        /**
+          * @default false
+         */
         "autoExpand": boolean;
+        /**
+          * @default 1
+         */
         "expandButtonPosition": number;
+        /**
+          * @default false
+         */
         "hidden": boolean;
         "selectTab": (tab: string, expand?: boolean) => Promise<void>;
+        /**
+          * @default false
+         */
         "silent": boolean;
+        /**
+          * @default 0
+         */
         "updateCounter": number;
     }
     interface ElsaInputTags {
         "fieldId"?: string;
         "fieldName"?: string;
+        /**
+          * @default 'Add tag'
+         */
         "placeHolder"?: string;
+        /**
+          * @default []
+         */
         "values"?: Array<string>;
     }
     interface ElsaInputTagsDropdown {
+        /**
+          * @default []
+         */
         "dropdownValues"?: Array<SelectListItem>;
         "fieldId"?: string;
         "fieldName"?: string;
+        /**
+          * @default 'Add tag'
+         */
         "placeHolder"?: string;
+        /**
+          * @default []
+         */
         "values"?: Array<string | SelectListItem>;
     }
     interface ElsaJsonProperty {
@@ -150,23 +225,44 @@ export namespace Components {
     }
     interface ElsaMonaco {
         "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
+        /**
+          * @default '5em'
+         */
         "editorHeight": string;
         "language": string;
         "monacoLibPath": string;
         "padding": string;
         "setValue": (value: string) => Promise<void>;
+        /**
+          * @default false
+         */
         "singleLineMode": boolean;
         "value": string;
     }
     interface ElsaMultiExpressionEditor {
         "context"?: IntellisenseContext;
+        /**
+          * @default SyntaxNames.Literal
+         */
         "defaultSyntax": string;
+        /**
+          * @default '10em'
+         */
         "editorHeight": string;
+        /**
+          * @default {}
+         */
         "expressions": Map<string>;
         "fieldName"?: string;
         "isReadOnly"?: boolean;
         "label": string;
+        /**
+          * @default false
+         */
         "singleLineMode": boolean;
+        /**
+          * @default []
+         */
         "supportedSyntaxes": Array<string>;
         "syntax"?: string;
     }
@@ -181,6 +277,34 @@ export namespace Components {
         "propertyModel": ActivityDefinitionProperty;
         "serverUrl": string;
     }
+    /**
+     * Lightweight replacement for stencil-route-link to eliminate
+     * @stencil-community /router dependency.
+     * Provides anchor rendering with active class evaluation based on current window.location.
+     * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
+     */
+    interface ElsaNavLink {
+        /**
+          * Class appended when current location matches URL
+         */
+        "activeClass"?: string;
+        /**
+          * CSS class applied to anchor
+         */
+        "anchorClass"?: string;
+        /**
+          * Optional rel attribute
+         */
+        "rel"?: string;
+        /**
+          * Optional target attribute
+         */
+        "target"?: string;
+        /**
+          * Target URL
+         */
+        "url": string;
+    }
     interface ElsaOauth2Authorized {
     }
     interface ElsaPager {
@@ -194,10 +318,19 @@ export namespace Components {
     interface ElsaPropertyEditor {
         "activityModel": ActivityModel;
         "context"?: string;
+        /**
+          * @default '10em'
+         */
         "editorHeight": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
+        /**
+          * @default true
+         */
         "showLabel": boolean;
+        /**
+          * @default false
+         */
         "singleLineMode": boolean;
     }
     interface ElsaRadioListProperty {
@@ -208,10 +341,16 @@ export namespace Components {
     }
     interface ElsaScriptProperty {
         "activityModel": ActivityModel;
+        /**
+          * @default '6em'
+         */
         "editorHeight": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "serverUrl": string;
+        /**
+          * @default false
+         */
         "singleLineMode": boolean;
         "syntax"?: string;
         "workflowDefinitionId": string;
@@ -229,6 +368,9 @@ export namespace Components {
         "propertyModel": ActivityDefinitionProperty;
     }
     interface ElsaStudioDashboard {
+        /**
+          * @default ''
+         */
         "basePath": string;
         "culture": string;
     }
@@ -239,12 +381,18 @@ export namespace Components {
     interface ElsaStudioRoot {
         "addPlugin": (pluginType: any) => Promise<void>;
         "addPlugins": (pluginTypes: Array<any>) => Promise<void>;
+        /**
+          * @default ''
+         */
         "basePath": string;
         "config": string;
         "culture": string;
         "features": any;
         "monacoLibPath": string;
         "serverUrl": string;
+        /**
+          * @default false
+         */
         "useX6Graphs": boolean;
     }
     interface ElsaStudioWebhookDefinitionsEdit {
@@ -341,6 +489,9 @@ export namespace Components {
         "history": RouterHistory;
         "importWorkflow": (file: File) => Promise<void>;
         "monacoLibPath": string;
+        /**
+          * @default []
+         */
         "serverFeatures": Array<string>;
         "serverUrl": string;
         "workflowDefinitionId": string;
@@ -357,6 +508,9 @@ export namespace Components {
         "workflowFault": WorkflowFault;
     }
     interface ElsaWorkflowInstanceJournal {
+        /**
+          * @default []
+         */
         "activityDescriptors": Array<ActivityDescriptor>;
         "selectActivityRecord": (activityId?: string) => Promise<void>;
         "serverUrl": string;
@@ -371,6 +525,9 @@ export namespace Components {
         "culture": string;
         "getSelectedWorkflowInstanceIds": () => Promise<string[]>;
         "history"?: RouterHistory;
+        /**
+          * @default OrderBy.Started
+         */
         "orderBy"?: OrderBy;
         "refresh": () => Promise<void>;
         "serverUrl": string;
@@ -420,15 +577,103 @@ export namespace Components {
         "activityContextTestMenu"?: ActivityContextMenuState;
         "connectionContextMenu"?: ActivityContextMenuState;
         "enableMultipleConnectionsFromSingleSource": boolean;
+        /**
+          * @default LayoutDirection.TopBottom
+         */
         "layoutDirection": LayoutDirection;
+        /**
+          * @default WorkflowDesignerMode.Edit
+         */
         "mode": WorkflowDesignerMode;
+        /**
+          * @default {     activities: [],     connections: [],     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst   }
+         */
         "model": WorkflowModel;
         "removeActivity": (activity: ActivityModel) => Promise<void>;
         "removeSelectedActivities": () => Promise<void>;
+        /**
+          * @default []
+         */
         "selectedActivityIds": Array<string>;
         "showActivityEditor": (activity: ActivityModel, animate: boolean) => Promise<void>;
         "updateLayout": () => Promise<void>;
     }
+}
+export interface ElsaDesignerPanelCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaDesignerPanelElement;
+}
+export interface ElsaDesignerTreeCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaDesignerTreeElement;
+}
+export interface ElsaDropdownButtonCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaDropdownButtonElement;
+}
+export interface ElsaExpressionEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaExpressionEditorElement;
+}
+export interface ElsaInputTagsCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaInputTagsElement;
+}
+export interface ElsaInputTagsDropdownCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaInputTagsDropdownElement;
+}
+export interface ElsaModalDialogCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaModalDialogElement;
+}
+export interface ElsaMonacoCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaMonacoElement;
+}
+export interface ElsaMultiExpressionEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaMultiExpressionEditorElement;
+}
+export interface ElsaMultiTextPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaMultiTextPropertyElement;
+}
+export interface ElsaPagerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaPagerElement;
+}
+export interface ElsaPropertyEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaPropertyEditorElement;
+}
+export interface ElsaStudioRootCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaStudioRootElement;
+}
+export interface ElsaSwitchCasesPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaSwitchCasesPropertyElement;
+}
+export interface ElsaVersionHistoryPanelCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaVersionHistoryPanelElement;
+}
+export interface ElsaWorkflowDefinitionEditorScreenCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaWorkflowDefinitionEditorScreenElement;
+}
+export interface ElsaWorkflowInstanceJournalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaWorkflowInstanceJournalElement;
+}
+export interface ElsaWorkflowPublishButtonCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLElsaWorkflowPublishButtonElement;
+}
+export interface X6DesignerCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLX6DesignerElement;
 }
 declare global {
     interface HTMLElsaActivityEditorModalElement extends Components.ElsaActivityEditorModal, HTMLStencilElement {
@@ -503,13 +748,41 @@ declare global {
         prototype: HTMLElsaCronExpressionPropertyElement;
         new (): HTMLElsaCronExpressionPropertyElement;
     };
+    interface HTMLElsaDesignerPanelElementEventMap {
+        "featureChanged": string;
+        "featureStatusChanged": string;
+    }
     interface HTMLElsaDesignerPanelElement extends Components.ElsaDesignerPanel, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaDesignerPanelElementEventMap>(type: K, listener: (this: HTMLElsaDesignerPanelElement, ev: ElsaDesignerPanelCustomEvent<HTMLElsaDesignerPanelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaDesignerPanelElementEventMap>(type: K, listener: (this: HTMLElsaDesignerPanelElement, ev: ElsaDesignerPanelCustomEvent<HTMLElsaDesignerPanelElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaDesignerPanelElement: {
         prototype: HTMLElsaDesignerPanelElement;
         new (): HTMLElsaDesignerPanelElement;
     };
+    interface HTMLElsaDesignerTreeElementEventMap {
+        "workflow-changed": WorkflowModel;
+        "activitySelected": ActivityModel;
+        "activityDeselected": ActivityModel;
+        "activityContextMenuButtonClicked": ActivityContextMenuState;
+        "connectionContextMenuButtonClicked": ActivityContextMenuState;
+        "activityContextMenuButtonTestClicked": ActivityContextMenuState;
+    }
     interface HTMLElsaDesignerTreeElement extends Components.ElsaDesignerTree, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaDesignerTreeElementEventMap>(type: K, listener: (this: HTMLElsaDesignerTreeElement, ev: ElsaDesignerTreeCustomEvent<HTMLElsaDesignerTreeElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaDesignerTreeElementEventMap>(type: K, listener: (this: HTMLElsaDesignerTreeElement, ev: ElsaDesignerTreeCustomEvent<HTMLElsaDesignerTreeElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaDesignerTreeElement: {
         prototype: HTMLElsaDesignerTreeElement;
@@ -521,7 +794,18 @@ declare global {
         prototype: HTMLElsaDictionaryPropertyElement;
         new (): HTMLElsaDictionaryPropertyElement;
     };
+    interface HTMLElsaDropdownButtonElementEventMap {
+        "itemSelected": DropdownButtonItem;
+    }
     interface HTMLElsaDropdownButtonElement extends Components.ElsaDropdownButton, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaDropdownButtonElementEventMap>(type: K, listener: (this: HTMLElsaDropdownButtonElement, ev: ElsaDropdownButtonCustomEvent<HTMLElsaDropdownButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaDropdownButtonElementEventMap>(type: K, listener: (this: HTMLElsaDropdownButtonElement, ev: ElsaDropdownButtonCustomEvent<HTMLElsaDropdownButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaDropdownButtonElement: {
         prototype: HTMLElsaDropdownButtonElement;
@@ -533,7 +817,18 @@ declare global {
         prototype: HTMLElsaDropdownPropertyElement;
         new (): HTMLElsaDropdownPropertyElement;
     };
+    interface HTMLElsaExpressionEditorElementEventMap {
+        "expressionChanged": string;
+    }
     interface HTMLElsaExpressionEditorElement extends Components.ElsaExpressionEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaExpressionEditorElementEventMap>(type: K, listener: (this: HTMLElsaExpressionEditorElement, ev: ElsaExpressionEditorCustomEvent<HTMLElsaExpressionEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaExpressionEditorElementEventMap>(type: K, listener: (this: HTMLElsaExpressionEditorElement, ev: ElsaExpressionEditorCustomEvent<HTMLElsaExpressionEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaExpressionEditorElement: {
         prototype: HTMLElsaExpressionEditorElement;
@@ -545,13 +840,35 @@ declare global {
         prototype: HTMLElsaFlyoutPanelElement;
         new (): HTMLElsaFlyoutPanelElement;
     };
+    interface HTMLElsaInputTagsElementEventMap {
+        "valueChanged": Array<string>;
+    }
     interface HTMLElsaInputTagsElement extends Components.ElsaInputTags, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaInputTagsElementEventMap>(type: K, listener: (this: HTMLElsaInputTagsElement, ev: ElsaInputTagsCustomEvent<HTMLElsaInputTagsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaInputTagsElementEventMap>(type: K, listener: (this: HTMLElsaInputTagsElement, ev: ElsaInputTagsCustomEvent<HTMLElsaInputTagsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaInputTagsElement: {
         prototype: HTMLElsaInputTagsElement;
         new (): HTMLElsaInputTagsElement;
     };
+    interface HTMLElsaInputTagsDropdownElementEventMap {
+        "valueChanged": Array<string | SelectListItem>;
+    }
     interface HTMLElsaInputTagsDropdownElement extends Components.ElsaInputTagsDropdown, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaInputTagsDropdownElementEventMap>(type: K, listener: (this: HTMLElsaInputTagsDropdownElement, ev: ElsaInputTagsDropdownCustomEvent<HTMLElsaInputTagsDropdownElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaInputTagsDropdownElementEventMap>(type: K, listener: (this: HTMLElsaInputTagsDropdownElement, ev: ElsaInputTagsDropdownCustomEvent<HTMLElsaInputTagsDropdownElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaInputTagsDropdownElement: {
         prototype: HTMLElsaInputTagsDropdownElement;
@@ -563,19 +880,54 @@ declare global {
         prototype: HTMLElsaJsonPropertyElement;
         new (): HTMLElsaJsonPropertyElement;
     };
+    interface HTMLElsaModalDialogElementEventMap {
+        "shown": any;
+        "hidden": any;
+    }
     interface HTMLElsaModalDialogElement extends Components.ElsaModalDialog, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaModalDialogElementEventMap>(type: K, listener: (this: HTMLElsaModalDialogElement, ev: ElsaModalDialogCustomEvent<HTMLElsaModalDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaModalDialogElementEventMap>(type: K, listener: (this: HTMLElsaModalDialogElement, ev: ElsaModalDialogCustomEvent<HTMLElsaModalDialogElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaModalDialogElement: {
         prototype: HTMLElsaModalDialogElement;
         new (): HTMLElsaModalDialogElement;
     };
+    interface HTMLElsaMonacoElementEventMap {
+        "valueChanged": MonacoValueChangedArgs;
+    }
     interface HTMLElsaMonacoElement extends Components.ElsaMonaco, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaMonacoElementEventMap>(type: K, listener: (this: HTMLElsaMonacoElement, ev: ElsaMonacoCustomEvent<HTMLElsaMonacoElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaMonacoElementEventMap>(type: K, listener: (this: HTMLElsaMonacoElement, ev: ElsaMonacoCustomEvent<HTMLElsaMonacoElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaMonacoElement: {
         prototype: HTMLElsaMonacoElement;
         new (): HTMLElsaMonacoElement;
     };
+    interface HTMLElsaMultiExpressionEditorElementEventMap {
+        "syntaxChanged": string;
+        "expressionChanged": string;
+    }
     interface HTMLElsaMultiExpressionEditorElement extends Components.ElsaMultiExpressionEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaMultiExpressionEditorElementEventMap>(type: K, listener: (this: HTMLElsaMultiExpressionEditorElement, ev: ElsaMultiExpressionEditorCustomEvent<HTMLElsaMultiExpressionEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaMultiExpressionEditorElementEventMap>(type: K, listener: (this: HTMLElsaMultiExpressionEditorElement, ev: ElsaMultiExpressionEditorCustomEvent<HTMLElsaMultiExpressionEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaMultiExpressionEditorElement: {
         prototype: HTMLElsaMultiExpressionEditorElement;
@@ -587,11 +939,34 @@ declare global {
         prototype: HTMLElsaMultiLinePropertyElement;
         new (): HTMLElsaMultiLinePropertyElement;
     };
+    interface HTMLElsaMultiTextPropertyElementEventMap {
+        "valueChange": Array<string | number | boolean | SelectListItem>;
+    }
     interface HTMLElsaMultiTextPropertyElement extends Components.ElsaMultiTextProperty, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaMultiTextPropertyElementEventMap>(type: K, listener: (this: HTMLElsaMultiTextPropertyElement, ev: ElsaMultiTextPropertyCustomEvent<HTMLElsaMultiTextPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaMultiTextPropertyElementEventMap>(type: K, listener: (this: HTMLElsaMultiTextPropertyElement, ev: ElsaMultiTextPropertyCustomEvent<HTMLElsaMultiTextPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaMultiTextPropertyElement: {
         prototype: HTMLElsaMultiTextPropertyElement;
         new (): HTMLElsaMultiTextPropertyElement;
+    };
+    /**
+     * Lightweight replacement for stencil-route-link to eliminate
+     * @stencil-community /router dependency.
+     * Provides anchor rendering with active class evaluation based on current window.location.
+     * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
+     */
+    interface HTMLElsaNavLinkElement extends Components.ElsaNavLink, HTMLStencilElement {
+    }
+    var HTMLElsaNavLinkElement: {
+        prototype: HTMLElsaNavLinkElement;
+        new (): HTMLElsaNavLinkElement;
     };
     interface HTMLElsaOauth2AuthorizedElement extends Components.ElsaOauth2Authorized, HTMLStencilElement {
     }
@@ -599,13 +974,35 @@ declare global {
         prototype: HTMLElsaOauth2AuthorizedElement;
         new (): HTMLElsaOauth2AuthorizedElement;
     };
+    interface HTMLElsaPagerElementEventMap {
+        "paged": PagerData;
+    }
     interface HTMLElsaPagerElement extends Components.ElsaPager, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaPagerElementEventMap>(type: K, listener: (this: HTMLElsaPagerElement, ev: ElsaPagerCustomEvent<HTMLElsaPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaPagerElementEventMap>(type: K, listener: (this: HTMLElsaPagerElement, ev: ElsaPagerCustomEvent<HTMLElsaPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaPagerElement: {
         prototype: HTMLElsaPagerElement;
         new (): HTMLElsaPagerElement;
     };
+    interface HTMLElsaPropertyEditorElementEventMap {
+        "defaultSyntaxValueChanged": string;
+    }
     interface HTMLElsaPropertyEditorElement extends Components.ElsaPropertyEditor, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaPropertyEditorElementEventMap>(type: K, listener: (this: HTMLElsaPropertyEditorElement, ev: ElsaPropertyEditorCustomEvent<HTMLElsaPropertyEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaPropertyEditorElementEventMap>(type: K, listener: (this: HTMLElsaPropertyEditorElement, ev: ElsaPropertyEditorCustomEvent<HTMLElsaPropertyEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaPropertyEditorElement: {
         prototype: HTMLElsaPropertyEditorElement;
@@ -653,7 +1050,19 @@ declare global {
         prototype: HTMLElsaStudioHomeElement;
         new (): HTMLElsaStudioHomeElement;
     };
+    interface HTMLElsaStudioRootElementEventMap {
+        "initializing": ElsaStudio;
+        "initialized": ElsaStudio;
+    }
     interface HTMLElsaStudioRootElement extends Components.ElsaStudioRoot, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaStudioRootElementEventMap>(type: K, listener: (this: HTMLElsaStudioRootElement, ev: ElsaStudioRootCustomEvent<HTMLElsaStudioRootElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaStudioRootElementEventMap>(type: K, listener: (this: HTMLElsaStudioRootElement, ev: ElsaStudioRootCustomEvent<HTMLElsaStudioRootElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaStudioRootElement: {
         prototype: HTMLElsaStudioRootElement;
@@ -707,7 +1116,18 @@ declare global {
         prototype: HTMLElsaStudioWorkflowRegistryElement;
         new (): HTMLElsaStudioWorkflowRegistryElement;
     };
+    interface HTMLElsaSwitchCasesPropertyElementEventMap {
+        "valueChange": Array<any>;
+    }
     interface HTMLElsaSwitchCasesPropertyElement extends Components.ElsaSwitchCasesProperty, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaSwitchCasesPropertyElementEventMap>(type: K, listener: (this: HTMLElsaSwitchCasesPropertyElement, ev: ElsaSwitchCasesPropertyCustomEvent<HTMLElsaSwitchCasesPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaSwitchCasesPropertyElementEventMap>(type: K, listener: (this: HTMLElsaSwitchCasesPropertyElement, ev: ElsaSwitchCasesPropertyCustomEvent<HTMLElsaSwitchCasesPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaSwitchCasesPropertyElement: {
         prototype: HTMLElsaSwitchCasesPropertyElement;
@@ -737,7 +1157,20 @@ declare global {
         prototype: HTMLElsaUserContextMenuElement;
         new (): HTMLElsaUserContextMenuElement;
     };
+    interface HTMLElsaVersionHistoryPanelElementEventMap {
+        "versionSelected": WorkflowDefinitionVersion;
+        "deleteVersionClicked": WorkflowDefinitionVersion;
+        "revertVersionClicked": WorkflowDefinitionVersion;
+    }
     interface HTMLElsaVersionHistoryPanelElement extends Components.ElsaVersionHistoryPanel, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaVersionHistoryPanelElementEventMap>(type: K, listener: (this: HTMLElsaVersionHistoryPanelElement, ev: ElsaVersionHistoryPanelCustomEvent<HTMLElsaVersionHistoryPanelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaVersionHistoryPanelElementEventMap>(type: K, listener: (this: HTMLElsaVersionHistoryPanelElement, ev: ElsaVersionHistoryPanelCustomEvent<HTMLElsaVersionHistoryPanelElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaVersionHistoryPanelElement: {
         prototype: HTMLElsaVersionHistoryPanelElement;
@@ -779,7 +1212,18 @@ declare global {
         prototype: HTMLElsaWorkflowDefinitionEditorNotificationsElement;
         new (): HTMLElsaWorkflowDefinitionEditorNotificationsElement;
     };
+    interface HTMLElsaWorkflowDefinitionEditorScreenElementEventMap {
+        "workflowSaved": WorkflowDefinition;
+    }
     interface HTMLElsaWorkflowDefinitionEditorScreenElement extends Components.ElsaWorkflowDefinitionEditorScreen, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaWorkflowDefinitionEditorScreenElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowDefinitionEditorScreenElement, ev: ElsaWorkflowDefinitionEditorScreenCustomEvent<HTMLElsaWorkflowDefinitionEditorScreenElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaWorkflowDefinitionEditorScreenElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowDefinitionEditorScreenElement, ev: ElsaWorkflowDefinitionEditorScreenCustomEvent<HTMLElsaWorkflowDefinitionEditorScreenElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaWorkflowDefinitionEditorScreenElement: {
         prototype: HTMLElsaWorkflowDefinitionEditorScreenElement;
@@ -797,7 +1241,18 @@ declare global {
         prototype: HTMLElsaWorkflowFaultInformationElement;
         new (): HTMLElsaWorkflowFaultInformationElement;
     };
+    interface HTMLElsaWorkflowInstanceJournalElementEventMap {
+        "recordSelected": WorkflowExecutionLogRecord;
+    }
     interface HTMLElsaWorkflowInstanceJournalElement extends Components.ElsaWorkflowInstanceJournal, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaWorkflowInstanceJournalElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowInstanceJournalElement, ev: ElsaWorkflowInstanceJournalCustomEvent<HTMLElsaWorkflowInstanceJournalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaWorkflowInstanceJournalElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowInstanceJournalElement, ev: ElsaWorkflowInstanceJournalCustomEvent<HTMLElsaWorkflowInstanceJournalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaWorkflowInstanceJournalElement: {
         prototype: HTMLElsaWorkflowInstanceJournalElement;
@@ -827,7 +1282,23 @@ declare global {
         prototype: HTMLElsaWorkflowPropertiesPanelElement;
         new (): HTMLElsaWorkflowPropertiesPanelElement;
     };
+    interface HTMLElsaWorkflowPublishButtonElementEventMap {
+        "publishClicked": any;
+        "unPublishClicked": any;
+        "revertClicked": any;
+        "exportClicked": any;
+        "importClicked": File;
+        "deleteClicked": any;
+    }
     interface HTMLElsaWorkflowPublishButtonElement extends Components.ElsaWorkflowPublishButton, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLElsaWorkflowPublishButtonElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowPublishButtonElement, ev: ElsaWorkflowPublishButtonCustomEvent<HTMLElsaWorkflowPublishButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElsaWorkflowPublishButtonElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowPublishButtonElement, ev: ElsaWorkflowPublishButtonCustomEvent<HTMLElsaWorkflowPublishButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaWorkflowPublishButtonElement: {
         prototype: HTMLElsaWorkflowPublishButtonElement;
@@ -851,7 +1322,24 @@ declare global {
         prototype: HTMLElsaWorkflowTestPanelElement;
         new (): HTMLElsaWorkflowTestPanelElement;
     };
+    interface HTMLX6DesignerElementEventMap {
+        "workflow-changed": WorkflowModel;
+        "activitySelected": ActivityModel;
+        "activityDeselected": ActivityModel;
+        "activityContextMenuButtonClicked": ActivityContextMenuState;
+        "connectionContextMenuButtonClicked": ActivityContextMenuState;
+        "activityContextMenuButtonTestClicked": ActivityContextMenuState;
+        "activityDeleted": ActivityDeletedArgs;
+    }
     interface HTMLX6DesignerElement extends Components.X6Designer, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLX6DesignerElementEventMap>(type: K, listener: (this: HTMLX6DesignerElement, ev: X6DesignerCustomEvent<HTMLX6DesignerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLX6DesignerElementEventMap>(type: K, listener: (this: HTMLX6DesignerElement, ev: X6DesignerCustomEvent<HTMLX6DesignerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLX6DesignerElement: {
         prototype: HTMLX6DesignerElement;
@@ -885,6 +1373,7 @@ declare global {
         "elsa-multi-expression-editor": HTMLElsaMultiExpressionEditorElement;
         "elsa-multi-line-property": HTMLElsaMultiLinePropertyElement;
         "elsa-multi-text-property": HTMLElsaMultiTextPropertyElement;
+        "elsa-nav-link": HTMLElsaNavLinkElement;
         "elsa-oauth2-authorized": HTMLElsaOauth2AuthorizedElement;
         "elsa-pager": HTMLElsaPagerElement;
         "elsa-property-editor": HTMLElsaPropertyEditorElement;
@@ -956,6 +1445,9 @@ declare namespace LocalJSX {
     }
     interface ElsaContextMenu {
         "history"?: RouterHistory;
+        /**
+          * @default []
+         */
         "menuItems"?: Array<MenuItem>;
     }
     interface ElsaControl {
@@ -983,8 +1475,8 @@ declare namespace LocalJSX {
     }
     interface ElsaDesignerPanel {
         "culture"?: string;
-        "onFeatureChanged"?: (event: CustomEvent<string>) => void;
-        "onFeatureStatusChanged"?: (event: CustomEvent<string>) => void;
+        "onFeatureChanged"?: (event: ElsaDesignerPanelCustomEvent<string>) => void;
+        "onFeatureStatusChanged"?: (event: ElsaDesignerPanelCustomEvent<string>) => void;
     }
     interface ElsaDesignerTree {
         "activityBorderColor"?: (activity: ActivityModel) => string;
@@ -993,15 +1485,27 @@ declare namespace LocalJSX {
         "activityContextTestMenu"?: ActivityContextMenuState;
         "connectionContextMenu"?: ActivityContextMenuState;
         "enableMultipleConnectionsFromSingleSource"?: boolean;
+        /**
+          * @default LayoutDirection.TopBottom
+         */
         "layoutDirection"?: LayoutDirection;
+        /**
+          * @default WorkflowDesignerMode.Edit
+         */
         "mode"?: WorkflowDesignerMode;
+        /**
+          * @default {     activities: [],     connections: [],     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst   }
+         */
         "model"?: WorkflowModel;
-        "onActivityContextMenuButtonClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
-        "onActivityContextMenuButtonTestClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
-        "onActivityDeselected"?: (event: CustomEvent<ActivityModel>) => void;
-        "onActivitySelected"?: (event: CustomEvent<ActivityModel>) => void;
-        "onConnectionContextMenuButtonClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
-        "onWorkflow-changed"?: (event: CustomEvent<WorkflowModel>) => void;
+        "onActivityContextMenuButtonClicked"?: (event: ElsaDesignerTreeCustomEvent<ActivityContextMenuState>) => void;
+        "onActivityContextMenuButtonTestClicked"?: (event: ElsaDesignerTreeCustomEvent<ActivityContextMenuState>) => void;
+        "onActivityDeselected"?: (event: ElsaDesignerTreeCustomEvent<ActivityModel>) => void;
+        "onActivitySelected"?: (event: ElsaDesignerTreeCustomEvent<ActivityModel>) => void;
+        "onConnectionContextMenuButtonClicked"?: (event: ElsaDesignerTreeCustomEvent<ActivityContextMenuState>) => void;
+        "onWorkflow-changed"?: (event: ElsaDesignerTreeCustomEvent<WorkflowModel>) => void;
+        /**
+          * @default []
+         */
         "selectedActivityIds"?: Array<string>;
     }
     interface ElsaDictionaryProperty {
@@ -1011,10 +1515,19 @@ declare namespace LocalJSX {
         "serverUrl"?: string;
     }
     interface ElsaDropdownButton {
+        /**
+          * @default " elsa-w-full elsa-bg-white elsa-border elsa-border-gray-300 elsa-rounded-md elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-inline-flex elsa-justify-center elsa-text-sm elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500"
+         */
         "btnClass"?: string;
         "icon"?: any;
+        /**
+          * @default []
+         */
         "items"?: Array<DropdownButtonItem>;
-        "onItemSelected"?: (event: CustomEvent<DropdownButtonItem>) => void;
+        "onItemSelected"?: (event: ElsaDropdownButtonCustomEvent<DropdownButtonItem>) => void;
+        /**
+          * @default DropdownButtonOrigin.TopLeft
+         */
         "origin"?: DropdownButtonOrigin;
         "text"?: string;
     }
@@ -1026,36 +1539,75 @@ declare namespace LocalJSX {
     }
     interface ElsaExpressionEditor {
         "context"?: IntellisenseContext;
+        /**
+          * @default '6em'
+         */
         "editorHeight"?: string;
         "expression"?: string;
         "language"?: string;
-        "onExpressionChanged"?: (event: CustomEvent<string>) => void;
+        "onExpressionChanged"?: (event: ElsaExpressionEditorCustomEvent<string>) => void;
+        /**
+          * @default false
+         */
         "opensModal"?: boolean;
         "padding"?: string;
         "serverUrl"?: string;
+        /**
+          * @default false
+         */
         "singleLineMode"?: boolean;
         "workflowDefinitionId"?: string;
     }
     interface ElsaFlyoutPanel {
+        /**
+          * @default false
+         */
         "autoExpand"?: boolean;
+        /**
+          * @default 1
+         */
         "expandButtonPosition"?: number;
+        /**
+          * @default false
+         */
         "hidden"?: boolean;
+        /**
+          * @default false
+         */
         "silent"?: boolean;
+        /**
+          * @default 0
+         */
         "updateCounter"?: number;
     }
     interface ElsaInputTags {
         "fieldId"?: string;
         "fieldName"?: string;
-        "onValueChanged"?: (event: CustomEvent<Array<string>>) => void;
+        "onValueChanged"?: (event: ElsaInputTagsCustomEvent<Array<string>>) => void;
+        /**
+          * @default 'Add tag'
+         */
         "placeHolder"?: string;
+        /**
+          * @default []
+         */
         "values"?: Array<string>;
     }
     interface ElsaInputTagsDropdown {
+        /**
+          * @default []
+         */
         "dropdownValues"?: Array<SelectListItem>;
         "fieldId"?: string;
         "fieldName"?: string;
-        "onValueChanged"?: (event: CustomEvent<Array<string | SelectListItem>>) => void;
+        "onValueChanged"?: (event: ElsaInputTagsDropdownCustomEvent<Array<string | SelectListItem>>) => void;
+        /**
+          * @default 'Add tag'
+         */
         "placeHolder"?: string;
+        /**
+          * @default []
+         */
         "values"?: Array<string | SelectListItem>;
     }
     interface ElsaJsonProperty {
@@ -1064,29 +1616,50 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface ElsaModalDialog {
-        "onHidden"?: (event: CustomEvent<any>) => void;
-        "onShown"?: (event: CustomEvent<any>) => void;
+        "onHidden"?: (event: ElsaModalDialogCustomEvent<any>) => void;
+        "onShown"?: (event: ElsaModalDialogCustomEvent<any>) => void;
     }
     interface ElsaMonaco {
+        /**
+          * @default '5em'
+         */
         "editorHeight"?: string;
         "language"?: string;
         "monacoLibPath"?: string;
-        "onValueChanged"?: (event: CustomEvent<MonacoValueChangedArgs>) => void;
+        "onValueChanged"?: (event: ElsaMonacoCustomEvent<MonacoValueChangedArgs>) => void;
         "padding"?: string;
+        /**
+          * @default false
+         */
         "singleLineMode"?: boolean;
         "value"?: string;
     }
     interface ElsaMultiExpressionEditor {
         "context"?: IntellisenseContext;
+        /**
+          * @default SyntaxNames.Literal
+         */
         "defaultSyntax"?: string;
+        /**
+          * @default '10em'
+         */
         "editorHeight"?: string;
+        /**
+          * @default {}
+         */
         "expressions"?: Map<string>;
         "fieldName"?: string;
         "isReadOnly"?: boolean;
         "label"?: string;
-        "onExpressionChanged"?: (event: CustomEvent<string>) => void;
-        "onSyntaxChanged"?: (event: CustomEvent<string>) => void;
+        "onExpressionChanged"?: (event: ElsaMultiExpressionEditorCustomEvent<string>) => void;
+        "onSyntaxChanged"?: (event: ElsaMultiExpressionEditorCustomEvent<string>) => void;
+        /**
+          * @default false
+         */
         "singleLineMode"?: boolean;
+        /**
+          * @default []
+         */
         "supportedSyntaxes"?: Array<string>;
         "syntax"?: string;
     }
@@ -1097,10 +1670,38 @@ declare namespace LocalJSX {
     }
     interface ElsaMultiTextProperty {
         "activityModel"?: ActivityModel;
-        "onValueChange"?: (event: CustomEvent<Array<string | number | boolean | SelectListItem>>) => void;
+        "onValueChange"?: (event: ElsaMultiTextPropertyCustomEvent<Array<string | number | boolean | SelectListItem>>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "serverUrl"?: string;
+    }
+    /**
+     * Lightweight replacement for stencil-route-link to eliminate
+     * @stencil-community /router dependency.
+     * Provides anchor rendering with active class evaluation based on current window.location.
+     * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
+     */
+    interface ElsaNavLink {
+        /**
+          * Class appended when current location matches URL
+         */
+        "activeClass"?: string;
+        /**
+          * CSS class applied to anchor
+         */
+        "anchorClass"?: string;
+        /**
+          * Optional rel attribute
+         */
+        "rel"?: string;
+        /**
+          * Optional target attribute
+         */
+        "target"?: string;
+        /**
+          * Target URL
+         */
+        "url"?: string;
     }
     interface ElsaOauth2Authorized {
     }
@@ -1108,7 +1709,7 @@ declare namespace LocalJSX {
         "culture"?: string;
         "history"?: RouterHistory;
         "location"?: LocationSegments;
-        "onPaged"?: (event: CustomEvent<PagerData>) => void;
+        "onPaged"?: (event: ElsaPagerCustomEvent<PagerData>) => void;
         "page"?: number;
         "pageSize"?: number;
         "totalCount"?: number;
@@ -1116,11 +1717,20 @@ declare namespace LocalJSX {
     interface ElsaPropertyEditor {
         "activityModel"?: ActivityModel;
         "context"?: string;
+        /**
+          * @default '10em'
+         */
         "editorHeight"?: string;
-        "onDefaultSyntaxValueChanged"?: (event: CustomEvent<string>) => void;
+        "onDefaultSyntaxValueChanged"?: (event: ElsaPropertyEditorCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
+        /**
+          * @default true
+         */
         "showLabel"?: boolean;
+        /**
+          * @default false
+         */
         "singleLineMode"?: boolean;
     }
     interface ElsaRadioListProperty {
@@ -1131,10 +1741,16 @@ declare namespace LocalJSX {
     }
     interface ElsaScriptProperty {
         "activityModel"?: ActivityModel;
+        /**
+          * @default '6em'
+         */
         "editorHeight"?: string;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "serverUrl"?: string;
+        /**
+          * @default false
+         */
         "singleLineMode"?: boolean;
         "syntax"?: string;
         "workflowDefinitionId"?: string;
@@ -1152,6 +1768,9 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface ElsaStudioDashboard {
+        /**
+          * @default ''
+         */
         "basePath"?: string;
         "culture"?: string;
     }
@@ -1160,14 +1779,20 @@ declare namespace LocalJSX {
         "serverVersion"?: string;
     }
     interface ElsaStudioRoot {
+        /**
+          * @default ''
+         */
         "basePath"?: string;
         "config"?: string;
         "culture"?: string;
         "features"?: any;
         "monacoLibPath"?: string;
-        "onInitialized"?: (event: CustomEvent<ElsaStudio>) => void;
-        "onInitializing"?: (event: CustomEvent<ElsaStudio>) => void;
+        "onInitialized"?: (event: ElsaStudioRootCustomEvent<ElsaStudio>) => void;
+        "onInitializing"?: (event: ElsaStudioRootCustomEvent<ElsaStudio>) => void;
         "serverUrl"?: string;
+        /**
+          * @default false
+         */
         "useX6Graphs"?: boolean;
     }
     interface ElsaStudioWebhookDefinitionsEdit {
@@ -1201,7 +1826,7 @@ declare namespace LocalJSX {
     }
     interface ElsaSwitchCasesProperty {
         "activityModel"?: ActivityModel;
-        "onValueChange"?: (event: CustomEvent<Array<any>>) => void;
+        "onValueChange"?: (event: ElsaSwitchCasesPropertyCustomEvent<Array<any>>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
     }
@@ -1219,9 +1844,9 @@ declare namespace LocalJSX {
         "serverUrl"?: string;
     }
     interface ElsaVersionHistoryPanel {
-        "onDeleteVersionClicked"?: (event: CustomEvent<WorkflowDefinitionVersion>) => void;
-        "onRevertVersionClicked"?: (event: CustomEvent<WorkflowDefinitionVersion>) => void;
-        "onVersionSelected"?: (event: CustomEvent<WorkflowDefinitionVersion>) => void;
+        "onDeleteVersionClicked"?: (event: ElsaVersionHistoryPanelCustomEvent<WorkflowDefinitionVersion>) => void;
+        "onRevertVersionClicked"?: (event: ElsaVersionHistoryPanelCustomEvent<WorkflowDefinitionVersion>) => void;
+        "onVersionSelected"?: (event: ElsaVersionHistoryPanelCustomEvent<WorkflowDefinitionVersion>) => void;
         "serverUrl"?: string;
         "workflowDefinition"?: WorkflowDefinition;
     }
@@ -1258,7 +1883,10 @@ declare namespace LocalJSX {
         "features"?: string;
         "history"?: RouterHistory;
         "monacoLibPath"?: string;
-        "onWorkflowSaved"?: (event: CustomEvent<WorkflowDefinition>) => void;
+        "onWorkflowSaved"?: (event: ElsaWorkflowDefinitionEditorScreenCustomEvent<WorkflowDefinition>) => void;
+        /**
+          * @default []
+         */
         "serverFeatures"?: Array<string>;
         "serverUrl"?: string;
         "workflowDefinitionId"?: string;
@@ -1274,8 +1902,11 @@ declare namespace LocalJSX {
         "workflowFault"?: WorkflowFault;
     }
     interface ElsaWorkflowInstanceJournal {
+        /**
+          * @default []
+         */
         "activityDescriptors"?: Array<ActivityDescriptor>;
-        "onRecordSelected"?: (event: CustomEvent<WorkflowExecutionLogRecord>) => void;
+        "onRecordSelected"?: (event: ElsaWorkflowInstanceJournalCustomEvent<WorkflowExecutionLogRecord>) => void;
         "serverUrl"?: string;
         "workflowBlueprint"?: WorkflowBlueprint;
         "workflowInstance"?: WorkflowInstance;
@@ -1287,6 +1918,9 @@ declare namespace LocalJSX {
         "correlationId"?: string;
         "culture"?: string;
         "history"?: RouterHistory;
+        /**
+          * @default OrderBy.Started
+         */
         "orderBy"?: OrderBy;
         "serverUrl"?: string;
         "workflowId"?: string;
@@ -1307,12 +1941,12 @@ declare namespace LocalJSX {
     }
     interface ElsaWorkflowPublishButton {
         "culture"?: string;
-        "onDeleteClicked"?: (event: CustomEvent<any>) => void;
-        "onExportClicked"?: (event: CustomEvent<any>) => void;
-        "onImportClicked"?: (event: CustomEvent<File>) => void;
-        "onPublishClicked"?: (event: CustomEvent<any>) => void;
-        "onRevertClicked"?: (event: CustomEvent<any>) => void;
-        "onUnPublishClicked"?: (event: CustomEvent<any>) => void;
+        "onDeleteClicked"?: (event: ElsaWorkflowPublishButtonCustomEvent<any>) => void;
+        "onExportClicked"?: (event: ElsaWorkflowPublishButtonCustomEvent<any>) => void;
+        "onImportClicked"?: (event: ElsaWorkflowPublishButtonCustomEvent<File>) => void;
+        "onPublishClicked"?: (event: ElsaWorkflowPublishButtonCustomEvent<any>) => void;
+        "onRevertClicked"?: (event: ElsaWorkflowPublishButtonCustomEvent<any>) => void;
+        "onUnPublishClicked"?: (event: ElsaWorkflowPublishButtonCustomEvent<any>) => void;
         "publishing"?: boolean;
         "workflowDefinition"?: WorkflowDefinition;
     }
@@ -1340,16 +1974,28 @@ declare namespace LocalJSX {
         "activityContextTestMenu"?: ActivityContextMenuState;
         "connectionContextMenu"?: ActivityContextMenuState;
         "enableMultipleConnectionsFromSingleSource"?: boolean;
+        /**
+          * @default LayoutDirection.TopBottom
+         */
         "layoutDirection"?: LayoutDirection;
+        /**
+          * @default WorkflowDesignerMode.Edit
+         */
         "mode"?: WorkflowDesignerMode;
+        /**
+          * @default {     activities: [],     connections: [],     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst   }
+         */
         "model"?: WorkflowModel;
-        "onActivityContextMenuButtonClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
-        "onActivityContextMenuButtonTestClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
-        "onActivityDeleted"?: (event: CustomEvent<ActivityDeletedArgs>) => void;
-        "onActivityDeselected"?: (event: CustomEvent<ActivityModel>) => void;
-        "onActivitySelected"?: (event: CustomEvent<ActivityModel>) => void;
-        "onConnectionContextMenuButtonClicked"?: (event: CustomEvent<ActivityContextMenuState>) => void;
-        "onWorkflow-changed"?: (event: CustomEvent<WorkflowModel>) => void;
+        "onActivityContextMenuButtonClicked"?: (event: X6DesignerCustomEvent<ActivityContextMenuState>) => void;
+        "onActivityContextMenuButtonTestClicked"?: (event: X6DesignerCustomEvent<ActivityContextMenuState>) => void;
+        "onActivityDeleted"?: (event: X6DesignerCustomEvent<ActivityDeletedArgs>) => void;
+        "onActivityDeselected"?: (event: X6DesignerCustomEvent<ActivityModel>) => void;
+        "onActivitySelected"?: (event: X6DesignerCustomEvent<ActivityModel>) => void;
+        "onConnectionContextMenuButtonClicked"?: (event: X6DesignerCustomEvent<ActivityContextMenuState>) => void;
+        "onWorkflow-changed"?: (event: X6DesignerCustomEvent<WorkflowModel>) => void;
+        /**
+          * @default []
+         */
         "selectedActivityIds"?: Array<string>;
     }
     interface IntrinsicElements {
@@ -1380,6 +2026,7 @@ declare namespace LocalJSX {
         "elsa-multi-expression-editor": ElsaMultiExpressionEditor;
         "elsa-multi-line-property": ElsaMultiLineProperty;
         "elsa-multi-text-property": ElsaMultiTextProperty;
+        "elsa-nav-link": ElsaNavLink;
         "elsa-oauth2-authorized": ElsaOauth2Authorized;
         "elsa-pager": ElsaPager;
         "elsa-property-editor": ElsaPropertyEditor;
@@ -1457,6 +2104,13 @@ declare module "@stencil/core" {
             "elsa-multi-expression-editor": LocalJSX.ElsaMultiExpressionEditor & JSXBase.HTMLAttributes<HTMLElsaMultiExpressionEditorElement>;
             "elsa-multi-line-property": LocalJSX.ElsaMultiLineProperty & JSXBase.HTMLAttributes<HTMLElsaMultiLinePropertyElement>;
             "elsa-multi-text-property": LocalJSX.ElsaMultiTextProperty & JSXBase.HTMLAttributes<HTMLElsaMultiTextPropertyElement>;
+            /**
+             * Lightweight replacement for stencil-route-link to eliminate
+             * @stencil-community /router dependency.
+             * Provides anchor rendering with active class evaluation based on current window.location.
+             * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
+             */
+            "elsa-nav-link": LocalJSX.ElsaNavLink & JSXBase.HTMLAttributes<HTMLElsaNavLinkElement>;
             "elsa-oauth2-authorized": LocalJSX.ElsaOauth2Authorized & JSXBase.HTMLAttributes<HTMLElsaOauth2AuthorizedElement>;
             "elsa-pager": LocalJSX.ElsaPager & JSXBase.HTMLAttributes<HTMLElsaPagerElement>;
             "elsa-property-editor": LocalJSX.ElsaPropertyEditor & JSXBase.HTMLAttributes<HTMLElsaPropertyEditorElement>;

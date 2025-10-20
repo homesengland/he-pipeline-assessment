@@ -1,7 +1,7 @@
 import { Component, Event, h, Host, Prop, State } from '@stencil/core';
 import { eventBus, propertyDisplayManager } from '../../../../services';
 import state from '../../../../utils/store';
-import { ActivityDescriptor, ActivityModel, ActivityPropertyDescriptor, EventTypes, WorkflowStorageDescriptor } from '../../../../models';
+import { ActivityDescriptor, ActivityModel, ActivityPropertyDescriptor, EventTypes, WorkflowStorageDescriptor, ActivityTraits } from '../../../../models';
 import { checkBox, FormContext, section, selectField, SelectOption, textArea, textInput } from '../../../../utils/forms';
 import { i18n } from 'i18next';
 import { loadTranslations } from '../../../i18n/i18n-loader';
@@ -77,7 +77,7 @@ export class ElsaActivityEditorPanel {
       type: '',
       outcomes: [],
       category: '',
-      traits: 0,
+  traits: ActivityTraits.None,
       browsable: false,
       inputProperties: [],
       outputProperties: [],

@@ -1,31 +1,18 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
-import {Service} from 'axios-middleware';
+import { HttpClient, createFetchHttpClient } from '../../../services/http/fetch-client';
 import * as collection from 'lodash/collection';
 import {eventBus} from '../../../services/event-bus';
 import {EventTypes} from "../../../models";
 import {WorkflowSettings} from "../models";
 
 
-let _httpClient: AxiosInstance = null;
+let _httpClient: HttpClient = null;
 let _elsaWorkflowSettingsClient: ElsaWorkflowSettingsClient = null;
 
-export const createHttpClient = function(baseAddress: string) : AxiosInstance
-{
+export const createHttpClient = async function(baseAddress: string) : Promise<HttpClient> {
   if(!!_httpClient)
     return _httpClient;
-
-  const config: AxiosRequestConfig = {
-    baseURL: baseAddress
-  };
-
-  eventBus.emit(EventTypes.HttpClientConfigCreated, this, {config});
-
-  const httpClient = axios.create(config);
-  const service = new Service(httpClient);
-
-  eventBus.emit(EventTypes.HttpClientCreated, this, {service, httpClient});
-
-  return _httpClient = httpClient;
+  _httpClient = await createFetchHttpClient(baseAddress);
+  return _httpClient;
 }
 
 export const createElsaWorkflowSettingsClient = async function (serverUrl: string): Promise<ElsaWorkflowSettingsClient> {
@@ -33,7 +20,7 @@ export const createElsaWorkflowSettingsClient = async function (serverUrl: strin
   if (!!_elsaWorkflowSettingsClient)
     return _elsaWorkflowSettingsClient;
 
-  const httpClient: AxiosInstance = await createHttpClient(serverUrl);
+  const httpClient: HttpClient = await createHttpClient(serverUrl);
 
   _elsaWorkflowSettingsClient = {
     workflowSettingsApi: {

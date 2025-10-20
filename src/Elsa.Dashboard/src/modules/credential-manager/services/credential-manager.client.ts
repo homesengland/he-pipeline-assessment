@@ -1,5 +1,4 @@
-import { AxiosInstance } from "axios";
-import { createHttpClient } from '../../../services';
+import { createHttpClient } from '../../../services/elsa-client';
 import { SecretModel } from "../models/secret.model";
 
 let _elsaSecretsClient: ElsaSecretsClient = null;
@@ -9,7 +8,7 @@ export const createElsaSecretsClient = async function (serverUrl: string): Promi
   if (!!_elsaSecretsClient)
     return _elsaSecretsClient;
 
-  const httpClient: AxiosInstance = await createHttpClient(serverUrl);
+  const httpClient = await createHttpClient(serverUrl);
 
   _elsaSecretsClient = {
     secretsApi: {

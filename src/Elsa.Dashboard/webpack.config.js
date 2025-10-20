@@ -20,7 +20,6 @@ module.exports = env => {
         plugins: [
             new CopyPlugin({
                 patterns: [
-                    { from: "dist/elsa-workflows-studio", to: "elsa-workflows-studio" },
                     { from: "node_modules/monaco-editor/min", to: "monaco-editor/min" },
                     { from: "node_modules/monaco-editor/min-maps", to: "monaco-editor/min-maps" },
                 ],

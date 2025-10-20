@@ -1,5 +1,4 @@
-import axios, {AxiosInstance, AxiosRequestConfig} from "axios";
-import {Service} from 'axios-middleware';
+import { HttpClient, createFetchHttpClient } from './http/fetch-client';
 import * as collection from 'lodash/collection';
 import {eventBus} from './event-bus';
 import {
@@ -26,22 +25,13 @@ import {
   WorkflowStorageDescriptor
 } from "../models";
 
-let _httpClient: AxiosInstance = null;
+let _httpClient: HttpClient = null;
 let _elsaClient: ElsaClient = null;
 
-export const createHttpClient = async function (baseAddress: string): Promise<AxiosInstance> {
+export const createHttpClient = async function (baseAddress: string): Promise<HttpClient> {
   if (!!_httpClient)
     return _httpClient;
-
-  const config: AxiosRequestConfig = {
-    baseURL: baseAddress
-  };
-  _httpClient = axios.create(config);
-  const service = new Service(_httpClient);
-
-  await eventBus.emit(EventTypes.HttpClientConfigCreated, this, {config});
-  await eventBus.emit(EventTypes.HttpClientCreated, this, {service, _httpClient});
-
+  _httpClient = await createFetchHttpClient(baseAddress);
   return _httpClient;
 }
 
@@ -50,7 +40,7 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
   if (!!_elsaClient)
     return _elsaClient;
 
-  const httpClient: AxiosInstance = await createHttpClient(serverUrl);
+  const httpClient: HttpClient = await createHttpClient(serverUrl);
 
   _elsaClient = {
     activitiesApi: {
@@ -123,9 +113,7 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
       },
       export: async (workflowDefinitionId, versionOptions): Promise<ExportWorkflowResponse> => {
         const versionOptionsString = getVersionOptionsString(versionOptions);
-        const response = await httpClient.post(`v1/workflow-definitions/${workflowDefinitionId}/${versionOptionsString}/export`, null, {
-          responseType: 'blob'
-        });
+        const response = await httpClient.post(`v1/workflow-definitions/${workflowDefinitionId}/${versionOptionsString}/export`, null, { responseType: 'blob' });
 
         const contentDispositionHeader = response.headers["content-disposition"]; // Only available if the Elsa Server exposes the "Content-Disposition" header.
         const fileName = contentDispositionHeader ? contentDispositionHeader.split(";")[1].split("=")[1] : `workflow-definition-${workflowDefinitionId}.json`;
@@ -139,21 +127,13 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
       import: async (workflowDefinitionId, file: File): Promise<WorkflowDefinition> => {
         const formData = new FormData();
         formData.append("file", file);
-        const response = await httpClient.post<WorkflowDefinition>(`v1/workflow-definitions/${workflowDefinitionId}/import`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+        const response = await httpClient.post<WorkflowDefinition>(`v1/workflow-definitions/${workflowDefinitionId}/import`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         return response.data;
       },
       restore: async (file: File): Promise<void> => {
         const formData = new FormData();
         formData.append("file", file);
-        await httpClient.post(`v1/workflow-definitions/restore`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+        await httpClient.post(`v1/workflow-definitions/restore`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
       }
     },
     workflowTestApi: {
@@ -255,17 +235,15 @@ export const createElsaClient = async function (serverUrl: string): Promise<Elsa
         await httpClient.post(`v1/workflow-instances/${id}/retry`, {runImmediately: false});
       },
       bulkCancel: async request => {
-        const response = await httpClient.post(`v1/workflow-instances/bulk/cancel`, request);
+  const response = await httpClient.post(`v1/workflow-instances/bulk/cancel`, request);
         return response.data;
       },
       bulkDelete: async request => {
-        const response = await httpClient.delete(`v1/workflow-instances/bulk`, {
-          data: request
-        });
+        const response = await httpClient.delete(`v1/workflow-instances/bulk`, { body: JSON.stringify(request), headers: { 'Content-Type': 'application/json' } });
         return response.data;
       },
       bulkRetry: async request => {
-        const response = await httpClient.post(`v1/workflow-instances/bulk/retry`, request);
+  const response = await httpClient.post(`v1/workflow-instances/bulk/retry`, request);
         return response.data;
       }
     },

@@ -6,7 +6,8 @@ import {
   ActivityModel,
   ActivityPropertyDescriptor,
   EventTypes,
-  WorkflowStorageDescriptor
+  WorkflowStorageDescriptor,
+  ActivityTraits
 } from "../../../../models";
 import {checkBox, FormContext, section, selectField, SelectOption, textArea, textInput} from "../../../../utils/forms";
 import {i18n} from "i18next";
@@ -85,7 +86,7 @@ export class ElsaActivityEditorModal {
       type: '',
       outcomes: [],
       category: '',
-      traits: 0,
+  traits: ActivityTraits.None,
       browsable: false,
       inputProperties: [],
       outputProperties: [],

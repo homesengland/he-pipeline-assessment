@@ -1,6 +1,6 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import { createElsaClient } from "../../../../services";
-import {RouterHistory} from "@stencil/router";
+import {RouterHistory} from "@stencil-community/router";
 import 'i18next-wc';
 import {GetIntlMessage, IntlMessage} from "../../../i18n/intl-message";
 import {loadTranslations} from "../../../i18n/i18n-loader";
@@ -70,10 +70,10 @@ export class ElsaStudioWorkflowDefinitionsList {
           </div>
           <div class="elsa-mt-4 elsa-flex sm:elsa-mt-0 sm:elsa-ml-4">
             <span class="elsa-relative elsa-z-20 elsa-inline-flex elsa-shadow-sm elsa-rounded-md">
-              <stencil-route-link url={`${basePath}/workflow-definitions/new`}
-                class="elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-l-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 focus:elsa-z-10">
+              <elsa-nav-link url={`${basePath}/workflow-definitions/new`}
+                anchorClass="elsa-relative elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-l-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 focus:elsa-z-10">
                 <IntlMessage label="CreateButton"/>
-              </stencil-route-link>
+              </elsa-nav-link>
               <span class="-elsa-ml-px elsa-relative elsa-block">
                 <button onClick={() => this.toggleMenu()} id="option-menu" type="button"
                   class="elsa-relative elsa-inline-flex elsa-items-center elsa-px-2 elsa-py-2 elsa-rounded-r-md elsa-border elsa-border-transparent elsa-bg-blue-600 elsa-text-sm elsa-font-medium elsa-text-white hover:elsa-bg-blue-700 focus:elsa-z-10 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-blue-500 focus:elsa-border-blue-500">

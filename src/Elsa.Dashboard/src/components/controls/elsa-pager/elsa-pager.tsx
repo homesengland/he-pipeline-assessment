@@ -1,5 +1,5 @@
 import {Component, Event, EventEmitter, h, Prop} from '@stencil/core';
-import {LocationSegments, RouterHistory, injectHistory} from "@stencil/router";
+import {LocationSegments, RouterHistory, injectHistory} from "@stencil-community/router";
 import {parseQuery, queryToString} from "../../../utils/utils";
 import {i18n} from "i18next";
 import {resources} from "./localizations";

@@ -327,6 +327,7 @@ export interface ListModel<T> {
 }
 
 export enum ActivityTraits {
+  None = 0,
   Action = 1,
   Trigger = 2,
   Job = 4,

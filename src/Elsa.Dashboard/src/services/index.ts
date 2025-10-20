@@ -3,6 +3,7 @@ export * from './confirm-dialog-service';
 export * from './toast-notification-service';
 export * from './elsa-plugin';
 export * from './elsa-client';
+export * from './http/fetch-client';
 export * from './event-bus';
 export * from './features-data-manager';
 export * from './plugin-manager';

@@ -1,4 +1,4 @@
-import {Component, h, Prop, getAssetPath} from '@stencil/core';
+import {Component, h, Prop, State, getAssetPath} from '@stencil/core';
 import {loadTranslations} from "../../../i18n/i18n-loader";
 import {resources} from "./localizations";
 import {i18n, t} from "i18next";
@@ -57,17 +57,22 @@ export class ElsaStudioDashboard {
           [route, this.i18next.t(`${menuItemsNamespace}:${route}`)] :
           [route, label]
       );
-    
+
     let routes = this.dashboardMenu.data != null ? this.dashboardMenu.data.routes : [];
 
     const renderFeatureMenuItem = (item: any, basePath: string) => {
-      return (<stencil-route-link url={`${basePath}/${item[0]}`} anchorClass="elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium" activeClass="elsa-text-white elsa-bg-gray-900">
+      return (<elsa-nav-link url={`${basePath}/${item[0]}`} anchorClass="elsa-text-gray-300 hover:elsa-bg-gray-700 hover:elsa-text-white elsa-px-3 elsa-py-2 elsa-rounded-md elsa-text-sm elsa-font-medium" activeClass="elsa-text-white elsa-bg-gray-900">
                 <IntlMessage label={`${item[1]}`}/>
-              </stencil-route-link>)
+              </elsa-nav-link>)
     }
 
-    const renderFeatureRoute = (item: any, basePath: string) => {
-      return (<stencil-route url={`${basePath}/${item[0]}`} component={`${item[1]}`} exact={item[2]}/>)
+    const renderActiveView = () => {
+      const path = (window.location.pathname || '').replace(/\\/g,'/');
+      // Match first route whose base segment is contained in path; default to home.
+      const match = routes.find(r => path.endsWith(`/${r[0]}`) || path.includes(`/${r[0]}/`)) || routes.find(r => r[0] === '') ;
+      if (!match) return null;
+      const componentTag = match[1];
+      return h(componentTag, { basePath: basePath, culture: this.culture });
     }
 
     return (
@@ -77,9 +82,9 @@ export class ElsaStudioDashboard {
             <div class="elsa-flex elsa-items-center elsa-justify-between elsa-h-16">
               <div class="elsa-flex elsa-items-center">
                 <div class="elsa-flex-shrink-0">
-                  <stencil-route-link url={`${basePath}/`}>
+      <elsa-nav-link url={`${basePath}/`}>
                     <img class="elsa-h-8 elsa-w-8" src={logoPath}
-                          alt="Workflow"/></stencil-route-link>
+        alt="Workflow"/></elsa-nav-link>
                 </div>
                 <div class="hidden md:elsa-block">
                   <div class="elsa-ml-10 elsa-flex elsa-items-baseline elsa-space-x-4">
@@ -93,11 +98,7 @@ export class ElsaStudioDashboard {
 
         </nav>
         <main>
-          <stencil-router>
-            <stencil-route-switch scrollTopOffset={0}>
-              {routes.map(item => renderFeatureRoute(item, basePath))}
-            </stencil-route-switch>
-          </stencil-router>
+          {renderActiveView()}
         </main>
 
       </div>
