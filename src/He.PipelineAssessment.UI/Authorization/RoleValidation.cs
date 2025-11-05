@@ -63,6 +63,7 @@ public class RoleValidation : IRoleValidation
         return false;
     }
 
+    //Most Likely Not Needed
     public bool ValidateForBusinessArea(string? businessArea)
     {
         bool isRoleExist = false;
@@ -70,13 +71,7 @@ public class RoleValidation : IRoleValidation
         switch (businessArea)
             {
                 case Constants.BusinessArea.MPP:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || isAdmin);
-                    return isRoleExist;
-                case Constants.BusinessArea.Investment:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || isAdmin);
-                    return isRoleExist;
-                case Constants.BusinessArea.Development:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || isAdmin);
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineProjectManager) || isAdmin);
                     return isRoleExist;
                 default: return isRoleExist;
             }
