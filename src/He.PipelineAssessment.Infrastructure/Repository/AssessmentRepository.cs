@@ -43,6 +43,12 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task <List<AssessmentFund>> GetAllFunds();
         Task SaveFund(List<AssessmentFund> funds);
         Task DeleteFund(int FundId);
+
+        Task<AssessmentFund?> GetAssessmentFundById(int fundId);
+
+        Task<int> UpdateAssessmentFund(AssessmentFund fund);
+
+        Task<int> DeleteAssessmentFund(AssessmentFund fund);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -325,6 +331,23 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                 context.Set<AssessmentFund>().Update(fundToBeDeleted);
                 await context.SaveChangesAsync();
             }
+        }
+
+        public async Task<AssessmentFund?> GetAssessmentFundById(int id)
+        {
+            return await context.Set<AssessmentFund>().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<int> UpdateAssessmentFund(AssessmentFund fund)
+        {
+            context.Set<AssessmentFund>().Update(fund);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteAssessmentFund(AssessmentFund fund)
+        {
+            context.Set<AssessmentFund>().Remove(fund);
+            return await context.SaveChangesAsync();
         }
     }
 }
