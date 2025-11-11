@@ -14,6 +14,7 @@
             { "width": "10%", "targets": 6 },
             { "width": "10%", "targets": 7 },
             { "width": "10%", "targets": 8 },
+            { "targets": 9, "visible": false, }
         ],
         //Search box label shown on the index page.
         "oLanguage": {
