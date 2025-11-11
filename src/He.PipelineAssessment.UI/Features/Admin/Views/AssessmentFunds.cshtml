@@ -1,0 +1,164 @@
+﻿
+@using He.PipelineAssessment.Models
+@using He.PipelineAssessment.UI.Features.Funds.FundsList
+
+@model FundsListResponse;
+
+@{
+    ViewData["Title"] = "Assessment Funds";
+    Layout = "_Layout";
+}
+<div class=" govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        @Html.ActionLink("Back", "AssessmentTool", "Admin", null, new { @class = "govuk-back-link" })
+    </div>
+</div>
+<div class="govuk-tabs" data-module="govuk-tabs">
+    <ul class="govuk-tabs__list">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected">
+            <a class="govuk-tabs__tab" href="#assessment-funds">
+                Assessment Funds
+            </a>
+        </li>
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#archived-assessment-funds">
+                Archived Assessment Funds
+            </a>
+        </li>
+    </ul>
+    <div class="govuk-tabs__panel" id="assessment-funds">
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Assessment Funds</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
+                    @* <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is disabled?</th> *@
+                    <th scope="col" class="govuk-table__header">Update</th>
+                    <th scope="col" class="govuk-table__header">Archive</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @{
+                    int iterator = 0;
+                    @foreach (var nonDisabledFunds in Model.Funds.Where(x => !x.IsDisabled))
+                    {
+                        //@foreach (var fund in Model.Funds)
+                        iterator++;
+                        <tr class="govuk-table__row ">
+                            @using (Html.BeginForm("UpdateAssessmentFund", "Admin", FormMethod.Post))
+                            {
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-form-group">
+                                        @{
+                                            var labelId = "Name" + iterator;
+                                            <label hidden id=@labelId>"Row: @iterator column: name"</label>
+                                            <input type="text" value="@nonDisabledFunds.Name" name="AssessmentFundsDTO.Name" class="govuk-input ">
+                                        }
+                                    </div>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-radios--inline govuk-radios--small">
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("AssessmentFundsDTO.IsEarlyStage", "True", nonDisabledFunds.IsEarlyStage, new { @class = "govuk-radios__input" })
+                                            @{
+                                                var earlyStageLabelId = "IsEarlyStage" + iterator;
+                                                <label class="govuk-label govuk-radios__label" id="@earlyStageLabelId">Yes</label>
+                                            }
+                                        </div>
+                                        <div class="govuk-radios__item radio-no-margin">
+                                            @Html.RadioButton("AssessmentFundsDTO.IsEarlyStage", "False", !nonDisabledFunds.IsEarlyStage, new { @class = "govuk-radios__input" })
+                                            @{
+                                                earlyStageLabelId = "IsNotEarlyStage" + iterator;
+                                                <label class="govuk-label govuk-radios__label" id="@earlyStageLabelId">No</label>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    @{
+                                        var hiddenId = "hidden" + iterator;
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("AssessmentFundsDTO.Id", nonDisabledFunds.Id, new { @id = @hiddenId })
+
+                                        var updateId = "Update" + iterator;
+                                        <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="@updateId" type="submit" value="Update" />
+                                    }
+                                </td>
+                            }
+                            <td class="govuk-table__cell">
+                                @using (Html.BeginForm("DeleteAssessmentFund", "Admin", FormMethod.Post))
+                                {
+                                    var hiddenId = "hidden" + iterator;
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("AssessmentFundsDTO.Id", nonDisabledFunds.Id, new { @id = @hiddenId })
+                                    @Html.Hidden("AssessmentFundsDTO.IsDisabled", nonDisabledFunds.IsDisabled, new { @id = hiddenId })
+
+                                    var deleteId = "Delete" + iterator;
+                                    <input class="govuk-button govuk-!-margin-0 govuk-button--warning" data-module="govuk-button" id="Archive" type="submit" value="Archive" />
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="archived-assessment-funds">
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--m">Archived Assessment Funds</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Restore</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var disabledFunds in Model.Funds.Where(x => x.IsDisabled))
+                {
+                    iterator++;
+                    <tr class="govuk-table__row ">
+                        @using (Html.BeginForm("UpdateAssessmentFund", "Admin", FormMethod.Post))
+                        {
+                            <td class="govuk-table__cell">
+                                <div class="govuk-form-group">
+                                    @{
+                                        var labelId = "Name" + iterator;
+                                        <label hidden id=@labelId>"Row: @iterator column: name"</label>
+                                        <input type="text" value="@disabledFunds.Name" class="govuk-input" disabled >
+                                    }
+                                </div>
+                            </td>
+                            <td class="govuk-table__cell">
+                                <div class="govuk-radios--inline govuk-radios--small">
+                                    <div class="govuk-radios__item radio-no-margin">
+                                        <span class="govuk-label">@(disabledFunds.IsEarlyStage ? "Yes" : "No")</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="govuk-table__cell">
+                                @{
+                                    var hiddenId = "hidden" + iterator;
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("AssessmentFundsDTO.Name", disabledFunds.Name, new {@id = @hiddenId + "_Name" })
+                                    @Html.Hidden("AssessmentFundsDTO.Id", disabledFunds.Id, new { @id = @hiddenId + "_Id"})
+                                    @Html.Hidden("AssessmentFundsDTO.IsEarlyStage", disabledFunds.IsEarlyStage, new { @id = @hiddenId + "_IsEarlyStage" })
+
+                                    var restoreId = "Restore" + iterator;
+                                    <input class="govuk-button govuk-button--secondary govuk-!-margin-0" data-module="govuk-button" id="@restoreId" type="submit" value="Restore" />
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+ 
+
+
+
+
+

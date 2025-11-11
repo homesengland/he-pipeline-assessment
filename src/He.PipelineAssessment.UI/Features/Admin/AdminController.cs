@@ -1,13 +1,19 @@
 ﻿using FluentValidation;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentFunds;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
+using He.PipelineAssessment.UI.Features.Funds.FundsList;
+using He.PipelineAssessment.UI.Features.Funds.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -112,6 +118,21 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
+        //create an assessment fund
+        [HttpPost]
+       //public async Task<IActionResult> CreateAssessmentFund(CreateAssessmentFundDto createAssessmentFundDto)
+       // {
+       //    //COMMENT: Insert validation here.
+       //     var createAssessmentFundCommand = new CreateAssessmentFundCommand
+       //     {
+       //         Name = createAssessmentFundDto.CreateAssessmentFundCommand.Name,
+       //         IsEarlyStage = createAssessmentFundDto.CreateAssessmentFundCommand.IsEarlyStage,
+       //         IsDisabled = createAssessmentFundDto.CreateAssessmentFundCommand.IsDisabled
+       //     };
+       //     await _mediator.Send(createAssessmentFundDto.CreateAssessmentFundCommand);
+       //     return RedirectToAction("AssessmentFunds");
+       // }
+
         //update an assessment tool
         [HttpPost]
         public async Task<IActionResult> UpdateAssessmentTool(UpdateAssessmentToolDto updateAssessmentToolDto)
@@ -193,6 +214,68 @@ namespace He.PipelineAssessment.UI.Features.Admin
             await _mediator.Send(new DeleteAssessmentToolWorkflowCommand(assessmentToolWorkflowId));
 
             return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId });
+        }
+
+        // display all available funds
+        [HttpGet]
+        public async Task<IActionResult> AssessmentFunds()
+        {
+            FundsListResponse response = await _mediator.Send(new FundsListRequest());
+
+            return View("AssessmentFunds", response);
+        }
+
+        // update an assessment fund
+        [HttpPost]
+        public async Task<IActionResult> UpdateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
+        {
+            var updateAssessmentFundCommandDTO = new UpdateAssessmentFundCommandDTO
+            {
+                UpdateAssessmentFundCommand = new UpdateAssessmentFundCommand
+                {
+                    Id = assessmentFundsDTO.Id ?? 0,
+                    Name = assessmentFundsDTO.Name,
+                    IsEarlyStage = assessmentFundsDTO.IsEarlyStage,
+                    IsDisabled = assessmentFundsDTO.IsDisabled
+                }
+            };
+            if (updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id == 0)
+            {
+                return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Fund Id provided." });
+            }
+
+            // var validationResult = await _updateAssessmentFundCommandValidator.ValidateAsync(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
+            //if (validationResult.IsValid)
+            //{
+            await _mediator.Send(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
+            return RedirectToAction("AssessmentFunds");
+            ////}
+            //else
+            //{
+            //    var assessmentFund = await _mediator.Send(new AssessmentFundQuery(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id));
+            //    if (assessmentFund != null && assessmentFund.Id == updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id)
+            //    {
+            //        //COMMENT: The query actually returns just one fund (assessmentFund), so it can be used directly. There’s no need to search inside a list using x => x.Id syntax.
+            //        assessmentFund.ValidationResult = validationResult;
+            //        assessmentFund.Name = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Name;
+            //        assessmentFund.IsEarlyStage = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsEarlyStage;
+            //        assessmentFund.IsDisabled = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsDisabled;
+            //    }
+            //    return View("AssessmentFunds", assessmentFund);
+        }
+
+
+
+        // delete an assessment fund
+        [HttpPost]
+        public async Task<IActionResult> DeleteAssessmentFund(AssessmentFundsDTO assessmentFundsDTO) // COMMENT: The parameter is of type AssessmentFundsDTO because it contains the ID of the fund to be deleted. Before calling the delete command, we need to extract the ID from this DTO.
+        {
+            // COMMENT: The id variable in AssessmentFundsDTO is nullable (int?), so the null-coalescing operator (??) is used to provide a default value of 0 in case it is null.
+            // COMMENT: If assessmentFundsDTO.ID is not null, it returns its value; otherwise, it returns 0.
+            var id = assessmentFundsDTO.Id ?? 0;
+
+            await _mediator.Send(new DeleteAssessmentFundCommand(id));
+            return RedirectToAction("AssessmentFunds");
         }
     }
 }

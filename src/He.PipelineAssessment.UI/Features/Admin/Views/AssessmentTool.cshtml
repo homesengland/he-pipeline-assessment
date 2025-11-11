@@ -8,11 +8,13 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        <label for="Back" hidden="hidden">Back: </label>
         @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
     </div>
     <div class="govuk-grid-column-one-third pull-right">
-        <label for="createAssessmentTool" hidden="hidden">Back: </label>
+        <label for="createAssessmentTool" hidden="hidden">Create Assessment Tool: </label>
         @Html.ActionLink("Create Assessment Tool", "LoadAssessmentTool","Admin", null, new {@class = "govuk-link"})
+        @Html.ActionLink("Manage Funds", "AssessmentFunds", "Admin", null, new { @class = "govuk-link" })
     </div>
 </div>
 <div class="text-center">

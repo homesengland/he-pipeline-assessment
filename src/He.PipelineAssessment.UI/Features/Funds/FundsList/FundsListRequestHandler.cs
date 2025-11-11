@@ -10,12 +10,10 @@ namespace He.PipelineAssessment.UI.Features.Funds.FundsList
 {
     public class FundsListRequestHandler : IRequestHandler<FundsListRequest, FundsListResponse>
     {
-        // COMMENT: private field to hold an instance of the assessment repository interface.
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ILogger<FundsListRequestHandler> _logger;
 
 
-        // COMMENT: Constructor:
         public FundsListRequestHandler(IAssessmentRepository assessmentRepository, ILogger<FundsListRequestHandler> logger)
         {
             _assessmentRepository = assessmentRepository;
@@ -26,10 +24,14 @@ namespace He.PipelineAssessment.UI.Features.Funds.FundsList
         {
             try
             {
-                // COMMENT: get all funds from the assessment repository and store them in the funds variable.
-                List<AssessmentFund> funds = await _assessmentRepository.GetAllFunds();
+                var funds = await _assessmentRepository.GetAllFunds();
 
-                // COMMENT: return a new FundsListResponse object containing the list of funds. 
+                if (funds == null)
+                {
+                    _logger.LogError("Database returned null when retrieving list of funds.");
+                    funds = new List<AssessmentFund>();
+                }
+
                 return new FundsListResponse(funds);
             }
             catch (Exception e)
