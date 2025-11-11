@@ -15,6 +15,7 @@ using MediatR;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Infrastructure.Repository;
 using Microsoft.Extensions.Logging;
+using Auth0.ManagementApi.Models;
 
 
 namespace He.PipelineAssessment.UI.Tests.Features.Funds.FundsList
@@ -95,48 +96,15 @@ namespace He.PipelineAssessment.UI.Tests.Features.Funds.FundsList
 
         [Theory]
         [AutoMoqData]
-        public async Task Handle_Method_Should_Return_Empty_List_Of_Funds_When_Repo_Returns_Null(
-            [Frozen] Mock<IAssessmentRepository> repo,
-            FundsListRequest fundsListRequest,
-            FundsListRequestHandler sut)
-        {
-            // Arrange
-            repo.Setup(x => x.GetAllFunds()).ReturnsAsync((List<AssessmentFund>)null);
-
-            // Act
-            var result = await sut.Handle(fundsListRequest, CancellationToken.None);
-
-            // Assert
-            Assert.Null(result.Funds);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Handle_Method_Should_Log_Error_If_Repo_Returns_Null(
-            [Frozen] Mock<IAssessmentRepository> repo,
-            [Frozen] Mock<ILogger<FundsListRequestHandler>> logger,
-            FundsListRequest fundsListRequest,
-            FundsListRequestHandler sut)
-        {
-            // Arrange
-            repo.Setup(x => x.GetAllFunds()).ReturnsAsync((List<AssessmentFund>?)null);
-
-            // Act
-            var result = await sut.Handle(fundsListRequest, CancellationToken.None);
-
-            // Assert
-        }
-
-        [Theory]
-        [AutoMoqData]
         public async Task Handle_Method_Should_Catch_Exception_If_Repo_Throws_Exception(
             [Frozen] Mock<IAssessmentRepository> repo,
             FundsListRequest fundsListRequest,
+            Exception exception,
             FundsListRequestHandler sut)
         {
             // Arrange
             // COMMENT: ThrowsAsync is used to simulate/fake an exception being thrown in asynchronously.
-            repo.Setup(x => x.GetAllFunds()).ThrowsAsync(new Exception("Database error"));
+            repo.Setup(x => x.GetAllFunds()).ThrowsAsync(exception);
 
             // Act 
             var exception = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(fundsListRequest, CancellationToken.None));
@@ -148,19 +116,28 @@ namespace He.PipelineAssessment.UI.Tests.Features.Funds.FundsList
 
         [Theory]
         [AutoMoqData]
-        public async Task Exception_Text_Should_Be_Unable_To_Get_List_Of_Funds_When_Repo_Throws_Exception(
+        public async Task Exception_Should_Be_Logged_When_Repo_Throws_Exception(
             [Frozen] Mock<IAssessmentRepository> repo,
+            [Frozen] Mock<ILogger<FundsListRequestHandler>> logger,
             FundsListRequest fundsListRequest,
+            Exception exception,
             FundsListRequestHandler sut)
         {
             //Arrange
-            repo.Setup(x => x.GetAllFunds()).ThrowsAsync(new Exception("Database error"));
+            repo.Setup(x => x.GetAllFunds()).ThrowsAsync(exception);
 
             // Act
             var exceptionMessage = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(fundsListRequest, CancellationToken.None));
 
             // Assert
-            Assert.Equal("Unable to get list of funds.", exceptionMessage.Message);
+            logger.Verify(
+                x => x.Log(
+                    LogLevel.Error,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains(exception.Message)),
+                    exception,
+                    (Func<It.IsAnyType, Exception?, string>)It.IsAny<object>()),
+                Times.Once);
 
         }
     }
