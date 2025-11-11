@@ -54,6 +54,7 @@ public class RoleValidation : IRoleValidation
         return _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
     }
 
+    //To Be Removed
     public bool ValidateForBusinessArea(Assessment? assessment)
     {
         if (assessment != null)
@@ -63,14 +64,14 @@ public class RoleValidation : IRoleValidation
         return false;
     }
 
-    //Most Likely Not Needed
+    //To Be Removed
     public bool ValidateForBusinessArea(string? businessArea)
     {
         bool isRoleExist = false;
         bool isAdmin = IsAdmin();
         switch (businessArea)
             {
-                case Constants.BusinessArea.MPP:
+                case Constants.AppRole.PipelineProjectManager:
                     isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineProjectManager) || isAdmin);
                     return isRoleExist;
                 default: return isRoleExist;

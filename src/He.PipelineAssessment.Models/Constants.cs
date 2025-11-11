@@ -34,4 +34,11 @@
     {
         public const string Deleted = "Deleted";
     }
+
+    public static class SensitivityStatus
+    {
+        public const string SensitiveOther = "sesnsitive - other";
+        public const string SensitivePLC = "sensitive - plc involved in delivery";
+        public const string SensitiveNDA = "sensitive - nda in place";
+    }
 }
