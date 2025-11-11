@@ -48,7 +48,8 @@ namespace Elsa.Services.Workflows
                 {
                     // An activity caused the fault.
                     workflowInstance.WorkflowStatus = faultedActivity.Resuming ? WorkflowStatus.Suspended : WorkflowStatus.Running;
-                    workflowInstance.ScheduledActivities.Push(new ScheduledActivity(faultedActivity.FaultedActivityId, faultedActivity.ActivityInput));
+                    string functionalActivityId = faultedActivity.FaultedActivityId ?? string.Empty;
+                    workflowInstance.ScheduledActivities.Push(new ScheduledActivity(functionalActivityId, faultedActivity.ActivityInput));
                 }
             }
 

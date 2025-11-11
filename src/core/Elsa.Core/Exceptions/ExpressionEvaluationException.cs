@@ -6,13 +6,23 @@ namespace Elsa.Exceptions
     {
         public string Expression
         {
-            get => (string)Data[nameof(Expression)];
+            get
+            {
+                if (Data.Contains(nameof(Expression)))
+                    return Data[nameof(Expression)] as string ?? string.Empty;
+                return string.Empty;
+            }
             set => Data[nameof(Expression)] = value;
         }
 
         public string Syntax
         {
-            get => (string)Data[nameof(Syntax)];
+            get
+            {
+                if (Data.Contains(nameof(Syntax)))
+                    return Data[nameof(Syntax)] as string ?? string.Empty;
+                return string.Empty;
+            }
             set => Data[nameof(Syntax)] = value;
         }
 

@@ -32,6 +32,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elsa.CustomActivities.Tests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60184F01-9213-4233-B604-A3F384050DB6}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		CodeCoverage.runsettings = CodeCoverage.runsettings
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props

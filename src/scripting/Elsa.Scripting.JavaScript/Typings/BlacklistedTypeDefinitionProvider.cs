@@ -35,7 +35,7 @@ namespace Elsa.Scripting.JavaScript.Typings
             "Newtonsoft.Json.Serialization"
         };
 
-        public override bool SupportsType(TypeDefinitionContext context, Type type) => !WhiteList.ContainsKey(type) && (Namespaces.Contains(type.Namespace) || BlackList.Contains(type));
+        public override bool SupportsType(TypeDefinitionContext context, Type type) => !WhiteList.ContainsKey(type) && (Namespaces.Contains(type.Namespace ?? "") || BlackList.Contains(type));
 
         public override string GetTypeDefinition(TypeDefinitionContext context, Type type)
         {

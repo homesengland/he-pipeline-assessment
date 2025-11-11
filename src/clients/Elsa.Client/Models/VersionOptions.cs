@@ -69,7 +69,7 @@ namespace Elsa.Client.Models
         /// </summary>
         public override string ToString() => AllVersions ? "AllVersions" : IsDraft ? "Draft" : IsLatest ? "Latest" : IsPublished ? "Published" : IsLatestOrPublished ? "LatestOrPublished" : Version.ToString();
 
-        public string ToString(string format, IFormatProvider formatProvider) => ToString();
+        public string ToString(string? format, IFormatProvider? formatProvider) => ToString();
 
         /// <summary>
         /// Parses a string into a <see cref="VersionOptions"/>. 

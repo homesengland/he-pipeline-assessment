@@ -85,14 +85,14 @@ namespace Elsa.Server.Authentication.Extensions
         }
         public static IServiceCollection AddTenantAccessorFromClaim(this IServiceCollection services,string claimName)
         {
-            services.AddScoped<ITenantAccessor>(x=>new TenantAccessorFromClaim(x.GetService<IHttpContextAccessor>(), claimName));
+            services.AddScoped<ITenantAccessor>(x=> new TenantAccessorFromClaim(x.GetService<IHttpContextAccessor>()!, claimName));
             ElsaAuthenticationContext.CurrentTenantAccessorName = nameof(TenantAccessorFromClaim);
             ElsaAuthenticationContext.TenantAccessorKeyName = claimName;
             return services;
         }
         public static IServiceCollection AddTenantAccessorFromHeader(this IServiceCollection services, string header)
         {
-            services.AddScoped<ITenantAccessor>(x => new TenantAccessorFromHeader(x.GetService<IHttpContextAccessor>(), header));
+            services.AddScoped<ITenantAccessor>(x => new TenantAccessorFromHeader(x.GetService<IHttpContextAccessor>()!, header));
             ElsaAuthenticationContext.CurrentTenantAccessorName = nameof(TenantAccessorFromHeader);
             ElsaAuthenticationContext.TenantAccessorKeyName = header;
             return services;

@@ -10,7 +10,7 @@ namespace Elsa.Activities.Workflows.Helper
         {
             var seen = new HashSet<object>();
             var properties = GetAllSimpleProperties(entity, seen);
-            return string.Join("",properties.Select(p => Encoding.ASCII.GetBytes(p.ToString()).AsEnumerable()).Aggregate((ag, next) => ag.Concat(next)).ToArray());
+            return string.Join("",properties.Select(p => Encoding.ASCII.GetBytes(p.ToString()!).AsEnumerable()).Aggregate((ag, next) => ag.Concat(next)).ToArray());
         }
 
         private static IEnumerable<object> GetAllSimpleProperties(object entity, HashSet<object> seen)

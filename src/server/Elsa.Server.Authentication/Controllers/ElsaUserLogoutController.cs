@@ -28,14 +28,14 @@ namespace Elsa.Server.Authentication.Controllers
         {
             if (ElsaAuthenticationContext.AuthenticationStyles.Contains(AuthenticationStyles.OpenIdConnect))
             {
-                await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                await _httpContextAccessor.HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
+                await _httpContextAccessor.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                await _httpContextAccessor.HttpContext!.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
             }
             if (ElsaAuthenticationContext.AuthenticationStyles.Contains(AuthenticationStyles.ServerManagedCookie))
             {
-                await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                await _httpContextAccessor.HttpContext!.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
-                _httpContextAccessor.HttpContext.Response.Redirect("/");
+                _httpContextAccessor.HttpContext!.Response.Redirect("/");
             }
         }
     }

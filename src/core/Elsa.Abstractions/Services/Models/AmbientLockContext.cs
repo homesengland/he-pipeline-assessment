@@ -26,6 +26,13 @@ namespace Elsa.Services.Models
             WorkflowInstanceLocks.Value = dictionary;
         }
 
-        public static void DeleteCurrentWorkflowInstanceLock(string workflowInstanceId) => WorkflowInstanceLocks.Value.Remove(workflowInstanceId, out _);
+        public static void DeleteCurrentWorkflowInstanceLock(string workflowInstanceId)
+        {
+            if (WorkflowInstanceLocks.Value == null)
+            {
+                return;
+            }
+            else WorkflowInstanceLocks.Value.Remove(workflowInstanceId, out _);
+        }
     }
 }

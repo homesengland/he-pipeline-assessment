@@ -37,7 +37,13 @@ namespace Elsa
                 return StateDictionaryExtensions.DeserializeState((JToken)value, underlyingTargetType);
 
             if (underlyingTargetType == typeof(Duration))
-                return DurationPattern.JsonRoundtrip.Parse(value!.ToString()).Value!;
+            {
+                if (value == null)
+                    return default!;
+                string valueString = value.ToString() ?? "";
+                return DurationPattern.JsonRoundtrip.Parse(valueString).Value!;
+            }
+                
 
             var targetTypeConverter = TypeDescriptor.GetConverter(underlyingTargetType);
 
@@ -67,8 +73,8 @@ namespace Elsa
 
                     if (targetType.IsAssignableFrom(desiredCollectionType) || desiredCollectionType.IsAssignableFrom(targetType))
                     {
-                        var collectionType = typeof(List<>).MakeGenericType(desiredCollectionItemType);
-                        var collection = (IList)Activator.CreateInstance(collectionType);
+                        Type collectionType = typeof(List<>).MakeGenericType(desiredCollectionItemType);
+                        IList collection = (IList)Activator.CreateInstance(collectionType)!;
                         foreach (var item in enumerable)
                         {
                             var convertedItem = ConvertTo(item, desiredCollectionItemType);

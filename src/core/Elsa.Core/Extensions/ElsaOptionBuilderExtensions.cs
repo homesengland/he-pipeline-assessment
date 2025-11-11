@@ -41,9 +41,16 @@ namespace Elsa
                 // Only load & configure features once.
                 if (builder.ElsaOptions.Startups.Where(t => t.GetType() == type).Any() == false)
                 {
-                    var instance = (IStartup)Activator.CreateInstance(type, null);
-                    builder.ElsaOptions.Startups.Add(instance);
-                    instance.ConfigureElsa(builder, configuration);
+                    if (type != null) 
+                    {
+                        var instance = Activator.CreateInstance(type!) as IStartup;
+                        if (instance != null)
+                        {
+                            builder.ElsaOptions.Startups.Add(instance);
+                            instance.ConfigureElsa(builder, configuration);
+                        }
+
+                    }
                 }
             }
 
@@ -85,9 +92,8 @@ namespace Elsa
 
             if (configuration.GetSection($"{feature}:Enabled").Exists())
             {
-                var featureItems = configuration.GetSection($"{feature}").AsEnumerable();
-
-                ParseFeatureItems(feature, featureModel, featureItems);
+                var featureItems = configuration.GetSection($"{feature}").AsEnumerable() ?? Enumerable.Empty<KeyValuePair<string, string?>>();
+                ParseFeatureItems(feature, featureModel, featureItems!);
                 ParseFeatureOptions(configuration, feature, featureModel);
 
                 return featureModel;

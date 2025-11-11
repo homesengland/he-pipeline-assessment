@@ -12,6 +12,7 @@ namespace Elsa.Models
 
         public WorkflowInstance()
         {
+            _faults = new SimpleStack<WorkflowFault>();
             Variables = new Variables();
             ScheduledActivities = new SimpleStack<ScheduledActivity>();
             Scopes = new SimpleStack<ActivityScope>();
@@ -70,10 +71,13 @@ namespace Elsa.Models
             {
                 //Temporal patch to decrease the Faults change impact
                 var result = value ?? new SimpleStack<WorkflowFault>();
-                if (Fault != null)
+                if (Faults != null)
                 {
-                    result.Push(Fault);
-                    Fault = null;
+                    Faults.ForEach(fault =>
+                    {
+                        result.Push(fault);
+                    });
+                    Faults.Clear();
                 }
                 _faults = result;
             }

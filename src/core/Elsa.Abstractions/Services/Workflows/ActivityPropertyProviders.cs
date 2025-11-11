@@ -57,7 +57,7 @@ namespace Elsa.Services
             await SetNestedActivityPropertiesAsync(activity, activityExecutionContext, providers, defaultValueResolver, null, cancellationToken);
         }
 
-        private async ValueTask SetNestedActivityPropertiesAsync(object nestedInstance, ActivityExecutionContext activityExecutionContext, IDictionary<string, IActivityPropertyValueProvider> providers, IActivityPropertyDefaultValueResolver defaultValueResolver, string nestedInstanceName = null, CancellationToken cancellationToken = default)
+        private async ValueTask SetNestedActivityPropertiesAsync(object nestedInstance, ActivityExecutionContext activityExecutionContext, IDictionary<string, IActivityPropertyValueProvider> providers, IActivityPropertyDefaultValueResolver defaultValueResolver, string? nestedInstanceName = null, CancellationToken cancellationToken = default)
         {
             var properties = nestedInstance.GetType().GetProperties().Where(IsActivityInputProperty).ToList();
             var nestedProperties = nestedInstance.GetType().GetProperties().Where(IsActivityObjectInputProperty).ToList();
@@ -91,7 +91,7 @@ namespace Elsa.Services
 
                 var nextInstanceName = nestedInstanceName == null ? nestedProperty.Name : $"{nestedInstanceName}_{nestedProperty.Name}";
 
-                await SetNestedActivityPropertiesAsync(instance, activityExecutionContext, providers, defaultValueResolver, nextInstanceName, cancellationToken);
+                await SetNestedActivityPropertiesAsync(instance!, activityExecutionContext, providers, defaultValueResolver, nextInstanceName, cancellationToken);
                 nestedProperty.SetValue(nestedInstance, instance);
             }
         }

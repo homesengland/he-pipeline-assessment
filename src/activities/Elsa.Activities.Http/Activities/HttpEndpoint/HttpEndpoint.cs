@@ -29,7 +29,7 @@ namespace Elsa.Activities.Http
         /// The path that triggers this activity. 
         /// </summary>
         [ActivityInput(Hint = "The relative path that triggers this activity.", SupportedSyntaxes = new[] { SyntaxNames.JavaScript, SyntaxNames.Liquid })]
-        public string Path { get; set; }
+        public string Path { get; set; } = null!;
 
         /// <summary>
         /// The HTTP methods that triggers this activity.

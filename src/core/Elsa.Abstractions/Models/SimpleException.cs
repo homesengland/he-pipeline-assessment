@@ -5,7 +5,7 @@ namespace Elsa.Models
 {
     public class SimpleException
     {
-        public SimpleException(Type type, string message, string stackTrace, IDictionary data, SimpleException? innerException = default)
+        public SimpleException(Type type, string message, string? stackTrace, IDictionary data, SimpleException? innerException = default)
         {
             Type = type;
             Message = message;
@@ -14,9 +14,9 @@ namespace Elsa.Models
             Data = data;
         }
         
-        public Type Type { get; set; }
-        public string Message { get; set; }
-        public string StackTrace { get; set; }
+        public Type Type { get; set; } = null!;
+        public string Message { get; set; } = null!;
+        public string? StackTrace { get; set; }
         public SimpleException? InnerException { get; set; }
         public IDictionary Data { get; set; }
         

@@ -31,7 +31,7 @@ namespace Elsa.Services.Bookmarks
 
         private static string Hash(string input)
         {
-            using var sha = new SHA256Managed();
+            using var sha = SHA256.Create();
             return Hash(sha, input);
         }
 

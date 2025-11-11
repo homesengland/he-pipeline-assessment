@@ -37,7 +37,7 @@ namespace Elsa.Activities.Console
                 return Suspend();
 
             var receivedInput = await _input.ReadLineAsync();
-            return Execute(context, receivedInput);
+            return Execute(context, receivedInput ?? "");
         }
 
         protected override IActivityExecutionResult OnResume(ActivityExecutionContext context)

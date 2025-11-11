@@ -66,7 +66,7 @@ namespace Elsa.Server.Stores
                     else
                     {
                         _logger.LogInformation($"Workflow found in cache for Key: {cacheKey}");
-                        WorkflowDefinition? parsedWorkflowDefinition = JsonConvert.DeserializeObject<WorkflowDefinition>(result, _serializerSettings);
+                        WorkflowDefinition? parsedWorkflowDefinition = JsonConvert.DeserializeObject<WorkflowDefinition>(result!, _serializerSettings);
                         return parsedWorkflowDefinition;
                     }
                 }

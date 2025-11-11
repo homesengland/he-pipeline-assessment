@@ -46,7 +46,7 @@ namespace Elsa.Server.DataDictionaryAccessors
             {
                 dataDictionaryInCache = await AddDataDictionaryItemsToCache(cancellationToken);
             }
-            var dataDictionaryItems = JsonConvert.DeserializeObject<List<DataDictionaryItem>>(dataDictionaryInCache);
+            var dataDictionaryItems = JsonConvert.DeserializeObject<List<DataDictionaryItem>>(dataDictionaryInCache!);
             return dataDictionaryItems;
         }
 

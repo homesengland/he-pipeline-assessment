@@ -10,7 +10,7 @@ namespace Elsa.Scripting.JavaScript.Extensions
     {
         public static T ToObject<T>(this ExpandoObject expandoObject)
         {
-            var dictionary = (IDictionary<string, object>) expandoObject;
+            var dictionary = expandoObject as IDictionary<string, object>;
             var bindings = new List<MemberBinding>();
             
             foreach (var sourceProperty in typeof(T).GetProperties().Where(x => x.CanWrite))

@@ -35,11 +35,22 @@ namespace Elsa.Services.Workflows
             _logger = logger;
         }
 
-        public async ValueTask<IEnumerable<ActivityType>> GetActivityTypesAsync(CancellationToken cancellationToken) => (await GetDictionaryAsync(cancellationToken)).Values;
+        public async ValueTask<IEnumerable<ActivityType>> GetActivityTypesAsync(CancellationToken cancellationToken)
+        {
+            var dictionary = await GetDictionaryAsync(cancellationToken);
+            if (dictionary is null)
+                return Enumerable.Empty<ActivityType>();
+            else return dictionary.Values;
+        }
+
 
         public async ValueTask<ActivityType> GetActivityTypeAsync(string type, CancellationToken cancellationToken)
         {
             var dictionary = await GetDictionaryAsync(cancellationToken);
+            if (dictionary is null)
+            {
+                throw new Exception("No activity types have been registered.");
+            }
 
             if (!dictionary.ContainsKey(type))
                 throw new WorkflowException($"The activity type '{type}' has not been registered. Did you forget to register it with ElsaOptions?");
@@ -69,9 +80,9 @@ namespace Elsa.Services.Workflows
             return descriptor;
         }
 
-        private async ValueTask<IDictionary<string, ActivityType>> GetDictionaryAsync(CancellationToken cancellationToken)
+        private async ValueTask<IDictionary<string, ActivityType>?> GetDictionaryAsync(CancellationToken cancellationToken)
         {
-            return await _memoryCache.GetOrCreate(CacheKey, async entry =>
+            return await _memoryCache.GetOrCreateAsync(CacheKey, async entry =>
             {
                 entry.Monitor(_cacheSignal.GetToken(CacheKey));
                 return await GetActivityTypesInternalAsync(cancellationToken).ToDictionaryAsync(x => x.TypeName, cancellationToken);
@@ -83,7 +94,7 @@ namespace Elsa.Services.Workflows
             foreach (var provider in _providers)
             {
                 IEnumerable<ActivityType> types = Enumerable.Empty<ActivityType>();
-                
+
                 try
                 {
                     types = await provider.GetActivityTypesAsync(cancellationToken);

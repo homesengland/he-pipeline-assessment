@@ -13,7 +13,7 @@ namespace Elsa.Server.Authentication.TenantAccessors
             _header = header;
         }
 
-        public Task<string> GetTenantIdAsync(CancellationToken cancellationToken = default)
+        public Task<string?> GetTenantIdAsync(CancellationToken cancellationToken = default)
         {
             var httpContext = _accessor.HttpContext;
             var tenantId = httpContext?.Request.Headers[_header].ToString();

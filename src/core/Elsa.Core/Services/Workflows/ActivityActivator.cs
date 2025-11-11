@@ -51,32 +51,35 @@ namespace Elsa.Services.Workflows
             await ApplyStoredObjectValuesAsync(context, activity, cancellationToken);
         }
 
-        private async ValueTask ApplyStoredObjectValuesAsync(ActivityExecutionContext context, object activity, CancellationToken cancellationToken, string parentName = null)
+        private async ValueTask ApplyStoredObjectValuesAsync(ActivityExecutionContext context, object? activity, CancellationToken cancellationToken, string? parentName = null)
         {
-            var properties = activity.GetType().GetProperties().Where(IsActivityProperty).ToList();
-            var nestedProperties = activity.GetType().GetProperties().Where(IsActivityObjectProperty).ToList();
-            var propertyStorageProviderDictionary = context.ActivityBlueprint.PropertyStorageProviders;
-            var workflowStorageContext = new WorkflowStorageContext(context.WorkflowInstance, context.ActivityId);
-
-            foreach (var property in properties)
+            if(activity != null)
             {
-                var propertyName = parentName == null ? property.Name : $"{parentName}_{property.Name}";
-                var attr = property.GetCustomAttributes<ActivityPropertyAttributeBase>().First();
-                var providerName = propertyStorageProviderDictionary.GetItem(propertyName) ?? attr.DefaultWorkflowStorageProvider;
-                var value = await _workflowStorageService.LoadAsync(providerName, workflowStorageContext, propertyName, cancellationToken);
+                var properties = activity.GetType().GetProperties().Where(IsActivityProperty).ToList();
+                var nestedProperties = activity.GetType().GetProperties().Where(IsActivityObjectProperty).ToList();
+                var propertyStorageProviderDictionary = context.ActivityBlueprint.PropertyStorageProviders;
+                var workflowStorageContext = new WorkflowStorageContext(context.WorkflowInstance, context.ActivityId);
 
-                if (value != null)
+                foreach (var property in properties)
                 {
-                    var typedValue = value.ConvertTo(property.PropertyType);
-                    property.SetValue(activity, typedValue);
-                }
-            }
+                    var propertyName = parentName == null ? property.Name : $"{parentName}_{property.Name}";
+                    var attr = property.GetCustomAttributes<ActivityPropertyAttributeBase>().First();
+                    var providerName = propertyStorageProviderDictionary.GetItem(propertyName) ?? attr.DefaultWorkflowStorageProvider;
+                    var value = await _workflowStorageService.LoadAsync(providerName, workflowStorageContext, propertyName, cancellationToken);
 
-            foreach (var nestedProperty in nestedProperties)
-            {
-                var instance = Activator.CreateInstance(nestedProperty.PropertyType);
-                var propertyName = parentName == null ? nestedProperty.Name : $"{parentName}_{nestedProperty.Name}";
-                await ApplyStoredObjectValuesAsync(context, instance, cancellationToken, propertyName);
+                    if (value != null)
+                    {
+                        var typedValue = value.ConvertTo(property.PropertyType);
+                        property.SetValue(activity, typedValue);
+                    }
+                }
+
+                foreach (var nestedProperty in nestedProperties)
+                {
+                    var instance = Activator.CreateInstance(nestedProperty.PropertyType);
+                    var propertyName = parentName == null ? nestedProperty.Name : $"{parentName}_{nestedProperty.Name}";
+                    await ApplyStoredObjectValuesAsync(context, instance, cancellationToken, propertyName);
+                }
             }
         }
 
@@ -85,28 +88,32 @@ namespace Elsa.Services.Workflows
             await StoreAppliedObjectValuesAsync(context, activity, cancellationToken);
         }
 
-        private async ValueTask StoreAppliedObjectValuesAsync(ActivityExecutionContext context, object activity, CancellationToken cancellationToken, string? parentName = null)
+        private async ValueTask StoreAppliedObjectValuesAsync(ActivityExecutionContext context, object? activity, CancellationToken cancellationToken, string? parentName = null)
         {
-            var properties = activity.GetType().GetProperties().Where(IsActivityProperty).ToList();
-            var nestedProperties = activity.GetType().GetProperties().Where(IsActivityObjectProperty).ToList();
-            var propertyStorageProviderDictionary = context.ActivityBlueprint.PropertyStorageProviders;
-            var workflowStorageContext = new WorkflowStorageContext(context.WorkflowInstance, context.ActivityId);
-
-            foreach (var property in properties)
+            if(activity != null)
             {
-                var propertyName = parentName == null ? property.Name : $"{parentName}_{property.Name}";
-                var value = property.GetValue(activity);
-                var attr = property.GetCustomAttributes<ActivityPropertyAttributeBase>().First();
-                var providerName = propertyStorageProviderDictionary.GetItem(propertyName) ?? attr.DefaultWorkflowStorageProvider;
-                await _workflowStorageService.SaveAsync(providerName, workflowStorageContext, propertyName, value, cancellationToken);
+                var properties = activity.GetType().GetProperties().Where(IsActivityProperty).ToList();
+                var nestedProperties = activity.GetType().GetProperties().Where(IsActivityObjectProperty).ToList();
+                var propertyStorageProviderDictionary = context.ActivityBlueprint.PropertyStorageProviders;
+                var workflowStorageContext = new WorkflowStorageContext(context.WorkflowInstance, context.ActivityId);
+
+                foreach (var property in properties)
+                {
+                    var propertyName = parentName == null ? property.Name : $"{parentName}_{property.Name}";
+                    var value = property.GetValue(activity);
+                    var attr = property.GetCustomAttributes<ActivityPropertyAttributeBase>().First();
+                    var providerName = propertyStorageProviderDictionary.GetItem(propertyName) ?? attr.DefaultWorkflowStorageProvider;
+                    await _workflowStorageService.SaveAsync(providerName, workflowStorageContext, propertyName, value, cancellationToken);
+                }
+
+                foreach (var nestedProperty in nestedProperties)
+                {
+                    var instance = Activator.CreateInstance(nestedProperty.PropertyType);
+                    var propertyName = parentName == null ? nestedProperty.Name : $"{parentName}_{nestedProperty.Name}";
+                    await StoreAppliedObjectValuesAsync(context, instance, cancellationToken, propertyName);
+                }
             }
 
-            foreach (var nestedProperty in nestedProperties)
-            {
-                var instance = Activator.CreateInstance(nestedProperty.PropertyType);
-                var propertyName = parentName == null ? nestedProperty.Name : $"{parentName}_{nestedProperty.Name}";
-                await StoreAppliedObjectValuesAsync(context, instance, cancellationToken, propertyName);
-            }
         }
 
         private bool ShouldSetProperties(ActivityExecutionContext context, IActivity activity)

@@ -74,7 +74,7 @@ namespace Elsa.Metadata
             throw new NotSupportedException("The specified outcomes type is not supported. Only string[] and typeof(IOutcomesProvider) are supported.");
         }
 
-        private IEnumerable<ActivityInputDescriptor> DescribeInputProperties(IEnumerable<PropertyInfo> properties, string category = null)
+        private IEnumerable<ActivityInputDescriptor> DescribeInputProperties(IEnumerable<PropertyInfo> properties, string? category = null)
         {
             foreach (var propertyInfo in properties)
             {

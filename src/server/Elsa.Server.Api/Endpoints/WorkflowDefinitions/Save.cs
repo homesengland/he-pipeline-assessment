@@ -107,6 +107,7 @@ namespace Elsa.Server.Api.Endpoints.WorkflowDefinitions
             }
             catch (JsonReaderException e)
             {
+                var error = e.Message;
                 return false;
             }
         }

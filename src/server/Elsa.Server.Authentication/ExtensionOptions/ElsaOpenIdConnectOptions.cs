@@ -7,9 +7,9 @@ namespace Elsa.Server.Authentication.ExtensionOptions
 
         public string DefaultChallengeScheme { get; set; } = OpenIdConnectDefaults.AuthenticationScheme;
         public override string LoginPath { get; set;} = "/signin-oidc";
-        public string Authority { get; set; }
-        public string ClientId { get; set; }
-        public string ClientSecret { get; set; }
+        public string Authority { get; set; } = null!;
+        public string ClientId { get; set; } = null!;
+        public string ClientSecret { get; set; } = null!;
         public string ResponseType { get; set; } = "code";
         public ICollection<string> Scopes { get; set; } = new List<string>();
         public Dictionary<string, string> UniqueJsonKeys = new Dictionary<string, string>();

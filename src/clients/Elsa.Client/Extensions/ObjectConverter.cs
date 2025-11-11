@@ -19,7 +19,10 @@ namespace Elsa.Client.Extensions
                 return default!;
 
             if (typeof(T) == typeof(Duration))
-                return (T?)((object?)DurationPattern.JsonRoundtrip.Parse(value!.ToString()).Value)!;
+            {
+                string valueText = value.ToString() ?? "";
+                return (T?)((object?)DurationPattern.JsonRoundtrip.Parse(valueText).Value)!;
+            }
             
             var converter = TypeDescriptor.GetConverter(typeof(T));
             if (converter.CanConvertFrom(value.GetType()))

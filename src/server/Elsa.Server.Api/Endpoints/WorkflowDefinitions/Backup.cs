@@ -53,7 +53,7 @@ namespace Elsa.Server.Api.Endpoints.WorkflowDefinitions
             CancellationToken cancellationToken = default)
         {
             Response.ContentType = "application/zip";
-            Response.Headers.Add($"Content-Disposition", $"attachment; filename=\"Workflows-{DateTime.Now:yyyy-MM-dd-HH-mm}.zip\"");
+            Response.Headers.Append($"Content-Disposition", $"attachment; filename=\"Workflows-{DateTime.Now:yyyy-MM-dd-HH-mm}.zip\"");
 
             await Response.StartAsync(cancellationToken);
 

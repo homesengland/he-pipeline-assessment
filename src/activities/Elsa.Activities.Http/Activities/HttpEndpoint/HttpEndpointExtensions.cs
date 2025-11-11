@@ -14,10 +14,10 @@ namespace Elsa.Activities.Http
         /// </summary>
         /// <param name="path">The path of the <see cref="HttpEndpoint"/> Activity</param>
         /// <returns>A <see cref="ISetupActivity"/> that can be used to further change properties of <see cref="HttpEndpoint"/></returns>
-        public static ISetupActivity<HttpEndpoint> WithPath(this ISetupActivity<HttpEndpoint> activity, Func<ActivityExecutionContext, ValueTask<string>> path) => activity.Set(x => x.Path, path);
+        public static ISetupActivity<HttpEndpoint> WithPath(this ISetupActivity<HttpEndpoint> activity, Func<ActivityExecutionContext, ValueTask<string>> path) => activity.Set(x => x.Path, path!);
 
         /// <inheritdoc cref="WithPath(ISetupActivity{HttpEndpoint}, Func{ActivityExecutionContext, ValueTask{string}})"/>
-        public static ISetupActivity<HttpEndpoint> WithPath(this ISetupActivity<HttpEndpoint> activity, Func<ValueTask<string>> path) => activity.Set(x => x.Path, path);
+        public static ISetupActivity<HttpEndpoint> WithPath(this ISetupActivity<HttpEndpoint> activity, Func<ValueTask<string>> path) => activity.Set(x => x.Path, path!);
         
         /// <inheritdoc cref="WithPath(ISetupActivity{HttpEndpoint}, Func{ActivityExecutionContext, ValueTask{string}})"/>
         public static ISetupActivity<HttpEndpoint> WithPath(this ISetupActivity<HttpEndpoint> activity, Func<ActivityExecutionContext, string> path) => activity.Set(x => x.Path, path);

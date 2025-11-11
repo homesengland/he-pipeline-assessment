@@ -12,7 +12,7 @@ public class RouteTable : IRouteTable
     private readonly IMemoryCache _cache;
     
     public RouteTable(IMemoryCache cache) => _cache = cache;
-    private ConcurrentDictionary<string, string> Routes => _cache.GetOrCreate(Key, _ => new ConcurrentDictionary<string, string>());
+    private ConcurrentDictionary<string, string> Routes => _cache.GetOrCreate(Key, _ => new ConcurrentDictionary<string, string>())!;
     public void Add(string path) => Routes.TryAdd(path, path);
     public void Remove(string path) => Routes.TryRemove(path, out _);
 

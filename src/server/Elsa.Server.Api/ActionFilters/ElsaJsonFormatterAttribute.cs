@@ -26,7 +26,7 @@ namespace Elsa.Server.Api.ActionFilters
             var parameters = action.Parameters.Where(p => p.BindingInfo?.BindingSource == BindingSource.Body);
 
             foreach (var p in parameters)
-                p.BindingInfo.BinderType = typeof(ElsaJsonBodyModelBinder);
+                p.BindingInfo!.BinderType = typeof(ElsaJsonBodyModelBinder);
         }
 
         public override void OnActionExecuted(ActionExecutedContext context)

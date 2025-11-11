@@ -111,7 +111,7 @@ namespace Elsa.Persistence.EntityFramework.Core.Stores
                 entity.CurrentActivity
             };
 
-            var json = (string)dbContext.Entry(entity).Property("Data").CurrentValue;
+            var json = dbContext.Entry(entity).Property("Data").CurrentValue as string ?? string.Empty;
 
             if (!string.IsNullOrWhiteSpace(json))
             {

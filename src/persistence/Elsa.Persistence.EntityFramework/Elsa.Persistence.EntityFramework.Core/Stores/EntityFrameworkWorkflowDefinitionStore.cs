@@ -5,6 +5,8 @@ using Elsa.Models;
 using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
 using Elsa.Serialization;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -48,8 +50,8 @@ namespace Elsa.Persistence.EntityFramework.Core.Stores
                 entity.CustomAttributes,
                 entity.Channel
             };
-            
-            var json = (string)dbContext.Entry(entity).Property("Data").CurrentValue;
+
+            var json = dbContext.Entry(entity).Property("Data").CurrentValue as string ?? string.Empty;
             data = JsonConvert.DeserializeAnonymousType(json, data, DefaultContentSerializer.CreateDefaultJsonSerializationSettings())!;
 
             entity.Activities = data.Activities;

@@ -31,6 +31,7 @@ namespace Elsa.Services.Messaging
             }
             catch (RebusApplicationException e)
             {
+                _logger.LogWarning(e, "An error occurred while sending a message. Disposing and recreating the service bus instance and retrying.");
                 await _serviceBusFactory.DisposeServiceBusAsync(bus, cancellationToken);
                 bus = await GetBusAsync(message, cancellationToken);
                 await bus.Send(message, headers);

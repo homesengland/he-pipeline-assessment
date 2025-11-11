@@ -37,7 +37,7 @@ namespace Elsa.Handlers
             {
                 var value = property.GetValue(activity);
                 var inputAttr = property.GetCustomAttribute<ActivityInputAttribute>();
-                var defaultProviderName = inputAttr.DefaultWorkflowStorageProvider; 
+                var defaultProviderName = inputAttr != null ? inputAttr.DefaultWorkflowStorageProvider : default(string); 
                 await SavePropertyAsync(activityExecutionContext, property.Name, value, defaultProviderName, cancellationToken);
             }
             
@@ -46,8 +46,8 @@ namespace Elsa.Handlers
             {
                 var value = property.GetValue(activity);
                 var outputAttr = property.GetCustomAttribute<ActivityOutputAttribute>();
-                var defaultProviderName = outputAttr.DefaultWorkflowStorageProvider; 
-                await SavePropertyAsync(activityExecutionContext, property.Name, value, defaultProviderName, cancellationToken);
+                var defaultProviderName = outputAttr != null ? outputAttr.DefaultWorkflowStorageProvider : default(string);
+                    await SavePropertyAsync(activityExecutionContext, property.Name, value, defaultProviderName, cancellationToken);
             }
             
             // Handle "inline" activities with output.

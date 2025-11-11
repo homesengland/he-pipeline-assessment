@@ -91,7 +91,7 @@ namespace Elsa.Activities.Workflows
             Hint = "Optional custom attributes to associate with the workflow to run.",
             Category = PropertyCategories.Advanced,
             SupportedSyntaxes = new[] { SyntaxNames.JavaScript, SyntaxNames.Liquid, SyntaxNames.Json })]
-        [Obsolete("Will be removed in future versions.")]
+       
         public Variables? CustomAttributes { get; set; } = default!;
 
         [ActivityInput(
@@ -138,14 +138,15 @@ namespace Elsa.Activities.Workflows
             if (RetryFailedActivities)
             {
                 AlreadyExecutedChildren ??= new Dictionary<string, string>();
-                hash = HashHelper.Hash(context.Input);
+                hash = HashHelper.Hash(context.Input!);
+                  
             }
 
             //We know it is a retry if ChildWorkflowInstanceId has a value here, but that value is not the real associated ChildWorkflow
             if (RetryFailedActivities && !string.IsNullOrEmpty(ChildWorkflowInstanceId) && AlreadyExecutedChildren.ContainsKey(hash))
             {
-                ChildWorkflowInstanceId = AlreadyExecutedChildren.GetValueOrDefault(hash);
-                childWorkflowInstance = await _workflowInstanceStore.FindByIdAsync(ChildWorkflowInstanceId);
+                ChildWorkflowInstanceId = AlreadyExecutedChildren.GetValueOrDefault(hash)!;
+                childWorkflowInstance = await _workflowInstanceStore.FindByIdAsync(ChildWorkflowInstanceId!);
 
                 if (childWorkflowInstance == null)
                 {
@@ -201,17 +202,17 @@ namespace Elsa.Activities.Workflows
                 context.JournalData.Add("Workflow Blueprint ID", workflowBlueprint.Id);
 
                 if (RetryFailedActivities)
-                    AlreadyExecutedChildren.Add(HashHelper.Hash(context.Input), ChildWorkflowInstanceId);
+                    AlreadyExecutedChildren.Add(HashHelper.Hash(context.Input!), ChildWorkflowInstanceId);
             }
             
             return Mode switch
             {
                 RunWorkflowMode.DispatchAndForget => Done(),
                 RunWorkflowMode.FireAndForget => Done(),
-                RunWorkflowMode.Blocking when childWorkflowStatus == WorkflowStatus.Finished => await ResumeSynchronouslyAsync(context, childWorkflowInstance, cancellationToken),
+                RunWorkflowMode.Blocking when childWorkflowStatus == WorkflowStatus.Finished => await ResumeSynchronouslyAsync(context, childWorkflowInstance!, cancellationToken),
                 RunWorkflowMode.Blocking when childWorkflowStatus == WorkflowStatus.Suspended => Suspend(),
                 RunWorkflowMode.Blocking when childWorkflowStatus == WorkflowStatus.Idle => Suspend(),
-                RunWorkflowMode.Blocking when childWorkflowStatus == WorkflowStatus.Faulted => Fault($"Workflow {childWorkflowInstance.Id} faulted"),
+                RunWorkflowMode.Blocking when childWorkflowStatus == WorkflowStatus.Faulted => Fault($"Workflow {childWorkflowInstance!.Id} faulted"),
                 _ => throw new ArgumentOutOfRangeException(nameof(Mode))
             };
         }

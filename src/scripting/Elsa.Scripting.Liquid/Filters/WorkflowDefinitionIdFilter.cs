@@ -28,7 +28,7 @@ namespace Elsa.Scripting.Liquid.Filters
             string? tenantId = null;
             if (arguments.Values?.Count() > 1)
             {
-                var wfInstanceId = arguments.Values?.LastOrDefault().ToStringValue();
+                var wfInstanceId = arguments.Values?.LastOrDefault()?.ToStringValue() ?? string.Empty;
                 if (wfInstanceId is not null)
                 {
                     var wfInstance = await _workflowInstanceStore.FindByIdAsync(wfInstanceId);

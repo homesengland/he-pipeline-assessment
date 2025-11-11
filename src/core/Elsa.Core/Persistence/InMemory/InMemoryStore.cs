@@ -104,7 +104,12 @@ namespace Elsa.Persistence.InMemory
             var query = dictionary.Values.AsQueryable().Apply(specification).Apply(orderBy).Apply(paging);
             return query.Select(funcMapping).ToList();
         }
-        private async Task<IDictionary<string, T>> GetDictionaryAsync() => await MemoryCache.GetOrCreateAsync(CacheKey, _ => Task.FromResult(new ConcurrentDictionary<string, T>()));
+        private async Task<IDictionary<string, T>> GetDictionaryAsync()
+        {
+            var dictionary = await MemoryCache.GetOrCreateAsync(CacheKey, _ => Task.FromResult<object>(new ConcurrentDictionary<string, T>()));
+            // Defensive: If for some reason the cache returns null, fallback to a new dictionary.
+            return (dictionary as IDictionary<string, T>) ?? new ConcurrentDictionary<string, T>();
+        }
         private void SetDictionary(IDictionary<string, T> dictionary) => MemoryCache.Set(CacheKey, dictionary);
     }
 }

@@ -265,7 +265,7 @@ namespace Elsa.Activities.Http
             {
                 var bodyAsString = Content as string;
                 var bodyAsBytes = Content as byte[];
-                var contentType = ContentType;
+                var contentType = ContentType ?? string.Empty;
 
                 if (!string.IsNullOrWhiteSpace(bodyAsString))
                     request.Content = new StringContent(bodyAsString, Encoding.UTF8, contentType);

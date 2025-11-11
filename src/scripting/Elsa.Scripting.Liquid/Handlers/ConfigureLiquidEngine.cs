@@ -65,7 +65,7 @@ namespace Elsa.Scripting.Liquid.Handlers
             memberAccessStrategy.Register<ActivityExecutionContext, LiquidActivityModel>(GetActivityModel);
             memberAccessStrategy.Register<LiquidActivityModel, object?>((model, name) => GetActivityProperty(model, name, cancellationToken));
             memberAccessStrategy.Register<LiquidObjectAccessor<JObject>, JObject>((x, name) => x.GetValueAsync(name));
-            memberAccessStrategy.Register<ExpandoObject, object>((x, name) => ((IDictionary<string, object>)x)[name]);
+            memberAccessStrategy.Register<ExpandoObject, object>((x, name) => (x as IDictionary<string, object>)[name]);
             memberAccessStrategy.Register<JObject, object?>((source, name) => source.GetValue(name, StringComparison.OrdinalIgnoreCase));
 
             if (_liquidOptions.EnableConfigurationAccess)

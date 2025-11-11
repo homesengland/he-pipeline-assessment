@@ -223,7 +223,7 @@ namespace Elsa.Services.Models
                 return null;
 
             var inputAttr = property.GetCustomAttribute<ActivityOutputAttribute>();
-            var defaultProviderName = inputAttr.DefaultWorkflowStorageProvider;
+            var defaultProviderName = inputAttr != null? inputAttr.DefaultWorkflowStorageProvider : "";
             var propertyStorageProviderDictionary = ActivityBlueprint.PropertyStorageProviders;
             return propertyStorageProviderDictionary.GetItem(propertyName) ?? defaultProviderName;
         }
@@ -253,10 +253,14 @@ namespace Elsa.Services.Models
         {
             var current = ActivityBlueprint;
 
-            while (current is not ICompositeActivityBlueprint)
-                current = current.Parent;
+            if(current != null)
+            {
+                while (current is not ICompositeActivityBlueprint)
+                    current = current!.Parent;
 
-            return (ICompositeActivityBlueprint)current;
+                return (ICompositeActivityBlueprint)current!;
+            }
+            throw new InvalidOperationException(string.Format("The activity does not have a container activity.  ActivityId: {0} ContextId: {1}", ActivityId, ContextId));
         }
 
         private string GetCompositeName(string activityName)

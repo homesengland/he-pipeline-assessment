@@ -49,7 +49,7 @@ namespace Elsa.Scripting.Liquid.Services
                     e.SetSlidingExpiration(TimeSpan.FromSeconds(30));
                     return parsed;
                 });
-            return result;
+            return result!;
         }
 
         public bool Validate(string template, out string error) => TryParse(template, out _, out error);

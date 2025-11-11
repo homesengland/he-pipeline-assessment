@@ -34,7 +34,7 @@ namespace Elsa.Server.Api.Attributes
             var parameters = action.Parameters.Where(p => p.BindingInfo?.BindingSource == BindingSource.Body);
             foreach (var p in parameters)
             {
-                p.BindingInfo.BinderType = typeof(NewtonsoftJsonBodyModelBinder);
+                p.BindingInfo!.BinderType = typeof(NewtonsoftJsonBodyModelBinder);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Elsa.Server.Api.Attributes
 
                 objectResult.Formatters.RemoveType<SystemTextJsonOutputFormatter>(); // Just to be sure
                 objectResult.Formatters.Add(new NewtonsoftJsonOutputFormatter(
-                    jsonOptions.Value.SerializerSettings,
+                    jsonOptions!.Value.SerializerSettings,
                     context.HttpContext.RequestServices.GetRequiredService<ArrayPool<char>>(),
                     context.HttpContext.RequestServices.GetRequiredService<IOptions<MvcOptions>>().Value,
                     null));

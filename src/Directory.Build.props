@@ -1,5 +1,9 @@
 <Project>
 	<PropertyGroup>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<WarningsAsErrors>CS8600;CS8602;CS8603;CS8618;CS8625</WarningsAsErrors>
+		
 	</PropertyGroup>
 </Project>

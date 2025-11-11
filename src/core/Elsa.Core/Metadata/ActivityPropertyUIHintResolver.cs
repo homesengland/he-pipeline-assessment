@@ -12,7 +12,7 @@ namespace Elsa.Metadata
         {
             var activityPropertyAttribute = activityPropertyInfo.GetCustomAttribute<ActivityInputAttribute>();
 
-            if (activityPropertyAttribute.UIHint != null)
+            if (activityPropertyAttribute?.UIHint != null)
                 return activityPropertyAttribute.UIHint;
             
             var type = activityPropertyInfo.PropertyType;
