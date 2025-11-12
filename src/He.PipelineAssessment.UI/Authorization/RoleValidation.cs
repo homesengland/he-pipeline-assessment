@@ -12,6 +12,7 @@ public interface IRoleValidation
     bool ValidateSensitiveRecords(Assessment assessment);
     bool ValidateForBusinessArea(string? businessArea);
     bool IsAdmin();
+    bool IsProjectManagerForAssessment(string? projectManager);
 }
 public class RoleValidation : IRoleValidation
 {
@@ -76,6 +77,16 @@ public class RoleValidation : IRoleValidation
                     return isRoleExist;
                 default: return isRoleExist;
             }
+    }
+
+    public bool IsProjectManagerForAssessment(string? projectManager)
+    {
+
+        if (projectManager == _userProvider.GetUserName())
+        {
+            return true;
+        }
+        return false;
     }
 
     public bool ValidateSensitiveRecords(Assessment? assessment)

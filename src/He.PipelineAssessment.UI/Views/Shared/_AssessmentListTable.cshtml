@@ -1,4 +1,8 @@
 ﻿@model List<He.PipelineAssessment.Models.ViewModels.AssessmentDataViewModel>
+@using He.PipelineAssessment.UI.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@inject IRoleValidation RoleValidation
 
 <div class="text-center">
     <div class="govuk-grid-row">
@@ -28,8 +32,19 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
+
+            @{bool isAdmin = ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded);}
+
             @foreach (var assessment in Model)
             {
+
+                //TODO: Check user is assigned to a SR assessment
+                //Do not render sensitive assessment unless user is admin or user is the project manager for an assessment
+                if (assessment.IsSensitiveRecord() && (!isAdmin || !RoleValidation.IsProjectManagerForAssessment(assessment.ProjectManager)))
+                {
+                    continue; 
+                }
+
                 var lastModifiedDate = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToString("yyyyMMdd") : "";
                 var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
 
