@@ -22,7 +22,6 @@
     "jsxFactory": "h"
   },
   "include": [
-    "src",
     "customsrc/src"
   ],
   "exclude": [

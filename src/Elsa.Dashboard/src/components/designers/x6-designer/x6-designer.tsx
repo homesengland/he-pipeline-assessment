@@ -51,8 +51,8 @@ export class ElsaWorkflowDesigner {
   ignoreNextNodeSelect: boolean = false;
   containerObserver: ResizeObserver;
   activityDisplayContexts: Map<ActivityDesignDisplayContext> = null;
-  workflowSaveTimer?: NodeJS.Timer = null;
-  edgeUpdateTimer?: NodeJS.Timer = null;
+  workflowSaveTimer?: ReturnType<typeof setTimeout> = null;
+  edgeUpdateTimer?: ReturnType<typeof setTimeout> = null;
 
   @Prop() model: WorkflowModel = {
     activities: [],

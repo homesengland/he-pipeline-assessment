@@ -9,7 +9,7 @@ export const config: Config = {
     ]
   },
   enableCache: true, //Added to try and improve performance
-  srcDir: 'src',
+  srcDir: 'customSrc/src',
   outputTargets: [
     {
       type: 'www',

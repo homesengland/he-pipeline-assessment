@@ -5,6 +5,7 @@
     "allowUnusedLabels": true,
     "declaration": false,
     "experimentalDecorators": true,
+    "skipLibCheck": true,
     "lib": [
       "dom",
       "es2017"
