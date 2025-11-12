@@ -12,7 +12,7 @@ public interface IRoleValidation
     bool ValidateSensitiveRecords(Assessment assessment);
     bool ValidateForBusinessArea(string? businessArea);
     bool IsAdmin();
-    bool IsProjectManagerForAssessment(string? projectManager);
+    bool IsProjectManagerForAssessment(string? assessmentProjectManager);
 }
 public class RoleValidation : IRoleValidation
 {
@@ -79,10 +79,10 @@ public class RoleValidation : IRoleValidation
             }
     }
 
-    public bool IsProjectManagerForAssessment(string? projectManager)
+    public bool IsProjectManagerForAssessment(string? assessmentProjectManager)
     {
 
-        if (projectManager == _userProvider.GetUserName())
+        if (assessmentProjectManager == _userProvider.GetUserName())
         {
             return true;
         }
