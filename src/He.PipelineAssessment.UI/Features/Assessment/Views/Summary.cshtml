@@ -1,9 +1,10 @@
 ﻿@using He.PipelineAssessment.UI
 @using He.PipelineAssessment.UI.Authorization;
 @using System.Security.Claims;
-@using Microsoft.AspNetCore.Authorization
-@inject IAuthorizationService AuthorizationService
-@inject NonceConfig nonceConfig
+@using Microsoft.AspNetCore.Authorization;
+@inject IRoleValidation RoleValidation;
+@inject IAuthorizationService AuthorizationService;
+@inject NonceConfig nonceConfig;
 @model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
 
 @{
@@ -83,6 +84,12 @@ else
                 Requests
             </a>
         </li>
+        <!-- ADD IF CHECK SO TAB ONLY DISPLAYS FOR RELEVANT USER GROUP-->
+        <li class="govuk-tabs__list-item">
+            <a class="govuk-tabs__tab" href="#permissions">
+                Permissions
+            </a>
+        </li>
     </ul>
     <div class="govuk-tabs__panel" id="summary">
         @await Html.PartialAsync("_SummaryList",Model)
@@ -92,6 +99,9 @@ else
     </div>
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="requests">
         @await Html.PartialAsync("_InterventionList",Model)
+    </div>
+    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="permissions">
+        @await Html.PartialAsync("_PermissionsList", Model)
     </div>
 </div>
 
