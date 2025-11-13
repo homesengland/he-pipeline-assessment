@@ -17,10 +17,6 @@
     </thead>
     <tbody class="govuk-table__body">
 
-        @{
-            bool isAdmin = ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded);
-        }
-
 
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell">
@@ -34,7 +30,7 @@
                 <td class="govuk-table__cell">
 
                 </td>
-            @if (isAdmin || !RoleValidation.IsProjectManagerForAssessment(assessment.ProjectManager))
+
                 {
                     <td class="govuk-table__cell">
                         <input class="govuk-button govuk-button--warning govuk-!-margin-0 govuk-button__pas-assessment-summary" data-module="govuk-button" id="Submit" type="submit" value="Remove" />
