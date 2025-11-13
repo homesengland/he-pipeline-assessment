@@ -15,7 +15,7 @@
     "loader/"
   ],
   "scripts": {
-    "custom:build": "stencil build --verbose --config ./customSrc/stencil.config.ts",
+    "custom:build": "stencil build --verbose --config customSrc/stencil.config.ts",
     "workflow:build:proj": "npm run workflow:pack:release",
     "workflow:pack:release": "cross-env webpack --mode=production --env configuration=Release",
     "workflow:pack:debug": "cross-env webpack --mode=development --env configuration=Debug",

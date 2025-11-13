@@ -1,5 +1,5 @@
-import {Component, Host, h, Prop, State, Listen, Method} from '@stencil/core';
-import {enter, leave, toggle} from 'el-transition'
+import {Component, Host, h, State, Method} from '@stencil/core';
+import {enter, leave} from 'el-transition'
 
 export interface ToastNotificationOptions {
   autoCloseIn?: number;

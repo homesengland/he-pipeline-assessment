@@ -49,6 +49,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using FluentValidation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using Asp.Versioning;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -133,6 +134,15 @@ else
 {
     builder.Services.AddScoped<IDataDictionaryIntellisenseAccessor, DataDictionaryIntellisenseAccessor>();
 }
+
+// Configure API Versioning
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+}).AddMvc();
+
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();
 builder.Services.AddMvc(delegate (MvcOptions options)

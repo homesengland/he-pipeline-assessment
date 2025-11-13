@@ -47,8 +47,21 @@ namespace Elsa.Expressions
             }
         }
 
-        public async Task<T?> EvaluateAsync<T>(string? expression, string syntax, ActivityExecutionContext context, CancellationToken cancellationToken = default) =>
-            (T) (await EvaluateAsync(expression, syntax, typeof(T), context, cancellationToken))!;
+        public async Task<T?> EvaluateAsync<T>(string? expression, string syntax, ActivityExecutionContext context, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                var result = await EvaluateAsync(expression, syntax, typeof(T), context, cancellationToken);
+                if(result == null)
+                    return default;
+                return (T)result;
+            }
+            catch(NullReferenceException e)
+            {
+                _logger.LogError(e, "Null reference exception while evaluating expression {Expression} using syntax {Syntax}", expression, syntax);
+                return default;
+            }
+        }
 
         public async Task<object?> EvaluateAsync(string? expression, string syntax, Type returnType, ActivityExecutionContext context, CancellationToken cancellationToken = default)
         {

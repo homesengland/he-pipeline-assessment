@@ -281,6 +281,7 @@ export namespace Components {
      * Lightweight replacement for stencil-route-link to eliminate
      * @stencil-community /router dependency.
      * Provides anchor rendering with active class evaluation based on current window.location.
+     * Performs client-side navigation using history.pushState to avoid page reloads.
      * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
      */
     interface ElsaNavLink {
@@ -960,6 +961,7 @@ declare global {
      * Lightweight replacement for stencil-route-link to eliminate
      * @stencil-community /router dependency.
      * Provides anchor rendering with active class evaluation based on current window.location.
+     * Performs client-side navigation using history.pushState to avoid page reloads.
      * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
      */
     interface HTMLElsaNavLinkElement extends Components.ElsaNavLink, HTMLStencilElement {
@@ -1679,6 +1681,7 @@ declare namespace LocalJSX {
      * Lightweight replacement for stencil-route-link to eliminate
      * @stencil-community /router dependency.
      * Provides anchor rendering with active class evaluation based on current window.location.
+     * Performs client-side navigation using history.pushState to avoid page reloads.
      * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
      */
     interface ElsaNavLink {
@@ -2108,6 +2111,7 @@ declare module "@stencil/core" {
              * Lightweight replacement for stencil-route-link to eliminate
              * @stencil-community /router dependency.
              * Provides anchor rendering with active class evaluation based on current window.location.
+             * Performs client-side navigation using history.pushState to avoid page reloads.
              * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
              */
             "elsa-nav-link": LocalJSX.ElsaNavLink & JSXBase.HTMLAttributes<HTMLElsaNavLinkElement>;

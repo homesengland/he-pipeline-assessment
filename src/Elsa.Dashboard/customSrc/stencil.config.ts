@@ -3,13 +3,8 @@ import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 export const config: Config = {
   namespace: 'custom-elsa',
-  rollupPlugins: {
-    after: [
-      nodePolyfills(),
-    ]
-  },
   enableCache: true, //Added to try and improve performance
-  srcDir: 'customSrc/src',
+  srcDir: 'src',
   outputTargets: [
     {
       type: 'www',

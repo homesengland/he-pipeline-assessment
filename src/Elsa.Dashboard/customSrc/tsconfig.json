@@ -22,7 +22,7 @@
     "jsxFactory": "h"
   },
   "include": [
-    "customsrc/src"
+    "src/**/*"
   ],
   "exclude": [
     "../node_modules",

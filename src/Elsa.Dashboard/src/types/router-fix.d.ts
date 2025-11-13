@@ -8,7 +8,7 @@ declare module '@stencil-community/router/dist/types/components' {
       ariaLabel?: string | null | undefined;
     }
   }
-  
+
   interface HTMLStencilRouteLinkElement {
     ariaLabel?: string | null | undefined;
   }
