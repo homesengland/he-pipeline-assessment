@@ -6,14 +6,15 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
     public class CreateAssessmentFundCommandDto
     {
         public CreateAssessmentFundCommand CreateAssessmentFundCommand { get; set; } = new();
-
-        //COMMENT: Insert validation here.
-        //public ValidationResult? ValidationResult { get; set; }
+        public ValidationResult? ValidationResult { get; set; }
     }
     public class CreateAssessmentFundCommand : IRequest<int>
     {
         public string Name { get; set; } = string.Empty;
+
+        [Display(Name = "Is early stage?")]
         public bool IsEarlyStage { get; set; } = false;
+
         public bool IsDisabled { get; set; } = false;
     }
 }

@@ -351,9 +351,9 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             return await context.SaveChangesAsync();
         }
 
-        public async Task<int> CreateAssessmentFund(AssessmentFund assessmentFund)
+        public async Task<int> CreateAssessmentFund(AssessmentFund fund)
         {
-            await context.Set<AssessmentFund>().AddAsync(assessmentFund);
+            await context.Set<AssessmentFund>().AddAsync(fund);
             return await context.SaveChangesAsync();
         }
     }

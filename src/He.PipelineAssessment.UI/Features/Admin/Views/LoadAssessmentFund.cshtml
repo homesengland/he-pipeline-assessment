@@ -53,10 +53,8 @@
                 </div>
             </div>
 
-            @Html.Hidden("AssessmentFundsDTO.Id", Model.Id)
-            @Html.Hidden("AssessmentFundsDTO.Name", Model.Name)
-            @Html.Hidden("AssessmentFundsDTO.IsEarlyStage", Model.IsEarlyStage)
-            @Html.Hidden("AssessmentFundsDTO.IsDisabled", Model.IsDisabled)
+            @Html.Hidden("Id", Model.Id)
+            @Html.Hidden("IsDisabled", Model.IsDisabled)
             <input class="govuk-button" data-module="govuk-button" id="Submit" type="submit" value="Create Assessment Fund" />
         }
     }

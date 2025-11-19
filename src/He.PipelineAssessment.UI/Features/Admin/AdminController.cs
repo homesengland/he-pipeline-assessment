@@ -125,7 +125,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
             var assessmentFundsDTO = new AssessmentFundsDTO();
             return View("LoadAssessmentFund", assessmentFundsDTO);
         }
-
+        
         // create an assessment fund
         [HttpPost]
         public async Task<IActionResult> CreateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
@@ -140,7 +140,6 @@ namespace He.PipelineAssessment.UI.Features.Admin
                 }
             };
             await _mediator.Send(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
-
             return RedirectToAction("AssessmentFunds");
         }
 
