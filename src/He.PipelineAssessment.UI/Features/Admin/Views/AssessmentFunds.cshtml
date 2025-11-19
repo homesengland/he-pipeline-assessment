@@ -11,7 +11,9 @@
 <div class=" govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         @Html.ActionLink("Back", "AssessmentTool", "Admin", null, new { @class = "govuk-back-link" })
-        @Html.ActionLink("Create an Assessment Fund", "CreateAssessmentFund", "Admin", null, new { @class = "govuk-link" })
+    </div>
+    <div class="govuk-grid-column-one-third pull-right">
+        @Html.ActionLink("Create an Assessment Fund", "LoadAssessmentFund", "Admin", null, new { @class = "govuk-link" })
     </div>
 </div>
 <div class="govuk-tabs" data-module="govuk-tabs">
@@ -157,9 +159,3 @@
         </table>
     </div>
 </div>
- 
-
-
-
-
-

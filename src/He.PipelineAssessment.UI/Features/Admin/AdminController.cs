@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentFund;
@@ -116,6 +117,31 @@ namespace He.PipelineAssessment.UI.Features.Admin
                 createAssessmentToolWorkflowDto.ValidationResult = validationResult;
                 return View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto);
             }
+        }
+
+        [HttpGet]
+        public IActionResult LoadAssessmentFund()
+        {
+            var assessmentFundsDTO = new AssessmentFundsDTO();
+            return View("LoadAssessmentFund", assessmentFundsDTO);
+        }
+
+        // create an assessment fund
+        [HttpPost]
+        public async Task<IActionResult> CreateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
+        {
+            var createAssessmentFundCommandDTO = new CreateAssessmentFundCommandDto
+            {
+                CreateAssessmentFundCommand = new CreateAssessmentFundCommand
+                {
+                    Name = assessmentFundsDTO.Name,
+                    IsEarlyStage = assessmentFundsDTO.IsEarlyStage,
+                    IsDisabled = assessmentFundsDTO.IsDisabled
+                }
+            };
+            await _mediator.Send(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
+
+            return RedirectToAction("AssessmentFunds");
         }
 
         //update an assessment tool
