@@ -17,8 +17,6 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
         private readonly IUserProvider _userProvider;
-        private readonly IRoleValidation _roleValidation;
-        private readonly IAuthorizationService _authorizationService;
 
 
         public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider)
