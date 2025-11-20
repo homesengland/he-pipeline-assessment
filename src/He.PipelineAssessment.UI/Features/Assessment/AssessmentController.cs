@@ -17,6 +17,8 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
         private readonly IUserProvider _userProvider;
+        private readonly IRoleValidation _roleValidation;
+        private readonly IAuthorizationService _authorizationService;
 
 
         public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider)
@@ -61,6 +63,24 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             {
                 return RedirectToAction("Summary", new { assessmentid = assessmentid, correlationId = correlationId });
             }
+        }
+
+        [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
+        [ResponseCache(NoStore = true)]
+        public async Task<IActionResult> Permissions(int assessmentid, int correlationId)
+        {
+            var overviewModel = await _mediator.Send(new AssessmentSummaryRequest(assessmentid, correlationId));
+ 
+            var isAdmin = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+            var currentUsername = _userProvider.GetUserName();
+            var isProjectManager = overviewModel.ProjectManager == currentUsername;
+
+            if (!isAdmin && !isProjectManager)
+            {
+                return RedirectToAction("AccessDenied", "Error");
+            }
+
+            return PartialView("_PermissionsList", overviewModel);
         }
     }
 }
