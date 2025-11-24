@@ -35,8 +35,8 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Description</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
+                    @* <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is disabled?</th> *@
                     <th scope="col" class="govuk-table__header">Update</th>
                     <th scope="col" class="govuk-table__header">Archive</th>
                 </tr>
@@ -46,6 +46,7 @@
                     int iterator = 0;
                     @foreach (var nonDisabledFunds in Model.Funds.Where(x => !x.IsDisabled))
                     {
+                        //@foreach (var fund in Model.Funds)
                         iterator++;
                         <tr class="govuk-table__row ">
                             @using (Html.BeginForm("UpdateAssessmentFund", "Admin", FormMethod.Post))
@@ -53,18 +54,9 @@
                                 <td class="govuk-table__cell">
                                     <div class="govuk-form-group">
                                         @{
-                                            var nameId = "Name" + iterator;
-                                            <label hidden id=@nameId>"Row: @iterator column: name"</label>
+                                            var labelId = "Name" + iterator;
+                                            <label hidden id=@labelId>"Row: @iterator column: name"</label>
                                             <input type="text" value="@nonDisabledFunds.Name" name="AssessmentFundsDTO.Name" class="govuk-input ">
-                                        }
-                                    </div>
-                                </td>
-                                <td class="govuk-table__cell">
-                                    <div class="govuk-form-group">
-                                        @{
-                                            var descriptionId = "Description" + iterator;
-                                            <label hidden id=@descriptionId>"Row: @iterator column: description"</label>
-                                            <input type="text" value="@nonDisabledFunds.Description" name="AssessmentFundsDTO.Description" class="govuk-input ">
                                         }
                                     </div>
                                 </td>
