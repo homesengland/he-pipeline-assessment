@@ -30,6 +30,9 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             _elsaCustomRepository = elsaCustomRepository;
         }
 
+        [ActivityInput(Label = "Show Assessment Tool Name")]
+        public bool ShowAssessmentToolName { get; set; } = true;
+
         [ActivityInput]
         public string PageTitle { get; set; } = null!;
 
