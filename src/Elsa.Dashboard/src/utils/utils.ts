@@ -18,14 +18,25 @@ export function newOptionNumber(options: Array<number>) : string {
   return highestValue.toString();
 }
 
-export function newOptionLetter(options: Array<string>): string {
-  let highestValue: string = "A";
-  if (options != null && options.length > 0) {
-    highestValue = options.sort().pop();
-    return incrementString(highestValue);
+export function newOptionLetter(existing: string[]): string {
+  // Helper to convert a number to Excel-style letters i.e. A to Z, followed by AA, AB, etc.
+  function numberToLetters(n: number): string {
+    let s = '';
+    while (n >= 0) {
+      s = String.fromCharCode((n % 26) + 65) + s;
+      n = Math.floor(n / 26) - 1;
+    }
+    return s;
   }
-  return highestValue;
-  
+
+  // Find the next available identifier
+  let i = 0;
+  let next;
+  do {
+    next = numberToLetters(i);
+    i++;
+  } while (existing.includes(next));
+  return next;
 }
 
 export function toLetter(num: number) {
@@ -36,7 +47,7 @@ export function toLetter(num: number) {
   return pow ? toLetter(pow) + out : out;
 };
 
-function incrementString(value: string) : string {
+export function incrementString(value: string) : string {
   let carry: number = 1;
   let res: string = '';
 
