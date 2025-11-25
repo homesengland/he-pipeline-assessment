@@ -245,6 +245,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
                 {
                     Id = assessmentFundsDTO.Id ?? 0,
                     Name = assessmentFundsDTO.Name,
+                    Description = assessmentFundsDTO.Description,
                     IsEarlyStage = assessmentFundsDTO.IsEarlyStage,
                     IsDisabled = assessmentFundsDTO.IsDisabled
                 }

@@ -7,10 +7,10 @@ namespace He.PipelineAssessment.UI.Features.Funds.ViewModels
     {
         public int? Id { get; set; }
         public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
         public bool IsEarlyStage { get; set; }
         public bool IsDisabled { get; set; }
 
-        //OVER HERE:
         public ValidationResult? ValidationResult { get; set; }
     }
 }

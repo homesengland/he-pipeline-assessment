@@ -25,6 +25,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
                 ArgumentNullException.ThrowIfNull(entity, "Assessment Fund not found");
                 entity.Id = request.Id;
                 entity.Name = request.Name;
+                entity.Description = request.Description;
                 entity.IsEarlyStage = request.IsEarlyStage;
                 entity.IsDisabled = request.IsDisabled;
                 return await _assessmentRepository.UpdateAssessmentFund(entity);
@@ -32,7 +33,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                throw new ApplicationException($"Unable to update assessment fund. AssessmentFundId: {request.Id}");
+                throw new ApplicationException($"Unable to update assessment fund. AssessmentFundId: {request.Id}.");
             }
         }
     }
