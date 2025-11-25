@@ -2,8 +2,8 @@
 @using He.PipelineAssessment.UI.Authorization
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
-@model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
-
+@using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist
+@model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse
 
 <table class="govuk-table">
     <caption class="govuk-table__caption govuk-table__caption--m">Permissions</caption>
@@ -16,22 +16,34 @@
         </tr>
     </thead>
     <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-            <td class="govuk-table__cell">
-                    
-            </td>
-
-            <td class="govuk-table__cell">
-
-            </td>
-
-            <td class="govuk-table__cell">
-
-            </td>
-            <td class="govuk-table__cell">
-                <input class="govuk-button govuk-button--warning govuk-!-margin-0 govuk-button__pas-assessment-summary" data-module="govuk-button" id="Submit" type="submit" value="Remove" />
-            </td>
-        </tr>
+        @if (Model.Permissions.Any())
+        {
+            @foreach (var permission in Model.Permissions)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        @permission.Email
+                    </td>
+                    <td class="govuk-table__cell">
+                        @permission.DateAdded.ToString("dd/MM/yyyy HH:mm")
+                    </td>
+                    <td class="govuk-table__cell">
+                        @permission.AddedBy
+                    </td>
+                    <td class="govuk-table__cell">
+                        <form method="post" asp-controller="SensitiveRecordPermissionsWhitelist" asp-action="Remove" asp-route-id="@permission.Id" asp-route-assessmentid="@Model.AssessmentId" asp-route-correlationId="@Model.CorrelationId">
+                            <input class="govuk-button govuk-button--warning govuk-!-margin-0 govuk-button__pas-assessment-summary" data-module="govuk-button" type="submit" value="Remove" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell" colspan="4">No permissions added yet</td>
+            </tr>
+        }
     </tbody>
 </table>
 <input class="govuk-button govuk-!-margin-0 govuk-button__pas-assessment-summary" data-module="govuk-button" id="Submit" type="submit" value="Add New" />

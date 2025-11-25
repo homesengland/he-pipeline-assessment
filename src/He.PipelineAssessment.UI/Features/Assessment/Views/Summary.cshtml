@@ -93,7 +93,15 @@ else
                 </a>
             </li>
         }
-        
+
+
+        @if (isAdmin || RoleValidation.IsProjectManagerForAssessment(Model.ProjectManager))
+        {
+            <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="permissions">
+                @await Html.PartialAsync("_PermissionsList", Model)
+            </div>
+        }
+
     </ul>
     <div class="govuk-tabs__panel" id="summary">
         @await Html.PartialAsync("_SummaryList",Model)
@@ -107,7 +115,9 @@ else
     @if (isAdmin || RoleValidation.IsProjectManagerForAssessment(Model.ProjectManager))
     {
         <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="permissions">
-            @await Html.PartialAsync("_PermissionsList", Model)
+            <div id="permissions-content">
+                Loading permissions...
+            </div>
         </div>
     }
 </div>

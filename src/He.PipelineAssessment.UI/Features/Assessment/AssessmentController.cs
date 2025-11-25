@@ -2,6 +2,7 @@
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
+using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist;
 using He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -45,6 +46,18 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         public async Task<IActionResult> Summary(int assessmentid, int correlationId)
         {
             var overviewModel = await _mediator.Send(new AssessmentSummaryRequest(assessmentid, correlationId));
+
+            // Load permissions data
+            var isAdmin = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+            var currentUsername = _userProvider.GetUserName();
+            var isProjectManager = overviewModel.ProjectManager == currentUsername;
+
+            if (isAdmin || isProjectManager)
+            {
+                var permissionsModel = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
+                overviewModel.Permissions = permissionsModel.Permissions;
+            }
+
             return View("Summary", overviewModel);
         }
 
@@ -67,18 +80,18 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         [ResponseCache(NoStore = true)]
         public async Task<IActionResult> Permissions(int assessmentid, int correlationId)
         {
-            var overviewModel = await _mediator.Send(new AssessmentSummaryRequest(assessmentid, correlationId));
+            var permissionsModel = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
  
             var isAdmin = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
             var currentUsername = _userProvider.GetUserName();
-            var isProjectManager = overviewModel.ProjectManager == currentUsername;
+            var isProjectManager = permissionsModel.AssessmentSummary.ProjectManager == currentUsername;
 
             if (!isAdmin && !isProjectManager)
             {
                 return RedirectToAction("AccessDenied", "Error");
             }
 
-            return PartialView("_PermissionsList", overviewModel);
+            return PartialView("_PermissionsList", permissionsModel);
         }
     }
 }

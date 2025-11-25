@@ -136,7 +136,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         {
             bool hasValidBusinessArea = _roleValidation.IsAdmin() ? true : _roleValidation.ValidateForBusinessArea(businessArea);
             return hasValidBusinessArea;
-        }
+        }  
 
         private AssessmentSummaryStage AssessmentSummaryStage( string name, int order, bool? isEarlyStage)
         {
