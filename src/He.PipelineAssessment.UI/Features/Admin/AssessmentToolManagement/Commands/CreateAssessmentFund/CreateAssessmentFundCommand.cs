@@ -14,7 +14,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
 
         [Display(Name = "Is early stage?")]
         public bool IsEarlyStage { get; set; } = false;
-
+        public string Description { get; set; } = string.Empty;
         public bool IsDisabled { get; set; } = false;
     }
 }

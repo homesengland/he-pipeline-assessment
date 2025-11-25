@@ -135,6 +135,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
                 CreateAssessmentFundCommand = new CreateAssessmentFundCommand
                 {
                     Name = assessmentFundsDTO.Name,
+                    Description = assessmentFundsDTO.Description,
                     IsEarlyStage = assessmentFundsDTO.IsEarlyStage,
                     IsDisabled = assessmentFundsDTO.IsDisabled
                 }

@@ -40,6 +40,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
             return new AssessmentFund
             {
                 Name = assessmentFundCommand.Name,
+                Description = assessmentFundCommand.Description,
                 IsEarlyStage = assessmentFundCommand.IsEarlyStage,
                 IsDisabled = assessmentFundCommand.IsDisabled
             };
