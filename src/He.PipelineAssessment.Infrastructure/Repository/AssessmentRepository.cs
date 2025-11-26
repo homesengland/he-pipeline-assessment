@@ -41,6 +41,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<List<AssessmentIntervention>> GetOpenAssessmentInterventions(int assessmentId);
         Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmendment(int assessmentId, int order);
         Task<List<SensitiveRecordWhitelist>> GetSensitiveRecordWhitelist(int assessmentId);
+        Task<SensitiveRecordWhitelist?> GetSensitiveRecordWhitelistById(int id);
+        Task<int> CreateSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist);
 
     }
 
@@ -299,5 +301,18 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                 .OrderByDescending(x => x.CreatedDateTime)
                 .ToListAsync();
         }
+
+        public async Task<SensitiveRecordWhitelist?> GetSensitiveRecordWhitelistById(int id)
+        {
+            return await context.Set<SensitiveRecordWhitelist>()
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<int> CreateSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist)
+        {
+            await context.Set<SensitiveRecordWhitelist>().AddAsync(whitelist);
+            return await context.SaveChangesAsync();
+        }
+
     }
 }

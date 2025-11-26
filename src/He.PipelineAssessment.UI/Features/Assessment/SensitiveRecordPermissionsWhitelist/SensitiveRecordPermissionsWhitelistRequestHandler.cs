@@ -25,6 +25,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
 
             var permissions = whitelistRecords.Select(x => new SensitiveRecordPermissionsWhitelistDto
             {
+                Id = x.Id,
                 Email = x.Email,
                 DateAdded = x.CreatedDateTime,
                 AddedBy = x.CreatedBy
