@@ -20,6 +20,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow
         public string PreviousActivityId { get; set; } = null!;
         public string PreviousActivityType { get; set; } = null!;
 
+        public bool ShowAssessmentToolName { get; set; } = true;
         public string PageTitle { get; set; } = null!;
         public string ActivityType { get; set; } = null!;
         public string? ConfirmationTitle { get; set; } = null!;
