@@ -49,7 +49,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 {
                     _logger.LogWarning("Add permission failed: missing email. AssessmentId={AssessmentId}", assessmentid);
                     TempData["ErrorMessage"] = "Email address is required.";
-                    return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId });
+                    return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
                 }
 
                 // Check if permission already exists
@@ -58,7 +58,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 {
                     _logger.LogWarning("Add permission failed: duplicate email {Email} for AssessmentId={AssessmentId}", email, assessmentid);
                     TempData["ErrorMessage"] = "This email address already has permission.";
-                    return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId });
+                    return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
                 }
 
                 // Add permission
@@ -72,13 +72,13 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 _logger.LogInformation("Permission added successfully. AssessmentId={AssessmentId}, Email={Email}, NewId={Id}, Result={Result}", assessmentid, whitelist.Email, whitelist.Id, result);
 
                 TempData["SuccessMessage"] = "Permission added successfully.";
-                return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId });
+                return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error adding permission for AssessmentId={AssessmentId}", assessmentid);
                 TempData["ErrorMessage"] = $"Failed to add permission: {ex.Message}";
-                return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId });
+                return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
             }
         }
 
