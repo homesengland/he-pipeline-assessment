@@ -28,12 +28,14 @@ namespace He.PipelineAssessment.UI.Features.Admin
         private readonly IValidator<UpdateAssessmentToolCommand> _updateAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolWorkflowCommand> _updateAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
+        private readonly IValidator<CreateAssessmentFundCommand> _createAssessmentFundCommandValidator;
 
         public AdminController(
             IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
             IValidator<CreateAssessmentToolWorkflowCommand> createAssessmentToolWorkflowCommandValidator,
             IValidator<UpdateAssessmentToolCommand> updateAssessmentToolCommandValidator,
             IValidator<UpdateAssessmentToolWorkflowCommand> updateAssessmentToolWorkflowCommandValidator,
+            IValidator<CreateAssessmentFundCommand> createAssessmentFundCommandValidator,
             IMediator mediator,
             ILogger<AdminController> logger) : base(mediator, logger)
         {
@@ -41,6 +43,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
             _updateAssessmentToolCommandValidator = updateAssessmentToolCommandValidator;
             _updateAssessmentToolWorkflowCommandValidator = updateAssessmentToolWorkflowCommandValidator;
             _createAssessmentToolCommandValidator = createAssessmentToolCommandValidator;
+            _createAssessmentFundCommandValidator = createAssessmentFundCommandValidator;
         }
 
         public IActionResult Index()
@@ -130,7 +133,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
         [HttpPost]
         public async Task<IActionResult> CreateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
         {
-            var createAssessmentFundCommandDTO = new CreateAssessmentFundCommandDto
+            var createAssessmentFundCommandDTO = new CreateAssessmentFundDto
             {
                 CreateAssessmentFundCommand = new CreateAssessmentFundCommand
                 {
@@ -140,9 +143,19 @@ namespace He.PipelineAssessment.UI.Features.Admin
                     IsDisabled = assessmentFundsDTO.IsDisabled
                 }
             };
-            await _mediator.Send(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
-            return RedirectToAction("AssessmentFunds");
+            var validationResult = await _createAssessmentFundCommandValidator.ValidateAsync(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
+            if (validationResult.IsValid)
+            {
+                await _mediator.Send(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
+                return RedirectToAction("AssessmentFunds");
+            }
+            else
+            {
+                assessmentFundsDTO.ValidationResult = validationResult;
+                return View("LoadAssessmentFund", assessmentFundsDTO);
+            }
         }
+
 
         //update an assessment tool
         [HttpPost]
