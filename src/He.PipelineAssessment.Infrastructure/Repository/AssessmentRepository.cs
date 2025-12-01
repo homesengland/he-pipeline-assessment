@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace He.PipelineAssessment.Infrastructure.Repository
 {
@@ -43,6 +44,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<List<SensitiveRecordWhitelist>> GetSensitiveRecordWhitelist(int assessmentId);
         Task<SensitiveRecordWhitelist?> GetSensitiveRecordWhitelistById(int id);
         Task<int> CreateSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist);
+        Task<int> DeleteSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist);
 
     }
 
@@ -312,6 +314,11 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         {
             await context.Set<SensitiveRecordWhitelist>().AddAsync(whitelist);
             return await context.SaveChangesAsync();
+        }
+        public async Task<int>DeleteSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist)
+        {
+            context.Remove(whitelist);
+            return await SaveChanges();
         }
 
     }

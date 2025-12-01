@@ -58,9 +58,10 @@
                         @permission.AddedBy
                     </td>
                     <td class="govuk-table__cell">
-@*                         <form method="post" asp-controller="SensitiveRecordPermissionsWhitelist" asp-action="Remove" asp-route-id="@permission.Id" asp-route-assessmentid="@Model.AssessmentId" asp-route-correlationId="@Model.CorrelationId">
+                        <form method="post" asp-controller="sensitiverecordpermissionswhitelist" asp-action="Remove" asp-route-id="@permission.Id" asp-route-assessmentid="@Model.AssessmentId" asp-route-correlationid="@Model.CorrelationId">
+                            @Html.AntiForgeryToken()
                             <input class="govuk-button govuk-button--warning govuk-!-margin-0 govuk-button__pas-assessment-summary" data-module="govuk-button" type="submit" value="Remove" />
-                        </form> *@
+                        </form>
                     </td>
                 </tr>
             }

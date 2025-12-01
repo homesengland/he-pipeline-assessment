@@ -82,6 +82,57 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
             }
         }
 
+        [HttpPost]
+        [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
+        public async Task<IActionResult> Remove(int id, int assessmentid, int correlationId)
+        {
+            _logger.LogInformation("Remove permission requested for Id={Id}, AssessmentId={AssessmentId}", id, assessmentid);
+
+            try
+            {
+                var assessmentSummary = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
+                var isAdmin = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+                var currentUsername = _userProvider.GetUserName();
+                var isProjectManager = assessmentSummary.AssessmentSummary.ProjectManager == currentUsername;
+
+                if (!isAdmin && !isProjectManager)
+                {
+                    _logger.LogWarning("Unauthorized remove attempt by User={User} for AssessmentId={AssessmentId}", currentUsername, assessmentid);
+                    return RedirectToAction("AccessDenied", "Error");
+                }
+
+                // Get the whitelist entry
+                var whitelist = await _assessmentRepository.GetSensitiveRecordWhitelistById(id);
+                if (whitelist == null)
+                {
+                    _logger.LogWarning("Remove permission failed: whitelist entry not found. Id={Id}", id);
+                    TempData["ErrorMessage"] = "Permission not found.";
+                    return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
+                }
+
+                // Verify the whitelist entry belongs to the correct assessment
+                if (whitelist.AssessmentId != assessmentid)
+                {
+                    _logger.LogWarning("Remove permission failed: whitelist entry {Id} does not belong to AssessmentId={AssessmentId}", id, assessmentid);
+                    TempData["ErrorMessage"] = "Invalid permission reference.";
+                    return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
+                }
+
+                // Remove permission
+                var result = await _assessmentRepository.DeleteSensitiveRecordWhitelist(whitelist);
+                _logger.LogInformation("Permission removed successfully. Id={Id}, AssessmentId={AssessmentId}, Email={Email}, Result={Result}", id, assessmentid, whitelist.Email, result);
+
+                TempData["SuccessMessage"] = "Permission removed successfully.";
+                return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error removing permission for Id={Id}, AssessmentId={AssessmentId}", id, assessmentid);
+                TempData["ErrorMessage"] = $"Failed to remove permission: {ex.Message}";
+                return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
+            }
+        }
+
 
     }
 }
