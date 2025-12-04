@@ -75,13 +75,24 @@
     </tbody>
 </table>
 
-<form method="post" asp-controller="SensitiveRecordPermissionsWhitelist" asp-action="Add" asp-route-assessmentid="@Model.AssessmentId" asp-route-correlationId="@Model.CorrelationId" class="govuk-!-margin-top-4">
+<form method="post" asp-controller="SensitiveRecordPermissionsWhitelist" asp-action="Add" asp-route-assessmentid="@Model.AssessmentId" asp-route-correlationId="@Model.CorrelationId" class="govuk-!-margin-top-4" novalidate>
     @Html.AntiForgeryToken()
-    <div class="govuk-form-group">
+    <div class="govuk-form-group @(TempData["EmailValidationError"] != null ? "govuk-form-group--error" : "")">
         <label class="govuk-label" for="email">
             Email address
         </label>
-        <input class="govuk-input govuk-input--width-20" id="email" name="email" type="email" required>
+        @if (TempData["EmailValidationError"] != null)
+        {
+            <p id="email-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> @TempData["EmailValidationError"]
+            </p>
+        }
+        <input class="govuk-input govuk-input--width-20 @(TempData["EmailValidationError"] != null ? "govuk-input--error" : "")"
+               id="email"
+               name="email"
+               type="text"
+               value="@TempData["EmailValue"]"
+               aria-describedby="email-hint @(TempData["EmailValidationError"] != null ? "email-error" : "")">
     </div>
     <button class="govuk-button govuk-!-margin-0" data-module="govuk-button" type="submit">Add New</button>
 </form>

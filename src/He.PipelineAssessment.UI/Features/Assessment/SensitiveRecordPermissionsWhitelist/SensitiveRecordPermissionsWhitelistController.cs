@@ -5,6 +5,7 @@ using He.PipelineAssessment.UI.Authorization;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist
 {
@@ -44,11 +45,24 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                     return RedirectToAction("AccessDenied", "Error");
                 }
 
-                // Validate email
+                // Validate email is not empty
                 if (string.IsNullOrWhiteSpace(email))
                 {
                     _logger.LogWarning("Add permission failed: missing email. AssessmentId={AssessmentId}", assessmentid);
-                    TempData["ErrorMessage"] = "Email address is required.";
+                    TempData["ErrorMessage"] = "Enter an email address";
+                    TempData["EmailValidationError"] = "Enter an email address";
+                    TempData["EmailValue"] = email;
+                    return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
+                }
+
+                // Validate email format
+                var emailAttribute = new EmailAddressAttribute();
+                if (!emailAttribute.IsValid(email))
+                {
+                    _logger.LogWarning("Add permission failed: invalid email format {Email} for AssessmentId={AssessmentId}", email, assessmentid);
+                    TempData["ErrorMessage"] = "Inavlid email address format";
+                    TempData["EmailValidationError"] = "Enter an email address in the correct format such as name@homesengland.gov.uk";
+                    TempData["EmailValue"] = email;
                     return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
                 }
 
@@ -57,7 +71,9 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 if (existingPermissions.Any(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
                 {
                     _logger.LogWarning("Add permission failed: duplicate email {Email} for AssessmentId={AssessmentId}", email, assessmentid);
-                    TempData["ErrorMessage"] = "This email address already has permission.";
+                    TempData["ErrorMessage"] = $"{email} is already on the permissions list for this assessment";
+                    TempData["EmailValidationError"] = $"{email} is already on the permissions list for this assessment";
+                    TempData["EmailValue"] = email;
                     return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
                 }
 
@@ -71,7 +87,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 var result = await _assessmentRepository.CreateSensitiveRecordWhitelist(whitelist);
                 _logger.LogInformation("Permission added successfully. AssessmentId={AssessmentId}, Email={Email}, NewId={Id}, Result={Result}", assessmentid, whitelist.Email, whitelist.Id, result);
 
-                TempData["SuccessMessage"] = "Permission added successfully.";
+                TempData["SuccessMessage"] = $"Permission for {whitelist.Email} added successfully";
                 return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
             }
             catch (Exception ex)
@@ -122,7 +138,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 var result = await _assessmentRepository.DeleteSensitiveRecordWhitelist(whitelist);
                 _logger.LogInformation("Permission removed successfully. Id={Id}, AssessmentId={AssessmentId}, Email={Email}, Result={Result}", id, assessmentid, whitelist.Email, result);
 
-                TempData["SuccessMessage"] = "Permission removed successfully.";
+                TempData["SuccessMessage"] = $"Permission for {whitelist.Email} removed successfully.";
                 return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
             }
             catch (Exception ex)
