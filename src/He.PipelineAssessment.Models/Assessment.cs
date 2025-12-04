@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Models.Helper;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace He.PipelineAssessment.Models
 {
@@ -21,6 +22,8 @@ namespace He.PipelineAssessment.Models
         public string LandType { get; set; } = string.Empty;
         public virtual List<AssessmentToolWorkflowInstance>? AssessmentToolWorkflowInstances { get; set; }
         public string? SensitiveStatus { get; set; }
+        [DefaultValue(true)]
+        public bool ValidData { get; set; } = true;
 
         public bool IsSensitiveRecord()
         {
