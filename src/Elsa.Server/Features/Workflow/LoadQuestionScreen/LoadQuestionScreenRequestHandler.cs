@@ -93,6 +93,8 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
                             var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                             result.Data.PageTitle = title;
+                            var showToolName = (bool?)activityDataDictionary.FirstOrDefault(x => x.Key == "ShowToolName").Value;
+                            result.Data.ShowToolName = showToolName ?? false;
 
                             var elsaActivityAssessmentQuestions =
                                 (AssessmentQuestions?)activityDataDictionary
