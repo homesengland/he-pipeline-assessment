@@ -15,6 +15,7 @@ using He.PipelineAssessment.UI.Extensions;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
@@ -98,6 +99,7 @@ builder.Services.AddScoped<IValidator<CreateAssessmentToolWorkflowCommand>, Crea
 builder.Services.AddScoped<IValidator<CreateAssessmentFundCommand>, CreateAssessmentFundCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolCommand>, UpdateAssessmentToolCommandValidator>();
 builder.Services.AddScoped<IValidator<UpdateAssessmentToolWorkflowCommand>, UpdateAssessmentToolWorkflowCommandValidator>();
+builder.Services.AddScoped<IValidator<UpdateAssessmentFundCommand>, UpdateAssessmentFundCommandValidator>();
 builder.Services.AddScoped<IValidator<AssessmentInterventionCommand>, AssessmentInterventionCommandValidator>();
 builder.Services.AddScoped<ISinglePipelineProvider, SinglePipelineProvider>();
 

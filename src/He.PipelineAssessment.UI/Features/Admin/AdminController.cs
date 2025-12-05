@@ -29,6 +29,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
         private readonly IValidator<UpdateAssessmentToolWorkflowCommand> _updateAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentFundCommand> _createAssessmentFundCommandValidator;
+        private readonly IValidator<UpdateAssessmentFundCommand> _updateAssessmentFundCommandValidator;
 
         public AdminController(
             IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
@@ -36,6 +37,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
             IValidator<UpdateAssessmentToolCommand> updateAssessmentToolCommandValidator,
             IValidator<UpdateAssessmentToolWorkflowCommand> updateAssessmentToolWorkflowCommandValidator,
             IValidator<CreateAssessmentFundCommand> createAssessmentFundCommandValidator,
+            IValidator<UpdateAssessmentFundCommand> updateAssessmentFundCommandValidator,
             IMediator mediator,
             ILogger<AdminController> logger) : base(mediator, logger)
         {
@@ -44,6 +46,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
             _updateAssessmentToolWorkflowCommandValidator = updateAssessmentToolWorkflowCommandValidator;
             _createAssessmentToolCommandValidator = createAssessmentToolCommandValidator;
             _createAssessmentFundCommandValidator = createAssessmentFundCommandValidator;
+            _updateAssessmentFundCommandValidator = updateAssessmentFundCommandValidator;
         }
 
         public IActionResult Index()
@@ -264,12 +267,35 @@ namespace He.PipelineAssessment.UI.Features.Admin
                     IsDisabled = assessmentFundsDTO.IsDisabled
                 }
             };
-            if (updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id == 0)
+             if (updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id == 0)
+                {
+                    return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Fund Id provided." });
+                }
+
+             var validationResult = await _updateAssessmentFundCommandValidator.ValidateAsync(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
+            if (validationResult.IsValid)
             {
-                return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Fund Id provided." });
+                await _mediator.Send(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
+                return RedirectToAction("AssessmentFunds");
             }
-            await _mediator.Send(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
-            return RedirectToAction("AssessmentFunds");
+            else
+            { 
+                var fundsList = await _mediator.Send(new FundsListRequest());
+                var validatedFund = fundsList.Funds.FirstOrDefault(x =>
+                    x.Id == updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id);
+                if (validatedFund != null)
+                {
+                    validatedFund.ValidationResult = validationResult;
+                    validatedFund.Name = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Name;
+                    validatedFund.Description = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Description;
+                    validatedFund.IsEarlyStage = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsEarlyStage;
+                    validatedFund.IsDisabled = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsDisabled;
+                }
+                return View("AssessmentFunds", fundsList);
+
+            }
+
+                
         }
 
 

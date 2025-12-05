@@ -1,14 +1,15 @@
 ﻿using FluentValidation;
 using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentFund;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentFund;
+using System.Drawing.Text;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators
 {
-    public class CreateAssessmentFundCommandValidator : AbstractValidator<CreateAssessmentFundCommand>
+    public class UpdateAssessmentFundCommandValidator : AbstractValidator<UpdateAssessmentFundCommand>
     {
         private readonly IAssessmentRepository _assessmentRepository;
 
-        public CreateAssessmentFundCommandValidator (IAssessmentRepository assessmentRepository)
+        public UpdateAssessmentFundCommandValidator(IAssessmentRepository assessmentRepository)
         {
             this._assessmentRepository = assessmentRepository;
 
@@ -16,25 +17,24 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
                 .NotEmpty().WithMessage("{PropertyName} cannot be empty.")
                 .Matches("^[a-zA-Z ]+$").WithMessage("{PropertyName} can only contain letters a-z, A-Z, and spaces. Special characters are not allowed.")
                 .MaximumLength(80).WithMessage("{PropertyName} must be at most 80 characters.");
-           
-            RuleFor(c => c.Name)
-                .Must(BeUnique)
+
+            RuleFor(c => c)
+                .Must((c) => BeUnique(c.Name, c.Id))
                 .WithMessage("The {PropertyName} must be unique and not named after another Assessment Fund.");
 
             RuleFor(c => c.Description)
-                .NotEmpty().WithMessage("{PropertyName} cannot be empty.")
+                .NotEmpty().WithMessage("{PropertyName} cannot be empty")
                 .Matches("^[a-zA-Z ]+$").WithMessage("{PropertyName} can only contain letters a-z, A-Z, and spaces. Special characters are not allowed.")
-                .MaximumLength(160).WithMessage("{PropertyName} must be at most 160 characters.");
+                .MaximumLength(160).WithMessage("{PropertyName} must be at most 160 characters.")
+                .WithMessage("The {PropertyName} cannot be empty.");
         }
 
-        private bool BeUnique(string name)
+        private bool BeUnique(string name, int id)
         {
-            if (_assessmentRepository.GetAllFunds().Result.Any(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase)) == false)
+            if (_assessmentRepository.GetAllFunds().Result.Any(f => f.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && 
+                f.Id != id) == false)
                 return true;
             return false;
         }
-
-
-
     }
 }
