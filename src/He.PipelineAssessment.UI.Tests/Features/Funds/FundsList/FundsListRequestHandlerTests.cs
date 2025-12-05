@@ -99,21 +99,20 @@ namespace He.PipelineAssessment.UI.Tests.Features.Funds.FundsList
         public async Task Handle_Method_Should_Catch_Exception_If_Repo_Throws_Exception(
             [Frozen] Mock<IAssessmentRepository> repo,
             FundsListRequest fundsListRequest,
-            Exception exception,
-            FundsListRequestHandler sut)
+            FundsListRequestHandler sut,
+            Exception exception)
+
         {
-            // Arrange
-            // COMMENT: ThrowsAsync is used to simulate/fake an exception being thrown in asynchronously.
+            //Arrange
             repo.Setup(x => x.GetAllFunds()).ThrowsAsync(exception);
 
-            // Act 
-            var exception = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(fundsListRequest, CancellationToken.None));
+            // Act
+            var exceptionMessage = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(fundsListRequest, CancellationToken.None));
 
-            //Assert
-            Assert.Equal("Unable to get list of funds.", exception.Message);
+            // Assert
+            Assert.Equal("Unable to get list of funds.", exceptionMessage.Message);
         }
-
-
+        
         [Theory]
         [AutoMoqData]
         public async Task Exception_Should_Be_Logged_When_Repo_Throws_Exception(

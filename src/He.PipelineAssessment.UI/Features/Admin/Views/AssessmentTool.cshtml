@@ -7,14 +7,14 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-one-third">
         <label for="Back" hidden="hidden">Back: </label>
-        @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
+        @Html.ActionLink("Back", "Index", "Assessment", null, new { @class = "govuk-back-link" })
     </div>
-    <div class="govuk-grid-column-one-third pull-right">
+    <div class="govuk-grid-column- pull-right">
         <label for="createAssessmentTool" hidden="hidden">Create Assessment Tool: </label>
-        @Html.ActionLink("Create Assessment Tool", "LoadAssessmentTool","Admin", null, new {@class = "govuk-link"})
-        @Html.ActionLink("Manage Funds", "AssessmentFunds", "Admin", null, new { @class = "govuk-link" })
+        @Html.ActionLink("Create Assessment Tool", "LoadAssessmentTool", "Admin", null, new { @class = "govuk-link" })
+        @Html.ActionLink("Manage Assessment Funds", "AssessmentFunds", "Admin", null, new { @class = "govuk-link" })
     </div>
 </div>
 <div class="text-center">
@@ -72,17 +72,17 @@
                             </td>
                             <td class="govuk-table__cell">
                                 <div class="govuk-form-group">
-                                @{
+                                    @{
                                         var orderLabelId = "Order" + iterrator;
                                         <label hidden id=@orderLabelId>"Row: @iterrator column: order"</label>
-                                    <input type="text" value="@assessmentTool.Order" name="UpdateAssessmentToolCommand.Order" class="govuk-input @orderErrorClass" aria-labelledBy="@orderLabelId"/>
-                                    @if (assessmentTool.ValidationResult != null)
-                                    {
-                                        @foreach (var error in assessmentTool.ValidationResult.Errors.Where(x => x.PropertyName == "Order"))
+                                        <input type="text" value="@assessmentTool.Order" name="UpdateAssessmentToolCommand.Order" class="govuk-input @orderErrorClass" aria-labelledBy="@orderLabelId" />
+                                        @if (assessmentTool.ValidationResult != null)
                                         {
-                                            @Html.ValidationMessageFor(model => assessmentTool.Order, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                            @foreach (var error in assessmentTool.ValidationResult.Errors.Where(x => x.PropertyName == "Order"))
+                                            {
+                                                @Html.ValidationMessageFor(model => assessmentTool.Order, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                            }
                                         }
-                                    }
                                     }
                                 </div>
                             </td>
@@ -90,11 +90,11 @@
                                 @{
                                     var hiddenId = "hidden" + iterrator;
                                     @Html.AntiForgeryToken()
-                                    @Html.Hidden("UpdateAssessmentToolCommand.Id", assessmentTool.Id,new { @id=@hiddenId})
+                                    @Html.Hidden("UpdateAssessmentToolCommand.Id", assessmentTool.Id, new { @id = @hiddenId })
 
                                     var updateId = "Update" + iterrator;
                                     <input class="govuk-button govuk-!-margin-0" data-module="govuk-button" id="@updateId" type="submit" value="Update" />
-                                
+
                                 }
                             </td>
                         }
@@ -119,7 +119,7 @@
                                         </tr>
                                     }
                             </table>
-                            @Html.ActionLink("Manage Assessmenttool Workflow", "AssessmentToolWorkflow", "Admin", new { assessmentToolId = assessmentTool.Id })
+                            @Html.ActionLink("Manage Assessment Tool Workflow", "AssessmentToolWorkflow", "Admin", new { assessmentToolId = assessmentTool.Id })
                         </td>
                     </tr>
                 }

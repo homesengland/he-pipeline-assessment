@@ -5,12 +5,15 @@
 @model FundsListResponse;
 
 @{
-    ViewData["Title"] = "Assessment Funds";
+    ViewData["Title"] = "Manage Assessment Funds";
     Layout = "_Layout";
 }
 <div class=" govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         @Html.ActionLink("Back", "AssessmentTool", "Admin", null, new { @class = "govuk-back-link" })
+    </div>
+    <div class="govuk-grid-column-one-third pull-right">
+        @Html.ActionLink("Create an Assessment Fund", "LoadAssessmentFund", "Admin", null, new { @class = "govuk-link" })
     </div>
 </div>
 <div class="govuk-tabs" data-module="govuk-tabs">
@@ -28,12 +31,12 @@
     </ul>
     <div class="govuk-tabs__panel" id="assessment-funds">
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--m">Assessment Funds</caption>
+            <caption class="govuk-table__caption govuk-table__caption--m">Manage Assessment Funds</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Description</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
-                    @* <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is disabled?</th> *@
                     <th scope="col" class="govuk-table__header">Update</th>
                     <th scope="col" class="govuk-table__header">Archive</th>
                 </tr>
@@ -41,19 +44,57 @@
             <tbody class="govuk-table__body">
                 @{
                     int iterator = 0;
-                    @foreach (var nonDisabledFunds in Model.Funds.Where(x => !x.IsDisabled))
+                    foreach (var nonDisabledFunds in Model.Funds.Where(x => !x.IsDisabled))
                     {
-                        //@foreach (var fund in Model.Funds)
                         iterator++;
-                        <tr class="govuk-table__row ">
+                        var nameErrorClass = "";
+                        var descriptionErrorClass = "";
+                        var errorFormClass = "";
+                        if (nonDisabledFunds.ValidationResult != null)
+                        {
+                            errorFormClass = !nonDisabledFunds.ValidationResult.IsValid ? "govuk-form-group--error" : "";
+                            var nameInvalid = nonDisabledFunds.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
+                            var descriptionInvalid = nonDisabledFunds.ValidationResult.Errors.Any(x => x.PropertyName == "Description");
+                            nameErrorClass = nameInvalid ? "govuk-input--error" : "";
+                            descriptionErrorClass = descriptionInvalid ? "govuk-input--error" : "";
+                        }
+
+                        @if (nonDisabledFunds.ValidationResult != null && !nonDisabledFunds.ValidationResult.IsValid)
+                        {
+                            @await Html.PartialAsync("~/Features/Workflow/Views/Shared/_ValidationSummary.cshtml", nonDisabledFunds.ValidationResult)
+                        }
+                        <tr class="govuk-table__row @errorFormClass">
                             @using (Html.BeginForm("UpdateAssessmentFund", "Admin", FormMethod.Post))
                             {
                                 <td class="govuk-table__cell">
                                     <div class="govuk-form-group">
                                         @{
-                                            var labelId = "Name" + iterator;
-                                            <label hidden id=@labelId>"Row: @iterator column: name"</label>
-                                            <input type="text" value="@nonDisabledFunds.Name" name="AssessmentFundsDTO.Name" class="govuk-input ">
+                                            var nameLabelId = "Name" + iterator;
+                                            <label hidden id=@nameLabelId>"Row: @iterator column: name"</label>
+                                            <input type="text" value="@nonDisabledFunds.Name" name="AssessmentFundsDTO.Name" class="govuk-input @nameErrorClass"/>
+                                            @if (nonDisabledFunds.ValidationResult != null)
+                                            {
+                                                @foreach (var error in nonDisabledFunds.ValidationResult.Errors.Where(x => x.PropertyName == "Name"))
+                                                {
+                                                    @Html.ValidationMessageFor(model => nonDisabledFunds.Name, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-form-group">
+                                        @{
+                                            var descriptionLabelId = "Description" + iterator;
+                                            <label hidden id=@descriptionLabelId>"Row: @iterator column: description"</label>
+                                            <input type="text" value="@nonDisabledFunds.Description" name="AssessmentFundsDTO.Description" class="govuk-input @descriptionErrorClass"/>
+                                            @if (nonDisabledFunds.ValidationResult != null)
+                                            {
+                                                @foreach (var error in nonDisabledFunds.ValidationResult.Errors.Where(x => x.PropertyName == "Description"))
+                                                {
+                                                    @Html.ValidationMessageFor(model => nonDisabledFunds.Description, error.ErrorMessage, new { @class = "govuk-error-message" })
+                                                }
+                                            }
                                         }
                                     </div>
                                 </td>
@@ -101,6 +142,7 @@
                         </tr>
                     }
                 }
+                
             </tbody>
         </table>
     </div>
@@ -110,6 +152,7 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Description</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Restore</th>
                 </tr>
@@ -124,9 +167,18 @@
                             <td class="govuk-table__cell">
                                 <div class="govuk-form-group">
                                     @{
-                                        var labelId = "Name" + iterator;
-                                        <label hidden id=@labelId>"Row: @iterator column: name"</label>
+                                        var nameLabelId = "Name" + iterator;
+                                        <label hidden id=@nameLabelId>"Row: @iterator column: name"</label>
                                         <input type="text" value="@disabledFunds.Name" class="govuk-input" disabled >
+                                    }
+                                </div>
+                            </td>
+                            <td class="govuk-table__cell">
+                                <div class="govuk-form-group">
+                                    @{
+                                        var descriptionLabelId = "Description" + iterator;
+                                        <label hidden id=@descriptionLabelId>"Row: @iterator column: description"</label>
+                                        <input type="text" value="@disabledFunds.Description" class="govuk-input" disabled>
                                     }
                                 </div>
                             </td>
@@ -142,6 +194,7 @@
                                     var hiddenId = "hidden" + iterator;
                                     @Html.AntiForgeryToken()
                                     @Html.Hidden("AssessmentFundsDTO.Name", disabledFunds.Name, new {@id = @hiddenId + "_Name" })
+                                    @Html.Hidden("AssessmentFundsDTO.Description", disabledFunds.Description, new { @id = @hiddenId + "_Description" })
                                     @Html.Hidden("AssessmentFundsDTO.Id", disabledFunds.Id, new { @id = @hiddenId + "_Id"})
                                     @Html.Hidden("AssessmentFundsDTO.IsEarlyStage", disabledFunds.IsEarlyStage, new { @id = @hiddenId + "_IsEarlyStage" })
 
@@ -156,9 +209,3 @@
         </table>
     </div>
 </div>
- 
-
-
-
-
-

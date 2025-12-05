@@ -19,6 +19,7 @@ namespace He.PipelineAssessment.UI.Features.Funds.FundsList
                 {
                     Id = dbFund.Id,
                     Name = dbFund.Name,
+                    Description = dbFund.Description,
                     IsEarlyStage = dbFund.IsEarlyStage,
                     IsDisabled = dbFund.IsDisabled
                 });

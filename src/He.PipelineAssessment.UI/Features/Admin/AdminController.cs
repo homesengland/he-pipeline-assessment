@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentFund;
@@ -27,12 +28,16 @@ namespace He.PipelineAssessment.UI.Features.Admin
         private readonly IValidator<UpdateAssessmentToolCommand> _updateAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolWorkflowCommand> _updateAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
+        private readonly IValidator<CreateAssessmentFundCommand> _createAssessmentFundCommandValidator;
+        private readonly IValidator<UpdateAssessmentFundCommand> _updateAssessmentFundCommandValidator;
 
         public AdminController(
             IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
             IValidator<CreateAssessmentToolWorkflowCommand> createAssessmentToolWorkflowCommandValidator,
             IValidator<UpdateAssessmentToolCommand> updateAssessmentToolCommandValidator,
             IValidator<UpdateAssessmentToolWorkflowCommand> updateAssessmentToolWorkflowCommandValidator,
+            IValidator<CreateAssessmentFundCommand> createAssessmentFundCommandValidator,
+            IValidator<UpdateAssessmentFundCommand> updateAssessmentFundCommandValidator,
             IMediator mediator,
             ILogger<AdminController> logger) : base(mediator, logger)
         {
@@ -40,6 +45,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
             _updateAssessmentToolCommandValidator = updateAssessmentToolCommandValidator;
             _updateAssessmentToolWorkflowCommandValidator = updateAssessmentToolWorkflowCommandValidator;
             _createAssessmentToolCommandValidator = createAssessmentToolCommandValidator;
+            _createAssessmentFundCommandValidator = createAssessmentFundCommandValidator;
+            _updateAssessmentFundCommandValidator = updateAssessmentFundCommandValidator;
         }
 
         public IActionResult Index()
@@ -118,20 +125,40 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
-        //create an assessment fund
+        [HttpGet]
+        public IActionResult LoadAssessmentFund()
+        {
+            var assessmentFundsDTO = new AssessmentFundsDTO();
+            return View("LoadAssessmentFund", assessmentFundsDTO);
+        }
+        
+        // create an assessment fund
         [HttpPost]
-       //public async Task<IActionResult> CreateAssessmentFund(CreateAssessmentFundDto createAssessmentFundDto)
-       // {
-       //    //COMMENT: Insert validation here.
-       //     var createAssessmentFundCommand = new CreateAssessmentFundCommand
-       //     {
-       //         Name = createAssessmentFundDto.CreateAssessmentFundCommand.Name,
-       //         IsEarlyStage = createAssessmentFundDto.CreateAssessmentFundCommand.IsEarlyStage,
-       //         IsDisabled = createAssessmentFundDto.CreateAssessmentFundCommand.IsDisabled
-       //     };
-       //     await _mediator.Send(createAssessmentFundDto.CreateAssessmentFundCommand);
-       //     return RedirectToAction("AssessmentFunds");
-       // }
+        public async Task<IActionResult> CreateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
+        {
+            var createAssessmentFundCommandDTO = new CreateAssessmentFundDto
+            {
+                CreateAssessmentFundCommand = new CreateAssessmentFundCommand
+                {
+                    Name = assessmentFundsDTO.Name,
+                    Description = assessmentFundsDTO.Description,
+                    IsEarlyStage = assessmentFundsDTO.IsEarlyStage,
+                    IsDisabled = assessmentFundsDTO.IsDisabled
+                }
+            };
+            var validationResult = await _createAssessmentFundCommandValidator.ValidateAsync(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
+            if (validationResult.IsValid)
+            {
+                await _mediator.Send(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
+                return RedirectToAction("AssessmentFunds");
+            }
+            else
+            {
+                assessmentFundsDTO.ValidationResult = validationResult;
+                return View("LoadAssessmentFund", assessmentFundsDTO);
+            }
+        }
+
 
         //update an assessment tool
         [HttpPost]
@@ -235,43 +262,48 @@ namespace He.PipelineAssessment.UI.Features.Admin
                 {
                     Id = assessmentFundsDTO.Id ?? 0,
                     Name = assessmentFundsDTO.Name,
+                    Description = assessmentFundsDTO.Description,
                     IsEarlyStage = assessmentFundsDTO.IsEarlyStage,
                     IsDisabled = assessmentFundsDTO.IsDisabled
                 }
             };
-            if (updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id == 0)
+             if (updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id == 0)
+                {
+                    return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Fund Id provided." });
+                }
+
+             var validationResult = await _updateAssessmentFundCommandValidator.ValidateAsync(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
+            if (validationResult.IsValid)
             {
-                return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Fund Id provided." });
+                await _mediator.Send(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
+                return RedirectToAction("AssessmentFunds");
+            }
+            else
+            { 
+                var fundsList = await _mediator.Send(new FundsListRequest());
+                var validatedFund = fundsList.Funds.FirstOrDefault(x =>
+                    x.Id == updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id);
+                if (validatedFund != null)
+                {
+                    validatedFund.ValidationResult = validationResult;
+                    validatedFund.Name = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Name;
+                    validatedFund.Description = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Description;
+                    validatedFund.IsEarlyStage = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsEarlyStage;
+                    validatedFund.IsDisabled = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsDisabled;
+                }
+                return View("AssessmentFunds", fundsList);
+
             }
 
-            // var validationResult = await _updateAssessmentFundCommandValidator.ValidateAsync(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
-            //if (validationResult.IsValid)
-            //{
-            await _mediator.Send(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
-            return RedirectToAction("AssessmentFunds");
-            ////}
-            //else
-            //{
-            //    var assessmentFund = await _mediator.Send(new AssessmentFundQuery(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id));
-            //    if (assessmentFund != null && assessmentFund.Id == updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id)
-            //    {
-            //        //COMMENT: The query actually returns just one fund (assessmentFund), so it can be used directly. There’s no need to search inside a list using x => x.Id syntax.
-            //        assessmentFund.ValidationResult = validationResult;
-            //        assessmentFund.Name = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Name;
-            //        assessmentFund.IsEarlyStage = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsEarlyStage;
-            //        assessmentFund.IsDisabled = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsDisabled;
-            //    }
-            //    return View("AssessmentFunds", assessmentFund);
+                
         }
 
 
 
-        // delete an assessment fund
+        // Delete an assessment fund
         [HttpPost]
-        public async Task<IActionResult> DeleteAssessmentFund(AssessmentFundsDTO assessmentFundsDTO) // COMMENT: The parameter is of type AssessmentFundsDTO because it contains the ID of the fund to be deleted. Before calling the delete command, we need to extract the ID from this DTO.
+        public async Task<IActionResult> DeleteAssessmentFund(AssessmentFundsDTO assessmentFundsDTO) 
         {
-            // COMMENT: The id variable in AssessmentFundsDTO is nullable (int?), so the null-coalescing operator (??) is used to provide a default value of 0 in case it is null.
-            // COMMENT: If assessmentFundsDTO.ID is not null, it returns its value; otherwise, it returns 0.
             var id = assessmentFundsDTO.Id ?? 0;
 
             await _mediator.Send(new DeleteAssessmentFundCommand(id));

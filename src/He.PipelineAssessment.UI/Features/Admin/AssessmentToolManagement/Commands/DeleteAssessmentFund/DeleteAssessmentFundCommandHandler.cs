@@ -19,7 +19,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         {
             try
             {
-                // COMMENT: Entity sometimes appears to be null -  because the ID provided does not correspond to any existing assessment fund in the database.
                 var entity = await _assessmentRepository.GetAssessmentFundById(request.Id);
                 ArgumentNullException.ThrowIfNull(entity, "Assessment Fund not found");
                 entity.IsDisabled = true;

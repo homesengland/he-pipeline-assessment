@@ -1,0 +1,81 @@
+﻿@using He.PipelineAssessment.UI.Features.Funds.ViewModels
+
+@model AssessmentFundsDTO;
+
+@{
+    ViewData["Title"] = "Assessment Funds";
+    Layout = "_Layout";
+}
+
+@Html.ActionLink("Back", "AssessmentFunds", "Admin", null, new { @class = "govuk-back-link" })
+<div class="text-center">
+    @{
+        var nameErrorClass = "";
+        var descriptionErrorClass = "";
+        var errorFormClass = "";
+        if (Model.ValidationResult != null)
+        {
+            errorFormClass = !Model.ValidationResult.IsValid ? "govuk-form-group--error" : "";
+
+            var nameInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "Name");
+            var descriptionInvalid = Model.ValidationResult.Errors.Any(x => x.PropertyName == "Description");
+
+            nameErrorClass = nameInvalid ? "govuk-input--error" : "";
+            descriptionErrorClass = descriptionInvalid ? "govuk-input--error" : "";
+        }
+
+        @using (Html.BeginForm("CreateAssessmentFund", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="@errorFormClass">
+                <div class="govuk-form-group">
+                    <h3 class="govuk-label-wrapper">
+                        @Html.LabelFor(m => Model.Name, new { @class = "govuk-label govuk-label--s" })
+                    </h3>
+                    @if (Model.ValidationResult != null)
+                    {
+                        @foreach (var error in Model.ValidationResult.Errors.Where(e => e.PropertyName == "Name"))
+                        {
+                            @Html.ValidationMessageFor(m => Model.Name, error.ErrorMessage, new { @class = "govuk-error-message" })
+                        }
+                    }
+                    @Html.TextBoxFor(m => Model.Name, new { @class = $"govuk-input {nameErrorClass}", id = "Name" })
+                </div>
+                <div class="govuk-form-group">
+                    <h3 class="govuk-label-wrapper">
+                        @Html.LabelFor(m => Model.Description, new { @class = "govuk-label govuk-label--s" })
+                    </h3>
+                    @if (Model.ValidationResult != null)
+                    {
+                        @foreach (var error in Model.ValidationResult.Errors.Where(e => e.PropertyName == "Description"))
+                        {
+                            @Html.ValidationMessageFor(m => Model.Description, error.ErrorMessage, new { @class = "govuk-error-message" })
+                        }
+                    }
+                    @Html.TextBoxFor(m => Model.Description, new { @class = $"govuk-input {descriptionErrorClass}", id = "Description" })
+                </div>
+                <div class="govuk-form-group">
+                    <h3 class="govuk-label-wrapper">
+                        @Html.LabelFor(m => Model.IsEarlyStage, new { @class = "govuk-label govuk-label--s" })
+                    </h3>
+                    <div class="govuk-radios govuk-radios--inline">
+                        <div class="govuk-radios__item">
+                            @Html.RadioButtonFor(m => Model.IsEarlyStage, "True", new { @class = "govuk-radios__input" })
+                            <label class="govuk-label govuk-radios__label" for="@Model.IsEarlyStage">Yes</label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            @Html.RadioButtonFor(m => Model.IsEarlyStage, "False", new { @checked = "checked", @class = "govuk-radios__input" })
+                            <label class="govuk-label govuk-radios__label" for="@Model.IsEarlyStage">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @Html.Hidden("Id", Model.Id)
+            @Html.Hidden("IsDisabled", Model.IsDisabled)
+            <input class="govuk-button" data-module="govuk-button" id="Submit" type="submit" value="Create Assessment Fund" />
+        }
+    }
+</div>
+
+

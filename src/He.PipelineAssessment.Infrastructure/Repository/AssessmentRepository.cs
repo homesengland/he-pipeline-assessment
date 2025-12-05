@@ -27,7 +27,6 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<List<AssessmentToolWorkflowInstance>> GetLastInstancesByStatus(int assessmentId, string status);
         Task<List<AssessmentToolInstanceNextWorkflow>> GetLastNextWorkflows(int assessmentId);
 
-
         Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow);
         Task DeleteAllNextWorkflows(int assessmentId);
         Task DeleteAllNextWorkflowsByOrder(int assessmentId, int order);
@@ -49,6 +48,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<int> UpdateAssessmentFund(AssessmentFund fund);
 
         Task<int> DeleteAssessmentFund(AssessmentFund fund);
+
+        Task<int> CreateAssessmentFund(AssessmentFund fund);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -347,6 +348,12 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<int> DeleteAssessmentFund(AssessmentFund fund)
         {
             context.Set<AssessmentFund>().Remove(fund);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> CreateAssessmentFund(AssessmentFund fund)
+        {
+            await context.Set<AssessmentFund>().AddAsync(fund);
             return await context.SaveChangesAsync();
         }
     }
