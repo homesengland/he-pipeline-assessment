@@ -40,11 +40,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             [Frozen] Mock<ILogger<SensitiveRecordPermissionsWhitelistController>> logger,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
-            int correlationId,
-            string email)
+            int correlationId)
         {
             // Arrange
             SetupControllerContext(sut);
+            var email = "test.user@homesengland.gov.uk";
 
             var response = new SensitiveRecordPermissionsWhitelistResponse
             {
@@ -70,9 +70,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Summary", redirectToActionResult.ActionName);
             Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Permission added successfully.", sut.TempData["SuccessMessage"]);
+            Assert.Contains($"Permission for {email} added successfully", sut.TempData["SuccessMessage"]?.ToString());
             assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.Is<SensitiveRecordWhitelist>(
-                w => w.AssessmentId == assessmentId && w.Email == email.Trim())), Times.Once);
+                w => w.AssessmentId == assessmentId && w.Email == email)), Times.Once);
         }
 
         [Theory]
@@ -84,13 +84,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             [Frozen] Mock<ILogger<SensitiveRecordPermissionsWhitelistController>> logger,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
-            int correlationId,
-            string email)
+            int correlationId)
         {
             // Arrange
             SetupControllerContext(sut);
-
+            var email = "test.user@homesengland.gov.uk";
             var currentUsername = "project.manager@test.com";
+
             var response = new SensitiveRecordPermissionsWhitelistResponse
             {
                 AssessmentSummary = new AssessmentSummaryResponse
@@ -115,7 +115,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Summary", redirectToActionResult.ActionName);
             Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Permission added successfully.", sut.TempData["SuccessMessage"]);
+            Assert.Contains($"Permission for {email} added successfully", sut.TempData["SuccessMessage"]?.ToString());
             assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Once);
         }
 
@@ -128,11 +128,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             [Frozen] Mock<ILogger<SensitiveRecordPermissionsWhitelistController>> logger,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
-            int correlationId,
-            string email)
+            int correlationId)
         {
             // Arrange
             SetupControllerContext(sut);
+            var email = "test.user@homesengland.gov.uk";
 
             var response = new SensitiveRecordPermissionsWhitelistResponse
             {
@@ -190,7 +190,49 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Summary", redirectToActionResult.ActionName);
             Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Email address is required.", sut.TempData["ErrorMessage"]);
+            Assert.Equal("Enter an email address", sut.TempData["ErrorMessage"]);
+            Assert.Equal("Enter an email address", sut.TempData["EmailValidationError"]);
+            Assert.Equal(string.Empty, sut.TempData["EmailValue"]);
+            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Add_ShouldReturnError_WhenEmailFormatIsInvalid(
+            [Frozen] Mock<IMediator> mediator,
+            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<ILogger<SensitiveRecordPermissionsWhitelistController>> logger,
+            SensitiveRecordPermissionsWhitelistController sut,
+            int assessmentId,
+            int correlationId)
+        {
+            // Arrange
+            SetupControllerContext(sut);
+
+            var invalidEmail = "not-an-email";
+            var response = new SensitiveRecordPermissionsWhitelistResponse
+            {
+                AssessmentSummary = new AssessmentSummaryResponse
+                {
+                    ProjectManager = "project.manager@test.com"
+                }
+            };
+
+            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
+                .ReturnsAsync(response);
+            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+
+            // Act
+            var result = await sut.Add(assessmentId, correlationId, invalidEmail);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Summary", redirectToActionResult.ActionName);
+            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
+            Assert.Equal("Inavlid email address format", sut.TempData["ErrorMessage"]);
+            Assert.Equal("Enter an email address in the correct format such as name@homesengland.gov.uk", sut.TempData["EmailValidationError"]);
+            Assert.Equal(invalidEmail, sut.TempData["EmailValue"]);
             assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
         }
 
@@ -203,11 +245,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             [Frozen] Mock<ILogger<SensitiveRecordPermissionsWhitelistController>> logger,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
-            int correlationId,
-            string email)
+            int correlationId)
         {
             // Arrange
             SetupControllerContext(sut);
+            var email = "existing.user@homesengland.gov.uk";
 
             var response = new SensitiveRecordPermissionsWhitelistResponse
             {
@@ -235,7 +277,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Summary", redirectToActionResult.ActionName);
             Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("This email address already has permission.", sut.TempData["ErrorMessage"]);
+            Assert.Equal($"{email} is already on the permissions list for this assessment", sut.TempData["ErrorMessage"]);
+            Assert.Equal($"{email} is already on the permissions list for this assessment", sut.TempData["EmailValidationError"]);
+            Assert.Equal(email, sut.TempData["EmailValue"]);
             assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
         }
 
@@ -248,11 +292,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             [Frozen] Mock<ILogger<SensitiveRecordPermissionsWhitelistController>> logger,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
-            int correlationId,
-            string email)
+            int correlationId)
         {
             // Arrange
             SetupControllerContext(sut);
+            var email = "test.user@homesengland.gov.uk";
 
             var response = new SensitiveRecordPermissionsWhitelistResponse
             {
@@ -330,7 +374,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Summary", redirectToActionResult.ActionName);
             Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Permission removed successfully.", sut.TempData["SuccessMessage"]);
+            Assert.Contains($"Permission for {whitelist.Email} removed successfully", sut.TempData["SuccessMessage"]?.ToString());
             assessmentRepository.Verify(x => x.DeleteSensitiveRecordWhitelist(It.Is<SensitiveRecordWhitelist>(
                 w => w.Id == id)), Times.Once);
         }
@@ -382,7 +426,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Summary", redirectToActionResult.ActionName);
             Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Permission removed successfully.", sut.TempData["SuccessMessage"]);
+            Assert.Contains($"Permission for {whitelist.Email} removed successfully", sut.TempData["SuccessMessage"]?.ToString());
             assessmentRepository.Verify(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Once);
         }
 
