@@ -198,7 +198,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<ILogger<SensitiveRecordPermissionsWhitelistController>> logger,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
             int correlationId)
@@ -238,7 +237,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<ILogger<SensitiveRecordPermissionsWhitelistController>> logger,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
             int correlationId)
