@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist
 {
@@ -26,11 +27,26 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
             _logger = logger;
         }
 
+        /// <summary>
+        /// Sanitizes email for logging by removing newlines and control characters to prevent log injection
+        /// </summary>
+        private static string SanitizeForLogging(string? input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return "[empty]";
+            }
+
+            // Remove newlines, carriage returns, and other control characters
+            return Regex.Replace(input, @"[\r\n\t\f\v\u0000-\u001F\u007F-\u009F]", "", RegexOptions.None, TimeSpan.FromMilliseconds(100));
+        }
+
         [HttpPost]
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> Add(int assessmentid, int correlationId, string email)
         {
-            _logger.LogInformation("Add permission requested for AssessmentId={AssessmentId}, Email={Email}", assessmentid, email);
+            var sanitizedEmail = SanitizeForLogging(email);
+            _logger.LogInformation("Add permission requested for AssessmentId={AssessmentId}, Email={Email}", assessmentid, sanitizedEmail);
 
             try
             {
@@ -59,8 +75,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 var emailAttribute = new EmailAddressAttribute();
                 if (!emailAttribute.IsValid(email))
                 {
-                    _logger.LogWarning("Add permission failed: invalid email format {Email} for AssessmentId={AssessmentId}", email, assessmentid);
-                    TempData["ErrorMessage"] = "Inavlid email address format";
+                    _logger.LogWarning("Add permission failed: invalid email format for AssessmentId={AssessmentId}. Email length={EmailLength}", assessmentid, email.Length);
+                    TempData["ErrorMessage"] = "Invalid email address format";
                     TempData["EmailValidationError"] = "Enter an email address in the correct format such as name@homesengland.gov.uk";
                     TempData["EmailValue"] = email;
                     return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
@@ -70,7 +86,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 var existingPermissions = await _assessmentRepository.GetSensitiveRecordWhitelist(assessmentid);
                 if (existingPermissions.Any(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
                 {
-                    _logger.LogWarning("Add permission failed: duplicate email {Email} for AssessmentId={AssessmentId}", email, assessmentid);
+                    _logger.LogWarning("Add permission failed: duplicate email for AssessmentId={AssessmentId}", assessmentid);
                     TempData["ErrorMessage"] = $"{email} is already on the permissions list for this assessment";
                     TempData["EmailValidationError"] = $"{email} is already on the permissions list for this assessment";
                     TempData["EmailValue"] = email;
@@ -85,7 +101,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 };
 
                 var result = await _assessmentRepository.CreateSensitiveRecordWhitelist(whitelist);
-                _logger.LogInformation("Permission added successfully. AssessmentId={AssessmentId}, Email={Email}, NewId={Id}, Result={Result}", assessmentid, whitelist.Email, whitelist.Id, result);
+                _logger.LogInformation("Permission added successfully. AssessmentId={AssessmentId}, NewId={Id}, Result={Result}", assessmentid, whitelist.Id, result);
 
                 TempData["SuccessMessage"] = $"Permission for {whitelist.Email} added successfully";
                 return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
@@ -136,7 +152,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
 
                 // Remove permission
                 var result = await _assessmentRepository.DeleteSensitiveRecordWhitelist(whitelist);
-                _logger.LogInformation("Permission removed successfully. Id={Id}, AssessmentId={AssessmentId}, Email={Email}, Result={Result}", id, assessmentid, whitelist.Email, result);
+                _logger.LogInformation("Permission removed successfully. Id={Id}, AssessmentId={AssessmentId}, Result={Result}", id, assessmentid, result);
 
                 TempData["SuccessMessage"] = $"Permission for {whitelist.Email} removed successfully.";
                 return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
