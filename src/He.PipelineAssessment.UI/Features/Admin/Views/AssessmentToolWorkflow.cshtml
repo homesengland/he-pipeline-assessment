@@ -28,6 +28,7 @@
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is last?</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is ammendable?</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Fund</th>
                 <th scope="col" class="govuk-table__header">Update</th>
                 <th scope="col" class="govuk-table__header">Delete</th>
             </tr>
@@ -150,6 +151,23 @@
                                     </div>
                             </div>
                         </td>
+                       <td class="govuk-table__cell">
+                                @if (assessmentToolWorkflow.IsEarlyStage == true)
+                                {
+                                    <div class="govuk-form-group" disabled>
+                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundOptions, "Value", "Text", assessmentToolWorkflow.FundId), "Select a fund", new { @class = "govuk-select", @disabled = "disabled" })
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="govuk-form-group">
+                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundOptions, "Value", "Text", assessmentToolWorkflow.FundId), "Select a fund", new { @class = "govuk-select" })
+                                    </div>
+                                }
+
+                         </td>
+
+
                         <td class="govuk-table__cell">
                             @Html.AntiForgeryToken()
                             @Html.Hidden("UpdateAssessmentToolWorkflowCommand.Id", assessmentToolWorkflow.Id)
