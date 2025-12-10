@@ -155,7 +155,7 @@
                                 @if (assessmentToolWorkflow.IsEarlyStage == true)
                                 {
                                     <div class="govuk-form-group" disabled>
-                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundOptions, "Value", "Text", assessmentToolWorkflow.FundId), "Select a fund", new { @class = "govuk-select", @disabled = "disabled" })
+                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundOptions, "Value", "Text", assessmentToolWorkflow.FundId), "No fund", new { @class = "govuk-select", @disabled = "disabled" })
                                     </div>
                                 }
                                 else
