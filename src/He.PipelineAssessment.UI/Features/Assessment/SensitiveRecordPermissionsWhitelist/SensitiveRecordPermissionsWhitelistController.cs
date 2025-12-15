@@ -17,7 +17,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
         private readonly IUserProvider _userProvider;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ILogger<SensitiveRecordPermissionsWhitelistController> _logger;
-
+        private const string AllowedEmailDomain = "@homesengland.gov.uk";
 
         public SensitiveRecordPermissionsWhitelistController(IMediator mediator, IUserProvider userProvider, IAssessmentRepository assessmentRepository, ILogger<SensitiveRecordPermissionsWhitelistController> logger)
         {
@@ -75,9 +75,19 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
                 var emailAttribute = new EmailAddressAttribute();
                 if (!emailAttribute.IsValid(email))
                 {
-                    _logger.LogWarning("Add permission failed: invalid email format for AssessmentId={AssessmentId}. Email length={EmailLength}", assessmentid, email.Length);
+                    _logger.LogWarning("Add permission failed: invalid email format for AssessmentId={AssessmentId}", assessmentid);
                     TempData["ErrorMessage"] = "Invalid email address format";
                     TempData["EmailValidationError"] = "Enter an email address in the correct format such as name@homesengland.gov.uk";
+                    TempData["EmailValue"] = email;
+                    return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
+                }
+
+                // Validate email domain
+                if (!email.EndsWith(AllowedEmailDomain, StringComparison.OrdinalIgnoreCase))
+                {
+                    _logger.LogWarning("Add permission failed: invalid email domain for AssessmentId={AssessmentId}.", assessmentid);
+                    TempData["ErrorMessage"] = "Email address must be a Homes England email address";
+                    TempData["EmailValidationError"] = "Enter a Homes England email address ending with @homesengland.gov.uk";
                     TempData["EmailValue"] = email;
                     return RedirectToAction("Summary", "Assessment", new { assessmentid, correlationId }, "permissions");
                 }

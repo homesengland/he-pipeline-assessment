@@ -225,9 +225,48 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Summary", redirectToActionResult.ActionName);
             Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Inavlid email address format", sut.TempData["ErrorMessage"]);
+            Assert.Equal("Invalid email address format", sut.TempData["ErrorMessage"]);
             Assert.Equal("Enter an email address in the correct format such as name@homesengland.gov.uk", sut.TempData["EmailValidationError"]);
             Assert.Equal(invalidEmail, sut.TempData["EmailValue"]);
+            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Add_ShouldReturnError_WhenEmailDomainIsInvalid(
+            [Frozen] Mock<IMediator> mediator,
+            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            SensitiveRecordPermissionsWhitelistController sut,
+            int assessmentId,
+            int correlationId)
+        {
+            // Arrange
+            SetupControllerContext(sut);
+
+            var invalidDomainEmail = "user@gmail.com";
+            var response = new SensitiveRecordPermissionsWhitelistResponse
+            {
+                AssessmentSummary = new AssessmentSummaryResponse
+                {
+                    ProjectManager = "project.manager@test.com"
+                }
+            };
+
+            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
+                .ReturnsAsync(response);
+            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+
+            // Act
+            var result = await sut.Add(assessmentId, correlationId, invalidDomainEmail);
+
+            // Assert
+            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Summary", redirectToActionResult.ActionName);
+            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
+            Assert.Equal("Email address must be a Homes England email address", sut.TempData["ErrorMessage"]);
+            Assert.Equal("Enter a Homes England email address ending with @homesengland.gov.uk", sut.TempData["EmailValidationError"]);
+            Assert.Equal(invalidDomainEmail, sut.TempData["EmailValue"]);
             assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
         }
 
