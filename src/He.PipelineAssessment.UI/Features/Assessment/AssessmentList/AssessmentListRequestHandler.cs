@@ -22,8 +22,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
 
                 var filteredAssessments = dbAssessments.Where(x =>
                     !x.IsSensitiveRecord() ||
-                    request.IsAdmin ||
-                    (x.IsSensitiveRecord() && (request.CanViewSensitiveRecords || request.Username == x.ProjectManager)));
+                    (x.IsSensitiveRecord() && (request.IsAdmin || request.CanViewSensitiveRecords || request.Username == x.ProjectManager)));
 
                 return filteredAssessments.ToList();
             }
