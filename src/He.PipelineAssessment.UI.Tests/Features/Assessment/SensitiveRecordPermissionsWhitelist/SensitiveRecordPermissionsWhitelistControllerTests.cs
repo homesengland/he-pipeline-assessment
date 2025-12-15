@@ -225,7 +225,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Summary", redirectToActionResult.ActionName);
             Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Inavlid email address format", sut.TempData["ErrorMessage"]);
+            Assert.Equal("Invalid email address format", sut.TempData["ErrorMessage"]);
             Assert.Equal("Enter an email address in the correct format such as name@homesengland.gov.uk", sut.TempData["EmailValidationError"]);
             Assert.Equal(invalidEmail, sut.TempData["EmailValue"]);
             assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
