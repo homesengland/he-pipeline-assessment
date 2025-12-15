@@ -33,18 +33,8 @@
         </thead>
         <tbody class="govuk-table__body">
 
-            @{bool isAdmin = ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded);}
-
             @foreach (var assessment in Model)
             {
-
-                //TODO: Check user is assigned to a SR assessment
-                //Do not render sensitive assessment unless user is admin or user is the project manager for an assessment
-                if (assessment.IsSensitiveRecord() && (!isAdmin || !RoleValidation.IsProjectManagerForAssessment(assessment.ProjectManager)))
-                {
-                    continue; 
-                }
-
                 var lastModifiedDate = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToString("yyyyMMdd") : "";
                 var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
 
@@ -60,6 +50,7 @@
                     <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
                 </tr>
             }
+
         </tbody>
 
     </table>

@@ -6,9 +6,9 @@
         {
             switch (sensitiveStatus?.ToLower())
             {
-                case SensitivityStatus.SensitiveNDA:
-                case SensitivityStatus.SensitivePLC:
-                case SensitivityStatus.SensitiveOther:
+                case "sensitive - nda in place":
+                case "sensitive - plc involved in delivery":
+                case "sensitive - other":
                     return true;
                 default:
                     return false;

@@ -7,5 +7,6 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
     {
         public string? Username { get; set; }
         public bool CanViewSensitiveRecords { get; set; }
+        public bool IsAdmin { get; set; } // Support admin filtering
     }
 }
