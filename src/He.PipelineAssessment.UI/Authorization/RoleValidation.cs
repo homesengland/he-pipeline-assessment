@@ -108,5 +108,23 @@ public class RoleValidation : IRoleValidation
         return true;
     }
 
+    /// <summary>
+    /// Checks if the current user's email is whitelisted for viewing a specific sensitive assessment
+    /// </summary>
+    /// <param name="assessmentId">The ID of the assessment to check</param>
+    /// <returns>True if user's email is in the whitelist, otherwise false</returns>
+    public async Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId)
+    {
+        var userEmail = _userProvider.GetUserEmail();
+
+        if (string.IsNullOrWhiteSpace(userEmail))
+        {
+            return false;
+        }
+
+        var whitelist = await _assessmentRepository.GetSensitiveRecordWhitelist(assessmentId);
+        return whitelist.Any(w => w.Email.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
+    }
+
 }
 

@@ -232,5 +232,144 @@ public class RoleValidationTests
         //Assert
         Assert.True(result);
     }
+
+    #region IsUserWhitelistedForSensitiveRecord Tests
+
+    [Theory]
+    [AutoMoqData]
+    public async Task IsUserWhitelistedForSensitiveRecord_ReturnsTrue_WhenUserEmailIsInWhitelist(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        int assessmentId,
+        RoleValidation sut)
+    {
+        //Arrange
+        var userEmail = "test.user@homesengland.gov.uk";
+        var whitelist = new List<SensitiveRecordWhitelist>
+            {
+                new SensitiveRecordWhitelist { Id = 1, AssessmentId = assessmentId, Email = userEmail }
+            };
+
+        userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+        assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
+
+        //Act
+        var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
+
+        //Assert
+        Assert.True(result);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task IsUserWhitelistedForSensitiveRecord_ReturnsTrue_WhenUserEmailIsInWhitelist_CaseInsensitive(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        int assessmentId,
+        RoleValidation sut)
+    {
+        //Arrange
+        var userEmail = "Test.User@HomesEngland.gov.uk";
+        var whitelist = new List<SensitiveRecordWhitelist>
+            {
+                new SensitiveRecordWhitelist { Id = 1, AssessmentId = assessmentId, Email = "test.user@homesengland.gov.uk" }
+            };
+
+        userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+        assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
+
+        //Act
+        var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
+
+        //Assert
+        Assert.True(result);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task IsUserWhitelistedForSensitiveRecord_ReturnsFalse_WhenUserEmailIsNotInWhitelist(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        int assessmentId,
+        RoleValidation sut)
+    {
+        //Arrange
+        var userEmail = "test.user@homesengland.gov.uk";
+        var whitelist = new List<SensitiveRecordWhitelist>
+            {
+                new SensitiveRecordWhitelist { Id = 1, AssessmentId = assessmentId, Email = "other.user@homesengland.gov.uk" }
+            };
+
+        userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+        assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
+
+        //Act
+        var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
+
+        //Assert
+        Assert.False(result);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task IsUserWhitelistedForSensitiveRecord_ReturnsFalse_WhenUserEmailIsNull(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        int assessmentId,
+        RoleValidation sut)
+    {
+        //Arrange
+        userProvider.Setup(x => x.GetUserEmail()).Returns((string?)null);
+
+        //Act
+        var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
+
+        //Assert
+        Assert.False(result);
+        assessmentRepository.Verify(x => x.GetSensitiveRecordWhitelist(It.IsAny<int>()), Times.Never);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task IsUserWhitelistedForSensitiveRecord_ReturnsFalse_WhenUserEmailIsEmpty(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        int assessmentId,
+        RoleValidation sut)
+    {
+        //Arrange
+        userProvider.Setup(x => x.GetUserEmail()).Returns(string.Empty);
+
+        //Act
+        var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
+
+        //Assert
+        Assert.False(result);
+        assessmentRepository.Verify(x => x.GetSensitiveRecordWhitelist(It.IsAny<int>()), Times.Never);
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task IsUserWhitelistedForSensitiveRecord_ReturnsFalse_WhenWhitelistIsEmpty(
+        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+        [Frozen] Mock<IUserProvider> userProvider,
+        int assessmentId,
+        RoleValidation sut)
+    {
+        //Arrange
+        var userEmail = "test.user@homesengland.gov.uk";
+        var whitelist = new List<SensitiveRecordWhitelist>();
+
+        userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+        assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
+
+        //Act
+        var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
+
+        //Assert
+        Assert.False(result);
+    }
+
+    #endregion
 }
 
