@@ -37,8 +37,8 @@
 
     public static class SensitivityStatus
     {
-        public const string SensitiveOther = "sensitive - other";
-        public const string SensitivePLC = "sensitive - plc involved in delivery";
-        public const string SensitiveNDA = "sensitive - nda in place";
+        public const string SensitiveOther = "Sensitive - Other";
+        public const string SensitivePLC = "Sensitive - PLC involved in delivery";
+        public const string SensitiveNDA = "Sensitive - NDA in place";
     }
 }
