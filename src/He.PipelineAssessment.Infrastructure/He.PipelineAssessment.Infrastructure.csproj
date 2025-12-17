@@ -52,6 +52,7 @@
 	<None Remove="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetStartableToolsByAssessmentId.sql" />
 	<None Remove="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
 	  <None Remove="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentHistoryByAssessmentId.sql" />
+	  <None Remove="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetAssessments.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Deployment\CreateAndAssignExecutorRole.sql" />
@@ -101,6 +102,10 @@
     <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentHistoryByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetStartableToolsByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetAssessmentInterventionListByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetEconomistAssessments.sql" />
+    <EmbeddedResource Include="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetInterventionList.sql" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

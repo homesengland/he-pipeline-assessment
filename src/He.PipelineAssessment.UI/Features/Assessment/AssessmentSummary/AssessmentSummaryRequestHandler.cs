@@ -45,6 +45,10 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
+                if (!dbAssessment.ValidData)
+                {
+                    throw new ApplicationException($"This assessment does not have the required minimum data to proceed. Please update the project data in TSP or contact PAS support.");
+                }
                 bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
 
                 List<string> businessAreaErrorMessage = new List<string>();
