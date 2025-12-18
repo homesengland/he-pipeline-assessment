@@ -95,7 +95,7 @@ public class RoleValidation : IRoleValidation
         {
             if (assessment.IsSensitiveRecord())
             {
-                if (_userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer) ||
+                if (_userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations) ||
                     assessment.ProjectManager == _userProvider.GetUserName())
                 {
                     return true;

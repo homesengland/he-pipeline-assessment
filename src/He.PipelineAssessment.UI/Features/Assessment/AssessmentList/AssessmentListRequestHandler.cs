@@ -21,8 +21,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
                 var dbAssessments = await _storedProcedureRepository.GetAssessments();
 
                 var filteredAssessments = dbAssessments.Where(x =>
-                    !x.IsSensitiveRecord() ||
-                    (x.IsSensitiveRecord() && (request.IsAdmin || request.CanViewSensitiveRecords || request.Username == x.ProjectManager)));
+                    !x.IsSensitiveRecord() || 
+                    (x.IsSensitiveRecord() && (request.CanViewSensitiveRecords || request.Username == x.ProjectManager)));
 
                 return filteredAssessments.ToList();
             }

@@ -32,16 +32,13 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         public async Task<IActionResult> Index()
         {
             var username = _userProvider.GetUserName();
-            var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
-            var isAdmin = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
 
+            var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
             var listModel = await _mediator.Send(new AssessmentListRequest()
             {
                 Username = username,
-                CanViewSensitiveRecords = canViewSensitiveRecords,
-                IsAdmin = isAdmin
+                CanViewSensitiveRecords = canViewSensitiveRecords
             });
-
             return View("Index", listModel);
         }
 
