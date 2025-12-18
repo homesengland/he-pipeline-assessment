@@ -30,7 +30,7 @@ public class EconomistAssessmentListCommandHandlerTests
     public async Task Handle_ReturnsLAssessmentListData_GivenNoErrorsEncountered(
           [Frozen] Mock<IStoredProcedureRepository> repo,
            EconomistAssessmentListRequest economistAssessmentListRequest,
-          List<AssessmentDataViewModel> assessments,
+           List<AssessmentDataViewModel> assessments,
           EconomistAssessmentListRequestHandler sut
       )
     {
@@ -45,6 +45,30 @@ public class EconomistAssessmentListCommandHandlerTests
         Assert.NotNull(result);
         Assert.NotEmpty(result);
         Assert.Equal(assessments.Count(), result.Count());
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task Handle_ReturnsFilteredAssessmentListData_GivenAnAssessmentDoesNotHaveValidData(
+      [Frozen] Mock<IStoredProcedureRepository> repo,
+       EconomistAssessmentListRequest economistAssessmentListRequest,
+       List<AssessmentDataViewModel> assessments,
+       EconomistAssessmentListRequestHandler sut
+  )
+    {
+        //Arrange
+        repo.Setup(x => x.GetEconomistAssessments())
+            .ReturnsAsync(assessments);
+        assessments.First().ValidData = false;
+
+        //Act
+        var result = await sut.Handle(economistAssessmentListRequest, CancellationToken.None);
+        
+
+        //Assert
+        Assert.NotNull(result);
+        Assert.NotEmpty(result);
+        Assert.Equal(assessments.Count() - 1, result.Count());
     }
 
 }
