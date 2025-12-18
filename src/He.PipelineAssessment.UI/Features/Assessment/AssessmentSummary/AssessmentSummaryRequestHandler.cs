@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 }
                 if (!dbAssessment.ValidData)
                 {
-                    throw new ApplicationException($"This assessment does not have the required minimum data to proceed. Please update the project data in TSP or contact PAS support.");
+                    throw new InvalidOperationException($"This assessment does not have the required minimum data to proceed. Please update the project data in TSP or contact PAS support.");
                 }
                 bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
 
@@ -128,6 +128,11 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
             {
                 _logger.LogError(e, e.Message);
                 throw;
+            }
+            catch (InvalidOperationException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw new InvalidOperationException(e.Message);
             }
             catch (Exception e)
             {
