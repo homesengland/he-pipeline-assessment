@@ -10,7 +10,7 @@ public interface IRoleValidation
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
     bool ValidateSensitiveRecords(Assessment assessment);
-    bool ValidateSensitiveRecordsAccessForProjectManagersAndAdmin(Assessment assessment);
+    bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment assessment);
     bool ValidateForBusinessArea(string? businessArea);
     bool IsAdmin();
     bool IsProjectManagerForAssessment(string? assessmentProjectManager);
@@ -108,7 +108,7 @@ public class RoleValidation : IRoleValidation
         return true;
     }
 
-    public bool ValidateSensitiveRecordsAccessForProjectManagersAndAdmin(Assessment? assessment)
+    public bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment? assessment)
     {
         if (assessment != null)
         {
