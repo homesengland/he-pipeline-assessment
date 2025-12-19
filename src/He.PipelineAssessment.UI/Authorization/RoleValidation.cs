@@ -10,6 +10,7 @@ public interface IRoleValidation
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
     bool ValidateSensitiveRecords(Assessment assessment);
+    bool ValidateSensitiveRecordsAccessForProjectManagersAndAdmin(Assessment assessment);
     bool ValidateForBusinessArea(string? businessArea);
     bool IsAdmin();
     bool IsProjectManagerForAssessment(string? assessmentProjectManager);
@@ -95,8 +96,25 @@ public class RoleValidation : IRoleValidation
         {
             if (assessment.IsSensitiveRecord())
             {
-                if (_userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations) ||
-                    assessment.ProjectManager == _userProvider.GetUserName())
+                if (assessment.ProjectManager == _userProvider.GetUserName())
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool ValidateSensitiveRecordsAccessForProjectManagersAndAdmin(Assessment? assessment)
+    {
+        if (assessment != null)
+        {
+            if (assessment.IsSensitiveRecord())
+            {
+                if (assessment.ProjectManager == _userProvider.GetUserName() || IsAdmin())
                 {
                     return true;
                 }

@@ -40,7 +40,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 }
 
                 var validateSensitiveStatus =
-                    _roleValidation.ValidateSensitiveRecords(dbAssessment);
+                    _roleValidation.ValidateSensitiveRecordsAccessForProjectManagersAndAdmin(dbAssessment);
                 if (!validateSensitiveStatus)
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
