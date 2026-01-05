@@ -47,6 +47,11 @@ public class RoleValidation : IRoleValidation
 
         var canSeeRecord = ValidateSensitiveRecords(assessment);
 
+        if (!canSeeRecord && assessment != null && assessment.IsSensitiveRecord())
+        {
+            canSeeRecord = await IsUserWhitelistedForSensitiveRecord(assessmentId);
+        }
+
         return canSeeRecord;
     }
 
@@ -122,8 +127,10 @@ public class RoleValidation : IRoleValidation
             return false;
         }
 
+        var formattedEmail = userEmail.ToLower();
         var whitelist = await _assessmentRepository.GetSensitiveRecordWhitelist(assessmentId);
-        return whitelist.Any(w => w.Email.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
+
+        return whitelist.Any(w => w.Email.ToLower() == formattedEmail);
     }
 
 }
