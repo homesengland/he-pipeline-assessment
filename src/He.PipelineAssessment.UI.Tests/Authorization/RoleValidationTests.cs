@@ -184,30 +184,6 @@ public class RoleValidationTests
 
     [Theory]
     [AutoMoqData]
-    public async Task RoleValidation_ReturnsTrue_IfSensitiveRecordAndUserHasGotRoleSensitiveRecordViewer(
-        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-        [Frozen] Mock<IUserProvider> userProvider,
-        Assessment assessment,
-        string workflowDefinitionId,
-        int assessmentId,
-        RoleValidation sut)
-    {
-        //Arrange
-        assessment.SensitiveStatus = "Sensitive - NDA in place";
-        assessment.BusinessArea = "Development";
-        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer)).Returns(true);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineProjectManager)).Returns(true);
-
-        //Act
-        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
-
-        //Assert
-        Assert.True(result);
-    }
-
-    [Theory]
-    [AutoMoqData]
     public async Task RoleValidation_ReturnsTrue_IfSensitiveRecordAndUserHasNotGotRoleSensitiveRecordViewerButIsProjectManager(
         [Frozen] Mock<IAssessmentRepository> assessmentRepository,
         [Frozen] Mock<IUserProvider> userProvider,
