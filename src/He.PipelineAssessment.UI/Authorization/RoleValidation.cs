@@ -97,38 +97,12 @@ public class RoleValidation : IRoleValidation
 
     public bool ValidateSensitiveRecords(Assessment? assessment)
     {
-        if (assessment != null)
-        {
-            if (assessment.IsSensitiveRecord())
-            {
-                if (assessment.ProjectManager == _userProvider.GetUserName())
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        return true;
+        return ValidateSensitiveRecordsInternal(assessment, includeAdmin: false);
     }
 
     public bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment? assessment)
     {
-        if (assessment != null)
-        {
-            if (assessment.IsSensitiveRecord())
-            {
-                if (assessment.ProjectManager == _userProvider.GetUserName() || IsAdmin())
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        return true;
+        return ValidateSensitiveRecordsInternal(assessment, includeAdmin: true);
     }
 
     /// <summary>
@@ -151,5 +125,26 @@ public class RoleValidation : IRoleValidation
         return whitelist.Any(w => w.Email.ToLower() == formattedEmail);
     }
 
+    private bool ValidateSensitiveRecordsInternal(Assessment? assessment, bool includeAdmin)
+    {
+        if (assessment == null)
+        {
+            return true;
+        }
+
+        if (!assessment.IsSensitiveRecord())
+        {
+            return true;
+        }
+
+        var isProjectManager = assessment.ProjectManager == _userProvider.GetUserName();
+
+        if (includeAdmin)
+        {
+            return isProjectManager || IsAdmin();
+        }
+
+        return isProjectManager;
+    }
 }
 
