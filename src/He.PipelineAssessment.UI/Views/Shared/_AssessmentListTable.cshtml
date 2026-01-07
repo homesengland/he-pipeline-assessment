@@ -1,4 +1,8 @@
 ﻿@model List<He.PipelineAssessment.Models.ViewModels.AssessmentDataViewModel>
+@using He.PipelineAssessment.UI.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@inject IRoleValidation RoleValidation
 
 <div class="text-center">
     <div class="govuk-grid-row">
@@ -28,6 +32,7 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
+
             @foreach (var assessment in Model)
             {
                 var lastModifiedDate = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToString("yyyyMMdd") : "";
@@ -45,6 +50,7 @@
                     <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
                 </tr>
             }
+
         </tbody>
 
     </table>
