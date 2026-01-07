@@ -18,14 +18,16 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
         private readonly IUserProvider _userProvider;
+        private readonly IRoleValidation _roleValidation;
 
 
-        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider)
+        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider, IRoleValidation roleValidation)
         {
             _logger = logger;
             _mediator = mediator;
             _configuration = configuration;
             _userProvider = userProvider;
+            _roleValidation = roleValidation;
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
@@ -53,7 +55,9 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             var currentUsername = _userProvider.GetUserName();
             var isProjectManager = overviewModel.ProjectManager == currentUsername;
 
-            if (isAdmin || isProjectManager)
+            var isWhitelisted = await _roleValidation.IsUserWhitelistedForSensitiveRecord(assessmentid);
+
+            if (isAdmin || isProjectManager || isWhitelisted)
             {
                 var permissionsModel = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
                 overviewModel.Permissions = permissionsModel.Permissions;

@@ -39,12 +39,18 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     throw new ApplicationException($"Assessment with id {request.AssessmentId} not found.");
                 }
 
-                var validateSensitiveStatus =
-                    _roleValidation.ValidateSensitiveRecordsForProjectManagerAndAdmin(dbAssessment);
+                var validateSensitiveStatus = _roleValidation.ValidateSensitiveRecordsForProjectManagerAndAdmin(dbAssessment);
+
+                if (!validateSensitiveStatus && dbAssessment.IsSensitiveRecord())
+                {
+                    validateSensitiveStatus = await _roleValidation.IsUserWhitelistedForSensitiveRecord(request.AssessmentId);
+                }
+
                 if (!validateSensitiveStatus)
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
+
                 bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
 
                 List<string> businessAreaErrorMessage = new List<string>();

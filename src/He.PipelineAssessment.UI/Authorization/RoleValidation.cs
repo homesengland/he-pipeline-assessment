@@ -14,6 +14,7 @@ public interface IRoleValidation
     bool ValidateForBusinessArea(string? businessArea);
     bool IsAdmin();
     bool IsProjectManagerForAssessment(string? assessmentProjectManager);
+    Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId);
 }
 public class RoleValidation : IRoleValidation
 {
