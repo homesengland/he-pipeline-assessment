@@ -35,9 +35,15 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
 
             }
 
-            
+            // COMMENT: Sends a request to the mediator to fetch a list of all funds.
+            // Creates a new instance of the FundsListRequest class and passes it to the Send method.
+            // The mediator then processes this request and returns a FundsListResponse object that contains the list of funds.
+            // this is needed to display the funds that are not archived and can be associated with the assessment tool workflows
+
             var allFunds = await _mediator.Send(new FundsListRequest());
-            assessmentToolWorkflowListDto.FundOptions = allFunds.Funds.Where(f => !f.IsDisabled).ToList();
+
+            // COMMENT: The line below basically, in simple terms, filters out the funds that are not disabled and assigns the resulting list to the FundsDropDownListOptions property of the assessmentToolWorkflowListDto object.
+            assessmentToolWorkflowListDto.FundsDropDownListOptions = allFunds.Funds.Where(f => !f.IsDisabled).ToList();
 
             return assessmentToolWorkflowListDto;
         }

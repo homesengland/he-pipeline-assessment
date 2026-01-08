@@ -152,13 +152,13 @@
                             </div>
                         </td>
                             @* COMMENT: Retrieve all funds that are not disabled *@
-                           var enabledFunds = Model.FundOptions.Where(f => !f.IsDisabled).ToList(); 
+                           var enabledFunds = Model.FundsDropDownListOptions.Where(f => !f.IsDisabled).ToList(); 
                         
                         <td class="govuk-table__cell">
                             @if (assessmentToolWorkflow.IsEarlyStage == true)
                             {
                                 <div class="govuk-form-group" disabled>
-                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundOptions, "Id", "Name", assessmentToolWorkflow.FundId), "No fund", new { @class = "govuk-select", @disabled = "disabled" })
+                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundsDropDownListOptions, "Id", "Name", assessmentToolWorkflow.FundId), "No fund", new { @class = "govuk-select", @disabled = "disabled" })
                                 </div>
                             }
                             else

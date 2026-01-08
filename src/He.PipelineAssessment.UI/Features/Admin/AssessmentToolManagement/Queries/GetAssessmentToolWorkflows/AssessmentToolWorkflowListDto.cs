@@ -10,7 +10,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public string AssessmentToolName { get; set; } = string.Empty;
 
         // COMMENT: Line 12 wasn't there before. 
-        public List<AssessmentFundsDTO> FundOptions { get; set; } = new();
+        public List<AssessmentFundsDTO> FundsDropDownListOptions { get; set; } = new();
         public List<AssessmentToolWorkflowDto> AssessmentToolWorkflowDtos { get; set; } = new();
     }
 
