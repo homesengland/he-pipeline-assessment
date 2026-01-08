@@ -159,7 +159,6 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
-
         //update an assessment tool
         [HttpPost]
         public async Task<IActionResult> UpdateAssessmentTool(UpdateAssessmentToolDto updateAssessmentToolDto)
@@ -292,13 +291,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
                     validatedFund.IsDisabled = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsDisabled;
                 }
                 return View("AssessmentFunds", fundsList);
-
             }
-
-                
         }
-
-
 
         // Delete an assessment fund
         [HttpPost]

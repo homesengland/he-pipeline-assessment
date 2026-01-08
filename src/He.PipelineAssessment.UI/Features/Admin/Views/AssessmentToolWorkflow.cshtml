@@ -151,21 +151,24 @@
                                     </div>
                             </div>
                         </td>
-                       <td class="govuk-table__cell">
-                                @if (assessmentToolWorkflow.IsEarlyStage == true)
-                                {
-                                    <div class="govuk-form-group" disabled>
-                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundOptions, "Value", "Text", assessmentToolWorkflow.FundId), "No fund", new { @class = "govuk-select", @disabled = "disabled" })
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="govuk-form-group">
-                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundOptions, "Value", "Text", assessmentToolWorkflow.FundId), "Select a fund", new { @class = "govuk-select" })
-                                    </div>
-                                }
-
-                         </td>
+                            @* COMMENT: Retrieve all funds that are not disabled *@
+                           var enabledFunds = Model.FundOptions.Where(f => !f.IsDisabled).ToList(); 
+                        
+                        <td class="govuk-table__cell">
+                            @if (assessmentToolWorkflow.IsEarlyStage == true)
+                            {
+                                <div class="govuk-form-group" disabled>
+                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(Model.FundOptions, "Id", "Name", assessmentToolWorkflow.FundId), "No fund", new { @class = "govuk-select", @disabled = "disabled" })
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="govuk-form-group">
+                                        @* COMMENT: Retrieve all funds that are not disabled *@
+                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundId", new SelectList(enabledFunds, "Id", "Name", assessmentToolWorkflow.FundId), "Select Fund", new { @class = "govuk-select" })
+                                </div>
+                            }
+                        </td>
 
 
                         <td class="govuk-table__cell">

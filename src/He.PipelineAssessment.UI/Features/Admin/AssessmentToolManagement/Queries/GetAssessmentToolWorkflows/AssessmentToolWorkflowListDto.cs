@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.UI.Features.Funds.ViewModels;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows
 {
@@ -7,7 +8,9 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
     {
         public int AssessmentToolId { get; set; }
         public string AssessmentToolName { get; set; } = string.Empty;
-        public List<AssessmentFund> FundOptions { get; set; } = new();
+
+        // COMMENT: Line 12 wasn't there before. 
+        public List<AssessmentFundsDTO> FundOptions { get; set; } = new();
         public List<AssessmentToolWorkflowDto> AssessmentToolWorkflowDtos { get; set; } = new();
     }
 
@@ -27,6 +30,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public bool IsEarlyStage { get; set; }
         public bool IsLast { get; set; }
 
-        public int FundId { get; set; }
+        // COMMENT: Line 33 wasn't there before. 
+        public int? FundId { get; set; }
     }
 }
