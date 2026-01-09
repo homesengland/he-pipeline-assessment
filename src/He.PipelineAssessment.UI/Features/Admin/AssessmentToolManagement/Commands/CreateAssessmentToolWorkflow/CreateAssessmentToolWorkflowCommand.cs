@@ -29,7 +29,9 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public bool IsVariation { get; set; } = false;
         [Display(Name = "Is early stage?")]
         public bool IsEarlyStage { get; set; } = false;
-
         public bool IsLast { get; set; }
+
+        [Display(Name = "Fund")]
+        public int? AssessmentFundId { get; set; }
     }
 }
