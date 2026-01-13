@@ -54,10 +54,11 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             var isAdmin = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
             var currentUsername = _userProvider.GetUserName();
             var isProjectManager = overviewModel.ProjectManager == currentUsername;
+            var isEconomistAndAssessmentAtEconomistStage = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) && overviewModel.HasCurrentEconmistWorkflow());
 
             var isWhitelisted = await _roleValidation.IsUserWhitelistedForSensitiveRecord(assessmentid);
 
-            if (isAdmin || isProjectManager || isWhitelisted)
+            if (isAdmin || isProjectManager || isWhitelisted || isEconomistAndAssessmentAtEconomistStage)
             {
                 var permissionsModel = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
                 overviewModel.Permissions = permissionsModel.Permissions;
