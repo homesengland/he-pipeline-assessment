@@ -205,6 +205,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         IsFirstWorkflow = item.IsFirstWorkflow,
                         IsVariation = item.IsVariation,
                         IsEarlyStage = item.IsEarlyStage,
+                        IsEconomistWorkflow = item.IsEconomistWorkflow,
                         AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
                         Result = item.Result,
                         SubmittedBy = item.SubmittedBy,

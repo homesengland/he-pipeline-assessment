@@ -21,11 +21,14 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public IEnumerable<AssessmentInterventionViewModel> Interventions { get; set; } = null!;
         public IEnumerable<AssessmentSummaryStage> StagesHistory { get; set; } = null!;
         public IEnumerable<SensitiveRecordPermissionsWhitelistDto> Permissions { get; set; } = Enumerable.Empty<SensitiveRecordPermissionsWhitelistDto>();
-        public bool HasCurrentEconmistWorkflow()
-        {
-            bool hasEconomicWorkflowInDraft = Stages.Any(x => x.IsCurrentWorkflowEconomic());
-            return hasEconomicWorkflowInDraft;
-        }
+        public bool HasCurrentEconomistWorkflow => Stages.Any(x => x.IsCurrentWorkflowEconomic());
+
+
+        //public bool HasCurrentEconmistWorkflow()
+        //{
+        //    bool hasEconomicWorkflowInDraft = Stages.Any(x => x.IsCurrentWorkflowEconomic());
+        //    return hasEconomicWorkflowInDraft;
+        //}
 
     }
 
