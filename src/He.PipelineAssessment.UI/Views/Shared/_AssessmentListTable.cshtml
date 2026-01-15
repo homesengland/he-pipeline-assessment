@@ -16,7 +16,7 @@
 
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Reference</th>
+                <th scope="col" class="govuk-table__header">SP ID</th>
                 <th scope="col" class="govuk-table__header">Project</th>
                 <th scope="col" class="govuk-table__header">Partner</th>
                 <th scope="col" class="govuk-table__header">Local Authority</th>
@@ -34,7 +34,7 @@
                 var lastModified = assessment.LastModifiedDateTime.HasValue ? assessment.LastModifiedDateTime.Value.Date.ToLongDateString() : "";
 
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentid="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.Reference</a> </td>
+                    <td class="govuk-table__cell"><a asp-controller="Assessment" asp-action="Summary" asp-route-assessmentid="@assessment.Id" asp-route-correlationId="@assessment.SpId" class="govuk-link">@assessment.SpId</a> </td>
                     <td class="govuk-table__cell">@assessment.SiteName</td>
                     <td class="govuk-table__cell">@assessment.Counterparty</td>
                     <td class="govuk-table__cell">@assessment.LocalAuthority</td>
