@@ -88,6 +88,11 @@ namespace He.PipelineAssessment.UI.Features.Admin
         [HttpGet]
         public Task<IActionResult> LoadAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
+            if (createAssessmentToolWorkflowDto.FundsDropDownListOptions == null || !createAssessmentToolWorkflowDto.FundsDropDownListOptions.Any())
+            {
+                var fundsList =  _mediator.Send(new FundsListRequest()).Result;
+                createAssessmentToolWorkflowDto.FundsDropDownListOptions = fundsList.Funds;
+            }
             return Task.FromResult<IActionResult>(View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto));
         }
 
@@ -120,6 +125,11 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
             else
             {
+                if (createAssessmentToolWorkflowDto.FundsDropDownListOptions == null || !createAssessmentToolWorkflowDto.FundsDropDownListOptions.Any())
+                {
+                    var fundsList = _mediator.Send(new FundsListRequest()).Result;
+                    createAssessmentToolWorkflowDto.FundsDropDownListOptions = fundsList.Funds;
+                }
                 createAssessmentToolWorkflowDto.ValidationResult = validationResult;
                 return View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto);
             }

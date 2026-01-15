@@ -158,14 +158,19 @@
                             @if (assessmentToolWorkflow.IsEarlyStage == true)
                             {
                                 <div class="govuk-form-group" disabled>
-                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.AssessmentFundId", new SelectList(Model.FundsDropDownListOptions, "Id", "Name", assessmentToolWorkflow.AssessmentFundId), "No fund", new { @class = "govuk-select", @disabled = "disabled" })
+                                        @* COMMENT:UpdateAssessmentToolWorkflowCommand.FundsDropDownListOptions is the name of the dropdown list in the form that will be submitted.
+                                            The new SelectList(Model.FundsDropDownListOptions, "Id", "Name", assessmentToolWorkflow.AssessmentFundId) part creates a new selection list using the funds available in the Model.FundsDropDownListOptions,
+                                            where "Id" is the value for each option, "Name" is the text displayed for each option, and assessmentToolWorkflow.AssessmentFundId sets the currently selected fund in the dropdown.
+                                            Model.FundsDropDownListOptions is used instead of enabledFunds to ensure that all funds, including disabled ones, are shown but the dropdown is disabled for early stage workflows.
+                                        *@
+                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundsDropDownListOptions", new SelectList(Model.FundsDropDownListOptions, "Id", "Name", assessmentToolWorkflow.AssessmentFundId), "No fund", new { @class = "govuk-select", @disabled = "disabled" })
                                 </div>
                             }
                             else
                             {
                                 <div class="govuk-form-group">
                                         @* COMMENT: Retrieve all funds that are not disabled *@
-                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.AssessmentFundId", new SelectList(enabledFunds, "Id", "Name", assessmentToolWorkflow.AssessmentFundId), "Select Fund", new { @class = "govuk-select" })
+                                        @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.FundsDropDownListOptions", new SelectList(enabledFunds, "Id", "Name", assessmentToolWorkflow.AssessmentFundId), "Select Fund", new { @class = "govuk-select" })
                                 </div>
                             }
                         </td>

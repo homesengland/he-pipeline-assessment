@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using He.PipelineAssessment.UI.Features.Funds.ViewModels;
+using MediatR;
 using System.ComponentModel.DataAnnotations;
 using ValidationResult = FluentValidation.Results.ValidationResult;
 
@@ -9,6 +10,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         public int AssessmentToolId { get; set; }
 
         public CreateAssessmentToolWorkflowCommand CreateAssessmentToolWorkflowCommand { get; set; } = new();
+
+        public List<AssessmentFundsDTO> FundsDropDownListOptions { get; set; } = new();
         public ValidationResult? ValidationResult { get; set; }
 
     }
@@ -30,8 +33,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Comma
         [Display(Name = "Is early stage?")]
         public bool IsEarlyStage { get; set; } = false;
         public bool IsLast { get; set; }
-
-        [Display(Name = "Fund")]
         public int? AssessmentFundId { get; set; }
+
     }
 }
