@@ -48,7 +48,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     LandType = string.IsNullOrEmpty(item.land_type)
                         ? "-"
                         : item.land_type,
-                    SensitiveStatus = item.sensitive_status
+                    SensitiveStatus = item.sensitive_status,
+                    ValidData = true
                 };
 
                 assessmentsToBeAdded.Add(assessment);
@@ -142,6 +143,10 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     {
                         destination.SensitiveStatus = source.sensitive_status!;
                         updateFlag = true;
+                    }
+                    if (destination.HasValidData())
+                    {
+                        destination.ValidData = true;
                     }
                 }
                 if (updateFlag)

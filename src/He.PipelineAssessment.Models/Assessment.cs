@@ -29,5 +29,15 @@ namespace He.PipelineAssessment.Models
         {
             return SensitiveStatusHelper.IsSensitiveStatus(SensitiveStatus);
         }
+
+        public bool HasValidData()
+        {
+            if(ProjectManager != null && NumberOfHomes != null && LocalAuthority != null && SiteName != null
+                && Status != null && LandType != null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
