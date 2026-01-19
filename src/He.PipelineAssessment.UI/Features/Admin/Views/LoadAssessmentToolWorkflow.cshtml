@@ -152,7 +152,6 @@
                 }
                 <div class="govuk-form-group">
                     <h3 class="govuk-label-wrapper">Funds</h3>
-                    
                     <div class="govuk-form-group">
                         @Html.DropDownList("CreateAssessmentToolWorkflowCommand.AssessmentFundId", new SelectList(enabledFunds, "Id", "Name", Model.CreateAssessmentToolWorkflowCommand.AssessmentFundId), "Select Fund", new { @class = "govuk-select" })
                     </div>

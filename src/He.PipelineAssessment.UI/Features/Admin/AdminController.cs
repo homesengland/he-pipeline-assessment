@@ -227,6 +227,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
                     validatedAssessmentToolWorkflow.ValidationResult = validationResult;
                     validatedAssessmentToolWorkflow.Name = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Name;
                     validatedAssessmentToolWorkflow.WorkflowDefinitionId = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.WorkflowDefinitionId;
+                    validatedAssessmentToolWorkflow.AssessmentFundId = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.AssessmentFundId;
                 }
                 return View("AssessmentToolWorkflow", assessmentToolWorkflowList);
             }
