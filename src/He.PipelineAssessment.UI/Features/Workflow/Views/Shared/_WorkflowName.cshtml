@@ -1,0 +1,6 @@
+﻿@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.PageHeaderInformation
+@if (!String.IsNullOrWhiteSpace(Model.AssessmentToolName) && !String.IsNullOrWhiteSpace(Model.AssessmentToolWorkflowName))
+{
+    <span class="govuk-caption-l">@Model.WorkflowName</span>
+    <br />
+}

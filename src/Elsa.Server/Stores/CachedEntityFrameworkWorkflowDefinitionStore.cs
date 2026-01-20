@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Elsa.Activities.Workflows.Workflow;
 using Elsa.Models;
+using Elsa.Persistence.EntityFramework.Core;
 using Elsa.Persistence.EntityFramework.Core.Services;
 using Elsa.Persistence.Specifications;
 using Elsa.Persistence.Specifications.WorkflowDefinitions;
@@ -7,6 +9,8 @@ using Elsa.Serialization;
 using Elsa.Server.Extensions;
 using Elsa.Server.Features.Dashboard;
 using Elsa.Server.Helpers;
+using Elsa.Server.Stores.Cache;
+using Google.Protobuf;
 using Newtonsoft.Json;
 using NodaTime;
 using NodaTime.Extensions;
@@ -14,25 +18,21 @@ using NodaTime.Serialization.JsonNet;
 using NodaTime.Serialization.SystemTextJson;
 using NodaTime.Xml;
 using StackExchange.Redis;
-using System.Text.Json;
-using Google.Protobuf;
-using Elsa.Activities.Workflows.Workflow;
 using System;
+using System.Text.Json;
 
 namespace Elsa.Server.Stores
 {
     public class CachedEntityFrameworkWorkflowDefinitionStore : ElsaStores.EntityFrameworkWorkflowDefinitionStore
     {
-        private IConnectionMultiplexer _cache;
+        //private IConnectionMultiplexer _cache;
         private ILogger<CachedEntityFrameworkWorkflowDefinitionStore> _logger;
-        private string _Key = "WorkflowDefinition";
-        private TimeSpan _expiryTime = TimeSpan.FromHours(1);
-        private JsonSerializerSettings _serializerSettings;
-        public CachedEntityFrameworkWorkflowDefinitionStore(IElsaContextFactory dbContextFactory, IMapper mapper, IContentSerializer contentSerializer, IConnectionMultiplexer connectionMultiplexer, ILogger<CachedEntityFrameworkWorkflowDefinitionStore> logger) : base(dbContextFactory, mapper, contentSerializer)
+        private IWorkflowDefinitionCache _workflowDefinitionCache;
+        public CachedEntityFrameworkWorkflowDefinitionStore(IElsaContextFactory dbContextFactory, IMapper mapper, IContentSerializer contentSerializer, IConnectionMultiplexer connectionMultiplexer, ILogger<CachedEntityFrameworkWorkflowDefinitionStore> logger, IWorkflowDefinitionCache cache) : base(dbContextFactory, mapper, contentSerializer)
         {
-            _cache = connectionMultiplexer;
+            //_cache = connectionMultiplexer;
             _logger = logger;
-            _serializerSettings = new JsonSerializerSettings().ConfigureForInstants();
+            _workflowDefinitionCache = cache;
         }
 
 
@@ -40,10 +40,8 @@ namespace Elsa.Server.Stores
         {
             try
             {
-                var db = _cache.GetDatabase();
-                _logger.LogInformation($"Specification to map: {specification}");
-                bool shouldUseCache = TryGetCacheKeyFromSpecification(specification, out string cacheKey);
-                if (shouldUseCache)
+                WorkflowDefinition? definition = await _workflowDefinitionCache.GetDefinition(specification);
+                if (definition == null)
                 {
                     _logger.LogInformation($"Attempting to Retrieve Workflow From Cache: {cacheKey}");
                     var result = await db.StringGetAsync(cacheKey);
@@ -87,19 +85,15 @@ namespace Elsa.Server.Stores
         {
             if (workflowDefinition != null)
             {
-                //Check if it's in the Cache
-                var db = _cache.GetDatabase();
-                string cacheKey = CacheKey(workflowDefinition);
                 try
                 {
                     await base.UpdateAsync(workflowDefinition, cancellationToken);
-                    string workflowJson = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
-                    await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
+                    await _workflowDefinitionCache.SaveDefinition(workflowDefinition);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"Error whilst updating workflow: {cacheKey}.  Clearing from Cache");
-                     await db.KeyDeleteAsync(cacheKey);
+                    _logger.LogError($"Error whilst updating workflow: {workflowDefinition.DefinitionId}.  Clearing from Cache");
+                    _workflowDefinitionCache.RemoveDefinition(workflowDefinition);
                     throw new Exception(ex.Message);
                 }
             }
@@ -109,12 +103,8 @@ namespace Elsa.Server.Stores
         {
             if (workflowDefinition != null)
             {
-                //Check if it's in the Cache
-                var db = _cache.GetDatabase();
-                string cacheKey = CacheKey(workflowDefinition);
                 await base.AddAsync(workflowDefinition, cancellationToken);
-                string workflowJson = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
-                await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
+                _workflowDefinitionCache.AddDefinition(workflowDefinition);
             }
         }
 
@@ -122,18 +112,8 @@ namespace Elsa.Server.Stores
         {
             if (workflowDefinition != null)
             {
-                //Check if it's in the Cache
-                var db = _cache.GetDatabase();
-                string cacheKey = CacheKey(workflowDefinition);
                 await base.SaveAsync(workflowDefinition, cancellationToken);
-                string workflowJson = JsonConvert.SerializeObject(workflowDefinition, _serializerSettings);
-                await db.StringSetAsync(cacheKey, workflowJson, _expiryTime);
-
-                if (workflowDefinition.IsPublished && workflowDefinition.IsLatest)
-                {
-                    string key = $"{_Key}:{workflowDefinition.DefinitionId}:Published";
-                    await db.StringSetAsync(key, workflowJson, _expiryTime);
-                }
+                await _workflowDefinitionCache.SaveDefinition(workflowDefinition);
             }
         }
 
@@ -144,15 +124,25 @@ namespace Elsa.Server.Stores
 
         public override async Task DeleteAsync(WorkflowDefinition entity, CancellationToken cancellationToken = default)
         {
-            var db = _cache.GetDatabase();
-            string cacheKey = CacheKey(entity);
             await base.DeleteAsync(entity, cancellationToken);
-            await db.KeyDeleteAsync(cacheKey);
+            _workflowDefinitionCache.RemoveDefinition(entity);
         }
 
         public override async Task<int> DeleteManyAsync(ISpecification<WorkflowDefinition> specification, CancellationToken cancellationToken = default)
         {
             return await base.DeleteManyAsync(specification, cancellationToken);
+        }
+
+        public override async Task UnpublishAll(string definitionId, CancellationToken token)
+        {
+            _workflowDefinitionCache.RemoveDefinition(definitionId);
+            await base.UnpublishAll(definitionId, token);
+        }
+
+        public override async Task Unpublish(WorkflowDefinition definition, CancellationToken token)
+        {
+            await base.Unpublish(definition, token);
+            _workflowDefinitionCache.RemoveDefinition(definition);
         }
 
         public override async Task<IEnumerable<WorkflowDefinition>> FindManyAsync(ISpecification<WorkflowDefinition> specification, IOrderBy<WorkflowDefinition>? orderBy = default, IPaging? paging = default, CancellationToken cancellationToken = default)
@@ -166,48 +156,6 @@ namespace Elsa.Server.Stores
                 return await base.GetWorkflowDefinitionList(listSpecification, orderBy, paging, cancellationToken);
             }
             return await base.FindManyAsync(specification, orderBy, paging, cancellationToken);
-        }
-
-        private bool TryGetCacheKeyFromSpecification(ISpecification<WorkflowDefinition> specification, out string cacheKey)
-        {
-            cacheKey = string.Empty;
-            if(specification is WorkflowDefinitionIdSpecification)
-            {
-                WorkflowDefinitionIdSpecification spec = (WorkflowDefinitionIdSpecification)specification;
-                cacheKey = CacheKey(spec);
-                return true;
-            }
-            if(specification is LatestOrPublishedWorkflowDefinitionIdSpecification)
-            {
-                LatestOrPublishedWorkflowDefinitionIdSpecification spec = (LatestOrPublishedWorkflowDefinitionIdSpecification)specification;
-                cacheKey = CacheKey(spec);
-                return true;
-            }
-            return false;
-        }
-
-        private string CacheKey(WorkflowDefinitionIdSpecification workflow)
-        {
-            if(workflow.VersionOptions == null)
-            {
-                return $"{_Key}:{workflow.Id}:Latest";
-            }
-            else
-            {
-                return $"{_Key}:{workflow.Id}:{workflow.VersionOptions.ToString()}";
-            }
-        }
-
-        private string CacheKey(LatestOrPublishedWorkflowDefinitionIdSpecification workflow)
-        {
-            return $"{_Key}:{workflow.WorkflowDefinitionId}:Latest";
-        }
-
-        private string CacheKey(WorkflowDefinition workflow)
-        {
-            string version = workflow.IsLatest ? "Latest": workflow.Version.ToString();
-            string key = $"{_Key}:{workflow.DefinitionId}:{version}";
-            return key;
         }
             
     }

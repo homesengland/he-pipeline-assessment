@@ -49,6 +49,9 @@
     <None Remove="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetEconomistAssessments.sql" />
     <None Remove="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetInterventionList.sql" />
     <None Remove="Migrations\20231116100927_AddProjectManagerToGetAssessmentListByAssessmentId\GetAssessmentInterventionListByAssessmentId.sql" />
+	<None Remove="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetStartableToolsByAssessmentId.sql" />
+	<None Remove="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
+	  <None Remove="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentHistoryByAssessmentId.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Deployment\CreateAndAssignExecutorRole.sql" />
@@ -95,6 +98,9 @@
     <EmbeddedResource Include="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetEconomistAssessments.sql" />
     <EmbeddedResource Include="Migrations\20231114144436_UpdateEconomistAndInterventionSPsToReturnSensitiveStatus\GetInterventionList.sql" />
     <EmbeddedResource Include="Migrations\20231116100927_AddProjectManagerToGetAssessmentListByAssessmentId\GetAssessmentInterventionListByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentHistoryByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetStartableToolsByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

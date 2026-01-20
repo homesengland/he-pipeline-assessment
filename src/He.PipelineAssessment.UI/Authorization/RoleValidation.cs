@@ -10,6 +10,8 @@ public interface IRoleValidation
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
     bool ValidateSensitiveRecords(Assessment assessment);
+    bool ValidateForBusinessArea(string? businessArea);
+    bool IsAdmin();
 }
 public class RoleValidation : IRoleValidation
 {
@@ -47,27 +49,37 @@ public class RoleValidation : IRoleValidation
         return canSeeRecord;
     }
 
-    private bool ValidateForBusinessArea(Assessment? assessment)
+    public bool IsAdmin()
     {
-        bool isRoleExist = false;
+        return _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+    }
 
+    public bool ValidateForBusinessArea(Assessment? assessment)
+    {
         if (assessment != null)
         {
-            switch (assessment?.BusinessArea)
+            return ValidateForBusinessArea(assessment?.BusinessArea);
+        }
+        return false;
+    }
+
+    public bool ValidateForBusinessArea(string? businessArea)
+    {
+        bool isRoleExist = false;
+        bool isAdmin = IsAdmin();
+        switch (businessArea)
             {
-                case "MPP":
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                case Constants.BusinessArea.MPP:
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || isAdmin);
                     return isRoleExist;
-                case "Investment":
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                case Constants.BusinessArea.Investment:
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || isAdmin);
                     return isRoleExist;
-                case "Development":
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                case Constants.BusinessArea.Development:
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || isAdmin);
                     return isRoleExist;
                 default: return isRoleExist;
             }
-        }
-        return false;
     }
 
     public bool ValidateSensitiveRecords(Assessment? assessment)

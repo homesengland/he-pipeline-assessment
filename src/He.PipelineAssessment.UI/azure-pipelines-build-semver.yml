@@ -27,8 +27,8 @@ parameters:
 
 variables:
   buildMajor: 1
-  buildMinor: 7
-  buildPatch: 11
+  buildMinor: 8
+  buildPatch: 23
   buildBranch: $[replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '.')]
   identifier: pipasmt
 

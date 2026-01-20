@@ -50,6 +50,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Asp.Versioning;
+using Elsa.Server.Stores.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -107,7 +108,6 @@ builder.Services
     );
 
 builder.Services.AddScoped<IWorkflowRegistry, WorkflowRegistry>();
-
 
 builder.Services.AddScoped<ICustomPropertyDescriber, CustomPropertyDescriber>();
 

@@ -12,12 +12,52 @@
 }
 
 @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
-<span class="govuk-caption-l">@Model.Reference</span>
+
+@if(Model.SensitiveStatus != null)
+{
+    <span class="govuk-caption-l">@Model.Reference - @Model.SensitiveStatus</span>
+} 
+else
+{
+    <span class="govuk-caption-l">@Model.Reference</span>
+}
+
 <h1 class="govuk-heading-l">@Model.SiteName</h1>
 
-<p class="govuk-body">@Model.LocalAuthority</p>
-<p class="govuk-body">@Model.CounterParty</p>
-<p class="govuk-body">@Model.ProjectManager</p>
+<table class="govuk-body">
+    <tr>
+        <td><b>Local Authority: </b></td>
+        <td>@Model.LocalAuthority</td>
+    </tr>
+    <tr>
+        <td><b>Partner: </b></td>
+        <td>@Model.CounterParty</td>
+    </tr>
+    <tr>
+        <td><b>Project Manager: </b></td>
+        <td>@Model.ProjectManager</td>
+    </tr>
+</table>
+
+@if (!Model.HasValidBusinessArea)
+{
+    @if (Model.BusinessAreaMessage != null)
+    {
+        <div class="govuk-warning-text govuk-warning-text__pas-custom">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+
+            @foreach (var message in Model.BusinessAreaMessage)
+            {
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    @message
+                </strong>
+                
+            }
+            
+        </div>
+    }
+}
 
 <div class="govuk-tabs" data-module="govuk-tabs">
     <h2 class="govuk-tabs__title">

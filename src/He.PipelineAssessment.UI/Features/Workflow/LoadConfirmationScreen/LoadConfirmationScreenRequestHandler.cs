@@ -127,6 +127,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                             result.IsVariationAllowed = await _assessmentToolWorkflowInstanceHelpers.IsVariationAllowed(currentAssessmentToolWorkflowInstance);
                             result.IsLatestSubmittedWorkflow = await _assessmentToolWorkflowInstanceHelpers.IsOrderEqualToLatestSubmittedWorkflowOrder(currentAssessmentToolWorkflowInstance);
                             result.IsAmendableWorkflow = currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.IsAmendable;
+
+                            
                         }
                         PageHeaderHelper.PopulatePageHeaderInformation(result, currentAssessmentToolWorkflowInstance);
                         return await Task.FromResult(result);

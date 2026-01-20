@@ -1,8 +1,11 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Infrastructure.Repository.StoredProcedure;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Common.Utility;
 using MediatR;
+using Microsoft.Extensions.Azure;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
@@ -12,16 +15,19 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         private readonly IStoredProcedureRepository _storedProcedureRepository;
         private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
         private readonly IRoleValidation _roleValidation;
+        private readonly IBusinessAreaValidation _businessAreaValidation;
 
         public AssessmentSummaryRequestHandler(IAssessmentRepository repository,
                                                ILogger<AssessmentSummaryRequestHandler> logger,
                                                IStoredProcedureRepository storedProcedureRepository, 
-                                               IRoleValidation roleValidation)
+                                               IRoleValidation roleValidation,
+                                               IBusinessAreaValidation businessAreaValidation)
         {
             _repository = repository;
             _logger = logger;
             _storedProcedureRepository = storedProcedureRepository;
             _roleValidation = roleValidation;
+            _businessAreaValidation = businessAreaValidation;
         }
         public async Task<AssessmentSummaryResponse?> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
         {
@@ -39,6 +45,10 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
+                bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
+
+                List<string> businessAreaErrorMessage = new List<string>();
+         
 
                 var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
                 var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
@@ -48,7 +58,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 if (assessmentStages.Any())
                 {
                     //Get distinct list of tools
-                    var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order, x.IsVariation })
+                    var uniqueTools = assessmentStages.Select(x => new { x.AssessmentToolId, x.Name, x.Order, x.IsVariation, x.IsEarlyStage })
                       .Distinct().ToList();
                     foreach (var assessmentTool in uniqueTools)
                     {
@@ -65,9 +75,18 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         //If there is nothing add the current stage as a non startable item
                         if (!workflowInstances.Any() && !startableList.Any())
                         {
-                            stages.Add(AssessmentSummaryStage(assessmentTool.Name, assessmentTool.Order));
+                            stages.Add(AssessmentSummaryStage(assessmentTool.Name, assessmentTool.Order, assessmentTool.IsEarlyStage));
                         }
                     }
+                }
+
+                if (!hasValidBusinessArea)
+                {
+                    string assessmentToolName = "Early Stage Tools";
+
+                    businessAreaErrorMessage.Add(string.Format("You do not have permission for this opportunity to complete assessments other than the {0}.", assessmentToolName));
+                    businessAreaErrorMessage.Add(string.Format("Please contact a System Administrator to request the correct level of access to complete {0} Assessments", dbAssessment.BusinessArea));
+                
                 }
 
                 var dbHistory = await _storedProcedureRepository.GetAssessmentHistory(request.AssessmentId);
@@ -94,7 +113,11 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     StagesHistory = stagesHistory,
                     LocalAuthority = dbAssessment.LocalAuthority,
                     ProjectManager = dbAssessment.ProjectManager,
-                    Interventions = interventions
+                    SensitiveStatus = dbAssessment.SensitiveStatus,
+                    Interventions = interventions,
+                    BusinessArea = dbAssessment.BusinessArea,
+                    HasValidBusinessArea = hasValidBusinessArea,
+                    BusinessAreaMessage = hasValidBusinessArea ? null : businessAreaErrorMessage
                 };
             }
             catch (UnauthorizedAccessException e)
@@ -109,13 +132,19 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
             }
         }
 
-        private AssessmentSummaryStage AssessmentSummaryStage( string name, int order)
+        private bool HasValidBusinessArea(string businessArea)
+        {
+            bool hasValidBusinessArea = _roleValidation.IsAdmin() ? true : _roleValidation.ValidateForBusinessArea(businessArea);
+            return hasValidBusinessArea;
+        }
+
+        private AssessmentSummaryStage AssessmentSummaryStage( string name, int order, bool? isEarlyStage)
         {
                 var stage = new AssessmentSummaryStage
                 {
                     Name = name,
-                    Order = order
-                   
+                    Order = order,
+                    IsEarlyStage = isEarlyStage
                 };
            
             return stage;
@@ -135,6 +164,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     AssessmentToolId = startableAssessmentTool?.AssessmentToolId,
                     IsFirstWorkflow = startableAssessmentTool?.IsFirstWorkflow,
                     IsVariation = startableAssessmentTool?.IsVariation,
+                    IsEarlyStage = startableAssessmentTool?.IsEarlyStage,
                     AssessmentToolWorkflowId = startableAssessmentTool?.AssessmentToolWorkflowId
                 };
                 stageList.Add(stage);
@@ -168,6 +198,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         AssessmentToolId = item.AssessmentToolId,
                         IsFirstWorkflow = item.IsFirstWorkflow,
                         IsVariation = item.IsVariation,
+                        IsEarlyStage = item.IsEarlyStage,
                         AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
                         Result = item.Result,
                         SubmittedBy = item.SubmittedBy,
