@@ -11,12 +11,6 @@ import { VNode } from "@stencil/core";
 import { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco";
 import { Map } from "./utils/utils";
 import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
-export { ToastNotificationOptions } from "../../src/components/shared/elsa-toast-notification/elsa-toast-notification";
-export { ActivityDefinitionProperty, ActivityModel, ActivityPropertyDescriptor, IntellisenseContext } from "./models/elsa-interfaces";
-export { VNode } from "@stencil/core";
-export { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco";
-export { Map } from "./utils/utils";
-export { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
     interface ElsaActivityEditorModal {
         "culture": string;
@@ -33,9 +27,6 @@ export namespace Components {
     }
     interface HeCheckboxOptionsProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -52,9 +43,6 @@ export namespace Components {
     }
     interface HeDataTableProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -64,18 +52,12 @@ export namespace Components {
     }
     interface HeExpressionEditor {
         "context"?: IntellisenseContext;
-        /**
-          * @default '6em'
-         */
         "editorHeight": string;
         "expression": string;
         "language": string;
         "padding": string;
         "serverUrl": string;
         "setExpression": (value: string) => Promise<void>;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
         "workflowDefinitionId": string;
     }
@@ -87,45 +69,24 @@ export namespace Components {
     }
     interface HeMonaco {
         "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
-        /**
-          * @default '5em'
-         */
         "editorHeight": string;
         "language": string;
         "monacoLibPath": string;
         "padding": string;
         "setValue": (value: string) => Promise<void>;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
         "value": string;
     }
     interface HeMultiExpressionEditor {
         "context"?: IntellisenseContext;
-        /**
-          * @default SyntaxNames.Literal
-         */
         "defaultSyntax": string;
-        /**
-          * @default '10em'
-         */
         "editorHeight": string;
-        /**
-          * @default {}
-         */
         "expressions": Map<string>;
         "fieldName"?: string;
         "hint"?: string;
         "isReadOnly"?: boolean;
         "label": string;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
-        /**
-          * @default []
-         */
         "supportedSyntaxes": Array<string>;
         "syntax"?: string;
     }
@@ -155,19 +116,10 @@ export namespace Components {
     interface HePropertyEditor {
         "activityModel": ActivityModel;
         "context"?: string;
-        /**
-          * @default '10em'
-         */
         "editorHeight": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
-        /**
-          * @default true
-         */
         "showLabel": boolean;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
     }
     interface HeQuestionDataDictionaryProperty {
@@ -177,9 +129,6 @@ export namespace Components {
     }
     interface HeRadioOptionsProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -198,27 +147,18 @@ export namespace Components {
     }
     interface HeTextActivityProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.TextActivityList
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeTextGroupProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeValidationProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.TextActivityList
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -226,36 +166,24 @@ export namespace Components {
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel": ActivityModel;
         "keyId": string;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": NestedActivityDefinitionProperty;
     }
     interface HeWeightedCheckboxProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
     }
     interface HeWeightedRadioOptionGroupProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": NestedActivityDefinitionProperty;
     }
     interface HeWeightedRadioProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
@@ -398,52 +326,19 @@ declare global {
         prototype: HTMLElsaToastNotificationElement;
         new (): HTMLElsaToastNotificationElement;
     };
-    interface HTMLHeCheckListPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeCheckListPropertyElement extends Components.HeCheckListProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeCheckListPropertyElementEventMap>(type: K, listener: (this: HTMLHeCheckListPropertyElement, ev: HeCheckListPropertyCustomEvent<HTMLHeCheckListPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeCheckListPropertyElementEventMap>(type: K, listener: (this: HTMLHeCheckListPropertyElement, ev: HeCheckListPropertyCustomEvent<HTMLHeCheckListPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeCheckListPropertyElement: {
         prototype: HTMLHeCheckListPropertyElement;
         new (): HTMLHeCheckListPropertyElement;
     };
-    interface HTMLHeCheckboxOptionsPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeCheckboxOptionsPropertyElement extends Components.HeCheckboxOptionsProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeCheckboxOptionsPropertyElementEventMap>(type: K, listener: (this: HTMLHeCheckboxOptionsPropertyElement, ev: HeCheckboxOptionsPropertyCustomEvent<HTMLHeCheckboxOptionsPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeCheckboxOptionsPropertyElementEventMap>(type: K, listener: (this: HTMLHeCheckboxOptionsPropertyElement, ev: HeCheckboxOptionsPropertyCustomEvent<HTMLHeCheckboxOptionsPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeCheckboxOptionsPropertyElement: {
         prototype: HTMLHeCheckboxOptionsPropertyElement;
         new (): HTMLHeCheckboxOptionsPropertyElement;
     };
-    interface HTMLHeCheckboxPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeCheckboxPropertyElement extends Components.HeCheckboxProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeCheckboxPropertyElementEventMap>(type: K, listener: (this: HTMLHeCheckboxPropertyElement, ev: HeCheckboxPropertyCustomEvent<HTMLHeCheckboxPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeCheckboxPropertyElementEventMap>(type: K, listener: (this: HTMLHeCheckboxPropertyElement, ev: HeCheckboxPropertyCustomEvent<HTMLHeCheckboxPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeCheckboxPropertyElement: {
         prototype: HTMLHeCheckboxPropertyElement;
@@ -455,18 +350,7 @@ declare global {
         prototype: HTMLHeDashboardElement;
         new (): HTMLHeDashboardElement;
     };
-    interface HTMLHeDataTablePropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeDataTablePropertyElement extends Components.HeDataTableProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeDataTablePropertyElementEventMap>(type: K, listener: (this: HTMLHeDataTablePropertyElement, ev: HeDataTablePropertyCustomEvent<HTMLHeDataTablePropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeDataTablePropertyElementEventMap>(type: K, listener: (this: HTMLHeDataTablePropertyElement, ev: HeDataTablePropertyCustomEvent<HTMLHeDataTablePropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeDataTablePropertyElement: {
         prototype: HTMLHeDataTablePropertyElement;
@@ -478,376 +362,133 @@ declare global {
         prototype: HTMLHeElsaControlElement;
         new (): HTMLHeElsaControlElement;
     };
-    interface HTMLHeExpressionEditorElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeExpressionEditorElement extends Components.HeExpressionEditor, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeExpressionEditorElementEventMap>(type: K, listener: (this: HTMLHeExpressionEditorElement, ev: HeExpressionEditorCustomEvent<HTMLHeExpressionEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeExpressionEditorElementEventMap>(type: K, listener: (this: HTMLHeExpressionEditorElement, ev: HeExpressionEditorCustomEvent<HTMLHeExpressionEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeExpressionEditorElement: {
         prototype: HTMLHeExpressionEditorElement;
         new (): HTMLHeExpressionEditorElement;
     };
-    interface HTMLHeJsonPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeJsonPropertyElement extends Components.HeJsonProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeJsonPropertyElementEventMap>(type: K, listener: (this: HTMLHeJsonPropertyElement, ev: HeJsonPropertyCustomEvent<HTMLHeJsonPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeJsonPropertyElementEventMap>(type: K, listener: (this: HTMLHeJsonPropertyElement, ev: HeJsonPropertyCustomEvent<HTMLHeJsonPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeJsonPropertyElement: {
         prototype: HTMLHeJsonPropertyElement;
         new (): HTMLHeJsonPropertyElement;
     };
-    interface HTMLHeMonacoElementEventMap {
-        "valueChanged": MonacoValueChangedArgs;
-    }
     interface HTMLHeMonacoElement extends Components.HeMonaco, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeMonacoElementEventMap>(type: K, listener: (this: HTMLHeMonacoElement, ev: HeMonacoCustomEvent<HTMLHeMonacoElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeMonacoElementEventMap>(type: K, listener: (this: HTMLHeMonacoElement, ev: HeMonacoCustomEvent<HTMLHeMonacoElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeMonacoElement: {
         prototype: HTMLHeMonacoElement;
         new (): HTMLHeMonacoElement;
     };
-    interface HTMLHeMultiExpressionEditorElementEventMap {
-        "syntaxChanged": string;
-        "expressionChanged": string;
-    }
     interface HTMLHeMultiExpressionEditorElement extends Components.HeMultiExpressionEditor, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeMultiExpressionEditorElementEventMap>(type: K, listener: (this: HTMLHeMultiExpressionEditorElement, ev: HeMultiExpressionEditorCustomEvent<HTMLHeMultiExpressionEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeMultiExpressionEditorElementEventMap>(type: K, listener: (this: HTMLHeMultiExpressionEditorElement, ev: HeMultiExpressionEditorCustomEvent<HTMLHeMultiExpressionEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeMultiExpressionEditorElement: {
         prototype: HTMLHeMultiExpressionEditorElement;
         new (): HTMLHeMultiExpressionEditorElement;
     };
-    interface HTMLHeMultiLinePropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeMultiLinePropertyElement extends Components.HeMultiLineProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeMultiLinePropertyElementEventMap>(type: K, listener: (this: HTMLHeMultiLinePropertyElement, ev: HeMultiLinePropertyCustomEvent<HTMLHeMultiLinePropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeMultiLinePropertyElementEventMap>(type: K, listener: (this: HTMLHeMultiLinePropertyElement, ev: HeMultiLinePropertyCustomEvent<HTMLHeMultiLinePropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeMultiLinePropertyElement: {
         prototype: HTMLHeMultiLinePropertyElement;
         new (): HTMLHeMultiLinePropertyElement;
     };
-    interface HTMLHeMultiTextPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeMultiTextPropertyElement extends Components.HeMultiTextProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeMultiTextPropertyElementEventMap>(type: K, listener: (this: HTMLHeMultiTextPropertyElement, ev: HeMultiTextPropertyCustomEvent<HTMLHeMultiTextPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeMultiTextPropertyElementEventMap>(type: K, listener: (this: HTMLHeMultiTextPropertyElement, ev: HeMultiTextPropertyCustomEvent<HTMLHeMultiTextPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeMultiTextPropertyElement: {
         prototype: HTMLHeMultiTextPropertyElement;
         new (): HTMLHeMultiTextPropertyElement;
     };
-    interface HTMLHeNumericPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeNumericPropertyElement extends Components.HeNumericProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeNumericPropertyElementEventMap>(type: K, listener: (this: HTMLHeNumericPropertyElement, ev: HeNumericPropertyCustomEvent<HTMLHeNumericPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeNumericPropertyElementEventMap>(type: K, listener: (this: HTMLHeNumericPropertyElement, ev: HeNumericPropertyCustomEvent<HTMLHeNumericPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeNumericPropertyElement: {
         prototype: HTMLHeNumericPropertyElement;
         new (): HTMLHeNumericPropertyElement;
     };
-    interface HTMLHePotscoreRadioOptionsPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHePotscoreRadioOptionsPropertyElement extends Components.HePotscoreRadioOptionsProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHePotscoreRadioOptionsPropertyElementEventMap>(type: K, listener: (this: HTMLHePotscoreRadioOptionsPropertyElement, ev: HePotscoreRadioOptionsPropertyCustomEvent<HTMLHePotscoreRadioOptionsPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHePotscoreRadioOptionsPropertyElementEventMap>(type: K, listener: (this: HTMLHePotscoreRadioOptionsPropertyElement, ev: HePotscoreRadioOptionsPropertyCustomEvent<HTMLHePotscoreRadioOptionsPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHePotscoreRadioOptionsPropertyElement: {
         prototype: HTMLHePotscoreRadioOptionsPropertyElement;
         new (): HTMLHePotscoreRadioOptionsPropertyElement;
     };
-    interface HTMLHePropertyEditorElementEventMap {
-        "defaultSyntaxValueChanged": string;
-    }
     interface HTMLHePropertyEditorElement extends Components.HePropertyEditor, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHePropertyEditorElementEventMap>(type: K, listener: (this: HTMLHePropertyEditorElement, ev: HePropertyEditorCustomEvent<HTMLHePropertyEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHePropertyEditorElementEventMap>(type: K, listener: (this: HTMLHePropertyEditorElement, ev: HePropertyEditorCustomEvent<HTMLHePropertyEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHePropertyEditorElement: {
         prototype: HTMLHePropertyEditorElement;
         new (): HTMLHePropertyEditorElement;
     };
-    interface HTMLHeQuestionDataDictionaryPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeQuestionDataDictionaryPropertyElement extends Components.HeQuestionDataDictionaryProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeQuestionDataDictionaryPropertyElementEventMap>(type: K, listener: (this: HTMLHeQuestionDataDictionaryPropertyElement, ev: HeQuestionDataDictionaryPropertyCustomEvent<HTMLHeQuestionDataDictionaryPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeQuestionDataDictionaryPropertyElementEventMap>(type: K, listener: (this: HTMLHeQuestionDataDictionaryPropertyElement, ev: HeQuestionDataDictionaryPropertyCustomEvent<HTMLHeQuestionDataDictionaryPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeQuestionDataDictionaryPropertyElement: {
         prototype: HTMLHeQuestionDataDictionaryPropertyElement;
         new (): HTMLHeQuestionDataDictionaryPropertyElement;
     };
-    interface HTMLHeRadioOptionsPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeRadioOptionsPropertyElement extends Components.HeRadioOptionsProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeRadioOptionsPropertyElementEventMap>(type: K, listener: (this: HTMLHeRadioOptionsPropertyElement, ev: HeRadioOptionsPropertyCustomEvent<HTMLHeRadioOptionsPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeRadioOptionsPropertyElementEventMap>(type: K, listener: (this: HTMLHeRadioOptionsPropertyElement, ev: HeRadioOptionsPropertyCustomEvent<HTMLHeRadioOptionsPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeRadioOptionsPropertyElement: {
         prototype: HTMLHeRadioOptionsPropertyElement;
         new (): HTMLHeRadioOptionsPropertyElement;
     };
-    interface HTMLHeSingleLinePropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeSingleLinePropertyElement extends Components.HeSingleLineProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeSingleLinePropertyElementEventMap>(type: K, listener: (this: HTMLHeSingleLinePropertyElement, ev: HeSingleLinePropertyCustomEvent<HTMLHeSingleLinePropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeSingleLinePropertyElementEventMap>(type: K, listener: (this: HTMLHeSingleLinePropertyElement, ev: HeSingleLinePropertyCustomEvent<HTMLHeSingleLinePropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeSingleLinePropertyElement: {
         prototype: HTMLHeSingleLinePropertyElement;
         new (): HTMLHeSingleLinePropertyElement;
     };
-    interface HTMLHeSwitchAnswersPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeSwitchAnswersPropertyElement extends Components.HeSwitchAnswersProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeSwitchAnswersPropertyElementEventMap>(type: K, listener: (this: HTMLHeSwitchAnswersPropertyElement, ev: HeSwitchAnswersPropertyCustomEvent<HTMLHeSwitchAnswersPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeSwitchAnswersPropertyElementEventMap>(type: K, listener: (this: HTMLHeSwitchAnswersPropertyElement, ev: HeSwitchAnswersPropertyCustomEvent<HTMLHeSwitchAnswersPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeSwitchAnswersPropertyElement: {
         prototype: HTMLHeSwitchAnswersPropertyElement;
         new (): HTMLHeSwitchAnswersPropertyElement;
     };
-    interface HTMLHeTextActivityPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeTextActivityPropertyElement extends Components.HeTextActivityProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeTextActivityPropertyElementEventMap>(type: K, listener: (this: HTMLHeTextActivityPropertyElement, ev: HeTextActivityPropertyCustomEvent<HTMLHeTextActivityPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeTextActivityPropertyElementEventMap>(type: K, listener: (this: HTMLHeTextActivityPropertyElement, ev: HeTextActivityPropertyCustomEvent<HTMLHeTextActivityPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeTextActivityPropertyElement: {
         prototype: HTMLHeTextActivityPropertyElement;
         new (): HTMLHeTextActivityPropertyElement;
     };
-    interface HTMLHeTextGroupPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeTextGroupPropertyElement extends Components.HeTextGroupProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeTextGroupPropertyElementEventMap>(type: K, listener: (this: HTMLHeTextGroupPropertyElement, ev: HeTextGroupPropertyCustomEvent<HTMLHeTextGroupPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeTextGroupPropertyElementEventMap>(type: K, listener: (this: HTMLHeTextGroupPropertyElement, ev: HeTextGroupPropertyCustomEvent<HTMLHeTextGroupPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeTextGroupPropertyElement: {
         prototype: HTMLHeTextGroupPropertyElement;
         new (): HTMLHeTextGroupPropertyElement;
     };
-    interface HTMLHeValidationPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeValidationPropertyElement extends Components.HeValidationProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeValidationPropertyElementEventMap>(type: K, listener: (this: HTMLHeValidationPropertyElement, ev: HeValidationPropertyCustomEvent<HTMLHeValidationPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeValidationPropertyElementEventMap>(type: K, listener: (this: HTMLHeValidationPropertyElement, ev: HeValidationPropertyCustomEvent<HTMLHeValidationPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeValidationPropertyElement: {
         prototype: HTMLHeValidationPropertyElement;
         new (): HTMLHeValidationPropertyElement;
     };
-    interface HTMLHeWeightedCheckboxOptionGroupPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeWeightedCheckboxOptionGroupPropertyElement extends Components.HeWeightedCheckboxOptionGroupProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeWeightedCheckboxOptionGroupPropertyElementEventMap>(type: K, listener: (this: HTMLHeWeightedCheckboxOptionGroupPropertyElement, ev: HeWeightedCheckboxOptionGroupPropertyCustomEvent<HTMLHeWeightedCheckboxOptionGroupPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeWeightedCheckboxOptionGroupPropertyElementEventMap>(type: K, listener: (this: HTMLHeWeightedCheckboxOptionGroupPropertyElement, ev: HeWeightedCheckboxOptionGroupPropertyCustomEvent<HTMLHeWeightedCheckboxOptionGroupPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeWeightedCheckboxOptionGroupPropertyElement: {
         prototype: HTMLHeWeightedCheckboxOptionGroupPropertyElement;
         new (): HTMLHeWeightedCheckboxOptionGroupPropertyElement;
     };
-    interface HTMLHeWeightedCheckboxPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeWeightedCheckboxPropertyElement extends Components.HeWeightedCheckboxProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeWeightedCheckboxPropertyElementEventMap>(type: K, listener: (this: HTMLHeWeightedCheckboxPropertyElement, ev: HeWeightedCheckboxPropertyCustomEvent<HTMLHeWeightedCheckboxPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeWeightedCheckboxPropertyElementEventMap>(type: K, listener: (this: HTMLHeWeightedCheckboxPropertyElement, ev: HeWeightedCheckboxPropertyCustomEvent<HTMLHeWeightedCheckboxPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeWeightedCheckboxPropertyElement: {
         prototype: HTMLHeWeightedCheckboxPropertyElement;
         new (): HTMLHeWeightedCheckboxPropertyElement;
     };
-    interface HTMLHeWeightedRadioOptionGroupPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeWeightedRadioOptionGroupPropertyElement extends Components.HeWeightedRadioOptionGroupProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeWeightedRadioOptionGroupPropertyElementEventMap>(type: K, listener: (this: HTMLHeWeightedRadioOptionGroupPropertyElement, ev: HeWeightedRadioOptionGroupPropertyCustomEvent<HTMLHeWeightedRadioOptionGroupPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeWeightedRadioOptionGroupPropertyElementEventMap>(type: K, listener: (this: HTMLHeWeightedRadioOptionGroupPropertyElement, ev: HeWeightedRadioOptionGroupPropertyCustomEvent<HTMLHeWeightedRadioOptionGroupPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeWeightedRadioOptionGroupPropertyElement: {
         prototype: HTMLHeWeightedRadioOptionGroupPropertyElement;
         new (): HTMLHeWeightedRadioOptionGroupPropertyElement;
     };
-    interface HTMLHeWeightedRadioPropertyElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLHeWeightedRadioPropertyElement extends Components.HeWeightedRadioProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLHeWeightedRadioPropertyElementEventMap>(type: K, listener: (this: HTMLHeWeightedRadioPropertyElement, ev: HeWeightedRadioPropertyCustomEvent<HTMLHeWeightedRadioPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLHeWeightedRadioPropertyElementEventMap>(type: K, listener: (this: HTMLHeWeightedRadioPropertyElement, ev: HeWeightedRadioPropertyCustomEvent<HTMLHeWeightedRadioPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLHeWeightedRadioPropertyElement: {
         prototype: HTMLHeWeightedRadioPropertyElement;
         new (): HTMLHeWeightedRadioPropertyElement;
     };
-    interface HTMLNestedPropertyListElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLNestedPropertyListElement extends Components.NestedPropertyList, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLNestedPropertyListElementEventMap>(type: K, listener: (this: HTMLNestedPropertyListElement, ev: NestedPropertyListCustomEvent<HTMLNestedPropertyListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLNestedPropertyListElementEventMap>(type: K, listener: (this: HTMLNestedPropertyListElement, ev: NestedPropertyListCustomEvent<HTMLNestedPropertyListElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLNestedPropertyListElement: {
         prototype: HTMLNestedPropertyListElement;
         new (): HTMLNestedPropertyListElement;
     };
-    interface HTMLQuestionPropertyElementEventMap {
-        "updateQuestionScreen": string;
-    }
     interface HTMLQuestionPropertyElement extends Components.QuestionProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLQuestionPropertyElementEventMap>(type: K, listener: (this: HTMLQuestionPropertyElement, ev: QuestionPropertyCustomEvent<HTMLQuestionPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLQuestionPropertyElementEventMap>(type: K, listener: (this: HTMLQuestionPropertyElement, ev: QuestionPropertyCustomEvent<HTMLQuestionPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLQuestionPropertyElement: {
         prototype: HTMLQuestionPropertyElement;
@@ -915,9 +556,6 @@ declare namespace LocalJSX {
     }
     interface HeCheckboxOptionsProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeCheckboxOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -936,9 +574,6 @@ declare namespace LocalJSX {
     }
     interface HeDataTableProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeDataTablePropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -949,18 +584,12 @@ declare namespace LocalJSX {
     }
     interface HeExpressionEditor {
         "context"?: IntellisenseContext;
-        /**
-          * @default '6em'
-         */
         "editorHeight"?: string;
         "expression"?: string;
         "language"?: string;
         "onExpressionChanged"?: (event: HeExpressionEditorCustomEvent<string>) => void;
         "padding"?: string;
         "serverUrl"?: string;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
         "workflowDefinitionId"?: string;
     }
@@ -972,33 +601,18 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface HeMonaco {
-        /**
-          * @default '5em'
-         */
         "editorHeight"?: string;
         "language"?: string;
         "monacoLibPath"?: string;
         "onValueChanged"?: (event: HeMonacoCustomEvent<MonacoValueChangedArgs>) => void;
         "padding"?: string;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
         "value"?: string;
     }
     interface HeMultiExpressionEditor {
         "context"?: IntellisenseContext;
-        /**
-          * @default SyntaxNames.Literal
-         */
         "defaultSyntax"?: string;
-        /**
-          * @default '10em'
-         */
         "editorHeight"?: string;
-        /**
-          * @default {}
-         */
         "expressions"?: Map<string>;
         "fieldName"?: string;
         "hint"?: string;
@@ -1006,13 +620,7 @@ declare namespace LocalJSX {
         "label"?: string;
         "onExpressionChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;
         "onSyntaxChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
-        /**
-          * @default []
-         */
         "supportedSyntaxes"?: Array<string>;
         "syntax"?: string;
     }
@@ -1046,20 +654,11 @@ declare namespace LocalJSX {
     interface HePropertyEditor {
         "activityModel"?: ActivityModel;
         "context"?: string;
-        /**
-          * @default '10em'
-         */
         "editorHeight"?: string;
         "onDefaultSyntaxValueChanged"?: (event: HePropertyEditorCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
-        /**
-          * @default true
-         */
         "showLabel"?: boolean;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
     }
     interface HeQuestionDataDictionaryProperty {
@@ -1070,9 +669,6 @@ declare namespace LocalJSX {
     }
     interface HeRadioOptionsProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeRadioOptionsPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -1094,9 +690,6 @@ declare namespace LocalJSX {
     }
     interface HeTextActivityProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.TextActivityList
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeTextActivityPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -1104,9 +697,6 @@ declare namespace LocalJSX {
     }
     interface HeTextGroupProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeTextGroupPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -1114,9 +704,6 @@ declare namespace LocalJSX {
     }
     interface HeValidationProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.TextActivityList
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeValidationPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -1125,9 +712,6 @@ declare namespace LocalJSX {
     interface HeWeightedCheckboxOptionGroupProperty {
         "activityModel"?: ActivityModel;
         "keyId"?: string;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedCheckboxOptionGroupPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -1135,9 +719,6 @@ declare namespace LocalJSX {
     }
     interface HeWeightedCheckboxProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedCheckboxPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -1145,9 +726,6 @@ declare namespace LocalJSX {
     }
     interface HeWeightedRadioOptionGroupProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedRadioOptionGroupPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
@@ -1155,9 +733,6 @@ declare namespace LocalJSX {
     }
     interface HeWeightedRadioProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default SyntaxNames.Json
-         */
         "modelSyntax"?: string;
         "onExpressionChanged"?: (event: HeWeightedRadioPropertyCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;

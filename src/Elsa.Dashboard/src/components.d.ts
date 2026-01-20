@@ -17,18 +17,10 @@ import { PagerData } from "./components/controls/elsa-pager/elsa-pager";
 import { ToastNotificationOptions } from "./components/shared/elsa-toast-notification/elsa-toast-notification";
 import { WebhookDefinition } from "./modules/elsa-webhooks/models";
 import { ActivityStats } from ".";
-export { ActivityDefinitionProperty, ActivityDeletedArgs, ActivityDescriptor, ActivityModel, ActivityPropertyDescriptor, ElsaStudio, IntellisenseContext, OrderBy, SelectListItem, VersionOptions, WorkflowBlueprint, WorkflowDefinition, WorkflowDefinitionVersion, WorkflowExecutionLogRecord, WorkflowFault, WorkflowInstance, WorkflowModel, WorkflowStatus } from "./models";
-export { LocationSegments, MatchResults, RouterHistory } from "@stencil-community/router";
-export { MenuItem } from "./components/controls/elsa-context-menu/models";
-export { VNode } from "@stencil/core";
-export { ActivityContextMenuState, LayoutDirection, WorkflowDesignerMode } from "./components/designers/tree/elsa-designer-tree/models";
-export { DropdownButtonItem, DropdownButtonOrigin } from "./components/controls/elsa-dropdown-button/models";
-export { MonacoValueChangedArgs } from "./components/controls/elsa-monaco/elsa-monaco";
-export { Map } from "./utils/utils";
-export { PagerData } from "./components/controls/elsa-pager/elsa-pager";
-export { ToastNotificationOptions } from "./components/shared/elsa-toast-notification/elsa-toast-notification";
-export { WebhookDefinition } from "./modules/elsa-webhooks/models";
-export { ActivityStats } from ".";
+import { ActivityDefinitionProperty as ActivityDefinitionProperty1, ActivityModel as ActivityModel1, ActivityPropertyDescriptor as ActivityPropertyDescriptor1, IntellisenseContext as IntellisenseContext1 } from "../customSrc/src/models/elsa-interfaces";
+import { MonacoValueChangedArgs as MonacoValueChangedArgs1 } from "../customSrc/src/components/editors/he-monaco/he-monaco";
+import { Map as Map1 } from "../customSrc/src/utils/utils";
+import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "../customSrc/src/models/custom-component-models";
 export namespace Components {
     interface ElsaActivityEditorModal {
         "culture": string;
@@ -56,9 +48,6 @@ export namespace Components {
     }
     interface ElsaContextMenu {
         "history": RouterHistory;
-        /**
-          * @default []
-         */
         "menuItems": Array<MenuItem>;
     }
     interface ElsaControl {
@@ -94,23 +83,11 @@ export namespace Components {
         "activityContextTestMenu"?: ActivityContextMenuState;
         "connectionContextMenu"?: ActivityContextMenuState;
         "enableMultipleConnectionsFromSingleSource": boolean;
-        /**
-          * @default LayoutDirection.TopBottom
-         */
         "layoutDirection": LayoutDirection;
-        /**
-          * @default WorkflowDesignerMode.Edit
-         */
         "mode": WorkflowDesignerMode;
-        /**
-          * @default {     activities: [],     connections: [],     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst   }
-         */
         "model": WorkflowModel;
         "removeActivity": (activity: ActivityModel) => Promise<void>;
         "removeSelectedActivities": () => Promise<void>;
-        /**
-          * @default []
-         */
         "selectedActivityIds": Array<string>;
         "showActivityEditor": (activity: ActivityModel, animate: boolean) => Promise<void>;
     }
@@ -121,18 +98,9 @@ export namespace Components {
         "serverUrl": string;
     }
     interface ElsaDropdownButton {
-        /**
-          * @default " elsa-w-full elsa-bg-white elsa-border elsa-border-gray-300 elsa-rounded-md elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-inline-flex elsa-justify-center elsa-text-sm elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500"
-         */
         "btnClass"?: string;
         "icon"?: any;
-        /**
-          * @default []
-         */
         "items": Array<DropdownButtonItem>;
-        /**
-          * @default DropdownButtonOrigin.TopLeft
-         */
         "origin": DropdownButtonOrigin;
         "text": string;
     }
@@ -144,74 +112,35 @@ export namespace Components {
     }
     interface ElsaExpressionEditor {
         "context"?: IntellisenseContext;
-        /**
-          * @default '6em'
-         */
         "editorHeight": string;
         "expression": string;
         "language": string;
-        /**
-          * @default false
-         */
         "opensModal": boolean;
         "padding": string;
         "serverUrl": string;
         "setExpression": (value: string) => Promise<void>;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
         "workflowDefinitionId": string;
     }
     interface ElsaFlyoutPanel {
-        /**
-          * @default false
-         */
         "autoExpand": boolean;
-        /**
-          * @default 1
-         */
         "expandButtonPosition": number;
-        /**
-          * @default false
-         */
         "hidden": boolean;
         "selectTab": (tab: string, expand?: boolean) => Promise<void>;
-        /**
-          * @default false
-         */
         "silent": boolean;
-        /**
-          * @default 0
-         */
         "updateCounter": number;
     }
     interface ElsaInputTags {
         "fieldId"?: string;
         "fieldName"?: string;
-        /**
-          * @default 'Add tag'
-         */
         "placeHolder"?: string;
-        /**
-          * @default []
-         */
         "values"?: Array<string>;
     }
     interface ElsaInputTagsDropdown {
-        /**
-          * @default []
-         */
         "dropdownValues"?: Array<SelectListItem>;
         "fieldId"?: string;
         "fieldName"?: string;
-        /**
-          * @default 'Add tag'
-         */
         "placeHolder"?: string;
-        /**
-          * @default []
-         */
         "values"?: Array<string | SelectListItem>;
     }
     interface ElsaJsonProperty {
@@ -225,44 +154,23 @@ export namespace Components {
     }
     interface ElsaMonaco {
         "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
-        /**
-          * @default '5em'
-         */
         "editorHeight": string;
         "language": string;
         "monacoLibPath": string;
         "padding": string;
         "setValue": (value: string) => Promise<void>;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
         "value": string;
     }
     interface ElsaMultiExpressionEditor {
         "context"?: IntellisenseContext;
-        /**
-          * @default SyntaxNames.Literal
-         */
         "defaultSyntax": string;
-        /**
-          * @default '10em'
-         */
         "editorHeight": string;
-        /**
-          * @default {}
-         */
         "expressions": Map<string>;
         "fieldName"?: string;
         "isReadOnly"?: boolean;
         "label": string;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
-        /**
-          * @default []
-         */
         "supportedSyntaxes": Array<string>;
         "syntax"?: string;
     }
@@ -278,8 +186,7 @@ export namespace Components {
         "serverUrl": string;
     }
     /**
-     * Lightweight replacement for stencil-route-link to eliminate
-     * @stencil-community /router dependency.
+     * Lightweight replacement for stencil-route-link to eliminate @stencil-community/router dependency.
      * Provides anchor rendering with active class evaluation based on current window.location.
      * Performs client-side navigation using history.pushState to avoid page reloads.
      * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
@@ -319,19 +226,10 @@ export namespace Components {
     interface ElsaPropertyEditor {
         "activityModel": ActivityModel;
         "context"?: string;
-        /**
-          * @default '10em'
-         */
         "editorHeight": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
-        /**
-          * @default true
-         */
         "showLabel": boolean;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
     }
     interface ElsaRadioListProperty {
@@ -342,16 +240,10 @@ export namespace Components {
     }
     interface ElsaScriptProperty {
         "activityModel": ActivityModel;
-        /**
-          * @default '6em'
-         */
         "editorHeight": string;
         "propertyDescriptor": ActivityPropertyDescriptor;
         "propertyModel": ActivityDefinitionProperty;
         "serverUrl": string;
-        /**
-          * @default false
-         */
         "singleLineMode": boolean;
         "syntax"?: string;
         "workflowDefinitionId": string;
@@ -369,9 +261,6 @@ export namespace Components {
         "propertyModel": ActivityDefinitionProperty;
     }
     interface ElsaStudioDashboard {
-        /**
-          * @default ''
-         */
         "basePath": string;
         "culture": string;
     }
@@ -382,18 +271,12 @@ export namespace Components {
     interface ElsaStudioRoot {
         "addPlugin": (pluginType: any) => Promise<void>;
         "addPlugins": (pluginTypes: Array<any>) => Promise<void>;
-        /**
-          * @default ''
-         */
         "basePath": string;
         "config": string;
         "culture": string;
         "features": any;
         "monacoLibPath": string;
         "serverUrl": string;
-        /**
-          * @default false
-         */
         "useX6Graphs": boolean;
     }
     interface ElsaStudioWebhookDefinitionsEdit {
@@ -490,9 +373,6 @@ export namespace Components {
         "history": RouterHistory;
         "importWorkflow": (file: File) => Promise<void>;
         "monacoLibPath": string;
-        /**
-          * @default []
-         */
         "serverFeatures": Array<string>;
         "serverUrl": string;
         "workflowDefinitionId": string;
@@ -509,9 +389,6 @@ export namespace Components {
         "workflowFault": WorkflowFault;
     }
     interface ElsaWorkflowInstanceJournal {
-        /**
-          * @default []
-         */
         "activityDescriptors": Array<ActivityDescriptor>;
         "selectActivityRecord": (activityId?: string) => Promise<void>;
         "serverUrl": string;
@@ -526,9 +403,6 @@ export namespace Components {
         "culture": string;
         "getSelectedWorkflowInstanceIds": () => Promise<string[]>;
         "history"?: RouterHistory;
-        /**
-          * @default OrderBy.Started
-         */
         "orderBy"?: OrderBy;
         "refresh": () => Promise<void>;
         "serverUrl": string;
@@ -571,6 +445,195 @@ export namespace Components {
         "workflowDefinition": WorkflowDefinition;
         "workflowTestActivityId": string;
     }
+    interface HeCheckListProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeCheckboxOptionsProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeCheckboxProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeDashboard {
+        "dataDictionaryGroup": string;
+        "storeConfig": string;
+    }
+    interface HeDataTableProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeElsaControl {
+        "content": VNode | string | Element;
+    }
+    interface HeExpressionEditor {
+        "context"?: IntellisenseContext1;
+        "editorHeight": string;
+        "expression": string;
+        "language": string;
+        "padding": string;
+        "serverUrl": string;
+        "setExpression": (value: string) => Promise<void>;
+        "singleLineMode": boolean;
+        "workflowDefinitionId": string;
+    }
+    interface HeJsonProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeMonaco {
+        "addJavaScriptLib": (libSource: string, libUri: string) => Promise<void>;
+        "editorHeight": string;
+        "language": string;
+        "monacoLibPath": string;
+        "padding": string;
+        "setValue": (value: string) => Promise<void>;
+        "singleLineMode": boolean;
+        "value": string;
+    }
+    interface HeMultiExpressionEditor {
+        "context"?: IntellisenseContext1;
+        "defaultSyntax": string;
+        "editorHeight": string;
+        "expressions": Map1<string>;
+        "fieldName"?: string;
+        "hint"?: string;
+        "isReadOnly"?: boolean;
+        "label": string;
+        "singleLineMode": boolean;
+        "supportedSyntaxes": Array<string>;
+        "syntax"?: string;
+    }
+    interface HeMultiLineProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeMultiTextProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeNumericProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HePotscoreRadioOptionsProperty {
+        "activityModel": ActivityModel1;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HePropertyEditor {
+        "activityModel": ActivityModel1;
+        "context"?: string;
+        "editorHeight": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+        "showLabel": boolean;
+        "singleLineMode": boolean;
+    }
+    interface HeQuestionDataDictionaryProperty {
+        "activityModel": ActivityModel1;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeRadioOptionsProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeSingleLineProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeSwitchAnswersProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeTextActivityProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeTextGroupProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeValidationProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeWeightedCheckboxOptionGroupProperty {
+        "activityModel": ActivityModel1;
+        "keyId": string;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": NestedActivityDefinitionProperty;
+    }
+    interface HeWeightedCheckboxProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface HeWeightedRadioOptionGroupProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": NestedActivityDefinitionProperty;
+    }
+    interface HeWeightedRadioProperty {
+        "activityModel": ActivityModel1;
+        "modelSyntax": string;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
+    interface NestedPropertyList {
+        "activityModel": ActivityModel1;
+        "nestedDescriptors": Array<HeActivityPropertyDescriptor>;
+        "propertyModel": NestedActivityDefinitionProperty;
+    }
+    interface QuestionProperty {
+        "activityModel": ActivityModel1;
+        "questionModel": NestedPropertyModel;
+    }
+    interface QuestionScreenProperty {
+        "activityModel": ActivityModel1;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+        "questionProperties": Array<HeActivityPropertyDescriptor>;
+    }
+    interface SwitchAnswersProperty {
+        "activityModel": ActivityModel1;
+        "propertyDescriptor": ActivityPropertyDescriptor1;
+        "propertyModel": ActivityDefinitionProperty1;
+    }
     interface X6Designer {
         "activityBorderColor"?: (activity: ActivityModel) => string;
         "activityContextMenu"?: ActivityContextMenuState;
@@ -578,23 +641,11 @@ export namespace Components {
         "activityContextTestMenu"?: ActivityContextMenuState;
         "connectionContextMenu"?: ActivityContextMenuState;
         "enableMultipleConnectionsFromSingleSource": boolean;
-        /**
-          * @default LayoutDirection.TopBottom
-         */
         "layoutDirection": LayoutDirection;
-        /**
-          * @default WorkflowDesignerMode.Edit
-         */
         "mode": WorkflowDesignerMode;
-        /**
-          * @default {     activities: [],     connections: [],     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst   }
-         */
         "model": WorkflowModel;
         "removeActivity": (activity: ActivityModel) => Promise<void>;
         "removeSelectedActivities": () => Promise<void>;
-        /**
-          * @default []
-         */
         "selectedActivityIds": Array<string>;
         "showActivityEditor": (activity: ActivityModel, animate: boolean) => Promise<void>;
         "updateLayout": () => Promise<void>;
@@ -671,6 +722,110 @@ export interface ElsaWorkflowInstanceJournalCustomEvent<T> extends CustomEvent<T
 export interface ElsaWorkflowPublishButtonCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLElsaWorkflowPublishButtonElement;
+}
+export interface HeCheckListPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeCheckListPropertyElement;
+}
+export interface HeCheckboxOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeCheckboxOptionsPropertyElement;
+}
+export interface HeCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeCheckboxPropertyElement;
+}
+export interface HeDataTablePropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeDataTablePropertyElement;
+}
+export interface HeExpressionEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeExpressionEditorElement;
+}
+export interface HeJsonPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeJsonPropertyElement;
+}
+export interface HeMonacoCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMonacoElement;
+}
+export interface HeMultiExpressionEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMultiExpressionEditorElement;
+}
+export interface HeMultiLinePropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMultiLinePropertyElement;
+}
+export interface HeMultiTextPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeMultiTextPropertyElement;
+}
+export interface HeNumericPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeNumericPropertyElement;
+}
+export interface HePotscoreRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHePotscoreRadioOptionsPropertyElement;
+}
+export interface HePropertyEditorCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHePropertyEditorElement;
+}
+export interface HeQuestionDataDictionaryPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeQuestionDataDictionaryPropertyElement;
+}
+export interface HeRadioOptionsPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeRadioOptionsPropertyElement;
+}
+export interface HeSingleLinePropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeSingleLinePropertyElement;
+}
+export interface HeSwitchAnswersPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeSwitchAnswersPropertyElement;
+}
+export interface HeTextActivityPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeTextActivityPropertyElement;
+}
+export interface HeTextGroupPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeTextGroupPropertyElement;
+}
+export interface HeValidationPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeValidationPropertyElement;
+}
+export interface HeWeightedCheckboxOptionGroupPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeWeightedCheckboxOptionGroupPropertyElement;
+}
+export interface HeWeightedCheckboxPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeWeightedCheckboxPropertyElement;
+}
+export interface HeWeightedRadioOptionGroupPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeWeightedRadioOptionGroupPropertyElement;
+}
+export interface HeWeightedRadioPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLHeWeightedRadioPropertyElement;
+}
+export interface NestedPropertyListCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLNestedPropertyListElement;
+}
+export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLQuestionPropertyElement;
 }
 export interface X6DesignerCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -749,41 +904,13 @@ declare global {
         prototype: HTMLElsaCronExpressionPropertyElement;
         new (): HTMLElsaCronExpressionPropertyElement;
     };
-    interface HTMLElsaDesignerPanelElementEventMap {
-        "featureChanged": string;
-        "featureStatusChanged": string;
-    }
     interface HTMLElsaDesignerPanelElement extends Components.ElsaDesignerPanel, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaDesignerPanelElementEventMap>(type: K, listener: (this: HTMLElsaDesignerPanelElement, ev: ElsaDesignerPanelCustomEvent<HTMLElsaDesignerPanelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaDesignerPanelElementEventMap>(type: K, listener: (this: HTMLElsaDesignerPanelElement, ev: ElsaDesignerPanelCustomEvent<HTMLElsaDesignerPanelElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaDesignerPanelElement: {
         prototype: HTMLElsaDesignerPanelElement;
         new (): HTMLElsaDesignerPanelElement;
     };
-    interface HTMLElsaDesignerTreeElementEventMap {
-        "workflow-changed": WorkflowModel;
-        "activitySelected": ActivityModel;
-        "activityDeselected": ActivityModel;
-        "activityContextMenuButtonClicked": ActivityContextMenuState;
-        "connectionContextMenuButtonClicked": ActivityContextMenuState;
-        "activityContextMenuButtonTestClicked": ActivityContextMenuState;
-    }
     interface HTMLElsaDesignerTreeElement extends Components.ElsaDesignerTree, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaDesignerTreeElementEventMap>(type: K, listener: (this: HTMLElsaDesignerTreeElement, ev: ElsaDesignerTreeCustomEvent<HTMLElsaDesignerTreeElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaDesignerTreeElementEventMap>(type: K, listener: (this: HTMLElsaDesignerTreeElement, ev: ElsaDesignerTreeCustomEvent<HTMLElsaDesignerTreeElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaDesignerTreeElement: {
         prototype: HTMLElsaDesignerTreeElement;
@@ -795,18 +922,7 @@ declare global {
         prototype: HTMLElsaDictionaryPropertyElement;
         new (): HTMLElsaDictionaryPropertyElement;
     };
-    interface HTMLElsaDropdownButtonElementEventMap {
-        "itemSelected": DropdownButtonItem;
-    }
     interface HTMLElsaDropdownButtonElement extends Components.ElsaDropdownButton, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaDropdownButtonElementEventMap>(type: K, listener: (this: HTMLElsaDropdownButtonElement, ev: ElsaDropdownButtonCustomEvent<HTMLElsaDropdownButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaDropdownButtonElementEventMap>(type: K, listener: (this: HTMLElsaDropdownButtonElement, ev: ElsaDropdownButtonCustomEvent<HTMLElsaDropdownButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaDropdownButtonElement: {
         prototype: HTMLElsaDropdownButtonElement;
@@ -818,18 +934,7 @@ declare global {
         prototype: HTMLElsaDropdownPropertyElement;
         new (): HTMLElsaDropdownPropertyElement;
     };
-    interface HTMLElsaExpressionEditorElementEventMap {
-        "expressionChanged": string;
-    }
     interface HTMLElsaExpressionEditorElement extends Components.ElsaExpressionEditor, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaExpressionEditorElementEventMap>(type: K, listener: (this: HTMLElsaExpressionEditorElement, ev: ElsaExpressionEditorCustomEvent<HTMLElsaExpressionEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaExpressionEditorElementEventMap>(type: K, listener: (this: HTMLElsaExpressionEditorElement, ev: ElsaExpressionEditorCustomEvent<HTMLElsaExpressionEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaExpressionEditorElement: {
         prototype: HTMLElsaExpressionEditorElement;
@@ -841,35 +946,13 @@ declare global {
         prototype: HTMLElsaFlyoutPanelElement;
         new (): HTMLElsaFlyoutPanelElement;
     };
-    interface HTMLElsaInputTagsElementEventMap {
-        "valueChanged": Array<string>;
-    }
     interface HTMLElsaInputTagsElement extends Components.ElsaInputTags, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaInputTagsElementEventMap>(type: K, listener: (this: HTMLElsaInputTagsElement, ev: ElsaInputTagsCustomEvent<HTMLElsaInputTagsElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaInputTagsElementEventMap>(type: K, listener: (this: HTMLElsaInputTagsElement, ev: ElsaInputTagsCustomEvent<HTMLElsaInputTagsElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaInputTagsElement: {
         prototype: HTMLElsaInputTagsElement;
         new (): HTMLElsaInputTagsElement;
     };
-    interface HTMLElsaInputTagsDropdownElementEventMap {
-        "valueChanged": Array<string | SelectListItem>;
-    }
     interface HTMLElsaInputTagsDropdownElement extends Components.ElsaInputTagsDropdown, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaInputTagsDropdownElementEventMap>(type: K, listener: (this: HTMLElsaInputTagsDropdownElement, ev: ElsaInputTagsDropdownCustomEvent<HTMLElsaInputTagsDropdownElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaInputTagsDropdownElementEventMap>(type: K, listener: (this: HTMLElsaInputTagsDropdownElement, ev: ElsaInputTagsDropdownCustomEvent<HTMLElsaInputTagsDropdownElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaInputTagsDropdownElement: {
         prototype: HTMLElsaInputTagsDropdownElement;
@@ -881,54 +964,19 @@ declare global {
         prototype: HTMLElsaJsonPropertyElement;
         new (): HTMLElsaJsonPropertyElement;
     };
-    interface HTMLElsaModalDialogElementEventMap {
-        "shown": any;
-        "hidden": any;
-    }
     interface HTMLElsaModalDialogElement extends Components.ElsaModalDialog, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaModalDialogElementEventMap>(type: K, listener: (this: HTMLElsaModalDialogElement, ev: ElsaModalDialogCustomEvent<HTMLElsaModalDialogElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaModalDialogElementEventMap>(type: K, listener: (this: HTMLElsaModalDialogElement, ev: ElsaModalDialogCustomEvent<HTMLElsaModalDialogElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaModalDialogElement: {
         prototype: HTMLElsaModalDialogElement;
         new (): HTMLElsaModalDialogElement;
     };
-    interface HTMLElsaMonacoElementEventMap {
-        "valueChanged": MonacoValueChangedArgs;
-    }
     interface HTMLElsaMonacoElement extends Components.ElsaMonaco, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaMonacoElementEventMap>(type: K, listener: (this: HTMLElsaMonacoElement, ev: ElsaMonacoCustomEvent<HTMLElsaMonacoElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaMonacoElementEventMap>(type: K, listener: (this: HTMLElsaMonacoElement, ev: ElsaMonacoCustomEvent<HTMLElsaMonacoElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaMonacoElement: {
         prototype: HTMLElsaMonacoElement;
         new (): HTMLElsaMonacoElement;
     };
-    interface HTMLElsaMultiExpressionEditorElementEventMap {
-        "syntaxChanged": string;
-        "expressionChanged": string;
-    }
     interface HTMLElsaMultiExpressionEditorElement extends Components.ElsaMultiExpressionEditor, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaMultiExpressionEditorElementEventMap>(type: K, listener: (this: HTMLElsaMultiExpressionEditorElement, ev: ElsaMultiExpressionEditorCustomEvent<HTMLElsaMultiExpressionEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaMultiExpressionEditorElementEventMap>(type: K, listener: (this: HTMLElsaMultiExpressionEditorElement, ev: ElsaMultiExpressionEditorCustomEvent<HTMLElsaMultiExpressionEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaMultiExpressionEditorElement: {
         prototype: HTMLElsaMultiExpressionEditorElement;
@@ -940,26 +988,14 @@ declare global {
         prototype: HTMLElsaMultiLinePropertyElement;
         new (): HTMLElsaMultiLinePropertyElement;
     };
-    interface HTMLElsaMultiTextPropertyElementEventMap {
-        "valueChange": Array<string | number | boolean | SelectListItem>;
-    }
     interface HTMLElsaMultiTextPropertyElement extends Components.ElsaMultiTextProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaMultiTextPropertyElementEventMap>(type: K, listener: (this: HTMLElsaMultiTextPropertyElement, ev: ElsaMultiTextPropertyCustomEvent<HTMLElsaMultiTextPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaMultiTextPropertyElementEventMap>(type: K, listener: (this: HTMLElsaMultiTextPropertyElement, ev: ElsaMultiTextPropertyCustomEvent<HTMLElsaMultiTextPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaMultiTextPropertyElement: {
         prototype: HTMLElsaMultiTextPropertyElement;
         new (): HTMLElsaMultiTextPropertyElement;
     };
     /**
-     * Lightweight replacement for stencil-route-link to eliminate
-     * @stencil-community /router dependency.
+     * Lightweight replacement for stencil-route-link to eliminate @stencil-community/router dependency.
      * Provides anchor rendering with active class evaluation based on current window.location.
      * Performs client-side navigation using history.pushState to avoid page reloads.
      * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
@@ -976,35 +1012,13 @@ declare global {
         prototype: HTMLElsaOauth2AuthorizedElement;
         new (): HTMLElsaOauth2AuthorizedElement;
     };
-    interface HTMLElsaPagerElementEventMap {
-        "paged": PagerData;
-    }
     interface HTMLElsaPagerElement extends Components.ElsaPager, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaPagerElementEventMap>(type: K, listener: (this: HTMLElsaPagerElement, ev: ElsaPagerCustomEvent<HTMLElsaPagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaPagerElementEventMap>(type: K, listener: (this: HTMLElsaPagerElement, ev: ElsaPagerCustomEvent<HTMLElsaPagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaPagerElement: {
         prototype: HTMLElsaPagerElement;
         new (): HTMLElsaPagerElement;
     };
-    interface HTMLElsaPropertyEditorElementEventMap {
-        "defaultSyntaxValueChanged": string;
-    }
     interface HTMLElsaPropertyEditorElement extends Components.ElsaPropertyEditor, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaPropertyEditorElementEventMap>(type: K, listener: (this: HTMLElsaPropertyEditorElement, ev: ElsaPropertyEditorCustomEvent<HTMLElsaPropertyEditorElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaPropertyEditorElementEventMap>(type: K, listener: (this: HTMLElsaPropertyEditorElement, ev: ElsaPropertyEditorCustomEvent<HTMLElsaPropertyEditorElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaPropertyEditorElement: {
         prototype: HTMLElsaPropertyEditorElement;
@@ -1052,19 +1066,7 @@ declare global {
         prototype: HTMLElsaStudioHomeElement;
         new (): HTMLElsaStudioHomeElement;
     };
-    interface HTMLElsaStudioRootElementEventMap {
-        "initializing": ElsaStudio;
-        "initialized": ElsaStudio;
-    }
     interface HTMLElsaStudioRootElement extends Components.ElsaStudioRoot, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaStudioRootElementEventMap>(type: K, listener: (this: HTMLElsaStudioRootElement, ev: ElsaStudioRootCustomEvent<HTMLElsaStudioRootElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaStudioRootElementEventMap>(type: K, listener: (this: HTMLElsaStudioRootElement, ev: ElsaStudioRootCustomEvent<HTMLElsaStudioRootElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaStudioRootElement: {
         prototype: HTMLElsaStudioRootElement;
@@ -1118,18 +1120,7 @@ declare global {
         prototype: HTMLElsaStudioWorkflowRegistryElement;
         new (): HTMLElsaStudioWorkflowRegistryElement;
     };
-    interface HTMLElsaSwitchCasesPropertyElementEventMap {
-        "valueChange": Array<any>;
-    }
     interface HTMLElsaSwitchCasesPropertyElement extends Components.ElsaSwitchCasesProperty, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaSwitchCasesPropertyElementEventMap>(type: K, listener: (this: HTMLElsaSwitchCasesPropertyElement, ev: ElsaSwitchCasesPropertyCustomEvent<HTMLElsaSwitchCasesPropertyElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaSwitchCasesPropertyElementEventMap>(type: K, listener: (this: HTMLElsaSwitchCasesPropertyElement, ev: ElsaSwitchCasesPropertyCustomEvent<HTMLElsaSwitchCasesPropertyElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaSwitchCasesPropertyElement: {
         prototype: HTMLElsaSwitchCasesPropertyElement;
@@ -1159,20 +1150,7 @@ declare global {
         prototype: HTMLElsaUserContextMenuElement;
         new (): HTMLElsaUserContextMenuElement;
     };
-    interface HTMLElsaVersionHistoryPanelElementEventMap {
-        "versionSelected": WorkflowDefinitionVersion;
-        "deleteVersionClicked": WorkflowDefinitionVersion;
-        "revertVersionClicked": WorkflowDefinitionVersion;
-    }
     interface HTMLElsaVersionHistoryPanelElement extends Components.ElsaVersionHistoryPanel, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaVersionHistoryPanelElementEventMap>(type: K, listener: (this: HTMLElsaVersionHistoryPanelElement, ev: ElsaVersionHistoryPanelCustomEvent<HTMLElsaVersionHistoryPanelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaVersionHistoryPanelElementEventMap>(type: K, listener: (this: HTMLElsaVersionHistoryPanelElement, ev: ElsaVersionHistoryPanelCustomEvent<HTMLElsaVersionHistoryPanelElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaVersionHistoryPanelElement: {
         prototype: HTMLElsaVersionHistoryPanelElement;
@@ -1214,18 +1192,7 @@ declare global {
         prototype: HTMLElsaWorkflowDefinitionEditorNotificationsElement;
         new (): HTMLElsaWorkflowDefinitionEditorNotificationsElement;
     };
-    interface HTMLElsaWorkflowDefinitionEditorScreenElementEventMap {
-        "workflowSaved": WorkflowDefinition;
-    }
     interface HTMLElsaWorkflowDefinitionEditorScreenElement extends Components.ElsaWorkflowDefinitionEditorScreen, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaWorkflowDefinitionEditorScreenElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowDefinitionEditorScreenElement, ev: ElsaWorkflowDefinitionEditorScreenCustomEvent<HTMLElsaWorkflowDefinitionEditorScreenElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaWorkflowDefinitionEditorScreenElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowDefinitionEditorScreenElement, ev: ElsaWorkflowDefinitionEditorScreenCustomEvent<HTMLElsaWorkflowDefinitionEditorScreenElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaWorkflowDefinitionEditorScreenElement: {
         prototype: HTMLElsaWorkflowDefinitionEditorScreenElement;
@@ -1243,18 +1210,7 @@ declare global {
         prototype: HTMLElsaWorkflowFaultInformationElement;
         new (): HTMLElsaWorkflowFaultInformationElement;
     };
-    interface HTMLElsaWorkflowInstanceJournalElementEventMap {
-        "recordSelected": WorkflowExecutionLogRecord;
-    }
     interface HTMLElsaWorkflowInstanceJournalElement extends Components.ElsaWorkflowInstanceJournal, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaWorkflowInstanceJournalElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowInstanceJournalElement, ev: ElsaWorkflowInstanceJournalCustomEvent<HTMLElsaWorkflowInstanceJournalElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaWorkflowInstanceJournalElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowInstanceJournalElement, ev: ElsaWorkflowInstanceJournalCustomEvent<HTMLElsaWorkflowInstanceJournalElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaWorkflowInstanceJournalElement: {
         prototype: HTMLElsaWorkflowInstanceJournalElement;
@@ -1284,23 +1240,7 @@ declare global {
         prototype: HTMLElsaWorkflowPropertiesPanelElement;
         new (): HTMLElsaWorkflowPropertiesPanelElement;
     };
-    interface HTMLElsaWorkflowPublishButtonElementEventMap {
-        "publishClicked": any;
-        "unPublishClicked": any;
-        "revertClicked": any;
-        "exportClicked": any;
-        "importClicked": File;
-        "deleteClicked": any;
-    }
     interface HTMLElsaWorkflowPublishButtonElement extends Components.ElsaWorkflowPublishButton, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLElsaWorkflowPublishButtonElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowPublishButtonElement, ev: ElsaWorkflowPublishButtonCustomEvent<HTMLElsaWorkflowPublishButtonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElsaWorkflowPublishButtonElementEventMap>(type: K, listener: (this: HTMLElsaWorkflowPublishButtonElement, ev: ElsaWorkflowPublishButtonCustomEvent<HTMLElsaWorkflowPublishButtonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLElsaWorkflowPublishButtonElement: {
         prototype: HTMLElsaWorkflowPublishButtonElement;
@@ -1324,24 +1264,187 @@ declare global {
         prototype: HTMLElsaWorkflowTestPanelElement;
         new (): HTMLElsaWorkflowTestPanelElement;
     };
-    interface HTMLX6DesignerElementEventMap {
-        "workflow-changed": WorkflowModel;
-        "activitySelected": ActivityModel;
-        "activityDeselected": ActivityModel;
-        "activityContextMenuButtonClicked": ActivityContextMenuState;
-        "connectionContextMenuButtonClicked": ActivityContextMenuState;
-        "activityContextMenuButtonTestClicked": ActivityContextMenuState;
-        "activityDeleted": ActivityDeletedArgs;
+    interface HTMLHeCheckListPropertyElement extends Components.HeCheckListProperty, HTMLStencilElement {
     }
+    var HTMLHeCheckListPropertyElement: {
+        prototype: HTMLHeCheckListPropertyElement;
+        new (): HTMLHeCheckListPropertyElement;
+    };
+    interface HTMLHeCheckboxOptionsPropertyElement extends Components.HeCheckboxOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLHeCheckboxOptionsPropertyElement: {
+        prototype: HTMLHeCheckboxOptionsPropertyElement;
+        new (): HTMLHeCheckboxOptionsPropertyElement;
+    };
+    interface HTMLHeCheckboxPropertyElement extends Components.HeCheckboxProperty, HTMLStencilElement {
+    }
+    var HTMLHeCheckboxPropertyElement: {
+        prototype: HTMLHeCheckboxPropertyElement;
+        new (): HTMLHeCheckboxPropertyElement;
+    };
+    interface HTMLHeDashboardElement extends Components.HeDashboard, HTMLStencilElement {
+    }
+    var HTMLHeDashboardElement: {
+        prototype: HTMLHeDashboardElement;
+        new (): HTMLHeDashboardElement;
+    };
+    interface HTMLHeDataTablePropertyElement extends Components.HeDataTableProperty, HTMLStencilElement {
+    }
+    var HTMLHeDataTablePropertyElement: {
+        prototype: HTMLHeDataTablePropertyElement;
+        new (): HTMLHeDataTablePropertyElement;
+    };
+    interface HTMLHeElsaControlElement extends Components.HeElsaControl, HTMLStencilElement {
+    }
+    var HTMLHeElsaControlElement: {
+        prototype: HTMLHeElsaControlElement;
+        new (): HTMLHeElsaControlElement;
+    };
+    interface HTMLHeExpressionEditorElement extends Components.HeExpressionEditor, HTMLStencilElement {
+    }
+    var HTMLHeExpressionEditorElement: {
+        prototype: HTMLHeExpressionEditorElement;
+        new (): HTMLHeExpressionEditorElement;
+    };
+    interface HTMLHeJsonPropertyElement extends Components.HeJsonProperty, HTMLStencilElement {
+    }
+    var HTMLHeJsonPropertyElement: {
+        prototype: HTMLHeJsonPropertyElement;
+        new (): HTMLHeJsonPropertyElement;
+    };
+    interface HTMLHeMonacoElement extends Components.HeMonaco, HTMLStencilElement {
+    }
+    var HTMLHeMonacoElement: {
+        prototype: HTMLHeMonacoElement;
+        new (): HTMLHeMonacoElement;
+    };
+    interface HTMLHeMultiExpressionEditorElement extends Components.HeMultiExpressionEditor, HTMLStencilElement {
+    }
+    var HTMLHeMultiExpressionEditorElement: {
+        prototype: HTMLHeMultiExpressionEditorElement;
+        new (): HTMLHeMultiExpressionEditorElement;
+    };
+    interface HTMLHeMultiLinePropertyElement extends Components.HeMultiLineProperty, HTMLStencilElement {
+    }
+    var HTMLHeMultiLinePropertyElement: {
+        prototype: HTMLHeMultiLinePropertyElement;
+        new (): HTMLHeMultiLinePropertyElement;
+    };
+    interface HTMLHeMultiTextPropertyElement extends Components.HeMultiTextProperty, HTMLStencilElement {
+    }
+    var HTMLHeMultiTextPropertyElement: {
+        prototype: HTMLHeMultiTextPropertyElement;
+        new (): HTMLHeMultiTextPropertyElement;
+    };
+    interface HTMLHeNumericPropertyElement extends Components.HeNumericProperty, HTMLStencilElement {
+    }
+    var HTMLHeNumericPropertyElement: {
+        prototype: HTMLHeNumericPropertyElement;
+        new (): HTMLHeNumericPropertyElement;
+    };
+    interface HTMLHePotscoreRadioOptionsPropertyElement extends Components.HePotscoreRadioOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLHePotscoreRadioOptionsPropertyElement: {
+        prototype: HTMLHePotscoreRadioOptionsPropertyElement;
+        new (): HTMLHePotscoreRadioOptionsPropertyElement;
+    };
+    interface HTMLHePropertyEditorElement extends Components.HePropertyEditor, HTMLStencilElement {
+    }
+    var HTMLHePropertyEditorElement: {
+        prototype: HTMLHePropertyEditorElement;
+        new (): HTMLHePropertyEditorElement;
+    };
+    interface HTMLHeQuestionDataDictionaryPropertyElement extends Components.HeQuestionDataDictionaryProperty, HTMLStencilElement {
+    }
+    var HTMLHeQuestionDataDictionaryPropertyElement: {
+        prototype: HTMLHeQuestionDataDictionaryPropertyElement;
+        new (): HTMLHeQuestionDataDictionaryPropertyElement;
+    };
+    interface HTMLHeRadioOptionsPropertyElement extends Components.HeRadioOptionsProperty, HTMLStencilElement {
+    }
+    var HTMLHeRadioOptionsPropertyElement: {
+        prototype: HTMLHeRadioOptionsPropertyElement;
+        new (): HTMLHeRadioOptionsPropertyElement;
+    };
+    interface HTMLHeSingleLinePropertyElement extends Components.HeSingleLineProperty, HTMLStencilElement {
+    }
+    var HTMLHeSingleLinePropertyElement: {
+        prototype: HTMLHeSingleLinePropertyElement;
+        new (): HTMLHeSingleLinePropertyElement;
+    };
+    interface HTMLHeSwitchAnswersPropertyElement extends Components.HeSwitchAnswersProperty, HTMLStencilElement {
+    }
+    var HTMLHeSwitchAnswersPropertyElement: {
+        prototype: HTMLHeSwitchAnswersPropertyElement;
+        new (): HTMLHeSwitchAnswersPropertyElement;
+    };
+    interface HTMLHeTextActivityPropertyElement extends Components.HeTextActivityProperty, HTMLStencilElement {
+    }
+    var HTMLHeTextActivityPropertyElement: {
+        prototype: HTMLHeTextActivityPropertyElement;
+        new (): HTMLHeTextActivityPropertyElement;
+    };
+    interface HTMLHeTextGroupPropertyElement extends Components.HeTextGroupProperty, HTMLStencilElement {
+    }
+    var HTMLHeTextGroupPropertyElement: {
+        prototype: HTMLHeTextGroupPropertyElement;
+        new (): HTMLHeTextGroupPropertyElement;
+    };
+    interface HTMLHeValidationPropertyElement extends Components.HeValidationProperty, HTMLStencilElement {
+    }
+    var HTMLHeValidationPropertyElement: {
+        prototype: HTMLHeValidationPropertyElement;
+        new (): HTMLHeValidationPropertyElement;
+    };
+    interface HTMLHeWeightedCheckboxOptionGroupPropertyElement extends Components.HeWeightedCheckboxOptionGroupProperty, HTMLStencilElement {
+    }
+    var HTMLHeWeightedCheckboxOptionGroupPropertyElement: {
+        prototype: HTMLHeWeightedCheckboxOptionGroupPropertyElement;
+        new (): HTMLHeWeightedCheckboxOptionGroupPropertyElement;
+    };
+    interface HTMLHeWeightedCheckboxPropertyElement extends Components.HeWeightedCheckboxProperty, HTMLStencilElement {
+    }
+    var HTMLHeWeightedCheckboxPropertyElement: {
+        prototype: HTMLHeWeightedCheckboxPropertyElement;
+        new (): HTMLHeWeightedCheckboxPropertyElement;
+    };
+    interface HTMLHeWeightedRadioOptionGroupPropertyElement extends Components.HeWeightedRadioOptionGroupProperty, HTMLStencilElement {
+    }
+    var HTMLHeWeightedRadioOptionGroupPropertyElement: {
+        prototype: HTMLHeWeightedRadioOptionGroupPropertyElement;
+        new (): HTMLHeWeightedRadioOptionGroupPropertyElement;
+    };
+    interface HTMLHeWeightedRadioPropertyElement extends Components.HeWeightedRadioProperty, HTMLStencilElement {
+    }
+    var HTMLHeWeightedRadioPropertyElement: {
+        prototype: HTMLHeWeightedRadioPropertyElement;
+        new (): HTMLHeWeightedRadioPropertyElement;
+    };
+    interface HTMLNestedPropertyListElement extends Components.NestedPropertyList, HTMLStencilElement {
+    }
+    var HTMLNestedPropertyListElement: {
+        prototype: HTMLNestedPropertyListElement;
+        new (): HTMLNestedPropertyListElement;
+    };
+    interface HTMLQuestionPropertyElement extends Components.QuestionProperty, HTMLStencilElement {
+    }
+    var HTMLQuestionPropertyElement: {
+        prototype: HTMLQuestionPropertyElement;
+        new (): HTMLQuestionPropertyElement;
+    };
+    interface HTMLQuestionScreenPropertyElement extends Components.QuestionScreenProperty, HTMLStencilElement {
+    }
+    var HTMLQuestionScreenPropertyElement: {
+        prototype: HTMLQuestionScreenPropertyElement;
+        new (): HTMLQuestionScreenPropertyElement;
+    };
+    interface HTMLSwitchAnswersPropertyElement extends Components.SwitchAnswersProperty, HTMLStencilElement {
+    }
+    var HTMLSwitchAnswersPropertyElement: {
+        prototype: HTMLSwitchAnswersPropertyElement;
+        new (): HTMLSwitchAnswersPropertyElement;
+    };
     interface HTMLX6DesignerElement extends Components.X6Designer, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLX6DesignerElementEventMap>(type: K, listener: (this: HTMLX6DesignerElement, ev: X6DesignerCustomEvent<HTMLX6DesignerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLX6DesignerElementEventMap>(type: K, listener: (this: HTMLX6DesignerElement, ev: X6DesignerCustomEvent<HTMLX6DesignerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLX6DesignerElement: {
         prototype: HTMLX6DesignerElement;
@@ -1419,6 +1522,36 @@ declare global {
         "elsa-workflow-registry-list-screen": HTMLElsaWorkflowRegistryListScreenElement;
         "elsa-workflow-settings-modal": HTMLElsaWorkflowSettingsModalElement;
         "elsa-workflow-test-panel": HTMLElsaWorkflowTestPanelElement;
+        "he-check-list-property": HTMLHeCheckListPropertyElement;
+        "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
+        "he-checkbox-property": HTMLHeCheckboxPropertyElement;
+        "he-dashboard": HTMLHeDashboardElement;
+        "he-data-table-property": HTMLHeDataTablePropertyElement;
+        "he-elsa-control": HTMLHeElsaControlElement;
+        "he-expression-editor": HTMLHeExpressionEditorElement;
+        "he-json-property": HTMLHeJsonPropertyElement;
+        "he-monaco": HTMLHeMonacoElement;
+        "he-multi-expression-editor": HTMLHeMultiExpressionEditorElement;
+        "he-multi-line-property": HTMLHeMultiLinePropertyElement;
+        "he-multi-text-property": HTMLHeMultiTextPropertyElement;
+        "he-numeric-property": HTMLHeNumericPropertyElement;
+        "he-potscore-radio-options-property": HTMLHePotscoreRadioOptionsPropertyElement;
+        "he-property-editor": HTMLHePropertyEditorElement;
+        "he-question-data-dictionary-property": HTMLHeQuestionDataDictionaryPropertyElement;
+        "he-radio-options-property": HTMLHeRadioOptionsPropertyElement;
+        "he-single-line-property": HTMLHeSingleLinePropertyElement;
+        "he-switch-answers-property": HTMLHeSwitchAnswersPropertyElement;
+        "he-text-activity-property": HTMLHeTextActivityPropertyElement;
+        "he-text-group-property": HTMLHeTextGroupPropertyElement;
+        "he-validation-property": HTMLHeValidationPropertyElement;
+        "he-weighted-checkbox-option-group-property": HTMLHeWeightedCheckboxOptionGroupPropertyElement;
+        "he-weighted-checkbox-property": HTMLHeWeightedCheckboxPropertyElement;
+        "he-weighted-radio-option-group-property": HTMLHeWeightedRadioOptionGroupPropertyElement;
+        "he-weighted-radio-property": HTMLHeWeightedRadioPropertyElement;
+        "nested-property-list": HTMLNestedPropertyListElement;
+        "question-property": HTMLQuestionPropertyElement;
+        "question-screen-property": HTMLQuestionScreenPropertyElement;
+        "switch-answers-property": HTMLSwitchAnswersPropertyElement;
         "x6-designer": HTMLX6DesignerElement;
     }
 }
@@ -1447,9 +1580,6 @@ declare namespace LocalJSX {
     }
     interface ElsaContextMenu {
         "history"?: RouterHistory;
-        /**
-          * @default []
-         */
         "menuItems"?: Array<MenuItem>;
     }
     interface ElsaControl {
@@ -1487,17 +1617,8 @@ declare namespace LocalJSX {
         "activityContextTestMenu"?: ActivityContextMenuState;
         "connectionContextMenu"?: ActivityContextMenuState;
         "enableMultipleConnectionsFromSingleSource"?: boolean;
-        /**
-          * @default LayoutDirection.TopBottom
-         */
         "layoutDirection"?: LayoutDirection;
-        /**
-          * @default WorkflowDesignerMode.Edit
-         */
         "mode"?: WorkflowDesignerMode;
-        /**
-          * @default {     activities: [],     connections: [],     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst   }
-         */
         "model"?: WorkflowModel;
         "onActivityContextMenuButtonClicked"?: (event: ElsaDesignerTreeCustomEvent<ActivityContextMenuState>) => void;
         "onActivityContextMenuButtonTestClicked"?: (event: ElsaDesignerTreeCustomEvent<ActivityContextMenuState>) => void;
@@ -1505,9 +1626,6 @@ declare namespace LocalJSX {
         "onActivitySelected"?: (event: ElsaDesignerTreeCustomEvent<ActivityModel>) => void;
         "onConnectionContextMenuButtonClicked"?: (event: ElsaDesignerTreeCustomEvent<ActivityContextMenuState>) => void;
         "onWorkflow-changed"?: (event: ElsaDesignerTreeCustomEvent<WorkflowModel>) => void;
-        /**
-          * @default []
-         */
         "selectedActivityIds"?: Array<string>;
     }
     interface ElsaDictionaryProperty {
@@ -1517,19 +1635,10 @@ declare namespace LocalJSX {
         "serverUrl"?: string;
     }
     interface ElsaDropdownButton {
-        /**
-          * @default " elsa-w-full elsa-bg-white elsa-border elsa-border-gray-300 elsa-rounded-md elsa-shadow-sm elsa-px-4 elsa-py-2 elsa-inline-flex elsa-justify-center elsa-text-sm elsa-font-medium elsa-text-gray-700 hover:elsa-bg-gray-50 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500"
-         */
         "btnClass"?: string;
         "icon"?: any;
-        /**
-          * @default []
-         */
         "items"?: Array<DropdownButtonItem>;
         "onItemSelected"?: (event: ElsaDropdownButtonCustomEvent<DropdownButtonItem>) => void;
-        /**
-          * @default DropdownButtonOrigin.TopLeft
-         */
         "origin"?: DropdownButtonOrigin;
         "text"?: string;
     }
@@ -1541,75 +1650,36 @@ declare namespace LocalJSX {
     }
     interface ElsaExpressionEditor {
         "context"?: IntellisenseContext;
-        /**
-          * @default '6em'
-         */
         "editorHeight"?: string;
         "expression"?: string;
         "language"?: string;
         "onExpressionChanged"?: (event: ElsaExpressionEditorCustomEvent<string>) => void;
-        /**
-          * @default false
-         */
         "opensModal"?: boolean;
         "padding"?: string;
         "serverUrl"?: string;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
         "workflowDefinitionId"?: string;
     }
     interface ElsaFlyoutPanel {
-        /**
-          * @default false
-         */
         "autoExpand"?: boolean;
-        /**
-          * @default 1
-         */
         "expandButtonPosition"?: number;
-        /**
-          * @default false
-         */
         "hidden"?: boolean;
-        /**
-          * @default false
-         */
         "silent"?: boolean;
-        /**
-          * @default 0
-         */
         "updateCounter"?: number;
     }
     interface ElsaInputTags {
         "fieldId"?: string;
         "fieldName"?: string;
         "onValueChanged"?: (event: ElsaInputTagsCustomEvent<Array<string>>) => void;
-        /**
-          * @default 'Add tag'
-         */
         "placeHolder"?: string;
-        /**
-          * @default []
-         */
         "values"?: Array<string>;
     }
     interface ElsaInputTagsDropdown {
-        /**
-          * @default []
-         */
         "dropdownValues"?: Array<SelectListItem>;
         "fieldId"?: string;
         "fieldName"?: string;
         "onValueChanged"?: (event: ElsaInputTagsDropdownCustomEvent<Array<string | SelectListItem>>) => void;
-        /**
-          * @default 'Add tag'
-         */
         "placeHolder"?: string;
-        /**
-          * @default []
-         */
         "values"?: Array<string | SelectListItem>;
     }
     interface ElsaJsonProperty {
@@ -1622,46 +1692,25 @@ declare namespace LocalJSX {
         "onShown"?: (event: ElsaModalDialogCustomEvent<any>) => void;
     }
     interface ElsaMonaco {
-        /**
-          * @default '5em'
-         */
         "editorHeight"?: string;
         "language"?: string;
         "monacoLibPath"?: string;
         "onValueChanged"?: (event: ElsaMonacoCustomEvent<MonacoValueChangedArgs>) => void;
         "padding"?: string;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
         "value"?: string;
     }
     interface ElsaMultiExpressionEditor {
         "context"?: IntellisenseContext;
-        /**
-          * @default SyntaxNames.Literal
-         */
         "defaultSyntax"?: string;
-        /**
-          * @default '10em'
-         */
         "editorHeight"?: string;
-        /**
-          * @default {}
-         */
         "expressions"?: Map<string>;
         "fieldName"?: string;
         "isReadOnly"?: boolean;
         "label"?: string;
         "onExpressionChanged"?: (event: ElsaMultiExpressionEditorCustomEvent<string>) => void;
         "onSyntaxChanged"?: (event: ElsaMultiExpressionEditorCustomEvent<string>) => void;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
-        /**
-          * @default []
-         */
         "supportedSyntaxes"?: Array<string>;
         "syntax"?: string;
     }
@@ -1678,8 +1727,7 @@ declare namespace LocalJSX {
         "serverUrl"?: string;
     }
     /**
-     * Lightweight replacement for stencil-route-link to eliminate
-     * @stencil-community /router dependency.
+     * Lightweight replacement for stencil-route-link to eliminate @stencil-community/router dependency.
      * Provides anchor rendering with active class evaluation based on current window.location.
      * Performs client-side navigation using history.pushState to avoid page reloads.
      * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
@@ -1720,20 +1768,11 @@ declare namespace LocalJSX {
     interface ElsaPropertyEditor {
         "activityModel"?: ActivityModel;
         "context"?: string;
-        /**
-          * @default '10em'
-         */
         "editorHeight"?: string;
         "onDefaultSyntaxValueChanged"?: (event: ElsaPropertyEditorCustomEvent<string>) => void;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
-        /**
-          * @default true
-         */
         "showLabel"?: boolean;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
     }
     interface ElsaRadioListProperty {
@@ -1744,16 +1783,10 @@ declare namespace LocalJSX {
     }
     interface ElsaScriptProperty {
         "activityModel"?: ActivityModel;
-        /**
-          * @default '6em'
-         */
         "editorHeight"?: string;
         "propertyDescriptor"?: ActivityPropertyDescriptor;
         "propertyModel"?: ActivityDefinitionProperty;
         "serverUrl"?: string;
-        /**
-          * @default false
-         */
         "singleLineMode"?: boolean;
         "syntax"?: string;
         "workflowDefinitionId"?: string;
@@ -1771,9 +1804,6 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface ElsaStudioDashboard {
-        /**
-          * @default ''
-         */
         "basePath"?: string;
         "culture"?: string;
     }
@@ -1782,9 +1812,6 @@ declare namespace LocalJSX {
         "serverVersion"?: string;
     }
     interface ElsaStudioRoot {
-        /**
-          * @default ''
-         */
         "basePath"?: string;
         "config"?: string;
         "culture"?: string;
@@ -1793,9 +1820,6 @@ declare namespace LocalJSX {
         "onInitialized"?: (event: ElsaStudioRootCustomEvent<ElsaStudio>) => void;
         "onInitializing"?: (event: ElsaStudioRootCustomEvent<ElsaStudio>) => void;
         "serverUrl"?: string;
-        /**
-          * @default false
-         */
         "useX6Graphs"?: boolean;
     }
     interface ElsaStudioWebhookDefinitionsEdit {
@@ -1887,9 +1911,6 @@ declare namespace LocalJSX {
         "history"?: RouterHistory;
         "monacoLibPath"?: string;
         "onWorkflowSaved"?: (event: ElsaWorkflowDefinitionEditorScreenCustomEvent<WorkflowDefinition>) => void;
-        /**
-          * @default []
-         */
         "serverFeatures"?: Array<string>;
         "serverUrl"?: string;
         "workflowDefinitionId"?: string;
@@ -1905,9 +1926,6 @@ declare namespace LocalJSX {
         "workflowFault"?: WorkflowFault;
     }
     interface ElsaWorkflowInstanceJournal {
-        /**
-          * @default []
-         */
         "activityDescriptors"?: Array<ActivityDescriptor>;
         "onRecordSelected"?: (event: ElsaWorkflowInstanceJournalCustomEvent<WorkflowExecutionLogRecord>) => void;
         "serverUrl"?: string;
@@ -1921,9 +1939,6 @@ declare namespace LocalJSX {
         "correlationId"?: string;
         "culture"?: string;
         "history"?: RouterHistory;
-        /**
-          * @default OrderBy.Started
-         */
         "orderBy"?: OrderBy;
         "serverUrl"?: string;
         "workflowId"?: string;
@@ -1970,6 +1985,219 @@ declare namespace LocalJSX {
         "workflowDefinition"?: WorkflowDefinition;
         "workflowTestActivityId"?: string;
     }
+    interface HeCheckListProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeCheckListPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeCheckboxOptionsProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeCheckboxOptionsPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeCheckboxProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeCheckboxPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeDashboard {
+        "dataDictionaryGroup"?: string;
+        "storeConfig"?: string;
+    }
+    interface HeDataTableProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeDataTablePropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeElsaControl {
+        "content"?: VNode | string | Element;
+    }
+    interface HeExpressionEditor {
+        "context"?: IntellisenseContext1;
+        "editorHeight"?: string;
+        "expression"?: string;
+        "language"?: string;
+        "onExpressionChanged"?: (event: HeExpressionEditorCustomEvent<string>) => void;
+        "padding"?: string;
+        "serverUrl"?: string;
+        "singleLineMode"?: boolean;
+        "workflowDefinitionId"?: string;
+    }
+    interface HeJsonProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeJsonPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeMonaco {
+        "editorHeight"?: string;
+        "language"?: string;
+        "monacoLibPath"?: string;
+        "onValueChanged"?: (event: HeMonacoCustomEvent<MonacoValueChangedArgs>) => void;
+        "padding"?: string;
+        "singleLineMode"?: boolean;
+        "value"?: string;
+    }
+    interface HeMultiExpressionEditor {
+        "context"?: IntellisenseContext1;
+        "defaultSyntax"?: string;
+        "editorHeight"?: string;
+        "expressions"?: Map1<string>;
+        "fieldName"?: string;
+        "hint"?: string;
+        "isReadOnly"?: boolean;
+        "label"?: string;
+        "onExpressionChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;
+        "onSyntaxChanged"?: (event: HeMultiExpressionEditorCustomEvent<string>) => void;
+        "singleLineMode"?: boolean;
+        "supportedSyntaxes"?: Array<string>;
+        "syntax"?: string;
+    }
+    interface HeMultiLineProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeMultiLinePropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeMultiTextProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeMultiTextPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeNumericProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeNumericPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HePotscoreRadioOptionsProperty {
+        "activityModel"?: ActivityModel1;
+        "onExpressionChanged"?: (event: HePotscoreRadioOptionsPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HePropertyEditor {
+        "activityModel"?: ActivityModel1;
+        "context"?: string;
+        "editorHeight"?: string;
+        "onDefaultSyntaxValueChanged"?: (event: HePropertyEditorCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+        "showLabel"?: boolean;
+        "singleLineMode"?: boolean;
+    }
+    interface HeQuestionDataDictionaryProperty {
+        "activityModel"?: ActivityModel1;
+        "onExpressionChanged"?: (event: HeQuestionDataDictionaryPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeRadioOptionsProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeRadioOptionsPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeSingleLineProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeSingleLinePropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeSwitchAnswersProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "onExpressionChanged"?: (event: HeSwitchAnswersPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeTextActivityProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeTextActivityPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeTextGroupProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeTextGroupPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeValidationProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeValidationPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeWeightedCheckboxOptionGroupProperty {
+        "activityModel"?: ActivityModel1;
+        "keyId"?: string;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeWeightedCheckboxOptionGroupPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: NestedActivityDefinitionProperty;
+    }
+    interface HeWeightedCheckboxProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeWeightedCheckboxPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface HeWeightedRadioOptionGroupProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeWeightedRadioOptionGroupPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: NestedActivityDefinitionProperty;
+    }
+    interface HeWeightedRadioProperty {
+        "activityModel"?: ActivityModel1;
+        "modelSyntax"?: string;
+        "onExpressionChanged"?: (event: HeWeightedRadioPropertyCustomEvent<string>) => void;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
+    interface NestedPropertyList {
+        "activityModel"?: ActivityModel1;
+        "nestedDescriptors"?: Array<HeActivityPropertyDescriptor>;
+        "onExpressionChanged"?: (event: NestedPropertyListCustomEvent<string>) => void;
+        "propertyModel"?: NestedActivityDefinitionProperty;
+    }
+    interface QuestionProperty {
+        "activityModel"?: ActivityModel1;
+        "onUpdateQuestionScreen"?: (event: QuestionPropertyCustomEvent<string>) => void;
+        "questionModel"?: NestedPropertyModel;
+    }
+    interface QuestionScreenProperty {
+        "activityModel"?: ActivityModel1;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+        "questionProperties"?: Array<HeActivityPropertyDescriptor>;
+    }
+    interface SwitchAnswersProperty {
+        "activityModel"?: ActivityModel1;
+        "propertyDescriptor"?: ActivityPropertyDescriptor1;
+        "propertyModel"?: ActivityDefinitionProperty1;
+    }
     interface X6Designer {
         "activityBorderColor"?: (activity: ActivityModel) => string;
         "activityContextMenu"?: ActivityContextMenuState;
@@ -1977,17 +2205,8 @@ declare namespace LocalJSX {
         "activityContextTestMenu"?: ActivityContextMenuState;
         "connectionContextMenu"?: ActivityContextMenuState;
         "enableMultipleConnectionsFromSingleSource"?: boolean;
-        /**
-          * @default LayoutDirection.TopBottom
-         */
         "layoutDirection"?: LayoutDirection;
-        /**
-          * @default WorkflowDesignerMode.Edit
-         */
         "mode"?: WorkflowDesignerMode;
-        /**
-          * @default {     activities: [],     connections: [],     persistenceBehavior: WorkflowPersistenceBehavior.WorkflowBurst   }
-         */
         "model"?: WorkflowModel;
         "onActivityContextMenuButtonClicked"?: (event: X6DesignerCustomEvent<ActivityContextMenuState>) => void;
         "onActivityContextMenuButtonTestClicked"?: (event: X6DesignerCustomEvent<ActivityContextMenuState>) => void;
@@ -1996,9 +2215,6 @@ declare namespace LocalJSX {
         "onActivitySelected"?: (event: X6DesignerCustomEvent<ActivityModel>) => void;
         "onConnectionContextMenuButtonClicked"?: (event: X6DesignerCustomEvent<ActivityContextMenuState>) => void;
         "onWorkflow-changed"?: (event: X6DesignerCustomEvent<WorkflowModel>) => void;
-        /**
-          * @default []
-         */
         "selectedActivityIds"?: Array<string>;
     }
     interface IntrinsicElements {
@@ -2073,6 +2289,36 @@ declare namespace LocalJSX {
         "elsa-workflow-registry-list-screen": ElsaWorkflowRegistryListScreen;
         "elsa-workflow-settings-modal": ElsaWorkflowSettingsModal;
         "elsa-workflow-test-panel": ElsaWorkflowTestPanel;
+        "he-check-list-property": HeCheckListProperty;
+        "he-checkbox-options-property": HeCheckboxOptionsProperty;
+        "he-checkbox-property": HeCheckboxProperty;
+        "he-dashboard": HeDashboard;
+        "he-data-table-property": HeDataTableProperty;
+        "he-elsa-control": HeElsaControl;
+        "he-expression-editor": HeExpressionEditor;
+        "he-json-property": HeJsonProperty;
+        "he-monaco": HeMonaco;
+        "he-multi-expression-editor": HeMultiExpressionEditor;
+        "he-multi-line-property": HeMultiLineProperty;
+        "he-multi-text-property": HeMultiTextProperty;
+        "he-numeric-property": HeNumericProperty;
+        "he-potscore-radio-options-property": HePotscoreRadioOptionsProperty;
+        "he-property-editor": HePropertyEditor;
+        "he-question-data-dictionary-property": HeQuestionDataDictionaryProperty;
+        "he-radio-options-property": HeRadioOptionsProperty;
+        "he-single-line-property": HeSingleLineProperty;
+        "he-switch-answers-property": HeSwitchAnswersProperty;
+        "he-text-activity-property": HeTextActivityProperty;
+        "he-text-group-property": HeTextGroupProperty;
+        "he-validation-property": HeValidationProperty;
+        "he-weighted-checkbox-option-group-property": HeWeightedCheckboxOptionGroupProperty;
+        "he-weighted-checkbox-property": HeWeightedCheckboxProperty;
+        "he-weighted-radio-option-group-property": HeWeightedRadioOptionGroupProperty;
+        "he-weighted-radio-property": HeWeightedRadioProperty;
+        "nested-property-list": NestedPropertyList;
+        "question-property": QuestionProperty;
+        "question-screen-property": QuestionScreenProperty;
+        "switch-answers-property": SwitchAnswersProperty;
         "x6-designer": X6Designer;
     }
 }
@@ -2108,8 +2354,7 @@ declare module "@stencil/core" {
             "elsa-multi-line-property": LocalJSX.ElsaMultiLineProperty & JSXBase.HTMLAttributes<HTMLElsaMultiLinePropertyElement>;
             "elsa-multi-text-property": LocalJSX.ElsaMultiTextProperty & JSXBase.HTMLAttributes<HTMLElsaMultiTextPropertyElement>;
             /**
-             * Lightweight replacement for stencil-route-link to eliminate
-             * @stencil-community /router dependency.
+             * Lightweight replacement for stencil-route-link to eliminate @stencil-community/router dependency.
              * Provides anchor rendering with active class evaluation based on current window.location.
              * Performs client-side navigation using history.pushState to avoid page reloads.
              * NOTE: For now, active check is a simple startsWith; can be enhanced for exact matching.
@@ -2158,6 +2403,36 @@ declare module "@stencil/core" {
             "elsa-workflow-registry-list-screen": LocalJSX.ElsaWorkflowRegistryListScreen & JSXBase.HTMLAttributes<HTMLElsaWorkflowRegistryListScreenElement>;
             "elsa-workflow-settings-modal": LocalJSX.ElsaWorkflowSettingsModal & JSXBase.HTMLAttributes<HTMLElsaWorkflowSettingsModalElement>;
             "elsa-workflow-test-panel": LocalJSX.ElsaWorkflowTestPanel & JSXBase.HTMLAttributes<HTMLElsaWorkflowTestPanelElement>;
+            "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
+            "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
+            "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;
+            "he-dashboard": LocalJSX.HeDashboard & JSXBase.HTMLAttributes<HTMLHeDashboardElement>;
+            "he-data-table-property": LocalJSX.HeDataTableProperty & JSXBase.HTMLAttributes<HTMLHeDataTablePropertyElement>;
+            "he-elsa-control": LocalJSX.HeElsaControl & JSXBase.HTMLAttributes<HTMLHeElsaControlElement>;
+            "he-expression-editor": LocalJSX.HeExpressionEditor & JSXBase.HTMLAttributes<HTMLHeExpressionEditorElement>;
+            "he-json-property": LocalJSX.HeJsonProperty & JSXBase.HTMLAttributes<HTMLHeJsonPropertyElement>;
+            "he-monaco": LocalJSX.HeMonaco & JSXBase.HTMLAttributes<HTMLHeMonacoElement>;
+            "he-multi-expression-editor": LocalJSX.HeMultiExpressionEditor & JSXBase.HTMLAttributes<HTMLHeMultiExpressionEditorElement>;
+            "he-multi-line-property": LocalJSX.HeMultiLineProperty & JSXBase.HTMLAttributes<HTMLHeMultiLinePropertyElement>;
+            "he-multi-text-property": LocalJSX.HeMultiTextProperty & JSXBase.HTMLAttributes<HTMLHeMultiTextPropertyElement>;
+            "he-numeric-property": LocalJSX.HeNumericProperty & JSXBase.HTMLAttributes<HTMLHeNumericPropertyElement>;
+            "he-potscore-radio-options-property": LocalJSX.HePotscoreRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHePotscoreRadioOptionsPropertyElement>;
+            "he-property-editor": LocalJSX.HePropertyEditor & JSXBase.HTMLAttributes<HTMLHePropertyEditorElement>;
+            "he-question-data-dictionary-property": LocalJSX.HeQuestionDataDictionaryProperty & JSXBase.HTMLAttributes<HTMLHeQuestionDataDictionaryPropertyElement>;
+            "he-radio-options-property": LocalJSX.HeRadioOptionsProperty & JSXBase.HTMLAttributes<HTMLHeRadioOptionsPropertyElement>;
+            "he-single-line-property": LocalJSX.HeSingleLineProperty & JSXBase.HTMLAttributes<HTMLHeSingleLinePropertyElement>;
+            "he-switch-answers-property": LocalJSX.HeSwitchAnswersProperty & JSXBase.HTMLAttributes<HTMLHeSwitchAnswersPropertyElement>;
+            "he-text-activity-property": LocalJSX.HeTextActivityProperty & JSXBase.HTMLAttributes<HTMLHeTextActivityPropertyElement>;
+            "he-text-group-property": LocalJSX.HeTextGroupProperty & JSXBase.HTMLAttributes<HTMLHeTextGroupPropertyElement>;
+            "he-validation-property": LocalJSX.HeValidationProperty & JSXBase.HTMLAttributes<HTMLHeValidationPropertyElement>;
+            "he-weighted-checkbox-option-group-property": LocalJSX.HeWeightedCheckboxOptionGroupProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxOptionGroupPropertyElement>;
+            "he-weighted-checkbox-property": LocalJSX.HeWeightedCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeWeightedCheckboxPropertyElement>;
+            "he-weighted-radio-option-group-property": LocalJSX.HeWeightedRadioOptionGroupProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioOptionGroupPropertyElement>;
+            "he-weighted-radio-property": LocalJSX.HeWeightedRadioProperty & JSXBase.HTMLAttributes<HTMLHeWeightedRadioPropertyElement>;
+            "nested-property-list": LocalJSX.NestedPropertyList & JSXBase.HTMLAttributes<HTMLNestedPropertyListElement>;
+            "question-property": LocalJSX.QuestionProperty & JSXBase.HTMLAttributes<HTMLQuestionPropertyElement>;
+            "question-screen-property": LocalJSX.QuestionScreenProperty & JSXBase.HTMLAttributes<HTMLQuestionScreenPropertyElement>;
+            "switch-answers-property": LocalJSX.SwitchAnswersProperty & JSXBase.HTMLAttributes<HTMLSwitchAnswersPropertyElement>;
             "x6-designer": LocalJSX.X6Designer & JSXBase.HTMLAttributes<HTMLX6DesignerElement>;
         }
     }
