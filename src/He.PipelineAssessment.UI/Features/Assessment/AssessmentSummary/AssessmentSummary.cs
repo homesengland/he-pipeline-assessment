@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
@@ -21,14 +22,15 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public IEnumerable<AssessmentInterventionViewModel> Interventions { get; set; } = null!;
         public IEnumerable<AssessmentSummaryStage> StagesHistory { get; set; } = null!;
         public IEnumerable<SensitiveRecordPermissionsWhitelistDto> Permissions { get; set; } = Enumerable.Empty<SensitiveRecordPermissionsWhitelistDto>();
-        public bool HasCurrentEconomistWorkflow => Stages.Any(x => x.IsCurrentWorkflowEconomic());
+        //[NotMapped]
+        //public bool HasCurrentEconomistWorkflow => Stages.Any(x => x.IsCurrentWorkflowEconomic());
 
 
-        //public bool HasCurrentEconmistWorkflow()
-        //{
-        //    bool hasEconomicWorkflowInDraft = Stages.Any(x => x.IsCurrentWorkflowEconomic());
-        //    return hasEconomicWorkflowInDraft;
-        //}
+        public bool HasCurrentEconomistWorkflow()
+        {
+            bool hasEconomicWorkflowInDraft = Stages.Any(x => x.IsCurrentWorkflowEconomic());
+            return hasEconomicWorkflowInDraft;
+        }
 
     }
 

@@ -101,6 +101,7 @@
     <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentHistoryByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetStartableToolsByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20250618152425_AddIsEarlyStageToAssessmentStagesStoredProcedure\GetAssessmentStagesByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20260120170652_UpdateFieldsInGetAssessmentHistoryByAssessmentID\GetAssessmentHistoryByAssessmentId.sql" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
