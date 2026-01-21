@@ -28,9 +28,6 @@ namespace He.PipelineAssessment.Infrastructure.Repository
 
         public async Task<IEnumerable<AssessmentTool>> GetAssessmentTools()
         {
-            // comment: The lines below fetch a list of assessment tools from the database that are not marked as deleted,
-            // along with their associated workflows that are also not marked as deleted. The results are then ordered by a specific property
-            // (Order) and returned as a list.
             return await _context.Set<AssessmentTool>().Where(x => x.Status != AssessmentToolStatus.Deleted)
                 .Include(a => a.AssessmentToolWorkflows!.Where(w => w.Status != AssessmentToolStatus.Deleted)).OrderBy(x => x.Order).ToListAsync();
         }

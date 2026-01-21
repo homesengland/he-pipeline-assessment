@@ -146,7 +146,6 @@
                     </div>
                 </div>    
                 @{
-                    @* COMMENT: Retrieve all funds that are not disabled *@
                     var enabledFunds = Model.FundsDropDownListOptions?.Where(f => !f.IsDisabled).ToList();
 
                 }

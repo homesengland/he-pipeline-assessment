@@ -30,8 +30,6 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public bool IsVariation { get; set; }
         public bool IsEarlyStage { get; set; }
         public bool IsLast { get; set; }
-
-        // Comment: AssessmentFundId is nullable because not all assessment tool workflows are associated with a specific fund.
         public int? AssessmentFundId { get; set; }
 
     }
