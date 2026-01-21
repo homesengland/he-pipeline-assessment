@@ -121,7 +121,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 }
                                 result.ValidationMessages = MapValidationModelToValidationResults(elsaActivityAssessmentQuestions.Questions);
                             }
-                            else
+                            else 
                             {
                                 _logger.LogError($"Failed to map activity data to Questions WorkflowInstanceId: {activityRequest.WorkflowInstanceId}");
 
