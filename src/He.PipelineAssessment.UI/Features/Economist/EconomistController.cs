@@ -21,7 +21,7 @@ public class EconomistController : BaseController<EconomistController>
     public async Task<IActionResult> GetEconomistList()
     {
         var username = _userProvider.GetUserName();
-        var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+        var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist);
 
         var listModel = await _mediator.Send(new EconomistAssessmentListRequest()
         {

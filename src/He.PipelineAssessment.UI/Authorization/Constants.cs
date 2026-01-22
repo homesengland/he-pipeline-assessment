@@ -6,14 +6,14 @@
         {
             public const string PipelineObserver = "PipelineAssessment.Observer";
 
-            public const string PipelineAssessorMPP = "PipelineAssessment.AssessorMPP";
-            public const string PipelineAssessorInvestment = "PipelineAssessment.AssessorInvestment";
-            public const string PipelineAssessorDevelopment = "PipelineAssessment.AssessorDevelopment";
+            public const string SensitiveRecordsViewer = "PipelineAssessment.SensitiveRecordsViewer";
+
+            public const string PipelineProjectManager = "PipelineAssessment.ProjectManager";
 
             public const string PipelineAdminOperations = "PipelineAssessment.AdminOperations";
 
             public const string PipelineEconomist = "PipelineAssessment.Economist";
-            public const string SensitiveRecordsViewer = "PipelineAssessment.SensitiveRecordsViewer";
+            
         }
 
         public static class BusinessArea
