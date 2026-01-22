@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
     [DbContext(typeof(PipelineAssessmentContext))]
-    [Migration("20260120175231_UpdateFieldsInGetAssessmentInterventionListByAssessmentId")]
-    partial class UpdateFieldsInGetAssessmentInterventionListByAssessmentId
+    [Migration("20260122141647_UpdateSPsToReturnSpIdForInterventions")]
+    partial class UpdateSPsToReturnSpIdForInterventions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

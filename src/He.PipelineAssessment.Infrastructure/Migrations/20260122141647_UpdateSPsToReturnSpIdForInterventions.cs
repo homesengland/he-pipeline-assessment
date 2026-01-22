@@ -6,15 +6,15 @@ using System.Reflection;
 namespace He.PipelineAssessment.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateFieldsInGetAssessmentInterventionListByAssessmentId : Migration
+    public partial class UpdateSPsToReturnSpIdForInterventions : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             var assembly = Assembly.GetExecutingAssembly();
             var sqlFiles = assembly.GetManifestResourceNames().Where(file =>
-                file.Contains(
-                    "20260120175231_UpdateFieldsInGetAssessmentInterventionListByAssessmentId.GetAssessmentInterventionListByAssessmentId.sql"));
+                file.Contains("20260122141647_UpdateSPsToReturnSpIdForInterventions.GetInterventionList.sql") ||
+                file.Contains("20260122141647_UpdateSPsToReturnSpIdForInterventions.GetAssessmentInterventionListByAssessmentId.sql"));
             foreach (var sqlFile in sqlFiles)
             {
                 using (Stream stream = assembly.GetManifestResourceStream(sqlFile))
@@ -29,6 +29,8 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            var dropGetGetInterventionList = "DROP PROC GetInterventionList";
+            migrationBuilder.Sql(dropGetGetInterventionList);
             var dropGetAssessmentInterventionListByAssessmentId = "DROP PROC GetAssessmentInterventionListByAssessmentId";
             migrationBuilder.Sql(dropGetAssessmentInterventionListByAssessmentId);
         }

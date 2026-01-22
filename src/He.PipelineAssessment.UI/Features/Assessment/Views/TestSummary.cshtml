@@ -7,7 +7,7 @@
 }
 
 @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
-<span class="govuk-caption-l">@Model.SpId</span>
+<span class="govuk-caption-l">@Model.Reference</span>
 <h1 class="govuk-heading-l">@Model.SiteName @(Model.CounterParty != "-" ? Model.CounterParty : "")</h1>
 
 @using (Html.BeginForm("StartWorkflow", "Workflow", FormMethod.Post))

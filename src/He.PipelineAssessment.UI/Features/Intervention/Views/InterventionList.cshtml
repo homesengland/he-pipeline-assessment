@@ -56,15 +56,15 @@
                     <td class="govuk-table__cell">
                         @if (@intervention.DecisionType == InterventionDecisionTypes.Override)
                         {
-                            <a asp-controller="Override" asp-action="EditOverride" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
+                            <a asp-controller="Override" asp-action="EditOverride" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.SpId</a>
                         }
                         @if (@intervention.DecisionType == InterventionDecisionTypes.Rollback)
                         {
-                            <a asp-controller="Rollback" asp-action="EditRollback" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
+                            <a asp-controller="Rollback" asp-action="EditRollback" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.SpId</a>
                         }
                         @if (@intervention.DecisionType == InterventionDecisionTypes.Variation)
                         {
-                            <a asp-controller="Variation" asp-action="EditVariation" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.Reference</a>
+                            <a asp-controller="Variation" asp-action="EditVariation" asp-route-interventionId="@intervention.Id" class="govuk-link">@intervention.SpId</a>
                         }
                     </td>
                     <td class="govuk-table__cell">@intervention.WorkflowName</td>

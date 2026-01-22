@@ -44,7 +44,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary
                     AssessmentId = request.AssessmentId,
                     SiteName = dbAssessment!.SiteName,
                     CounterParty = dbAssessment.Counterparty,
-                    SpId = dbAssessment.SpId,
+                    Reference = dbAssessment.Reference,
                     Stages = stages
                 };
                 
