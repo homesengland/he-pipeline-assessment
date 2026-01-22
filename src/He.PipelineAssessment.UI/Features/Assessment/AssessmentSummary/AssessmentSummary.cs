@@ -22,9 +22,6 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public IEnumerable<AssessmentInterventionViewModel> Interventions { get; set; } = null!;
         public IEnumerable<AssessmentSummaryStage> StagesHistory { get; set; } = null!;
         public IEnumerable<SensitiveRecordPermissionsWhitelistDto> Permissions { get; set; } = Enumerable.Empty<SensitiveRecordPermissionsWhitelistDto>();
-        //[NotMapped]
-        //public bool HasCurrentEconomistWorkflow => Stages.Any(x => x.IsCurrentWorkflowEconomic());
-
 
         public bool HasCurrentEconomistWorkflow()
         {

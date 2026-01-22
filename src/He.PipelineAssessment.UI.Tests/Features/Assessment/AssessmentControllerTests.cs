@@ -309,5 +309,100 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Verify(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None), Times.Never);
             roleValidation.Verify(x => x.IsUserWhitelistedForSensitiveRecord(assessmentId), Times.Once);
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Summary_ShouldLoadPermissions_WhenUserIsEconomistAndAssessmentAtEconomistStage(
+            [Frozen] Mock<IMediator> mediator,
+            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            AssessmentSummaryResponse summaryResponse,
+            SensitiveRecordPermissionsWhitelistResponse permissionsResponse,
+            AssessmentController sut,
+            int correlationId,
+            int assessmentId)
+        {
+            //Arrange
+            summaryResponse.ProjectManager = "project.manager@test.com";
+            summaryResponse.Permissions = new List<SensitiveRecordPermissionsWhitelistDto>();
+
+            summaryResponse.Stages = new List<AssessmentSummaryStage>
+            {
+                new AssessmentSummaryStage
+                {
+                    IsEconomistWorkflow = true,
+                    Status = "Draft"
+                }
+            };
+
+            mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None))
+                .ReturnsAsync(summaryResponse);
+            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
+                .ReturnsAsync(permissionsResponse);
+
+            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(false);
+            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(true);
+            userProvider.Setup(x => x.GetUserName()).Returns("economist.user@test.com");
+
+            roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
+                .ReturnsAsync(false);
+
+            //Act
+            var result = await sut.Summary(assessmentId, correlationId);
+
+            //Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Summary", viewResult.ViewName);
+            var model = Assert.IsType<AssessmentSummaryResponse>(viewResult.Model);
+            Assert.Equal(permissionsResponse.Permissions, model.Permissions);
+            mediator.Verify(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Summary_ShouldNotLoadPermissions_WhenUserIsEconomistButAssessmentNotAtEconomistStage(
+            [Frozen] Mock<IMediator> mediator,
+            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            AssessmentSummaryResponse summaryResponse,
+            AssessmentController sut,
+            int correlationId,
+            int assessmentId)
+        {
+            //Arrange
+            summaryResponse.ProjectManager = "project.manager@test.com";
+            summaryResponse.Permissions = new List<SensitiveRecordPermissionsWhitelistDto>();
+
+            summaryResponse.Stages = new List<AssessmentSummaryStage>
+            {
+                new AssessmentSummaryStage
+                {
+                    IsEconomistWorkflow = true,
+                    Status = "Submitted"
+                }
+            };
+
+            mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None))
+                .ReturnsAsync(summaryResponse);
+
+            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(false);
+            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(true);
+            userProvider.Setup(x => x.GetUserName()).Returns("economist.user@test.com");
+
+            roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
+                .ReturnsAsync(false);
+
+            //Act
+            var result = await sut.Summary(assessmentId, correlationId);
+
+            //Assert
+            Assert.NotNull(result);
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("Summary", viewResult.ViewName);
+            var model = Assert.IsType<AssessmentSummaryResponse>(viewResult.Model);
+            Assert.Empty(model.Permissions);
+            mediator.Verify(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None), Times.Never);
+        }
     }
 }
