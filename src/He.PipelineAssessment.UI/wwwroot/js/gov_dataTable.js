@@ -46,10 +46,10 @@
                         .unique()
                         .sort()
                         .each(function (d, j) {
-                            console.log("J", j)
+                            //console.log("J", j)
                             var dom_nodes = $($.parseHTML(d));
                             var node = dom_nodes[0];
-                            console.log("Node", node);
+                            //console.log("Node", node);
                             var option = document.createElement('option');
                             if (node?.innerText != null) {
                                 option.value = node.innerText;
@@ -62,6 +62,32 @@
                             select.append(option);
                         });
                 });
+
+            this.api().columns('[data-datesearchable]').every(function () {
+                var column = this;
+                var th = $(column.header());
+                var colName = th.text().replaceAll(/\s/g, '');
+                var container = $('<div class="govuk-input__item"><div id="' + colName + '_datesearch" class="govuk-form-group"></div></div>')
+                    .appendTo('#' + searchElementId);
+
+                var label = $('<label class="govuk-label govuk-date-input__label">' + th.text() + '</label>');
+                var input = $('<input type="date" class="govuk-input margin-right-10" aria-labelledby="' + colName + '_datesearch" placeholder="YYYY-MM-DD"/>')
+                    .on('input', function () {
+                        var val = $(this).val();
+                        // Convert to long date format (e.g., "22 January 2026") to match table display
+                        var longDate = "";
+                        if (val) {
+                            var dateObj = new Date(val);
+                            longDate = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+                            console.log(longDate);
+                        }
+                        //Using partial match regex as DataTables searches for both hidden and visible data in the table. Look into custom render for date column if implementing in future
+                        column.search(longDate ? longDate : '', true, false).draw();
+                    });
+
+                label.appendTo(container.find('.govuk-form-group'));
+                input.appendTo(container.find('.govuk-form-group'));
+            });
         },
 
     });   
