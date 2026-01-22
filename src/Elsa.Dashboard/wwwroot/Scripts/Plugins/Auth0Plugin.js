@@ -7,17 +7,22 @@ export class Auth0Plugin {
   options;  //Auth0ClientOptions
   auth0;  //Auth0Client
   token;
+  tokenRefreshInterval = null;
+  tokenExpirationWarningTimeout = null;
 
   constructor(options, elsaStudio) {
     let origin = window.location.origin;
     let auth0Params = {
       redirect_uri: origin,
       audience: options.audience,
-/*      scope: options.scope*/
+      scope: 'openid profile email offline_access' // offline_access enables refresh tokens
     };
     this.options = options;
     this.options.authorizationParams = auth0Params;
-    this.options.cacheLocation = 'memory';
+    this.options.cacheLocation = 'memory'; // or 'localstorage' for cross-tab persistence
+    this.options.useRefreshTokens = true; // Enable refresh token rotation
+    this.options.useRefreshTokensFallback = true; // Fallback to refresh tokens if iframe fails
+    
     const eventBus = elsaStudio.eventBus;
     eventBus.on('root.initializing', this.initialize);
     eventBus.on('http-client-created', this.configureAuthMiddleware);
@@ -33,9 +38,12 @@ export class Auth0Plugin {
 
     const isAuthenticated = await this.auth0.isAuthenticated();
     console.log("Is Authenticated", isAuthenticated);
-    // Nothing to do if authenticated.
-    if (isAuthenticated)
+    
+    // Start background token refresh if authenticated
+    if (isAuthenticated) {
+      this.startBackgroundTokenRefresh();
       return;
+    }
 
     // Are we in a redirect back from Auth0 receiving a code?
     const query = window.location.search;
@@ -48,6 +56,9 @@ export class Auth0Plugin {
 
         // Update address to remove code query string.
         window.history.replaceState({}, document.title, "/");
+        
+        // Start background token refresh after successful login
+        this.startBackgroundTokenRefresh();
         return;
       } catch (err) {
         console.log("Error parsing redirect:", err);
@@ -65,7 +76,72 @@ export class Auth0Plugin {
     await this.auth0.loginWithRedirect(redirectOptions);
   };
 
+  startBackgroundTokenRefresh = () => {
+    // Clear any existing interval
+    if (this.tokenRefreshInterval) {
+      clearInterval(this.tokenRefreshInterval);
+    }
+
+    // Refresh token every 50 minutes (tokens typically expire in 1 hour)
+    // This runs regardless of user activity or server communication
+    this.tokenRefreshInterval = setInterval(async () => {
+      await this.refreshToken();
+    }, 50 * 60 * 1000); // 50 minutes
+
+    // Also refresh immediately to get initial token
+    this.refreshToken();
+
+    console.log('Background token refresh started - will refresh every 50 minutes');
+  };
+
+  refreshToken = async () => {
+    if (!this.auth0) return;
+
+    try {
+      const isAuthenticated = await this.auth0.isAuthenticated();
+      if (!isAuthenticated) {
+        console.log('User is not authenticated, stopping token refresh');
+        this.stopBackgroundTokenRefresh();
+        await this.auth0.loginWithRedirect();
+        return;
+      }
+
+      // This method uses hidden iframe to communicate with Auth0
+      // No communication with your server required!
+      this.token = await this.auth0.getTokenSilently({
+        cacheMode: 'off' // Force a fresh token from Auth0
+      });
+      
+      console.log('Token refreshed successfully at:', new Date().toLocaleTimeString());
+      
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      
+      // Handle specific error cases
+      if (error.error === 'login_required' || error.error === 'consent_required') {
+        console.log('Re-authentication required');
+        this.stopBackgroundTokenRefresh();
+        await this.auth0.loginWithRedirect();
+      } else if (error.error === 'timeout') {
+        console.log('Token refresh timeout, will retry on next interval');
+      }
+    }
+  };
+
+  stopBackgroundTokenRefresh = () => {
+    if (this.tokenRefreshInterval) {
+      clearInterval(this.tokenRefreshInterval);
+      this.tokenRefreshInterval = null;
+      console.log('Background token refresh stopped');
+    }
+  };
+
   configureAuthMiddleware = async (e) => {
+    if (!this.auth0) return;
+    
+    // Get current token (from cache if available)
+    const token = await this.auth0.getTokenSilently().catch(() => null);
+    this.token = token;
 
     let service = new Service();
     if (e != null && e != undefined && e.service != null && e.service != undefined) {
@@ -88,5 +164,9 @@ export class Auth0Plugin {
     });
   };
 
+  // Call this when the plugin is destroyed (if needed)
+  destroy = () => {
+    this.stopBackgroundTokenRefresh();
+  };
 }
 
