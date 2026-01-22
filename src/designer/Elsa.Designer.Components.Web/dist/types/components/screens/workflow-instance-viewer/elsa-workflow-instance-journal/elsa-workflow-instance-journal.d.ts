@@ -1,0 +1,32 @@
+import { EventEmitter } from '../../../../stencil-public-runtime';
+import { ActivityDescriptor, PagedList, WorkflowBlueprint, WorkflowExecutionLogRecord, WorkflowInstance, WorkflowModel, WorkflowStatus } from "../../../../models";
+export declare class ElsaWorkflowInstanceJournal {
+  workflowInstanceId: string;
+  workflowInstance: WorkflowInstance;
+  serverUrl: string;
+  activityDescriptors: Array<ActivityDescriptor>;
+  workflowBlueprint: WorkflowBlueprint;
+  workflowModel: WorkflowModel;
+  recordSelected: EventEmitter<WorkflowExecutionLogRecord>;
+  isVisible: boolean;
+  records: PagedList<WorkflowExecutionLogRecord>;
+  filteredRecords: Array<WorkflowExecutionLogRecord>;
+  selectedRecordId?: string;
+  selectedActivityId?: string;
+  selectedTabId: string;
+  el: HTMLElement;
+  flyoutPanel: HTMLElsaFlyoutPanelElement;
+  selectActivityRecord(activityId?: string): Promise<void>;
+  workflowInstanceIdChangedHandler(newValue: string): Promise<void>;
+  componentWillLoad(): Promise<void>;
+  selectActivityRecordInternal(record?: WorkflowExecutionLogRecord): void;
+  getEventColor(eventName: string): any;
+  getStatusColor(status: WorkflowStatus): "blue" | "gray" | "green" | "red" | "yellow" | "rose";
+  onRecordClick(record: WorkflowExecutionLogRecord): void;
+  render(): any;
+  renderPanel(): any;
+  renderJournalTab: () => any;
+  renderActivityStateTab: () => any;
+  renderGeneralTab: () => any;
+  renderVariablesTab: () => any;
+}

@@ -1,0 +1,58 @@
+import { r as registerInstance, h } from './index-1542df5c.js';
+import './index-842ad20c.js';
+import { l as loadTranslations } from './i18n-loader-aa6cec69.js';
+import { G as GetIntlMessage } from './intl-message-2593bae2.js';
+import { T as Tunnel } from './dashboard-beb9b1e8.js';
+import './index-2db7bf78.js';
+
+const resources = {
+  'en': {
+    default: {
+      'Title': 'Webhook Definitions',
+      'CreateButton': 'Create Webhook'
+    }
+  },
+  'zh-CN': {
+    default: {
+      'Title': 'Webhook的定义',
+      'CreateButton': '创建 Webhook'
+    }
+  },
+  'nl-NL': {
+    default: {
+      'Title': 'Webhook Definitie',
+      'CreateButton': 'Maak Webhook'
+    }
+  },
+  'fa-IR': {
+    default: {
+      'Title': 'هاWebhook مشخصات',
+      'CreateButton': 'ایجاد Webhook'
+    }
+  },
+  'de-Ide': {
+    default: {
+      'Title': 'Webhook Definitionen',
+      'CreateButton': 'Webhook erstellen'
+    }
+  },
+};
+
+const ElsaStudioWebhookDefinitionsList = class {
+  constructor(hostRef) {
+    registerInstance(this, hostRef);
+    this.culture = undefined;
+    this.basePath = undefined;
+  }
+  async componentWillLoad() {
+    this.i18next = await loadTranslations(this.culture, resources);
+  }
+  render() {
+    const basePath = this.basePath;
+    const IntlMessage = GetIntlMessage(this.i18next);
+    return (h("div", null, h("div", { class: "elsa-border-b elsa-border-gray-200 elsa-px-4 elsa-py-4 sm:elsa-flex sm:elsa-items-center sm:elsa-justify-between sm:elsa-px-6 lg:elsa-px-8 elsa-bg-white" }, h("div", { class: "elsa-flex-1 elsa-min-w-0" }, h("h1", { class: "elsa-text-lg elsa-font-medium elsa-leading-6 elsa-text-gray-900 sm:elsa-truncate" }, h(IntlMessage, { label: "Title" }))), h("div", { class: "elsa-mt-4 elsa-flex sm:elsa-mt-0 sm:elsa-ml-4" }, h("elsa-nav-link", { url: `${basePath}/webhook-definitions/new`, anchorClass: "elsa-order-0 elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 sm:elsa-order-1 sm:elsa-ml-3" }, h(IntlMessage, { label: "CreateButton" })))), h("elsa-webhook-definitions-list-screen", null)));
+  }
+};
+Tunnel.injectProps(ElsaStudioWebhookDefinitionsList, ['culture', 'basePath']);
+
+export { ElsaStudioWebhookDefinitionsList as elsa_studio_webhook_definitions_list };

@@ -1,0 +1,36 @@
+import { i18n } from "i18next";
+import { FormContext } from "../../../utils/forms";
+import { SecretDescriptor, SecretEditorRenderProps, SecretModel, SecretPropertyDescriptor } from "../models/secret.model";
+export declare class ElsaSecretEditorModal {
+  monacoLibPath: string;
+  culture: string;
+  serverUrl: string;
+  secretModel: SecretModel;
+  secretDescriptor: SecretDescriptor;
+  renderProps: SecretEditorRenderProps;
+  preventClosing: boolean;
+  updateCounter: number;
+  i18next: i18n;
+  dialog: HTMLElsaModalDialogElement;
+  formContext: FormContext;
+  timestamp: Date;
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  componentWillLoad(): Promise<void>;
+  t: (key: string) => string;
+  updateSecret(formData: FormData, secret: SecretModel): void;
+  get isAuthorizeButtonVisible(): boolean;
+  get isAuthorizeButtonDisabled(): boolean;
+  componentWillRender(): Promise<void>;
+  onCancelClick(): Promise<void>;
+  onGetConsentClick(e: Event): Promise<void>;
+  onSubmit: (e: Event) => Promise<void>;
+  onSecretsLoaded: (secrets: SecretModel[]) => Promise<void>;
+  onShowSecretEditor: (secret: SecretModel, animate: boolean) => Promise<void>;
+  show: (animate: boolean) => Promise<void>;
+  hide: (animate: boolean) => Promise<void>;
+  onKeyDown: (event: KeyboardEvent) => Promise<void>;
+  render(): any;
+  renderProperties(secretModel: SecretModel): any;
+  renderPropertyEditor(secret: SecretModel, property: SecretPropertyDescriptor): any;
+}

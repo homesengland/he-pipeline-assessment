@@ -1,0 +1,30 @@
+import { EventEmitter } from '../../../../stencil-public-runtime';
+import { ElsaStudio, WorkflowModel } from "../../../../models";
+import { ToastNotificationOptions } from "../../../shared/elsa-toast-notification/elsa-toast-notification";
+export declare class ElsaStudioRoot {
+  serverUrl: string;
+  monacoLibPath: string;
+  culture: string;
+  basePath: string;
+  useX6Graphs: boolean;
+  features: any;
+  config: string;
+  featuresConfig: any;
+  initializing: EventEmitter<ElsaStudio>;
+  initialized: EventEmitter<ElsaStudio>;
+  private confirmDialog;
+  private toastNotificationElement;
+  private elsaStudio;
+  addPlugins(pluginTypes: Array<any>): Promise<void>;
+  addPlugin(pluginType: any): Promise<void>;
+  workflowChangedHandler(event: CustomEvent<WorkflowModel>): void;
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  componentWillLoad(): Promise<void>;
+  componentDidLoad(): Promise<void>;
+  onShowConfirmDialog: (e: any) => Promise<boolean>;
+  onHideConfirmDialog: () => Promise<void>;
+  onShowToastNotification: (e: ToastNotificationOptions) => Promise<void>;
+  onHideToastNotification: () => Promise<void>;
+  render(): any;
+}

@@ -1,0 +1,36 @@
+import { RouterHistory } from "@stencil/router";
+export declare class ElsaWorkflowRegistryListScreen {
+  static readonly DEFAULT_PAGE_SIZE = 5;
+  static readonly MIN_PAGE_SIZE = 5;
+  static readonly MAX_PAGE_SIZE = 100;
+  static readonly START_PAGE = 0;
+  history?: RouterHistory;
+  serverUrl: string;
+  basePath: string;
+  culture: string;
+  private currentProviderName;
+  private workflowProviders;
+  private workflowBlueprints;
+  private currentPage;
+  private currentPageSize;
+  private currentSearchTerm?;
+  private confirmDialog;
+  private unlistenRouteChanged;
+  private workflowRegistryColumns;
+  componentWillLoad(): Promise<void>;
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  private applyQueryString;
+  private routeChanged;
+  private onDisableWorkflowClick;
+  private onEnableWorkflowClick;
+  private updateFeature;
+  private onLoadWorkflowBlueprints;
+  private onPaged;
+  private onWorkflowProviderChanged;
+  private loadWorkflowProviders;
+  private loadWorkflowBlueprints;
+  createClient(): Promise<import("../../../../services").ElsaClient>;
+  render(): any;
+  renderWorkflowProviderFilter(): any;
+}

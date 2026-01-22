@@ -1,0 +1,34 @@
+import { PagedList, WorkflowDefinitionSummary } from "../../../../models";
+import { LocationSegments, RouterHistory } from "@stencil/router";
+import { PagerData } from "../../../controls/elsa-pager/elsa-pager";
+export declare class ElsaWorkflowDefinitionsListScreen {
+  static readonly DEFAULT_PAGE_SIZE = 15;
+  static readonly MIN_PAGE_SIZE = 5;
+  static readonly MAX_PAGE_SIZE = 100;
+  static readonly START_PAGE = 0;
+  history?: RouterHistory;
+  serverUrl: string;
+  culture: string;
+  basePath: string;
+  workflowDefinitions: PagedList<WorkflowDefinitionSummary>;
+  currentPage: number;
+  currentPageSize: number;
+  currentSearchTerm?: string;
+  private i18next;
+  private confirmDialog;
+  private clearRouteChangedListeners;
+  connectedCallback(): void;
+  disconnectedCallback(): void;
+  componentWillLoad(): Promise<void>;
+  t: (key: string, options?: any) => import("i18next").TFunctionDetailedResult<object>;
+  onSearch(e: Event): Promise<void>;
+  applyQueryString(queryString?: string): void;
+  onPublishClick(e: Event, workflowDefinition: WorkflowDefinitionSummary): Promise<void>;
+  onUnPublishClick(e: Event, workflowDefinition: WorkflowDefinitionSummary): Promise<void>;
+  onDeleteClick(e: Event, workflowDefinition: WorkflowDefinitionSummary): Promise<void>;
+  routeChanged(e: LocationSegments): Promise<void>;
+  onPaged: (e: CustomEvent<PagerData>) => Promise<void>;
+  loadWorkflowDefinitions(): Promise<void>;
+  createClient(): Promise<import("../../../../services").ElsaClient>;
+  render(): any;
+}
