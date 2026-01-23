@@ -10,6 +10,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public string SiteName { get; set; } = null!;
         public string CounterParty { get; set; } = null!;
         public string Reference { get; set; } = null!;
+        public int SpId { get; set; }
         public string? LocalAuthority { get; set; }
         public string? BusinessArea { get; set; }
         public string? ProjectManager { get; set; }

@@ -35,7 +35,7 @@
     "construe": "^0.4.1",
     "el-transition": "^0.0.7",
     "eslint": "^9.31.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "micromatch": "^4.0.8",
     "sortablejs": "^1.15.0",
     "typescript-eslint": "^8.19.1"
