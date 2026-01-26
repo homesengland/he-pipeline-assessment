@@ -24,6 +24,7 @@ namespace He.PipelineAssessment.Models
         public virtual List<TargetAssessmentToolWorkflow>? TargetAssessmentToolWorkflows { get; set; }
 
         public virtual AssessmentFund? AssessmentFund { get; set; }
-        // need to add fundID
+
+        //Comment: need to add fundID
     }
 }

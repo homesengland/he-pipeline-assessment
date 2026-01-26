@@ -88,6 +88,11 @@ namespace He.PipelineAssessment.UI.Features.Admin
         [HttpGet]
         public Task<IActionResult> LoadAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
+            if (createAssessmentToolWorkflowDto.FundsDropDownListOptions == null || !createAssessmentToolWorkflowDto.FundsDropDownListOptions.Any())
+            {
+                var fundsList =  _mediator.Send(new FundsListRequest()).Result;
+                createAssessmentToolWorkflowDto.FundsDropDownListOptions = fundsList.Funds;
+            }
             return Task.FromResult<IActionResult>(View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto));
         }
 
@@ -120,6 +125,11 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
             else
             {
+                if (createAssessmentToolWorkflowDto.FundsDropDownListOptions == null || !createAssessmentToolWorkflowDto.FundsDropDownListOptions.Any())
+                {
+                    var fundsList = _mediator.Send(new FundsListRequest()).Result;
+                    createAssessmentToolWorkflowDto.FundsDropDownListOptions = fundsList.Funds;
+                }
                 createAssessmentToolWorkflowDto.ValidationResult = validationResult;
                 return View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto);
             }
@@ -158,7 +168,6 @@ namespace He.PipelineAssessment.UI.Features.Admin
                 return View("LoadAssessmentFund", assessmentFundsDTO);
             }
         }
-
 
         //update an assessment tool
         [HttpPost]
@@ -218,6 +227,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
                     validatedAssessmentToolWorkflow.ValidationResult = validationResult;
                     validatedAssessmentToolWorkflow.Name = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Name;
                     validatedAssessmentToolWorkflow.WorkflowDefinitionId = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.WorkflowDefinitionId;
+                    validatedAssessmentToolWorkflow.AssessmentFundId = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.AssessmentFundId;
                 }
                 return View("AssessmentToolWorkflow", assessmentToolWorkflowList);
             }
@@ -292,13 +302,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
                     validatedFund.IsDisabled = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsDisabled;
                 }
                 return View("AssessmentFunds", fundsList);
-
             }
-
-                
         }
-
-
 
         // Delete an assessment fund
         [HttpPost]

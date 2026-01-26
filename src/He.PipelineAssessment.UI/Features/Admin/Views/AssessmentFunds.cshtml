@@ -36,7 +36,6 @@
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Description</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
                     <th scope="col" class="govuk-table__header">Update</th>
                     <th scope="col" class="govuk-table__header">Archive</th>
                 </tr>
@@ -99,24 +98,6 @@
                                     </div>
                                 </td>
                                 <td class="govuk-table__cell">
-                                    <div class="govuk-radios--inline govuk-radios--small">
-                                        <div class="govuk-radios__item radio-no-margin">
-                                            @Html.RadioButton("AssessmentFundsDTO.IsEarlyStage", "True", nonDisabledFunds.IsEarlyStage, new { @class = "govuk-radios__input" })
-                                            @{
-                                                var earlyStageLabelId = "IsEarlyStage" + iterator;
-                                                <label class="govuk-label govuk-radios__label" id="@earlyStageLabelId">Yes</label>
-                                            }
-                                        </div>
-                                        <div class="govuk-radios__item radio-no-margin">
-                                            @Html.RadioButton("AssessmentFundsDTO.IsEarlyStage", "False", !nonDisabledFunds.IsEarlyStage, new { @class = "govuk-radios__input" })
-                                            @{
-                                                earlyStageLabelId = "IsNotEarlyStage" + iterator;
-                                                <label class="govuk-label govuk-radios__label" id="@earlyStageLabelId">No</label>
-                                            }
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="govuk-table__cell">
                                     @{
                                         var hiddenId = "hidden" + iterator;
                                         @Html.AntiForgeryToken()
@@ -153,7 +134,6 @@
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Name</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Description</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
                     <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Restore</th>
                 </tr>
             </thead>
@@ -180,13 +160,6 @@
                                         <label hidden id=@descriptionLabelId>"Row: @iterator column: description"</label>
                                         <input type="text" value="@disabledFunds.Description" class="govuk-input" disabled>
                                     }
-                                </div>
-                            </td>
-                            <td class="govuk-table__cell">
-                                <div class="govuk-radios--inline govuk-radios--small">
-                                    <div class="govuk-radios__item radio-no-margin">
-                                        <span class="govuk-label">@(disabledFunds.IsEarlyStage ? "Yes" : "No")</span>
-                                    </div>
                                 </div>
                             </td>
                             <td class="govuk-table__cell">
