@@ -63,31 +63,89 @@
                         });
                 });
 
+
+            //Prototype for date to and from filter
             this.api().columns('[data-datesearchable]').every(function () {
                 var column = this;
                 var th = $(column.header());
                 var colName = th.text().replaceAll(/\s/g, '');
-                var container = $('<div class="govuk-input__item"><div id="' + colName + '_datesearch" class="govuk-form-group"></div></div>')
-                    .appendTo('#' + searchElementId);
+                var fromInputId = colName + '_fromDate';
+                var toInputId = colName + '_toDate';
 
-                var label = $('<label class="govuk-label govuk-date-input__label">' + th.text() + '</label>');
-                var input = $('<input type="date" class="govuk-input margin-right-10" aria-labelledby="' + colName + '_datesearch" placeholder="YYYY-MM-DD"/>')
-                    .on('input', function () {
-                        var val = $(this).val();
-                        // Convert to long date format (e.g., "22 January 2026") to match table display
-                        var longDate = "";
-                        if (val) {
-                            var dateObj = new Date(val);
-                            longDate = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-                            console.log(longDate);
-                        }
-                        //Using partial match regex as DataTables searches for both hidden and visible data in the table. Look into custom render for date column if implementing in future
-                        column.search(longDate ? longDate : '', true, false).draw();
-                    });
+                // Create a new grid row for the date filters
+                var gridRow = $(
+                    '<div class="govuk-grid-row" style="margin-top: 16px;">' +
+                        '<div class="govuk-grid-column-one-half">' +
+                            '<div class="govuk-form-group">' +
+                                '<label class="govuk-label govuk-date-input__label" for="' + fromInputId + '">From Last Updated</label>' +
+                                '<input type="date" id="' + fromInputId + '" class="govuk-input" placeholder="YYYY-MM-DD"/>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="govuk-grid-column-one-half">' +
+                            '<div class="govuk-form-group">' +
+                                '<label class="govuk-label govuk-date-input__label" for="' + toInputId + '">To Last Updated</label>' +
+                                '<input type="date" id="' + toInputId + '" class="govuk-input" placeholder="YYYY-MM-DD"/>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>'
+                );
+                // Append the grid row after the other filters
+                $('#' + searchElementId).append(gridRow);
 
-                label.appendTo(container.find('.govuk-form-group'));
-                input.appendTo(container.find('.govuk-form-group'));
+                // Custom filter for "date from" and "date to"
+                $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+                    if (settings.nTable.id !== column.table().node().id) return true; // Only apply to this table
+
+                    var cellHtml = data[column.index()];
+                    // Get first 8 characters which is in YYYYMMDD format
+                    var rowDate = cellHtml.substring(0, 8);
+
+                    var from = $('#' + fromInputId).val();
+                    var to = $('#' + toInputId).val();
+                    var fromVal = from ? from.replaceAll('-', '') : '';
+                    var toVal = to ? to.replaceAll('-', '') : '';
+
+                    // If no from/to date, show all. Otherwise, only show rows in range.
+                    if ((fromVal === '' || rowDate >= fromVal) && (toVal === '' || rowDate <= toVal)) {
+                        return true;
+                    }
+                    return false;
+                });
+
+                // Redraw table on date input change
+                $('#' + fromInputId + ', #' + toInputId).on('change', function () {
+                    column.table().draw();
+                });
             });
+
+            
+            //#region Prototype for date string matching filter
+            //this.api().columns('[data-datesearchable]').every(function () {
+            //    var column = this;
+            //    var th = $(column.header());
+            //    var colName = th.text().replaceAll(/\s/g, '');
+            //    var container = $('<div class="govuk-input__item"><div id="' + colName + '_datesearch" class="govuk-form-group"></div></div>')
+            //        .appendTo('#' + searchElementId);
+
+            //    var label = $('<label class="govuk-label govuk-date-input__label">' + th.text() + '</label>');
+            //    var input = $('<input type="date" class="govuk-input margin-right-10" aria-labelledby="' + colName + '_datesearch" placeholder="YYYY-MM-DD"/>')
+            //        .on('input', function () {
+            //            var val = $(this).val();
+            //            // Convert to long date format (e.g., "22 January 2026") to match table display
+            //            var longDate = "";
+            //            if (val) {
+            //                var dateObj = new Date(val);
+            //                longDate = dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+            //                console.log(longDate);
+            //            }
+            //            //Using partial match regex as DataTables searches for both hidden and visible data in the table. Look into custom render for date column if implementing in future
+            //            column.search(longDate ? longDate : '', true, false).draw();
+            //        });
+
+            //    label.appendTo(container.find('.govuk-form-group'));
+            //    input.appendTo(container.find('.govuk-form-group'));
+            //});
+           //#endregion
         },
 
     });   
