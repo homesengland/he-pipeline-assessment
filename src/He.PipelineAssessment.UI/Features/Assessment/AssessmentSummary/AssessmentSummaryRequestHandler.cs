@@ -39,12 +39,18 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     throw new ApplicationException($"Assessment with id {request.AssessmentId} not found.");
                 }
 
-                var validateSensitiveStatus =
-                    _roleValidation.ValidateSensitiveRecords(dbAssessment);
+                var validateSensitiveStatus = _roleValidation.ValidateSensitiveRecordsForProjectManagerAndAdmin(dbAssessment);
+
+                if (!validateSensitiveStatus && dbAssessment.IsSensitiveRecord())
+                {
+                    validateSensitiveStatus = await _roleValidation.IsUserWhitelistedForSensitiveRecord(request.AssessmentId);
+                }
+
                 if (!validateSensitiveStatus)
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
+
                 bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
 
                 List<string> businessAreaErrorMessage = new List<string>();
@@ -109,6 +115,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     SiteName = dbAssessment.SiteName,
                     CounterParty = dbAssessment.Counterparty,
                     Reference = dbAssessment.Reference,
+                    SpId = dbAssessment.SpId,
                     Stages = stages,
                     StagesHistory = stagesHistory,
                     LocalAuthority = dbAssessment.LocalAuthority,
@@ -136,7 +143,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         {
             bool hasValidBusinessArea = _roleValidation.IsAdmin() ? true : _roleValidation.ValidateForBusinessArea(businessArea);
             return hasValidBusinessArea;
-        }
+        }  
 
         private AssessmentSummaryStage AssessmentSummaryStage( string name, int order, bool? isEarlyStage)
         {
@@ -199,6 +206,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         IsFirstWorkflow = item.IsFirstWorkflow,
                         IsVariation = item.IsVariation,
                         IsEarlyStage = item.IsEarlyStage,
+                        IsEconomistWorkflow = item.IsEconomistWorkflow,
                         AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
                         Result = item.Result,
                         SubmittedBy = item.SubmittedBy,

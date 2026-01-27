@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 var assessment = new Models.Assessment()
                 {
                     Counterparty = string.IsNullOrEmpty(item.applicant_1) ? "-" : item.applicant_1,
-                    Reference = string.IsNullOrEmpty(item.internal_reference) ? "-" : item.internal_reference,
+                    Reference = (!item.project_identifier.HasValue || item.project_identifier.Value == 0) ? "-" : item.project_identifier.Value.ToString(),
                     SiteName = string.IsNullOrEmpty(item.pipeline_opportunity_site_name)
                         ? "-"
                         : item.pipeline_opportunity_site_name,
