@@ -15,16 +15,20 @@
 
 @if(Model.SensitiveStatus != null)
 {
-    <span class="govuk-caption-l">@Model.Reference - @Model.SensitiveStatus</span>
+    <span class="govuk-caption-l">@Model.SpId - @Model.SensitiveStatus</span>
 } 
 else
 {
-    <span class="govuk-caption-l">@Model.Reference</span>
+    <span class="govuk-caption-l">@Model.SpId</span>
 }
 
 <h1 class="govuk-heading-l">@Model.SiteName</h1>
 
 <table class="govuk-body">
+    <tr>
+        <td><b>PCS Reference: </b></td>
+        <td>@Model.Reference</td>
+    </tr>
     <tr>
         <td><b>Local Authority: </b></td>
         <td>@Model.LocalAuthority</td>

@@ -113,6 +113,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     SiteName = dbAssessment.SiteName,
                     CounterParty = dbAssessment.Counterparty,
                     Reference = dbAssessment.Reference,
+                    SpId = dbAssessment.SpId,
                     Stages = stages,
                     StagesHistory = stagesHistory,
                     LocalAuthority = dbAssessment.LocalAuthority,

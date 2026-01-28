@@ -106,6 +106,8 @@
     <EmbeddedResource Include="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetAssessments.sql" />
     <EmbeddedResource Include="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetEconomistAssessments.sql" />
     <EmbeddedResource Include="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetInterventionList.sql" />
+    <EmbeddedResource Include="Migrations\20260122141647_UpdateSPsToReturnSpIdForInterventions\GetAssessmentInterventionListByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20260122141647_UpdateSPsToReturnSpIdForInterventions\GetInterventionList.sql" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
