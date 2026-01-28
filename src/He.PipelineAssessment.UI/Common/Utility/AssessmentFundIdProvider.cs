@@ -12,6 +12,7 @@ namespace He.PipelineAssessment.UI.Common.Utility
     {
         private readonly ILogger<AssessmentFundIdProvider> _logger;
         private readonly IAssessmentRepository _assessmentRepository;
+
         public AssessmentFundIdProvider(ILogger<AssessmentFundIdProvider> logger, IAssessmentRepository repo)
         {
             _logger = logger;
