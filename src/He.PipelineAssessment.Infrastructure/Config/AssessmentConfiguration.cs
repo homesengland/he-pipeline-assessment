@@ -49,6 +49,10 @@ namespace He.PipelineAssessment.Infrastructure.Config
                 .HasMaxLength(EntityConfigurationConstants.StandardLength);            
             builder.Property(x => x.SensitiveStatus)
                 .HasMaxLength(EntityConfigurationConstants.MaxLength);
+
+            builder.HasOne(x => x.AssessmentFund)
+                .WithMany(x => x.Assessments)
+                .HasForeignKey(x => x.FundId);
         }
     }
 }

@@ -21,6 +21,9 @@ namespace He.PipelineAssessment.Models
         public string LandType { get; set; } = string.Empty;
         public virtual List<AssessmentToolWorkflowInstance>? AssessmentToolWorkflowInstances { get; set; }
         public string? SensitiveStatus { get; set; }
+        public int? FundId { get; set; }
+
+        public virtual AssessmentFund? AssessmentFund { get; set; }
 
         public bool IsSensitiveRecord()
         {
