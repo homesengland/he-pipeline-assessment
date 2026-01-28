@@ -38,6 +38,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
 
                 var validateSensitiveStatus =
                     _roleValidation.ValidateSensitiveRecords(assessmentWorkflowInstance!.Assessment);
+
+                if (!validateSensitiveStatus && assessmentWorkflowInstance.Assessment.IsSensitiveRecord())
+                {
+                    validateSensitiveStatus = await _roleValidation.IsUserWhitelistedForSensitiveRecord(assessmentWorkflowInstance.AssessmentId);
+                }
+
                 if (!validateSensitiveStatus)
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");

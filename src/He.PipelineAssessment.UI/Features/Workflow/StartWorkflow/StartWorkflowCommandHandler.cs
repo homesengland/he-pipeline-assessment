@@ -40,6 +40,9 @@ namespace He.PipelineAssessment.UI.Features.Workflow.StartWorkflow
             {
                 if (!await _roleValidation.ValidateRole(request.AssessmentId, request.WorkflowDefinitionId))
                 {
+                    if(_roleValidation.IsAdmin())
+                        throw new UnauthorizedAccessException($"You do not have permission to access this resource. This is a SR and you must request access from the assigned Project Manager or an Administrator.");
+                    
                     throw new UnauthorizedAccessException($"You do not have permission to access this resource.");
                 }
 

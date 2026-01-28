@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
+using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
@@ -10,6 +11,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public string SiteName { get; set; } = null!;
         public string CounterParty { get; set; } = null!;
         public string Reference { get; set; } = null!;
+        public int SpId { get; set; }
         public string? LocalAuthority { get; set; }
         public string? BusinessArea { get; set; }
         public string? ProjectManager { get; set; }
@@ -19,6 +21,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public IEnumerable<AssessmentSummaryStage> Stages { get; set; } = null!;
         public IEnumerable<AssessmentInterventionViewModel> Interventions { get; set; } = null!;
         public IEnumerable<AssessmentSummaryStage> StagesHistory { get; set; } = null!;
+        public IEnumerable<SensitiveRecordPermissionsWhitelistDto> Permissions { get; set; } = Enumerable.Empty<SensitiveRecordPermissionsWhitelistDto>();
 
     }
 

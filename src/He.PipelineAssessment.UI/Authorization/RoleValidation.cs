@@ -10,8 +10,11 @@ public interface IRoleValidation
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
     bool ValidateSensitiveRecords(Assessment assessment);
+    bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment assessment);
     bool ValidateForBusinessArea(string? businessArea);
     bool IsAdmin();
+    bool IsProjectManagerForAssessment(string? assessmentProjectManager);
+    Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId);
 }
 public class RoleValidation : IRoleValidation
 {
@@ -46,6 +49,11 @@ public class RoleValidation : IRoleValidation
 
         var canSeeRecord = ValidateSensitiveRecords(assessment);
 
+        if (!canSeeRecord && assessment != null && assessment.IsSensitiveRecord())
+        {
+            canSeeRecord = await IsUserWhitelistedForSensitiveRecord(assessmentId);
+        }
+
         return canSeeRecord;
     }
 
@@ -54,6 +62,7 @@ public class RoleValidation : IRoleValidation
         return _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
     }
 
+    //To Be Removed
     public bool ValidateForBusinessArea(Assessment? assessment)
     {
         if (assessment != null)
@@ -63,43 +72,81 @@ public class RoleValidation : IRoleValidation
         return false;
     }
 
+    //To Be Removed
     public bool ValidateForBusinessArea(string? businessArea)
     {
         bool isRoleExist = false;
         bool isAdmin = IsAdmin();
         switch (businessArea)
             {
-                case Constants.BusinessArea.MPP:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || isAdmin);
-                    return isRoleExist;
-                case Constants.BusinessArea.Investment:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || isAdmin);
-                    return isRoleExist;
-                case Constants.BusinessArea.Development:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || isAdmin);
+                case Constants.AppRole.PipelineProjectManager:
+                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineProjectManager) || isAdmin);
                     return isRoleExist;
                 default: return isRoleExist;
             }
     }
 
-    public bool ValidateSensitiveRecords(Assessment? assessment)
+    public bool IsProjectManagerForAssessment(string? assessmentProjectManager)
     {
-        if (assessment != null)
+
+        if (assessmentProjectManager == _userProvider.GetUserName())
         {
-            if (assessment.IsSensitiveRecord())
-            {
-                if (_userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer) ||
-                    assessment.ProjectManager == _userProvider.GetUserName())
-                {
-                    return true;
-                }
-
-                return false;
-            }
+            return true;
         }
-
-        return true;
+        return false;
     }
 
+    public bool ValidateSensitiveRecords(Assessment? assessment)
+    {
+        return ValidateSensitiveRecordsInternal(assessment, includeAdmin: false);
+    }
+
+    public bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment? assessment)
+    {
+        return ValidateSensitiveRecordsInternal(assessment, includeAdmin: true);
+    }
+
+    /// <summary>
+    /// Checks if the current user's email is whitelisted for viewing a specific sensitive assessment
+    /// </summary>
+    /// <param name="assessmentId">The ID of the assessment to check</param>
+    /// <returns>True if user's email is in the whitelist, otherwise false</returns>
+    public async Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId)
+    {
+        var userEmail = _userProvider.GetUserEmail();
+
+        if (string.IsNullOrWhiteSpace(userEmail))
+        {
+            return false;
+        }
+
+        var formattedEmail = userEmail.ToLower();
+        var whitelist = await _assessmentRepository.GetSensitiveRecordWhitelist(assessmentId);
+
+        return whitelist.Any(w => w.Email.ToLower() == formattedEmail);
+    }
+
+    private bool ValidateSensitiveRecordsInternal(Assessment? assessment, bool includeAdmin)
+    {
+        if (assessment == null)
+        {
+            return true;
+        }
+
+        if (!assessment.IsSensitiveRecord())
+        {
+            return true;
+        }
+
+        var isProjectManager = assessment.ProjectManager == _userProvider.GetUserName();
+        bool isAdmin = IsAdmin();
+
+        if (includeAdmin)
+        {
+            return isProjectManager || isAdmin;
+        }
+
+        return isProjectManager;
+    }
 }
 

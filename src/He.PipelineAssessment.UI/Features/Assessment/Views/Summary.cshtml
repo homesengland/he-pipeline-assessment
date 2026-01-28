@@ -1,30 +1,36 @@
 ﻿@using He.PipelineAssessment.UI
 @using He.PipelineAssessment.UI.Authorization;
 @using System.Security.Claims;
-@using Microsoft.AspNetCore.Authorization
-@inject IAuthorizationService AuthorizationService
-@inject NonceConfig nonceConfig
+@using Microsoft.AspNetCore.Authorization;
+@inject IRoleValidation RoleValidation;
+@inject IAuthorizationService AuthorizationService;
+@inject NonceConfig nonceConfig;
 @model He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary.AssessmentSummaryResponse;
 
 @{
     ViewData["Title"] = "Assessment Summary";
     Layout = "_Layout";
+    bool isAdmin = ((await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded);
 }
 
 @Html.ActionLink("Back","Index","Assessment", null,new{ @class="govuk-back-link"})
 
 @if(Model.SensitiveStatus != null)
 {
-    <span class="govuk-caption-l">@Model.Reference - @Model.SensitiveStatus</span>
+    <span class="govuk-caption-l">@Model.SpId - @Model.SensitiveStatus</span>
 } 
 else
 {
-    <span class="govuk-caption-l">@Model.Reference</span>
+    <span class="govuk-caption-l">@Model.SpId</span>
 }
 
 <h1 class="govuk-heading-l">@Model.SiteName</h1>
 
 <table class="govuk-body">
+    <tr>
+        <td><b>PCS Reference: </b></td>
+        <td>@Model.Reference</td>
+    </tr>
     <tr>
         <td><b>Local Authority: </b></td>
         <td>@Model.LocalAuthority</td>
@@ -79,6 +85,15 @@ else
                 Requests
             </a>
         </li>
+        @if (isAdmin || RoleValidation.IsProjectManagerForAssessment(Model.ProjectManager))
+        {
+            <li class="govuk-tabs__list-item">
+                <a class="govuk-tabs__tab" href="#permissions">
+                    Permissions
+                </a>
+            </li>
+        }
+
     </ul>
     <div class="govuk-tabs__panel" id="summary">
         @await Html.PartialAsync("_SummaryList",Model)
@@ -89,6 +104,12 @@ else
     <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="requests">
         @await Html.PartialAsync("_InterventionList",Model)
     </div>
+    @if (isAdmin || RoleValidation.IsProjectManagerForAssessment(Model.ProjectManager))
+    {
+        <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="permissions">
+            @await Html.PartialAsync("_PermissionsList", Model)
+        </div>
+    }
 </div>
 
 <script nonce="@nonceConfig.SiteSetup" src="~/js/site.js"></script>
