@@ -11,6 +11,9 @@ import { MonacoValueChangedArgs } from "./components/editors/he-monaco/he-monaco
 import { Map } from "./utils/utils";
 import { HeActivityPropertyDescriptor, NestedActivityDefinitionProperty, NestedPropertyModel } from "./models/custom-component-models";
 export namespace Components {
+    interface Auth0StatusButton {
+        "checkTokenStatus": () => Promise<boolean>;
+    }
     interface HeCheckListProperty {
         "activityModel": ActivityModel;
         "keyId": string;
@@ -306,6 +309,12 @@ export interface QuestionPropertyCustomEvent<T> extends CustomEvent<T> {
     target: HTMLQuestionPropertyElement;
 }
 declare global {
+    interface HTMLAuth0StatusButtonElement extends Components.Auth0StatusButton, HTMLStencilElement {
+    }
+    var HTMLAuth0StatusButtonElement: {
+        prototype: HTMLAuth0StatusButtonElement;
+        new (): HTMLAuth0StatusButtonElement;
+    };
     interface HTMLHeCheckListPropertyElement extends Components.HeCheckListProperty, HTMLStencilElement {
     }
     var HTMLHeCheckListPropertyElement: {
@@ -487,6 +496,7 @@ declare global {
         new (): HTMLSwitchAnswersPropertyElement;
     };
     interface HTMLElementTagNameMap {
+        "auth0-status-button": HTMLAuth0StatusButtonElement;
         "he-check-list-property": HTMLHeCheckListPropertyElement;
         "he-checkbox-options-property": HTMLHeCheckboxOptionsPropertyElement;
         "he-checkbox-property": HTMLHeCheckboxPropertyElement;
@@ -520,6 +530,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface Auth0StatusButton {
+    }
     interface HeCheckListProperty {
         "activityModel"?: ActivityModel;
         "keyId"?: string;
@@ -734,6 +746,7 @@ declare namespace LocalJSX {
         "propertyModel"?: ActivityDefinitionProperty;
     }
     interface IntrinsicElements {
+        "auth0-status-button": Auth0StatusButton;
         "he-check-list-property": HeCheckListProperty;
         "he-checkbox-options-property": HeCheckboxOptionsProperty;
         "he-checkbox-property": HeCheckboxProperty;
@@ -770,6 +783,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "auth0-status-button": LocalJSX.Auth0StatusButton & JSXBase.HTMLAttributes<HTMLAuth0StatusButtonElement>;
             "he-check-list-property": LocalJSX.HeCheckListProperty & JSXBase.HTMLAttributes<HTMLHeCheckListPropertyElement>;
             "he-checkbox-options-property": LocalJSX.HeCheckboxOptionsProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxOptionsPropertyElement>;
             "he-checkbox-property": LocalJSX.HeCheckboxProperty & JSXBase.HTMLAttributes<HTMLHeCheckboxPropertyElement>;

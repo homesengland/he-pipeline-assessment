@@ -5,6 +5,7 @@ import { StoreConfig } from '../models/StoreConfig';
 import { StoreStatus } from '../constants/constants';
 import { IntellisenseGatherer } from '../utils/intellisenseGatherer';
 import { Auth0ClientOptions, AuthorizationParams } from '@auth0/auth0-spa-js';
+import { Auth0StatusButton } from '../components/auth0-status-button/auth0-status-button';
 
 @Component({
   tag: 'he-dashboard',
@@ -103,7 +104,11 @@ export class HeDashboard {
   render() {
 
     return (
-      <slot />
+      <div style={{margin: '0', padding: '0' }}>
+        <auth0-status-button></auth0-status-button>
+        <slot />
+      </div>
+      
     );
   }
 }

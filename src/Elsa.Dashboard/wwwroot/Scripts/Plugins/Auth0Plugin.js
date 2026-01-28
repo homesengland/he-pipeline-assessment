@@ -86,7 +86,7 @@ export class Auth0Plugin {
     // This runs regardless of user activity or server communication
     this.tokenRefreshInterval = setInterval(async () => {
       await this.refreshToken();
-    }, 50 * 60 * 1000); // 50 minutes
+    }, 49 * 60 * 1000); // 49 minutes
 
     // Also refresh immediately to get initial token
     this.refreshToken();
@@ -139,26 +139,51 @@ export class Auth0Plugin {
   configureAuthMiddleware = async (e) => {
     if (!this.auth0) return;
     
-    // Get current token (from cache if available)
-    const token = await this.auth0.getTokenSilently().catch(() => null);
-    this.token = token;
+    // Get initial token
+    try {
+      this.token = await this.auth0.getTokenSilently();
+      console.log('Initial token retrieved for HTTP client');
+    } catch (error) {
+      console.error('Failed to get initial token:', error);
+      return;
+    }
 
     let service = new Service();
     if (e != null && e != undefined && e.service != null && e.service != undefined) {
       service = e.service;
     }
+    
+    // Store reference to auth0 instance and plugin for closure
     const auth0 = this.auth0;
-    const token = await auth0.getTokenSilently();
+    const plugin = this;
 
     service.register({
       async onRequest(request) {
-        // Get a (cached) access token.
-        if (request.data == null) {
-          request.data = "{}";
+        // Get a fresh token for each request (from cache if still valid)
+        try {
+          const token = await auth0.getTokenSilently();
+          plugin.token = token; // Update stored token
+          
+          // Ensure request has data
+          if (request.data == null) {
+            request.data = "{}";
+          }
+          
+          // Attach Authorization header
+          if (token) {
+            request.headers = { 
+              ...request.headers, 
+              'Authorization': `Bearer ${token}`, 
+              'Content-Type': 'application/json; charset=UTF-8' 
+            };
+            console.log('Authorization header attached to request');
+          } else {
+            console.warn('No token available for request');
+          }
+        } catch (error) {
+          console.error('Failed to get token for request:', error);
         }
-        if (!!token) {
-          request.headers = { ...request.headers, 'Authorization': `Bearer ${token}`, 'Content-Type': `application/json; charset=UTF-8` };
-        }
+        
         return request;
       }
     });

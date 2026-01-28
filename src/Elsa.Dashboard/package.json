@@ -29,9 +29,10 @@
     "unit-test": "jest"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^2.1.1",
+    "@auth0/auth0-spa-js": "2.11.3",
     "@eslint/plugin-kit": "^0.3.5",
     "async-mutex": "^0.4.0",
+    "axios-middleware": "0.4.0",
     "construe": "^0.4.1",
     "el-transition": "^0.0.7",
     "eslint": "^9.31.0",
@@ -57,7 +58,10 @@
     "workbox-build": "^7.3.0"
   },
   "overrides": {
-    "js-yaml": ">=4.1.1"
+    "js-yaml": ">=4.1.1",
+    "axios-middleware": {
+      "axios": "^1.12.2"
+    }
   },
   "license": "MIT",
   "jest-junit": {
