@@ -3,13 +3,14 @@ using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Common.Utility;
+using He.PipelineAssessment.UI.Features.Shared;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace He.PipelineAssessment.UI.Tests.Common.Utility
+namespace He.PipelineAssessment.UI.Tests.Features.Shared
 {
-    public class AssessmentFundIdProviderTests
+    public class UpdateAssessmentWithFundIdHandlerTests
     {
         [Theory]
         [AutoMoqData]
@@ -17,7 +18,7 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             int assessmentId,
             int fundId,
-            AssessmentFundIdProvider sut)
+            UpdateAssessmentWithFundIdHandler sut)
         {
             //Arrange
             assessmentRepository
@@ -36,9 +37,8 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
         [AutoMoqData]
         public async Task GetCurrentFundId_ReturnsNull_GivenRepositoryReturnsNull(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<ILogger<AssessmentFundIdProvider>> logger,
             int assessmentId,
-            AssessmentFundIdProvider sut)
+            UpdateAssessmentWithFundIdHandler sut)
         {
             //Arrange
             assessmentRepository
@@ -56,9 +56,8 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
         [AutoMoqData]
         public async Task GetCurrentFundId_ThrowsException_GivenRepositoryThrowsException(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<ILogger<AssessmentFundIdProvider>> logger,
             int assessmentId,
-            AssessmentFundIdProvider sut)
+            UpdateAssessmentWithFundIdHandler sut)
         {
             //Arrange
             var expectedException = new Exception("Database error");
@@ -76,10 +75,9 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
         [AutoMoqData]
         public async Task AssignFundId_AssignsFundSuccessfully_GivenValidFundIdAndDifferentExistingFund(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<ILogger<AssessmentFundIdProvider>> logger,
-            Assessment assessment,
+            Models.Assessment assessment,
             int newFundId,
-            AssessmentFundIdProvider sut)
+            UpdateAssessmentWithFundIdHandler sut)
         {
             //Arrange
             assessment.FundId = 999; // Different from newFundId
@@ -105,9 +103,9 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
         [AutoMoqData]
         public async Task AssignFundId_DoesNotAssign_GivenFundIdAlreadyMatches(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            Assessment assessment,
+            Models.Assessment assessment,
             int fundId,
-            AssessmentFundIdProvider sut)
+            UpdateAssessmentWithFundIdHandler sut)
         {
             //Arrange
             assessment.FundId = fundId; // Same as current fund
@@ -130,7 +128,7 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
         public async Task AssignFundId_DoesNotAssign_GivenNoFundIdFound(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             int assessmentId,
-            AssessmentFundIdProvider sut)
+            UpdateAssessmentWithFundIdHandler sut)
         {
             //Arrange
             assessmentRepository
@@ -151,7 +149,7 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             int assessmentId,
             int fundId,
-            AssessmentFundIdProvider sut)
+            UpdateAssessmentWithFundIdHandler sut)
         {
             //Arrange
             assessmentRepository
@@ -159,7 +157,7 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
                 .ReturnsAsync(fundId);
             assessmentRepository
                 .Setup(x => x.GetAssessment(assessmentId))
-                .ReturnsAsync((Assessment?)null);
+                .ReturnsAsync((Models.Assessment?)null);
 
             //Act
             await sut.AssignFundId(assessmentId);
@@ -172,10 +170,9 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
         [AutoMoqData]
         public async Task AssignFundId_AssignsFundSuccessfully_GivenNullExistingFundId(
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            [Frozen] Mock<ILogger<AssessmentFundIdProvider>> logger,
-            Assessment assessment,
+            Models.Assessment assessment,
             int newFundId,
-            AssessmentFundIdProvider sut)
+            UpdateAssessmentWithFundIdHandler sut)
         {
             //Arrange
             assessment.FundId = null; // No existing fund

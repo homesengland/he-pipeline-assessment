@@ -5,7 +5,7 @@ using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Shared
 {
-    public class UpdateAssessmentWithFundIdHandler : IRequestHandler<UpdateAssessmentWithFundIdRequest>
+    public class UpdateAssessmentWithFundIdHandler : IRequestHandler<UpdateAssessmentWithFundIdRequest, Unit>
     {
         private readonly ILogger<UpdateAssessmentWithFundIdHandler> _logger;
         private readonly IAssessmentRepository _assessmentRepository;
