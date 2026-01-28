@@ -139,10 +139,11 @@ public class RoleValidation : IRoleValidation
         }
 
         var isProjectManager = assessment.ProjectManager == _userProvider.GetUserName();
+        bool isAdmin = IsAdmin();
 
         if (includeAdmin)
         {
-            return isProjectManager || IsAdmin();
+            return isProjectManager || isAdmin;
         }
 
         return isProjectManager;
