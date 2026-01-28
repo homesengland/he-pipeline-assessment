@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using He.PipelineAssessment.Infrastructure.Repository;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Validators
@@ -24,13 +25,13 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
                 .Must((c) => BeUnique(c.WorkflowDefinitionId, c.Id))
                 .WithMessage("The Workflow Definition Id must be unique and not used in another Assessment Tool Workflow");
 
-            RuleFor(c => c.IsEarlyStage)
+            RuleFor(c => c)
                 .Must(FollowIsEarlyStageRule)
                 .WithMessage("Funds can only be assigned to assessment tool workflows that are not marked as Early Stage. " +
-                "Please ensure that no fund is selected when creating an Early Stage workflow.");
+                "Please ensure that 'No Fund' is selected when creating an Early Stage workflow.");
 
-            RuleFor(c => c.AssessmentFundId)
-                .Must((command, assessmentFundId) => FollowFundRule(command.IsEarlyStage, assessmentFundId))
+            RuleFor(c => c)
+                .Must(FollowFundRule)
                 .WithMessage("A fund must be assigned to assessment tool workflows that are not marked as Early Stage.");
         }
 
@@ -42,20 +43,20 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
                 return true;
             return false;
         }
-        private bool FollowIsEarlyStageRule(bool isEarlyStage)
+        private bool FollowIsEarlyStageRule(UpdateAssessmentToolWorkflowCommand command)
         {
-            if (isEarlyStage == true)
+            if (command.IsEarlyStage)
             {
-                return false;
+                return !command.AssessmentFundId.HasValue || command.AssessmentFundId.Value == 0;
             }
             return true;
         }
 
-        private bool FollowFundRule(bool isEarlyStage, int? assessmentFundId)
+        private bool FollowFundRule(UpdateAssessmentToolWorkflowCommand command)
         {
-            if (!isEarlyStage && (!assessmentFundId.HasValue || assessmentFundId == 0))
+            if (!command.IsEarlyStage)
             {
-                return false;
+                return command.AssessmentFundId.HasValue && command.AssessmentFundId.Value != 0;
             }
             return true;
         }
