@@ -51,10 +51,9 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
 
-                bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
+                bool hasValidBusinessArea = _businessAreaValidation.IsValidBusinessArea(dbAssessment.BusinessArea);
 
                 List<string> businessAreaErrorMessage = new List<string>();
-         
 
                 var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
                 var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
@@ -138,12 +137,6 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 throw new ApplicationException($"Unable to get the assessment summary. AssessmentId: {request.AssessmentId}");
             }
         }
-
-        private bool HasValidBusinessArea(string businessArea)
-        {
-            bool hasValidBusinessArea = _roleValidation.IsAdmin() ? true : _roleValidation.ValidateForBusinessArea(businessArea);
-            return hasValidBusinessArea;
-        }  
 
         private AssessmentSummaryStage AssessmentSummaryStage( string name, int order, bool? isEarlyStage)
         {

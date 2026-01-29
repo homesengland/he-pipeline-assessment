@@ -11,7 +11,6 @@ public interface IRoleValidation
 
     bool ValidateSensitiveRecords(Assessment assessment);
     bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment assessment);
-    bool ValidateForBusinessArea(string? businessArea);
     bool IsAdmin();
     bool IsProjectManagerForAssessment(string? assessmentProjectManager);
     Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId);
@@ -39,14 +38,6 @@ public class RoleValidation : IRoleValidation
         }
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
 
-        if(assessmentToolWorkflow != null && !assessmentToolWorkflow.IsEarlyStage)
-        {
-            if (!ValidateForBusinessArea(assessment))
-            {
-                return false;
-            }
-        }
-
         var canSeeRecord = ValidateSensitiveRecords(assessment);
 
         if (!canSeeRecord && assessment != null && assessment.IsSensitiveRecord())
@@ -60,30 +51,6 @@ public class RoleValidation : IRoleValidation
     public bool IsAdmin()
     {
         return _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
-    }
-
-    //To Be Removed
-    public bool ValidateForBusinessArea(Assessment? assessment)
-    {
-        if (assessment != null)
-        {
-            return ValidateForBusinessArea(assessment?.BusinessArea);
-        }
-        return false;
-    }
-
-    //To Be Removed
-    public bool ValidateForBusinessArea(string? businessArea)
-    {
-        bool isRoleExist = false;
-        bool isAdmin = IsAdmin();
-        switch (businessArea)
-            {
-                case Constants.AppRole.PipelineProjectManager:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineProjectManager) || isAdmin);
-                    return isRoleExist;
-                default: return isRoleExist;
-            }
     }
 
     public bool IsProjectManagerForAssessment(string? assessmentProjectManager)
