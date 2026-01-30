@@ -14,7 +14,8 @@ BEGIN
 	i.CreatedDateTime,
 	i.LastModifiedDateTime,
 	a.SensitiveStatus,
-	a.ProjectManager
+	a.ProjectManager,
+	a.ValidData
 	FROM dbo.AssessmentIntervention i
 	JOIN dbo.AssessmentToolWorkflowInstance atfi ON i.AssessmentToolWorkflowInstanceId = atfi.Id
 	JOIN dbo.AssessmentToolWorkflow atw ON atfi.AssessmentToolWorkflowId = atw.Id
