@@ -20,12 +20,14 @@ public class RoleValidation : IRoleValidation
     private readonly IAssessmentRepository _assessmentRepository;
     private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
     private readonly IUserProvider _userProvider;
+    private readonly IUserRoleChecker _userRoleChecker;
 
-    public RoleValidation(IAssessmentRepository assessmentRepository, IAdminAssessmentToolRepository adminAssessmentToolRepository, IUserProvider userProvider)
+    public RoleValidation(IAssessmentRepository assessmentRepository, IAdminAssessmentToolRepository adminAssessmentToolRepository, IUserProvider userProvider, IUserRoleChecker userRoleChecker)
     {
         _assessmentRepository = assessmentRepository;
         _adminAssessmentToolRepository = adminAssessmentToolRepository;
         _userProvider = userProvider;
+        _userRoleChecker = userRoleChecker;
     }
     public async Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId)
     {
@@ -33,7 +35,7 @@ public class RoleValidation : IRoleValidation
 
         if (assessmentToolWorkflow != null && assessmentToolWorkflow.IsEconomistWorkflow)
         {
-                bool isEconomistRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                bool isEconomistRoleExist = (_userRoleChecker.IsEconomist() || _userRoleChecker.IsAdmin());
                 return isEconomistRoleExist;
         }
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
@@ -50,7 +52,7 @@ public class RoleValidation : IRoleValidation
 
     public bool IsAdmin()
     {
-        return _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+        return _userRoleChecker.IsAdmin();
     }
 
     public bool IsProjectManagerForAssessment(string? assessmentProjectManager)

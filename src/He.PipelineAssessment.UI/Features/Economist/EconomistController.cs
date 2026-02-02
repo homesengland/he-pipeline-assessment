@@ -10,18 +10,20 @@ namespace He.PipelineAssessment.UI.Features.Economist;
 public class EconomistController : BaseController<EconomistController>
 {
     private readonly IUserProvider _userProvider;
+    private readonly IUserRoleChecker _userRoleChecker;
 
-    public EconomistController(IMediator mediator, ILogger<EconomistController> logger, IUserProvider userProvider) :
+    public EconomistController(IMediator mediator, ILogger<EconomistController> logger, IUserProvider userProvider, IUserRoleChecker userRoleChecker) :
         base(mediator, logger)
     {
         _userProvider = userProvider;
+        _userRoleChecker = userRoleChecker;
     }
 
     [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)]
     public async Task<IActionResult> GetEconomistList()
     {
         var username = _userProvider.GetUserName();
-        var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist);
+        var canViewSensitiveRecords = _userRoleChecker.IsEconomist();
 
         var listModel = await _mediator.Send(new EconomistAssessmentListRequest()
         {

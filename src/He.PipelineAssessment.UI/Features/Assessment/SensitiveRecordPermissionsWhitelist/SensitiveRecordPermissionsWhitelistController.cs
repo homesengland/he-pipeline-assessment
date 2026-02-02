@@ -15,16 +15,19 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
     {
         private readonly IMediator _mediator;
         private readonly IUserProvider _userProvider;
+        private readonly IUserRoleChecker _userRoleChecker;
         private readonly IAssessmentRepository _assessmentRepository;
         private readonly ILogger<SensitiveRecordPermissionsWhitelistController> _logger;
         private const string AllowedEmailDomain = "@homesengland.gov.uk";
 
-        public SensitiveRecordPermissionsWhitelistController(IMediator mediator, IUserProvider userProvider, IAssessmentRepository assessmentRepository, ILogger<SensitiveRecordPermissionsWhitelistController> logger)
+
+        public SensitiveRecordPermissionsWhitelistController(IMediator mediator, IUserProvider userProvider, IUserRoleChecker userRoleChecker, IAssessmentRepository assessmentRepository, ILogger<SensitiveRecordPermissionsWhitelistController> logger)
         {
             _mediator = mediator;
             _userProvider = userProvider;
             _assessmentRepository = assessmentRepository;
             _logger = logger;
+            _userRoleChecker = userRoleChecker;
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
             try
             {
                 var assessmentSummary = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
-                var isAdmin = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+                var isAdmin = _userRoleChecker.IsAdmin();
                 var currentUsername = _userProvider.GetUserName();
                 var isProjectManager = assessmentSummary.AssessmentSummary.ProjectManager == currentUsername;
 
@@ -133,7 +136,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermission
             try
             {
                 var assessmentSummary = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
-                var isAdmin = _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+                var isAdmin = _userRoleChecker.IsAdmin();
                 var currentUsername = _userProvider.GetUserName();
                 var isProjectManager = assessmentSummary.AssessmentSummary.ProjectManager == currentUsername;
 
