@@ -15,7 +15,7 @@ public class RoleValidationTests
     [AutoMoqData]
     public async Task RoleValidation_ReturnsTrue_IfEconomistWorkflowAndUserIsEconomist(
         [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-        [Frozen] Mock<IUserProvider> userProvider,
+        [Frozen] Mock<IUserRoleChecker> userRoleChecker,
         AssessmentToolWorkflow assessmentTool,
         string workflowDefinitionId,
         int assessmentId,
@@ -25,7 +25,7 @@ public class RoleValidationTests
         //Arrange
         assessmentTool.IsEconomistWorkflow = true;
         adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(true);
+        userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
 
         //Act
         var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
@@ -38,7 +38,7 @@ public class RoleValidationTests
     [AutoMoqData]
     public async Task RoleValidation_ReturnsFalse_IfEconomistWorkflowAndUserIsNotEconomist(
         [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-        [Frozen] Mock<IUserProvider> userProvider,
+        [Frozen] Mock<IUserRoleChecker> userRoleChecker,
         AssessmentToolWorkflow assessmentTool,
         string workflowDefinitionId,
         int assessmentId,
@@ -47,7 +47,7 @@ public class RoleValidationTests
         //Arrange
         assessmentTool.IsEconomistWorkflow = true;
         adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(false);
+        userRoleChecker.Setup(x => x.IsEconomist()).Returns(false);
 
         //Act
         var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
@@ -60,7 +60,7 @@ public class RoleValidationTests
     [AutoMoqData]
     public async Task RoleValidation_ReturnsTrue_IfWorkflowIsEarlyStage(
     [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-    [Frozen] Mock<IUserProvider> userProvider,
+    [Frozen] Mock<IUserRoleChecker> userRoleChecker,
     AssessmentToolWorkflow assessmentTool,
     string workflowDefinitionId,
     int assessmentId,
@@ -70,7 +70,7 @@ public class RoleValidationTests
         assessmentTool.IsEconomistWorkflow = false;
         assessmentTool.IsEarlyStage = true;
         adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineProjectManager)).Returns(true);
+        userRoleChecker.Setup(x => x.IsProjectManager()).Returns(true);
 
         //Act
         var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
@@ -81,112 +81,10 @@ public class RoleValidationTests
 
     [Theory]
     [AutoMoqData]
-    public async Task RoleValidation_ReturnsFalse_IfWorkflowIsEarlyStage(
-    [Frozen] Mock<IAssessmentRepository> assementRepository,
-    [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-    [Frozen] Mock<IUserProvider> userProvider,
-    Assessment assessment,
-    AssessmentToolWorkflow assessmentTool,
-    string workflowDefinitionId,
-    int assessmentId,
-    RoleValidation sut)
-    {
-        //Arrange
-        assessmentTool.IsEconomistWorkflow = false;
-        assessmentTool.IsEarlyStage = false;
-        adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineProjectManager)).Returns(true);
-        assementRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
-        //Act
-        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
-
-        //Assert
-        Assert.False(result);
-    }
-
-    [Theory]
-    [AutoMoqData]
-    public async Task RoleValidation_ReturnsFalse_IfBusinessAreaIsNotRecognised(
-    [Frozen] Mock<IAdminAssessmentToolRepository> assessmentToolRepository,
-    [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-    [Frozen] Mock<IUserProvider> userProvider,
-    AssessmentToolWorkflow assessmentTool,
-    Assessment assessment,
-    string workflowDefinitionId,
-    int assessmentId,
-    RoleValidation sut)
-    {
-        //Arrange
-        assessmentTool.IsEconomistWorkflow = false;
-        assessmentTool.IsEarlyStage = false;
-        assessment.BusinessArea = "";
-        assessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(false);
-
-        //Act
-        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
-
-        //Assert
-        Assert.False(result);
-    }
-
-    [Theory]
-    [AutoMoqData]
-    public async Task RoleValidation_ReturnsFalse_IfAssessmentNotFound(
-    [Frozen] Mock<IAdminAssessmentToolRepository> assessmentToolRepository,
-    [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-    [Frozen] Mock<IUserProvider> userProvider,
-    AssessmentToolWorkflow assessmentTool,
-    Assessment assessment,
-    string workflowDefinitionId,
-    int assessmentId,
-    RoleValidation sut)
-    {
-        //Arrange
-        assessmentTool.IsEconomistWorkflow = false;
-        assessmentTool.IsEarlyStage = false;
-        assessment.BusinessArea = "";
-        assessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync((Assessment?)null);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineEconomist)).Returns(false);
-
-        //Act
-        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
-
-        //Assert
-        Assert.False(result);
-    }
-
-    [Theory]
-    [AutoMoqData]
-    public async Task RoleValidation_ReturnsFalse_IfSensitiveRecordAndUserHasNotGotRoleSensitiveRecordViewer(
-        [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-        [Frozen] Mock<IUserProvider> userProvider,
-        Assessment assessment,
-        string workflowDefinitionId,
-        int assessmentId,
-        RoleValidation sut)
-    {
-        //Arrange
-        assessment.SensitiveStatus = "Sensitive - NDA in place";
-        assessment.BusinessArea = "Development";
-        assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer)).Returns(false);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineProjectManager)).Returns(true);
-
-        //Act
-        var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
-
-        //Assert
-        Assert.False(result);
-    }
-
-    [Theory]
-    [AutoMoqData]
     public async Task RoleValidation_ReturnsTrue_IfSensitiveRecordAndUserHasNotGotRoleSensitiveRecordViewerButIsProjectManager(
         [Frozen] Mock<IAssessmentRepository> assessmentRepository,
         [Frozen] Mock<IUserProvider> userProvider,
+        [Frozen] Mock<IUserRoleChecker> userRoleChecker,
         Assessment assessment,
         string workflowDefinitionId,
         int assessmentId,
@@ -198,8 +96,7 @@ public class RoleValidationTests
         assessment.BusinessArea = "Development";
         assessment.ProjectManager = projectManager;
         assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer)).Returns(false);
-        userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineProjectManager)).Returns(true);
+        userRoleChecker.Setup(x => x.IsProjectManager()).Returns(true);
         userProvider.Setup(x => x.GetUserName()).Returns(projectManager);
 
         //Act

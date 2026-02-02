@@ -36,6 +36,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         public async Task Add_ShouldAddPermission_WhenUserIsAdmin(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
@@ -55,7 +56,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
             userProvider.Setup(x => x.GetUserName()).Returns("admin.user@test.com");
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
                 .ReturnsAsync(new List<SensitiveRecordWhitelist>());
@@ -79,6 +80,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         public async Task Add_ShouldAddPermission_WhenUserIsProjectManager(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
@@ -99,7 +101,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(false);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.GetUserName()).Returns(currentUsername);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
                 .ReturnsAsync(new List<SensitiveRecordWhitelist>());
@@ -122,6 +124,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         public async Task Add_ShouldRedirectToAccessDenied_WhenUserIsNotAuthorized(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
@@ -141,7 +144,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(false);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.GetUserName()).Returns("unauthorized.user@test.com");
 
             // Act
@@ -158,7 +161,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         [AutoMoqData]
         public async Task Add_ShouldReturnError_WhenEmailIsEmpty(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
@@ -177,7 +180,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
 
             // Act
             var result = await sut.Add(assessmentId, correlationId, string.Empty);
@@ -196,7 +199,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         [AutoMoqData]
         public async Task Add_ShouldReturnError_WhenEmailFormatIsInvalid(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
@@ -216,7 +219,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
 
             // Act
             var result = await sut.Add(assessmentId, correlationId, invalidEmail);
@@ -235,7 +238,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         [AutoMoqData]
         public async Task Add_ShouldReturnError_WhenEmailDomainIsInvalid(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
@@ -255,7 +258,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
 
             // Act
             var result = await sut.Add(assessmentId, correlationId, invalidDomainEmail);
@@ -274,7 +277,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         [AutoMoqData]
         public async Task Add_ShouldReturnError_WhenEmailAlreadyExists(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
@@ -299,7 +302,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
                 .ReturnsAsync(existingPermissions);
 
@@ -320,7 +323,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         [AutoMoqData]
         public async Task Add_ShouldHandleException_WhenErrorOccurs(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
@@ -340,7 +343,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
                 .ReturnsAsync(new List<SensitiveRecordWhitelist>());
             assessmentRepository.Setup(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
@@ -365,6 +368,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         public async Task Remove_ShouldRemovePermission_WhenUserIsAdmin(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int id,
@@ -391,7 +395,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
             userProvider.Setup(x => x.GetUserName()).Returns("admin.user@test.com");
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
                 .ReturnsAsync(whitelist);
@@ -415,6 +419,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         public async Task Remove_ShouldRemovePermission_WhenUserIsProjectManager(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int id,
@@ -442,7 +447,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(false);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.GetUserName()).Returns(currentUsername);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
                 .ReturnsAsync(whitelist);
@@ -465,6 +470,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         public async Task Remove_ShouldRedirectToAccessDenied_WhenUserIsNotAuthorized(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int id,
@@ -484,7 +490,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(false);
+            userRoleChecker .Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.GetUserName()).Returns("unauthorized.user@test.com");
 
             // Act
@@ -501,7 +507,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         [AutoMoqData]
         public async Task Remove_ShouldReturnError_WhenWhitelistEntryNotFound(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int id,
@@ -521,7 +527,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
                 .ReturnsAsync((SensitiveRecordWhitelist?)null);
 
@@ -540,7 +546,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         [AutoMoqData]
         public async Task Remove_ShouldReturnError_WhenWhitelistEntryBelongsToDifferentAssessment(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int id,
@@ -567,7 +573,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
                 .ReturnsAsync(whitelist);
 
@@ -586,7 +592,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
         [AutoMoqData]
         public async Task Remove_ShouldHandleException_WhenErrorOccurs(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserProvider> userProvider,
+            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             SensitiveRecordPermissionsWhitelistController sut,
             int id,
@@ -613,7 +619,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
-            userProvider.Setup(x => x.CheckUserRole(Constants.AppRole.PipelineAdminOperations)).Returns(true);
+            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
                 .ReturnsAsync(whitelist);
             assessmentRepository.Setup(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
