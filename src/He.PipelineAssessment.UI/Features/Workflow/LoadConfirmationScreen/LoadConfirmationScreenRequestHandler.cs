@@ -10,6 +10,7 @@ using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Helper;
 using He.PipelineAssessment.UI.Integration.ServiceBusSend;
+using He.PipelineAssessment.UI.Features.Shared;
 
 namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 {
@@ -22,7 +23,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
         private readonly IAssessmentToolWorkflowInstanceHelpers _assessmentToolWorkflowInstanceHelpers;
         private readonly ILogger<LoadConfirmationScreenRequestHandler> _logger;
         private readonly IRoleValidation _roleValidation;
-
+        private readonly IMediator _mediator;
         private readonly IServiceBusMessageSender _serviceBusMessageSender;
 
         public LoadConfirmationScreenRequestHandler(
@@ -33,7 +34,8 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             IAssessmentToolWorkflowInstanceHelpers assessmentToolWorkflowInstanceHelpers, 
             ILogger<LoadConfirmationScreenRequestHandler> logger, 
             IRoleValidation roleValidation,
-            IServiceBusMessageSender serviceBusMessageSender)
+            IServiceBusMessageSender serviceBusMessageSender, 
+            IMediator mediator)
         {
             _elsaServerHttpClient = elsaServerHttpClient;
             _assessmentRepository = assessmentRepository;
@@ -43,6 +45,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
             _logger = logger;
             _roleValidation = roleValidation;
             _serviceBusMessageSender = serviceBusMessageSender;
+            _mediator = mediator;
         }
 
         public async Task<LoadConfirmationScreenResponse?> Handle(LoadConfirmationScreenRequest request, CancellationToken cancellationToken)
@@ -130,6 +133,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 
                             
                         }
+                        await _mediator.Send(new UpdateAssessmentWithFundIdRequest { AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId });
                         PageHeaderHelper.PopulatePageHeaderInformation(result, currentAssessmentToolWorkflowInstance);
                         return await Task.FromResult(result);
                     }

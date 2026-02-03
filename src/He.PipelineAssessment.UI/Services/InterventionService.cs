@@ -6,6 +6,7 @@ using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Exceptions;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Intervention;
+using He.PipelineAssessment.UI.Features.Shared;
 using He.PipelineAssessment.UI.Integration.ServiceBusSend;
 using MediatR;
 
@@ -24,6 +25,7 @@ namespace He.PipelineAssessment.UI.Services
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IElsaServerHttpClient _elsaServerHttpClient;
         private readonly IServiceBusMessageSender _serviceBusMessageSender;
+        private readonly IMediator _mediator;
 
         public InterventionService(
             IAssessmentRepository assessmentRepository, 
@@ -35,7 +37,8 @@ namespace He.PipelineAssessment.UI.Services
             IAdminAssessmentToolWorkflowRepository adminAssessmentToolWorkflowRepository,
             IDateTimeProvider dateTimeProvider,
             IElsaServerHttpClient elsaServerHttpClient,
-            IServiceBusMessageSender serviceBusMessageSender
+            IServiceBusMessageSender serviceBusMessageSender, 
+            IMediator mediator
             )
         {
             _assessmentRepository = assessmentRepository;
@@ -48,6 +51,7 @@ namespace He.PipelineAssessment.UI.Services
             _dateTimeProvider = dateTimeProvider;
             _elsaServerHttpClient = elsaServerHttpClient;
             _serviceBusMessageSender = serviceBusMessageSender;
+            _mediator = mediator;
         }
 
 
@@ -584,6 +588,7 @@ namespace He.PipelineAssessment.UI.Services
                     await _assessmentRepository.SaveChanges();
                     await ClearNextWorkflowsByOrder(intervention, workflowsToDelete);
                     await CreateNextWorkflows(intervention);
+                    await _mediator.Send(new UpdateAssessmentWithFundIdRequest { AssessmentId = command.AssessmentId });
 
                     foreach (var workflowInstance in workflowsToDelete)
                     {

@@ -23,6 +23,8 @@ namespace He.PipelineAssessment.Models
         public string? SensitiveStatus { get; set; }
         public int? FundId { get; set; }
 
+        public int? LastCompletedAssessmentToolId { get; set; }
+
         public virtual AssessmentFund? AssessmentFund { get; set; }
 
         public bool IsSensitiveRecord()

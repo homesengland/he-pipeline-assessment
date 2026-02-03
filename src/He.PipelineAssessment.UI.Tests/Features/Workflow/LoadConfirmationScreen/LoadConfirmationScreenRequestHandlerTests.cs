@@ -7,6 +7,8 @@ using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Common.Utility;
 using He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen;
+using He.PipelineAssessment.UI.Features.Shared;
+using MediatR;
 using Moq;
 using Xunit;
 
@@ -18,6 +20,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
         [AutoMoqData]
         public async Task Handle_ThrowsApplicationException_GivenHttpClientResponseIsNull(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IMediator> mediator,
             LoadConfirmationScreenRequest request,
             LoadConfirmationScreenRequestHandler sut)
         {
@@ -32,6 +35,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             //Assert
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
             Assert.Equal("Failed to load Confirmation Screen activity.", ex.Message);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -39,6 +43,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
         public async Task Handle_ThrowsApplicationException_GivenNoAssessmentToolWorkflowInstanceFound(
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IMediator> mediator,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
             LoadConfirmationScreenRequestHandler sut)
@@ -58,6 +63,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             //Assert
             Assert.Equal("Failed to load Confirmation Screen activity.", ex.Message);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -67,6 +73,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             LoadConfirmationScreenRequest request,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -104,6 +111,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             Assert.Equal(assessmentToolWorkflowInstance.AssessmentToolWorkflow!.IsAmendable, result.IsAmendableWorkflow);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -113,6 +121,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IAssessmentToolWorkflowInstanceHelpers> assessmentToolWorkflowInstanceHelpers,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             LoadConfirmationScreenRequest request,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -153,6 +162,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             Assert.False(result.IsAmendableWorkflow);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -161,6 +171,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             LoadConfirmationScreenRequest request,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -182,6 +193,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             //Assert
             Assert.Equal($"You do not have permission to access this resource.", result.Message);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Never);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -190,6 +202,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             LoadConfirmationScreenRequest request,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -217,6 +230,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             Assert.Equal(0, result.AssessmentId);
             Assert.False(result.IsAuthorised);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Never);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -226,6 +240,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -262,6 +277,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                 x.CreateAssessmentToolInstanceNextWorkflows(It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
                     y.Count == 2 && y.Any(z => z.NextWorkflowDefinitionId == "workflowDefinition2"))));
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -271,6 +287,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -306,6 +323,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                 x.CreateAssessmentToolInstanceNextWorkflows(It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
                     y.First().NextWorkflowDefinitionId == "workflowDefinition2")));
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -315,6 +333,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -352,6 +371,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                 x.CreateAssessmentToolInstanceNextWorkflows(It.Is<List<AssessmentToolInstanceNextWorkflow>>(z =>
                     z.Count == 2 && z.Any(y => y.NextWorkflowDefinitionId == "workflowDefinition2"))), Times.Never);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -361,6 +381,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -387,6 +408,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                     x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
                 Times.Never);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -396,6 +418,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
             [Frozen] Mock<IAssessmentRepository> assessmentRepository,
             [Frozen] Mock<IRoleValidation> roleValidation,
+            [Frozen] Mock<IMediator> mediator,
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
@@ -422,6 +445,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                     x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
                 Times.Never);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -431,6 +455,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
            [Frozen] Mock<IRoleValidation> roleValidation,
+           [Frozen] Mock<IMediator> mediator,
            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
            LoadConfirmationScreenRequest request,
            WorkflowActivityDataDto workflowActivityDataDto,
@@ -456,7 +481,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 .ReturnsAsync(assessmentToolWorkflowInstances);
             assessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Draft;
             assessmentToolWorkflowInstance.IsVariation = false;
-            
+
             //Act
             await sut.Handle(request, CancellationToken.None);
 
@@ -464,6 +489,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                     x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
                 Times.Never);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         //[Theory]
