@@ -38,7 +38,6 @@ namespace He.PipelineAssessment.Data.ExtendedSinglePipeline
         public long? date_processed { get; set; }
         public long? date_changed { get; set; }
         public string? sensitive_status { get; set; }
-        public int? project_identifier { get; set; }
         public string? market_failure { get; set; }
         public string? barriers { get; set; }
         public string? la_gss_code { get; set; }
