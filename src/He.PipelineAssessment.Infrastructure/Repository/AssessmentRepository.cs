@@ -52,6 +52,8 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<int> CreateAssessmentFund(AssessmentFund fund);
 
         Task<int?> GetCurrentWorkflowFundId(int assessmentId);
+
+        Task<int?> GetLatestCompletedWorkflowId(int assessmentId);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -368,6 +370,17 @@ namespace He.PipelineAssessment.Infrastructure.Repository
                          && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment)
                 .OrderByDescending(x => x.CreatedDateTime)
                 .Select(x => x.AssessmentToolWorkflow.AssessmentFundId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<int?> GetLatestCompletedWorkflowId(int assessmentId)
+        {
+            return await context.Set<AssessmentToolWorkflowInstance>()
+                .Where(x => x.AssessmentId == assessmentId
+                         && x.Status == AssessmentToolWorkflowInstanceConstants.Submitted
+                         && x.SubmittedDateTime != null)
+                .OrderByDescending(x => x.SubmittedDateTime)
+                .Select(x => x.AssessmentToolWorkflowId)
                 .FirstOrDefaultAsync();
         }
     }

@@ -133,7 +133,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 
                             
                         }
-                        await _mediator.Send(new UpdateAssessmentWithFundIdRequest { AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId });
+                        await _mediator.Send(new UpdateAssessmentStatusRequest { AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId });
                         PageHeaderHelper.PopulatePageHeaderInformation(result, currentAssessmentToolWorkflowInstance);
                         return await Task.FromResult(result);
                     }

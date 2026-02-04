@@ -23,7 +23,8 @@ namespace He.PipelineAssessment.Models
         public string? SensitiveStatus { get; set; }
         public int? FundId { get; set; }
 
-        public int? LastCompletedAssessmentToolId { get; set; }
+        //Corresponds to the most recently completed AssessmentToolWorkflow's Id.
+        public int? LatestAssessmentWorkflowToolId { get; set; }
 
         public virtual AssessmentFund? AssessmentFund { get; set; }
 

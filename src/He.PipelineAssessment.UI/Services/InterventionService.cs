@@ -588,7 +588,7 @@ namespace He.PipelineAssessment.UI.Services
                     await _assessmentRepository.SaveChanges();
                     await ClearNextWorkflowsByOrder(intervention, workflowsToDelete);
                     await CreateNextWorkflows(intervention);
-                    await _mediator.Send(new UpdateAssessmentWithFundIdRequest { AssessmentId = command.AssessmentId });
+                    await _mediator.Send(new UpdateAssessmentStatusRequest { AssessmentId = command.AssessmentId });
 
                     foreach (var workflowInstance in workflowsToDelete)
                     {

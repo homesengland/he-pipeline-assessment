@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             //Assert
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
             Assert.Equal("Failed to load Confirmation Screen activity.", ex.Message);
-            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentStatusRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -58,12 +58,12 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                 .ReturnsAsync((AssessmentToolWorkflowInstance?)null);
 
             //Act
-            var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
+                    var ex = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(request, CancellationToken.None));
 
             //Assert
             Assert.Equal("Failed to load Confirmation Screen activity.", ex.Message);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
-            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentStatusRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -111,7 +111,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             Assert.Equal(assessmentToolWorkflowInstance.AssessmentToolWorkflow!.IsAmendable, result.IsAmendableWorkflow);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -162,7 +162,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             Assert.False(result.IsAmendableWorkflow);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Once);
             elsaServerHttpClient.Verify(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()), Times.Once);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -193,7 +193,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             //Assert
             Assert.Equal($"You do not have permission to access this resource.", result.Message);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Never);
-            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentStatusRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -230,7 +230,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             Assert.Equal(0, result.AssessmentId);
             Assert.False(result.IsAuthorised);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Never);
-            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentStatusRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -277,7 +277,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                 x.CreateAssessmentToolInstanceNextWorkflows(It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
                     y.Count == 2 && y.Any(z => z.NextWorkflowDefinitionId == "workflowDefinition2"))));
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -323,7 +323,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                 x.CreateAssessmentToolInstanceNextWorkflows(It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
                     y.First().NextWorkflowDefinitionId == "workflowDefinition2")));
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -371,7 +371,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                 x.CreateAssessmentToolInstanceNextWorkflows(It.Is<List<AssessmentToolInstanceNextWorkflow>>(z =>
                     z.Count == 2 && z.Any(y => y.NextWorkflowDefinitionId == "workflowDefinition2"))), Times.Never);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -385,8 +385,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
-            LoadConfirmationScreenRequestHandler sut
-        )
+            LoadConfirmationScreenRequestHandler sut)
         {
             //Arrange
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -408,7 +407,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                     x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
                 Times.Never);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -422,8 +421,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
             LoadConfirmationScreenRequest request,
             WorkflowActivityDataDto workflowActivityDataDto,
-            LoadConfirmationScreenRequestHandler sut
-        )
+            LoadConfirmationScreenRequestHandler sut)
         {
             //Arrange
             elsaServerHttpClient.Setup(x => x.LoadConfirmationScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -445,7 +443,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                     x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
                 Times.Never);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -489,7 +487,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Verify(x =>
                     x.CreateAssessmentToolInstanceNextWorkflows(It.IsAny<List<AssessmentToolInstanceNextWorkflow>>()),
                 Times.Never);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == assessmentToolWorkflowInstance.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         //[Theory]

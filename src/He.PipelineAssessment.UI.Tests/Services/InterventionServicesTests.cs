@@ -247,7 +247,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
             assessmentRepository.Verify(x => x.GetWorkflowInstancesToDeleteForAmendment(intervention.AssessmentToolWorkflowInstance.AssessmentId,
                                 intervention.AssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order), Times.Never);
             assessmentRepository.Verify(x => x.SaveChanges(), Times.Never);
-            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentWithFundIdRequest>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediator.Verify(x => x.Send(It.IsAny<UpdateAssessmentStatusRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Theory]
@@ -361,7 +361,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 x => x.CreateAssessmentToolInstanceNextWorkflows(
                     It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
                         y.Count == intervention.TargetAssessmentToolWorkflows.Count)), Times.Once);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -432,7 +432,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 x => x.CreateAssessmentToolInstanceNextWorkflows(
                     It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
                         y.Count == intervention.TargetAssessmentToolWorkflows.Count)), Times.Once);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -503,7 +503,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 x => x.CreateAssessmentToolInstanceNextWorkflows(
                     It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
                         y.Count == intervention.TargetAssessmentToolWorkflows.Count)), Times.Once);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -546,7 +546,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                 x => x.CreateAssessmentToolInstanceNextWorkflows(
                     It.Is<List<AssessmentToolInstanceNextWorkflow>>(y =>
                         y.Count == intervention.TargetAssessmentToolWorkflows.Count)), Times.Once);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -591,7 +591,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                         y[0].IsVariation == true &&
                         y[0].IsLast == isLast
                         )), Times.Once);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
@@ -651,7 +651,7 @@ namespace He.PipelineAssessment.UI.Tests.Services
                         y[0].IsVariation == false &&
                         y[0].IsLast == isLast
                     )), Times.Once);
-            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentWithFundIdRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
+            mediator.Verify(x => x.Send(It.Is<UpdateAssessmentStatusRequest>(req => req.AssessmentId == command.AssessmentId), It.IsAny<CancellationToken>()), Times.Once);
         }
 
 
