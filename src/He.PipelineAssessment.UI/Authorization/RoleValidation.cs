@@ -10,20 +10,24 @@ public interface IRoleValidation
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
     bool ValidateSensitiveRecords(Assessment assessment);
-    bool ValidateForBusinessArea(string? businessArea);
+    bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment assessment);
     bool IsAdmin();
+    bool IsProjectManagerForAssessment(string? assessmentProjectManager);
+    Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId);
 }
 public class RoleValidation : IRoleValidation
 {
     private readonly IAssessmentRepository _assessmentRepository;
     private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
     private readonly IUserProvider _userProvider;
+    private readonly IUserRoleChecker _userRoleChecker;
 
-    public RoleValidation(IAssessmentRepository assessmentRepository, IAdminAssessmentToolRepository adminAssessmentToolRepository, IUserProvider userProvider)
+    public RoleValidation(IAssessmentRepository assessmentRepository, IAdminAssessmentToolRepository adminAssessmentToolRepository, IUserProvider userProvider, IUserRoleChecker userRoleChecker)
     {
         _assessmentRepository = assessmentRepository;
         _adminAssessmentToolRepository = adminAssessmentToolRepository;
         _userProvider = userProvider;
+        _userRoleChecker = userRoleChecker;
     }
     public async Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId)
     {
@@ -31,75 +35,86 @@ public class RoleValidation : IRoleValidation
 
         if (assessmentToolWorkflow != null && assessmentToolWorkflow.IsEconomistWorkflow)
         {
-                bool isEconomistRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineEconomist) || _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations));
+                bool isEconomistRoleExist = (_userRoleChecker.IsEconomist() || _userRoleChecker.IsAdmin());
                 return isEconomistRoleExist;
         }
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
 
-        if(assessmentToolWorkflow != null && !assessmentToolWorkflow.IsEarlyStage)
-        {
-            if (!ValidateForBusinessArea(assessment))
-            {
-                return false;
-            }
-        }
-
         var canSeeRecord = ValidateSensitiveRecords(assessment);
+
+        if (!canSeeRecord && assessment != null && assessment.IsSensitiveRecord())
+        {
+            canSeeRecord = await IsUserWhitelistedForSensitiveRecord(assessmentId);
+        }
 
         return canSeeRecord;
     }
 
     public bool IsAdmin()
     {
-        return _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
+        return _userRoleChecker.IsAdmin();
     }
 
-    public bool ValidateForBusinessArea(Assessment? assessment)
+    public bool IsProjectManagerForAssessment(string? assessmentProjectManager)
     {
-        if (assessment != null)
+
+        if (assessmentProjectManager == _userProvider.GetUserName())
         {
-            return ValidateForBusinessArea(assessment?.BusinessArea);
+            return true;
         }
         return false;
     }
 
-    public bool ValidateForBusinessArea(string? businessArea)
-    {
-        bool isRoleExist = false;
-        bool isAdmin = IsAdmin();
-        switch (businessArea)
-            {
-                case Constants.BusinessArea.MPP:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorMPP) || isAdmin);
-                    return isRoleExist;
-                case Constants.BusinessArea.Investment:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorInvestment) || isAdmin);
-                    return isRoleExist;
-                case Constants.BusinessArea.Development:
-                    isRoleExist = (_userProvider.CheckUserRole(Constants.AppRole.PipelineAssessorDevelopment) || isAdmin);
-                    return isRoleExist;
-                default: return isRoleExist;
-            }
-    }
-
     public bool ValidateSensitiveRecords(Assessment? assessment)
     {
-        if (assessment != null)
-        {
-            if (assessment.IsSensitiveRecord())
-            {
-                if (_userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer) ||
-                    assessment.ProjectManager == _userProvider.GetUserName())
-                {
-                    return true;
-                }
-
-                return false;
-            }
-        }
-
-        return true;
+        return ValidateSensitiveRecordsInternal(assessment, includeAdmin: false);
     }
 
+    public bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment? assessment)
+    {
+        return ValidateSensitiveRecordsInternal(assessment, includeAdmin: true);
+    }
+
+    /// <summary>
+    /// Checks if the current user's email is whitelisted for viewing a specific sensitive assessment
+    /// </summary>
+    /// <param name="assessmentId">The ID of the assessment to check</param>
+    /// <returns>True if user's email is in the whitelist, otherwise false</returns>
+    public async Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId)
+    {
+        var userEmail = _userProvider.GetUserEmail();
+
+        if (string.IsNullOrWhiteSpace(userEmail))
+        {
+            return false;
+        }
+
+        var formattedEmail = userEmail.ToLower();
+        var whitelist = await _assessmentRepository.GetSensitiveRecordWhitelist(assessmentId);
+
+        return whitelist.Any(w => w.Email.ToLower() == formattedEmail);
+    }
+
+    private bool ValidateSensitiveRecordsInternal(Assessment? assessment, bool includeAdmin)
+    {
+        if (assessment == null)
+        {
+            return true;
+        }
+
+        if (!assessment.IsSensitiveRecord())
+        {
+            return true;
+        }
+
+        var isProjectManager = assessment.ProjectManager == _userProvider.GetUserName();
+
+        if (includeAdmin)
+        {
+            return isProjectManager || IsAdmin();
+        }
+
+        return isProjectManager;
+    }
 }
 

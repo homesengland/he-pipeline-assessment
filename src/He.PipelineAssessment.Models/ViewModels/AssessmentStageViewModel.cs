@@ -22,5 +22,6 @@
         public string? SubmittedBy { get; set; } = null;
         public bool? IsVariation { get; set; }
         public bool? IsEarlyStage { get; set; }
+        public bool? IsEconomistWorkflow { get; set; }
     }
 }

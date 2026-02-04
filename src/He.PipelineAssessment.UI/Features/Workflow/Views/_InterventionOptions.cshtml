@@ -14,8 +14,8 @@
     }
 
     @Html.ActionLink("Rollback", "Rollback", "Rollback", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
-    
-    @if(Model.IsAmendableWorkflow)
+
+    @if (Model.IsAmendableWorkflow || (await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
     {
         @Html.ActionLink("Amendment", "Amendment", "Amendment", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
     }
@@ -26,7 +26,7 @@
         </button>
     }
 
-    @if (Model.IsVariationAllowed)
+    @if (Model.IsVariationAllowed || (await AuthorizationService.AuthorizeAsync(User, Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)).Succeeded)
     {
         @Html.ActionLink("Variation", "Variation", "Variation", new { workflowInstanceId = Model.WorkflowInstanceId }, new { @class = "govuk-button", data_module="govuk-button" })
     }

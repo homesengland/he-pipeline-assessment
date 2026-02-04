@@ -1,6 +1,8 @@
 ﻿using AutoFixture.Xunit2;
+using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.Tests.Common;
+using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Economist;
 using He.PipelineAssessment.UI.Features.Economist.EconomistAssessmentList;
 using MediatR;
@@ -45,5 +47,34 @@ public class EconomistControllerTests
         Assert.NotNull(result);
         Assert.IsType<ViewResult>(result);
 
+    }
+
+    [Theory]
+    [AutoMoqData]
+    public async Task GetEconomistList_ShouldCheckPipelineEconomistRole_GivenUserIsEconomist(
+    [Frozen] Mock<IMediator> mediator,
+    [Frozen] Mock<IUserProvider> userProvider,
+    [Frozen] Mock<IUserRoleChecker> userRoleChecker,
+    List<AssessmentDataViewModel> response,
+    EconomistController sut)
+    {
+        //Arrange
+        userProvider.Setup(x => x.GetUserName()).Returns("economist@test.com");
+        userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
+
+        mediator.Setup(x => x.Send(It.IsAny<EconomistAssessmentListRequest>(), CancellationToken.None))
+            .ReturnsAsync(response);
+
+        //Act
+        var result = await sut.GetEconomistList();
+
+        //Assert
+        Assert.NotNull(result);
+        Assert.IsType<ViewResult>(result);
+        userRoleChecker.Verify(x => x.IsEconomist(), Times.Once);
+        mediator.Verify(x => x.Send(It.Is<EconomistAssessmentListRequest>(r =>
+            r.CanViewSensitiveRecords == true &&
+            r.Username == "economist@test.com"),
+            CancellationToken.None), Times.Once);
     }
 }

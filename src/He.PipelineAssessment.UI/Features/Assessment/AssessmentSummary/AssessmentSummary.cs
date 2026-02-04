@@ -1,5 +1,7 @@
 ﻿using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
+using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
 {
@@ -10,6 +12,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public string SiteName { get; set; } = null!;
         public string CounterParty { get; set; } = null!;
         public string Reference { get; set; } = null!;
+        public int SpId { get; set; }
         public string? LocalAuthority { get; set; }
         public string? BusinessArea { get; set; }
         public string? ProjectManager { get; set; }
@@ -19,6 +22,13 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public IEnumerable<AssessmentSummaryStage> Stages { get; set; } = null!;
         public IEnumerable<AssessmentInterventionViewModel> Interventions { get; set; } = null!;
         public IEnumerable<AssessmentSummaryStage> StagesHistory { get; set; } = null!;
+        public IEnumerable<SensitiveRecordPermissionsWhitelistDto> Permissions { get; set; } = Enumerable.Empty<SensitiveRecordPermissionsWhitelistDto>();
+
+        public bool HasCurrentEconomistWorkflow()
+        {
+            bool hasEconomicWorkflowInDraft = Stages.Any(x => x.IsCurrentWorkflowEconomic());
+            return hasEconomicWorkflowInDraft;
+        }
 
     }
 
@@ -45,6 +55,16 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         public bool? IsEarlyStage { get; set; }
         public string? Result { get; set; } = null;
         public string? SubmittedBy { get; set; } = null;
+        public bool? IsEconomistWorkflow { get; set; }
+
+        public bool IsCurrentWorkflowEconomic()
+        {
+            if(IsEconomistWorkflow != null && IsEconomistWorkflow == true)
+            {
+                return Status == AssessmentToolWorkflowInstanceConstants.Draft;
+            }
+            return false;
+        }
 
         public string StartedDateString()
         {

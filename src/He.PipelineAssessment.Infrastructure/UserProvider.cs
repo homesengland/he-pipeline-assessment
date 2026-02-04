@@ -8,7 +8,6 @@ namespace He.PipelineAssessment.Infrastructure
     {
         string? GetUserName();
         string? GetUserEmail();
-        bool CheckUserRole(string roleName);
     }
     public class UserProvider : IUserProvider
     {
@@ -48,21 +47,6 @@ namespace He.PipelineAssessment.Infrastructure
                 _logger.LogError("The HttpContext is null");
                 return null;
             }
-        }
-
-        public bool CheckUserRole(string roleName )
-        {
-            if (_httpContextAccessor.HttpContext != null)
-            {
-                var isRoleExist = _httpContextAccessor.HttpContext.User.IsInRole(roleName);
-                return isRoleExist;
-            }
-            else
-            {
-                _logger.LogError("The HttpContext is null");
-                return false;
-            }
-
         }
 
     }

@@ -2,6 +2,7 @@
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
+using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist;
 using He.PipelineAssessment.UI.Features.Assessment.TestAssessmentSummary;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,21 +18,26 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
         private readonly IUserProvider _userProvider;
+        private readonly IRoleValidation _roleValidation;
+        private readonly IUserRoleChecker _userRoleChecker;
 
 
-        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider)
+        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider, IRoleValidation roleValidation, IUserRoleChecker userRoleChecker)
         {
             _logger = logger;
             _mediator = mediator;
             _configuration = configuration;
             _userProvider = userProvider;
+            _roleValidation = roleValidation;
+            _userRoleChecker = userRoleChecker;
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> Index()
         {
             var username = _userProvider.GetUserName();
-            var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+
+            var canViewSensitiveRecords = _userRoleChecker.IsAdmin();
             var listModel = await _mediator.Send(new AssessmentListRequest()
             {
                 Username = username,
@@ -45,6 +51,21 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         public async Task<IActionResult> Summary(int assessmentid, int correlationId)
         {
             var overviewModel = await _mediator.Send(new AssessmentSummaryRequest(assessmentid, correlationId));
+
+            // Load permissions data
+            var isAdmin = _userRoleChecker.IsAdmin();
+            var currentUsername = _userProvider.GetUserName();
+            var isProjectManager = overviewModel.ProjectManager == currentUsername;
+            var isEconomistAndAssessmentAtEconomistStage = (_userRoleChecker.IsEconomist() && overviewModel.HasCurrentEconomistWorkflow());
+
+            var isWhitelisted = await _roleValidation.IsUserWhitelistedForSensitiveRecord(assessmentid);
+
+            if (isAdmin || isProjectManager || isWhitelisted || isEconomistAndAssessmentAtEconomistStage)
+            {
+                var permissionsModel = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
+                overviewModel.Permissions = permissionsModel.Permissions;
+            }
+
             return View("Summary", overviewModel);
         }
 
@@ -61,6 +82,24 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             {
                 return RedirectToAction("Summary", new { assessmentid = assessmentid, correlationId = correlationId });
             }
+        }
+
+        [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
+        [ResponseCache(NoStore = true)]
+        public async Task<IActionResult> Permissions(int assessmentid, int correlationId)
+        {
+            var permissionsModel = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
+
+            var isAdmin = _userRoleChecker.IsAdmin();
+            var currentUsername = _userProvider.GetUserName();
+            var isProjectManager = permissionsModel.AssessmentSummary.ProjectManager == currentUsername;
+
+            if (!isAdmin && !isProjectManager)
+            {
+                return RedirectToAction("AccessDenied", "Error");
+            }
+
+            return PartialView("_PermissionsList", permissionsModel);
         }
     }
 }
