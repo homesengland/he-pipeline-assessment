@@ -11,7 +11,7 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
         public string PreviousActivityType { get; set; } = null!;
 
         public string? PageTitle { get; set; } = null!;
-
+        public bool ShowToolName { get; set; } = true;
         public string? FooterTitle { get; set; } = null!;
         public string? FooterText { get; set; } = null!;
         public List<Question>? CheckQuestions { get; set; }
