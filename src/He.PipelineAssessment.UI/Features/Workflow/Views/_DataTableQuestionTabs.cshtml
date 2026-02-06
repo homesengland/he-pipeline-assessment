@@ -1,0 +1,201 @@
+﻿@using He.PipelineAssessment.UI.Features.Workflow.ViewModels
+@using He.PipelineAssessment.UI.Helper
+@using Elsa.CustomWorkflow.Sdk.Providers;
+@using Elsa.CustomWorkflow.Sdk
+@model He.PipelineAssessment.UI.Features.Workflow.ViewModels.Question
+@* *****TAB STYLE BELOW***** *@
+
+@{
+    var formItemName = ValidationPropertyNameProvider.GetPropertyName(Model.QuestionType, Model.Index);
+    var errorFormClass = !Model.IsValid ? "govuk-form-group--error" : "";
+    var isReadOnly = Model.IsReadOnly ? "disabled" : "";
+    DataTable largestDataTable = Model.DataTable.OrderByDescending(x => x.Inputs.Count()).FirstOrDefault()!;
+    int totalRows = largestDataTable.Inputs.Count();
+    int rowsPerTab = 10;
+    int tabCount = (int)Math.Ceiling((double)totalRows / rowsPerTab);
+}
+
+<div class="govuk-form-group @errorFormClass" id="@formItemName">
+
+    @* Hidden fields for DataTable-level properties *@
+    @for (int i = 0; i < Model.DataTable.Count(); i++)
+    {
+        var hiddenInputType = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.InputType";
+        var hiddenDisplayGroupId = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.DisplayGroupId";
+
+        <input type="hidden" name="@hiddenInputType" value="@Model.DataTable[i].InputType" />
+        <input type="hidden" name="@hiddenDisplayGroupId" value="@Model.DataTable[i].DisplayGroupId" />
+
+        @* Hidden fields for ALL row metadata - MUST use "Title" not "InputHeading" for DTO binding *@
+        @for (int rowIndex = 0; rowIndex < Model.DataTable[i].Inputs.Count(); rowIndex++)
+        {
+            var inputs = "Data.Questions[" + Model.DataTable[i].QuestionIndex + "].DataTable.Inputs";
+            var itemId = inputs + "[" + rowIndex + "]";
+            var hiddenTitleName = itemId + ".Title";
+            var hiddenIdentifierName = itemId + ".Identifier";
+            var hiddenIsReadOnlyName = itemId + ".IsReadOnly";
+            var hiddenIsSummaryTotalName = itemId + ".IsSummaryTotal";
+
+            <input type="hidden" name="@hiddenTitleName" value="@Model.DataTable[i].Inputs[rowIndex].InputHeading" />
+            <input type="hidden" name="@hiddenIdentifierName" value="@Model.DataTable[i].Inputs[rowIndex].Identifier" />
+            <input type="hidden" name="@hiddenIsReadOnlyName" value="@Model.DataTable[i].Inputs[rowIndex].IsReadOnly.ToString()" />
+            <input type="hidden" name="@hiddenIsSummaryTotalName" value="@Model.DataTable[i].Inputs[rowIndex].IsSummaryTotal.ToString()" />
+        }
+    }
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="govuk-tabs" data-module="govuk-tabs">
+                <h2 class="govuk-tabs__title">
+                    Contents
+                </h2>
+                <ul class="govuk-tabs__list">
+                    @for (int t = 0; t < tabCount; t++)
+                    {
+                        var startRow = t * rowsPerTab;
+                        var endRow = Math.Min(startRow + rowsPerTab, totalRows);
+                        var isSelected = t == 0 ? "govuk-tabs__list-item--selected" : "";
+
+                        <li class="govuk-tabs__list-item @isSelected">
+                            <a class="govuk-tabs__tab" href="#tab-@t">
+                                Rows @startRow to @(endRow - 1)
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                @for (int t = 0; t < tabCount; t++)
+                {
+                    var startRow = t * rowsPerTab;
+                    var endRow = Math.Min(startRow + rowsPerTab, totalRows);
+                    var isHidden = t == 0 ? "" : "govuk-tabs__panel--hidden";
+
+                    <div class="govuk-tabs__panel @isHidden" id="tab-@t">
+                        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key"></dt>
+                                @for (int q = 0; q < Model.DataTable.Count(); q++)
+                                {
+                                    var inputItemName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs";
+                                    var questionText = Model.DataTable[q].ReEvaluatePrePopulatedAnswers && !Model.DataTable[q].Inputs.All(x => x.IsReadOnly) ? $"{@Model.DataTable[q].QuestionText}*" : @Model.DataTable[q].QuestionText;
+                                    <dt class="govuk-summary-list__key" id="@inputItemName">
+                                        @questionText
+                                    </dt>
+                                }
+                            </div>
+                            @for (int i = startRow; i < endRow; i++)
+                            {
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        @largestDataTable.Inputs[i].InputHeading
+                                    </dt>
+                                    @for (int q = 0; q < Model.DataTable.Count(); q++)
+                                    {
+                                        int countOfColumnIndex = Model.DataTable[q].Inputs.Count();
+                                        if (i < countOfColumnIndex)
+                                        {
+                                            var inputs = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.Inputs";
+                                            var itemId = inputs + "[" + i + "]";
+                                            var itemName = itemId + ".Input";
+
+                                            @* Check for question-level error (entire DataTable) *@
+                                            var dataTablePropertyName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable";
+                                            string questionNotAnswered = Model.ValidationMessages != null && Model.ValidationMessages.Errors.Any(x => x.PropertyName == dataTablePropertyName) ? "govuk-input--error" : "";
+
+                                            @* Check for field-level error (specific input cell) - matches validator output "tableInput[i]" *@
+                                            var tableInputPropertyName = "Data.Questions[" + Model.DataTable[q].QuestionIndex + "].DataTable.tableInput[" + i + "]";
+                                            string errorFieldClass = Model.ValidationMessages != null && Model.ValidationMessages.Errors.Any(x => x.PropertyName == tableInputPropertyName) ? "govuk-input--error" : "";
+
+                                            var input = Model.DataTable[q].Inputs.ElementAtOrDefault(i);
+                                            bool hasNullInput = input == null;
+                                            var inputValue = hasNullInput ? "" : Model.DataTable[q].Inputs[i].Input;
+                                            var disableInput = Model.DataTable[q].Inputs[i].IsReadOnly ? "disabled" : "";
+                                            string dataFlagIsSummary = Model.DataTable[q].Inputs[i].IsSummaryTotal ? "true" : "false";
+                                            string dataColumn = Model.DataTable[q].DisplayGroupId + "_" + q.ToString();
+
+                                            <dd class="govuk-summary-list__value">
+                                                <div class="govuk-input__wrapper">
+                                                    @if (!String.IsNullOrEmpty(disableInput))
+                                                    {
+                                                        <input type="hidden" name="@itemName" value="@Model.DataTable[q].Inputs[i].Input" data-summary="true" />
+                                                    }
+                                                    @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.CurrencyDataTableInput)
+                                                    {
+                                                        var success = Decimal.TryParse(inputValue, out decimal tempCurrencyInputDecimal);
+                                                        decimal? currencyInputDecimal = success ? tempCurrencyInputDecimal : null;
+                                                        var currencyInputValue = success ? currencyInputDecimal.ToCommaSeparatedNumber() : inputValue;
+                                                        <div class="govuk-input__prefix" aria-hidden="true">£</div>
+                                                        var labelId = Model.DataTable[q].QuestionText + "_" + Model.DataTable[q].Inputs[i].InputHeading;
+                                                        <label hidden id="@labelId.Replace(" ", "")">Input for column @Model.DataTable[q].QuestionText and row @Model.DataTable[q].Inputs[i].InputHeading</label>
+                                                        <input id="@itemId"
+                                                               type="text"
+                                                               name="@itemName"
+                                                               class="govuk-input govuk-input--width-10 @errorFieldClass @questionNotAnswered"
+                                                               @disableInput
+                                                               data-summary=@dataFlagIsSummary
+                                                               data-column=@dataColumn
+                                                               value="@currencyInputValue"
+                                                               currency-formatter="true"
+                                                               aria-labelledby="@labelId.Replace(" ", "")" />
+                                                    }
+                                                    @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.DecimalDataTableInput)
+                                                    {
+                                                        var labelId = Model.DataTable[q].QuestionText + "_" + Model.DataTable[q].Inputs[i].InputHeading;
+                                                        <label hidden id="@labelId.Replace(" ", "")">Input for column @Model.DataTable[q].QuestionText and row @Model.DataTable[q].Inputs[i].InputHeading</label>
+                                                        <input id="@itemName"
+                                                               type="text"
+                                                               name="@itemName"
+                                                               class="govuk-input govuk-input--width-10 @errorFieldClass @questionNotAnswered"
+                                                               @disableInput
+                                                               data-summary=@dataFlagIsSummary
+                                                               data-column=@dataColumn
+                                                               value="@inputValue"
+                                                               currency-formatter="true"
+                                                               aria-labelledby="@labelId.Replace(" ", "")" />
+                                                    }
+                                                    @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.IntegerDataTableInput)
+                                                    {
+                                                        var labelId = Model.DataTable[q].QuestionText + "_" + Model.DataTable[q].Inputs[i].InputHeading;
+                                                        <label hidden id="@labelId.Replace(" ", "")">Input for column @Model.DataTable[q].QuestionText and row @Model.DataTable[q].Inputs[i].InputHeading</label>
+                                                        <input id="@itemName"
+                                                               type="text"
+                                                               name="@itemName"
+                                                               class="govuk-input govuk-input--width-10 @errorFieldClass @questionNotAnswered"
+                                                               @disableInput
+                                                               data-summary=@dataFlagIsSummary
+                                                               data-column=@dataColumn
+                                                               value="@inputValue"
+                                                               currency-formatter="true"
+                                                               aria-labelledby="@labelId.Replace(" ", "")" />
+                                                    }
+                                                    @if (Model.DataTable[q].InputType == DataTableInputTypeConstants.TextDataTableInput)
+                                                    {
+                                                        var labelId = Model.DataTable[q].QuestionText + "_" + Model.DataTable[q].Inputs[i].InputHeading;
+                                                        <label hidden id="@labelId.Replace(" ", "")">Input for column @Model.DataTable[q].QuestionText and row @Model.DataTable[q].Inputs[i].InputHeading</label>
+                                                        <input id="@itemId"
+                                                               type="text"
+                                                               name="@itemName"
+                                                               class="govuk-input govuk-input--width-10 @errorFieldClass @questionNotAnswered"
+                                                               @disableInput
+                                                               value="@inputValue"
+                                                               aria-labelledby="@labelId.Replace(" ", "")" />
+                                                    }
+                                                </div>
+                                            </dd>
+                                        }
+                                        else
+                                        {
+                                            <dd class="govuk-summary-list__value">
+                                                <div class="govuk-input__wrapper"></div>
+                                            </dd>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </dl>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
