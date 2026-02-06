@@ -28,8 +28,9 @@ namespace He.PipelineAssessment.UI.Common.Utility
             {
                 var latestSubmittedWorkflowInstanceWithToolInfo = await _repository.GetAssessmentToolWorkflowInstance(latestSubmittedWorkflowInstance.WorkflowInstanceId);
 
-                if (latestSubmittedWorkflowInstanceWithToolInfo != null &&
-                    latestSubmittedWorkflowInstanceWithToolInfo.AssessmentToolWorkflow.AssessmentTool.Order == currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)
+                if (latestSubmittedWorkflowInstanceWithToolInfo != null
+                    && latestSubmittedWorkflowInstanceWithToolInfo.AssessmentToolWorkflow != null 
+                    && latestSubmittedWorkflowInstanceWithToolInfo.AssessmentToolWorkflow.AssessmentTool.Order == currentAssessmentToolWorkflowInstance.AssessmentToolWorkflow.AssessmentTool.Order)
                 {
                     return true;
                 }
