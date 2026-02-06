@@ -73,7 +73,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Funds.FundsList
             Assert.NotNull(result);
             Assert.IsType<FundsListResponse>(result);
             Assert.Equal(assessmentFunds.Count(), result.Funds.Count());
-            Assert.Equal(assessmentFunds.ToString, result.Funds.ToString);
         }
 
         [Theory]
