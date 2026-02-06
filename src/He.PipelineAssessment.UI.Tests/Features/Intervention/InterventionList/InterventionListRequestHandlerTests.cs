@@ -56,5 +56,28 @@ namespace He.PipelineAssessment.UI.Tests.Features.Intervention.InterventionList
             Assert.NotEmpty(result);
             Assert.Equal(interventions.Count(), result.Count());
         }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsFilteredInterventionListData_GivenAnAssessmentHasNoValidData(
+            [Frozen] Mock<IStoredProcedureRepository> repo,
+             InterventionListRequest interventionListRequest,
+            List<AssessmentInterventionViewModel> interventions,
+            InterventionListRequestHandler sut
+        )
+        {
+            //Arrange
+            repo.Setup(x => x.GetInterventionList())
+                .ReturnsAsync(interventions);
+            interventions.First().ValidData = false;
+
+            //Act
+            var result = await sut.Handle(interventionListRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+            Assert.Equal(interventions.Count() - 1, result.Count());
+        }
     }
 }

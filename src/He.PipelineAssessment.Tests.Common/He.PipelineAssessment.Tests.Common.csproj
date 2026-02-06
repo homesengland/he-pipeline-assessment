@@ -13,4 +13,7 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\He.PipelineAssessment.Models\He.PipelineAssessment.Models.csproj" />
+  </ItemGroup>
 </Project>

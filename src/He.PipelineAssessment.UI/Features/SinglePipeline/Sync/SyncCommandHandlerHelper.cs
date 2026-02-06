@@ -8,6 +8,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
         List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> sourcSinglePipelineData);
         List<Models.Assessment> AssessmentsToBeRemoved(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<Models.Assessment> singlePipelineData);
         int UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data);
+
+        int SetAssessmentsAsInvalid(List<Models.Assessment> assessmentsToBeSetAsInvalid);
     }
 
     public class SyncCommandHandlerHelper : ISyncCommandHandlerHelper
@@ -46,7 +48,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     LandType = string.IsNullOrEmpty(item.land_type)
                         ? "-"
                         : item.land_type,
-                    SensitiveStatus = item.sensitive_status
+                    SensitiveStatus = item.sensitive_status,
+                    ValidData = true
                 };
 
                 assessmentsToBeAdded.Add(assessment);
@@ -65,6 +68,20 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 assessmentsToBeRemoved = assessments.Where(x => idsToBeRemoved.Contains(x.SpId)).ToList();
             }
             return assessmentsToBeRemoved;
+        }
+
+        public int SetAssessmentsAsInvalid(List<Models.Assessment> assessmentsToBeSetAsInvalid)
+        {
+            var count = 0;
+            foreach (var assessment in assessmentsToBeSetAsInvalid)
+            {
+                if (assessment != null)
+                {
+                    assessment.ValidData = false;
+                    count++;
+                }
+            }
+            return count;
         }
 
         public int UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data)
@@ -126,6 +143,10 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     {
                         destination.SensitiveStatus = source.sensitive_status!;
                         updateFlag = true;
+                    }
+                    if (destination.HasValidData())
+                    {
+                        destination.ValidData = true;
                     }
                 }
                 if (updateFlag)

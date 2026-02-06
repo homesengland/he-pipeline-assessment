@@ -24,7 +24,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
             repo.Setup(x => x.GetAssessments()).Throws(exception);
 
             //Act
-            var result = await Assert.ThrowsAsync<ApplicationException>(()=>sut.Handle(assessmentListRequest, CancellationToken.None));
+            var result = await Assert.ThrowsAsync<ApplicationException>(() => sut.Handle(assessmentListRequest, CancellationToken.None));
 
             //Assert
             Assert.Equal("Unable to get list of assessments.", result.Message);
@@ -128,6 +128,29 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
             Assert.NotEmpty(result);
             Assert.Equal(assessments.Count(), result.Count());
             Assert.Equal(1, result.Count(x => x.IsSensitiveRecord()));
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsFilteredAssessmentListData_GivenAnAssessmentDoesNotHaveValidData(
+            [Frozen] Mock<IStoredProcedureRepository> repo,
+            AssessmentListRequest assessmentListRequest,
+            List<AssessmentDataViewModel> assessments,
+            AssessmentListRequestHandler sut
+        )
+        {
+            //Arrange
+            repo.Setup(x => x.GetAssessments())
+                .ReturnsAsync(assessments);
+            assessments.First().ValidData = false;
+
+            //Act
+            var result = await sut.Handle(assessmentListRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.NotEmpty(result);
+            Assert.Equal(assessments.Count() - 1, result.Count());
         }
     }
 }
