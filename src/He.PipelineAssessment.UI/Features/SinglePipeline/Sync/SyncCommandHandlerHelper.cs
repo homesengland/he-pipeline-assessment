@@ -99,9 +99,9 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                         destination.Counterparty = source.applicant_1!;
                         updateFlag = true;
                     }
-                    if (!string.IsNullOrEmpty(source.internal_reference) && destination.Reference != source.internal_reference)
+                    if (source.project_identifier.HasValue && destination.Reference != source.project_identifier.ToString())
                     {
-                        destination.Reference = source.internal_reference!;
+                        destination.Reference = source.project_identifier.ToString()!;
                         updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.pipeline_opportunity_site_name) && destination.SiteName != source.pipeline_opportunity_site_name)
