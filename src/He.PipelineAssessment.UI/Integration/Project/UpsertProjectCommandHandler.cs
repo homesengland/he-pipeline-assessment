@@ -40,7 +40,8 @@ namespace He.PipelineAssessment.UI.Integration.Project
                     assessmentRecord = new Models.Assessment()
                     {
                         SpId = request.ProjectData.ProjectId,
-                        Status = "New"
+                        Status = "New",
+                        ValidData = true
                     };
                 }
 

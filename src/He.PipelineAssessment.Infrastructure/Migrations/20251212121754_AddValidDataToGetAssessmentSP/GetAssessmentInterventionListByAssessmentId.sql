@@ -5,7 +5,6 @@ BEGIN
    SELECT 
 	i.Id,
 	a.Reference,
-	a.SpId,
 	at.Name + '' - '' + atw.Name as WorkflowName,
 	i.RequestedBy,
 	i.Administrator,
