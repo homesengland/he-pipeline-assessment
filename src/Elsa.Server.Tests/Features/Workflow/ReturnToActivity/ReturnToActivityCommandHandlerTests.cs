@@ -99,11 +99,11 @@ namespace Elsa.Server.Tests.Features.Workflow.ReturnToActivity
         [Theory]
         [AutoMoqData]
         public async Task
-            Handle_ShouldReturnErrors_WhenWorkflowInstanceIsNull(
-            [Frozen] Mock<IActivityDataProvider> activityDataProvider,
-            [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
-            [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
-            ReturnToActivityCommandHandler sut
+        Handle_ShouldReturnErrors_WhenWorkflowInstanceIsNull(
+        [Frozen] Mock<IActivityDataProvider> activityDataProvider,
+        [Frozen] Mock<IElsaCustomRepository> elsaCustomRepository,
+        [Frozen] Mock<IWorkflowRegistry> workflowRegistry,
+        ReturnToActivityCommandHandler sut
         )
         {
             //Setup
@@ -114,11 +114,15 @@ namespace Elsa.Server.Tests.Features.Workflow.ReturnToActivity
             };
 
             var dictionary = new Dictionary<string, object?>()
-            {
-                { "ActivityName", "MyActivity" },
-            };
+    {
+        { "ActivityName", "MyActivity" },
+    };
 
-            activityDataProvider.Setup(x => x.GetActivityData("456", "123", CancellationToken.None)).ReturnsAsync(dictionary);
+            activityDataProvider.Setup(x => x.GetActivityData("456", "123", CancellationToken.None))
+                .ReturnsAsync(dictionary);
+
+            elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance("456", CancellationToken.None))
+                .ReturnsAsync((QuestionWorkflowInstance?)null);
 
             //Act
             var result = await sut.Handle(returnToActivityCommand, CancellationToken.None);
