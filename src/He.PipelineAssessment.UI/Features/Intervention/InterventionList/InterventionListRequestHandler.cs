@@ -21,9 +21,9 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionList
                 var interventionList = await _storedProcedureRepository.GetInterventionList();
 
                 var filteredInterventions = interventionList.Where(x =>
-                    !x.IsSensitiveRecord() || (x.IsSensitiveRecord() &&
+                    x.ValidData && (!x.IsSensitiveRecord() || (x.IsSensitiveRecord() &&
                                                (request.CanViewSensitiveRecords ||
-                                                request.Username == x.ProjectManager)));
+                                                request.Username == x.ProjectManager))));
 
                 return filteredInterventions.ToList();
             }
