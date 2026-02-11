@@ -14,6 +14,7 @@ public class AssessmentInterventionViewModel : AuditableEntityViewModel
     public string DecisionType { get; set; } = null!;
     public string? SensitiveStatus { get; set; } = null!;
     public string ProjectManager { get; set; } = null!;
+    public bool ValidData { get; set; }
 
     public string StatusDisplayTag()
     {

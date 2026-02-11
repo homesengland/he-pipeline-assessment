@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Models.Helper;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace He.PipelineAssessment.Models
 {
@@ -21,6 +22,8 @@ namespace He.PipelineAssessment.Models
         public string LandType { get; set; } = string.Empty;
         public virtual List<AssessmentToolWorkflowInstance>? AssessmentToolWorkflowInstances { get; set; }
         public string? SensitiveStatus { get; set; }
+        [DefaultValue(true)]
+        public bool ValidData { get; set; } = true;
         public int? FundId { get; set; }
 
         //Corresponds to the most recently completed AssessmentToolWorkflow's Id.
@@ -31,6 +34,16 @@ namespace He.PipelineAssessment.Models
         public bool IsSensitiveRecord()
         {
             return SensitiveStatusHelper.IsSensitiveStatus(SensitiveStatus);
+        }
+
+        public bool HasValidData()
+        {
+            if(ProjectManager != null && NumberOfHomes != null && LocalAuthority != null && SiteName != null
+                && Status != null && LandType != null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
