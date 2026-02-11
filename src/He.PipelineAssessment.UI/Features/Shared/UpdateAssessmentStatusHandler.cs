@@ -149,31 +149,24 @@ namespace He.PipelineAssessment.UI.Features.Shared
                 throw;
             }
         }
-
         /// <summary>
-        /// Retrieves both fund ID and workflow tool ID in parallel for maximum efficiency.
+        /// Retrieves both fund ID and workflow tool ID sequentially to avoid DbContext threading issues.
         /// </summary>
         /// <param name="assessmentId">The unique identifier of the assessment.</param>
         /// <returns>A tuple containing the nullable fund ID and workflow tool ID.</returns>
         /// <remarks>
         /// <para>
-        /// Uses <see cref="Task.WhenAll"/> to execute both queries simultaneously, reducing total execution time
-        /// by approximately 50% compared to sequential execution. Each query is independently optimized with
-        /// database-level projections.
-        /// </para>
-        /// <para>
-        /// <b>Performance:</b> ~10-15ms for both queries combined (parallel) vs ~20-30ms (sequential)
+        /// Executes queries sequentially to prevent concurrent access to the same DbContext instance.
+        /// DbContext is not thread-safe and does not support parallel operations on the same instance.
         /// </para>
         /// </remarks>
         private async Task<(int? fundId, int? workflowToolId)> GetAssessmentStatusData(int assessmentId)
         {
-            // Execute both queries in parallel for maximum efficiency
-            var fundIdTask = GetCurrentFundId(assessmentId);
-            var workflowToolIdTask = GetLatestCompletedWorkflowId(assessmentId);
+            // Execute queries sequentially to avoid DbContext threading issues
+            var fundId = await GetCurrentFundId(assessmentId);
+            var workflowToolId = await GetLatestCompletedWorkflowId(assessmentId);
 
-            await Task.WhenAll(fundIdTask, workflowToolIdTask);
-
-            return (await fundIdTask, await workflowToolIdTask);
+            return (fundId, workflowToolId);
         }
 
         /// <summary>

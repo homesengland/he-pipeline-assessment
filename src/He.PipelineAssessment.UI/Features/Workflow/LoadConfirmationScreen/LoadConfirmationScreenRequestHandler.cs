@@ -119,7 +119,12 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 
                                 if (nextWorkflows.Any())
                                     await _assessmentRepository.CreateAssessmentToolInstanceNextWorkflows(nextWorkflows);
+
+
+
                             }
+                            //Update Status of Assessment after first completion.
+                            await _mediator.Send(new UpdateAssessmentStatusRequest { AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId });
 
                             _serviceBusMessageSender.SendMessage(currentAssessmentToolWorkflowInstance);
                         }
@@ -133,7 +138,6 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
 
                             
                         }
-                        await _mediator.Send(new UpdateAssessmentStatusRequest { AssessmentId = currentAssessmentToolWorkflowInstance.AssessmentId });
                         PageHeaderHelper.PopulatePageHeaderInformation(result, currentAssessmentToolWorkflowInstance);
                         return await Task.FromResult(result);
                     }
