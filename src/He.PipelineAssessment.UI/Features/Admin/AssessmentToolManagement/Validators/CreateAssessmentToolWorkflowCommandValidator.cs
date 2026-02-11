@@ -24,13 +24,13 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
                 .Must(BeUnique)
                 .WithMessage("The {PropertyName} must be unique and not used in another Assessment Tool Workflow");
 
-            RuleFor(c => c.IsEarlyStage)
-                .Must(FollowIsEarlyStageRule)
-                .WithMessage("Funds can only be assigned to assessment tool workflows that are not marked as Early Stage. " +
-                "Please ensure that no fund is selected when creating an Early Stage workflow.");
+            RuleFor(c => c.AssessmentFundId)
+                .Must((command, assessmentFundId) => !command.IsEarlyStage || !assessmentFundId.HasValue)
+                .WithMessage("Funds cannot be assigned to assessment tool workflows that are marked as Early Stage. " +
+                    "Please ensure that no fund is selected when creating an Early Stage workflow.");
 
             RuleFor(c => c.AssessmentFundId)
-                .Must((command, assessmentFundId) => FollowFundRule(command.IsEarlyStage, assessmentFundId))
+                .Must((command, assessmentFundId) => command.IsEarlyStage || (assessmentFundId.HasValue && assessmentFundId.Value > 0))
                 .WithMessage("A fund must be assigned to assessment tool workflows that are not marked as Early Stage.");
         }
 

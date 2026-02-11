@@ -161,7 +161,7 @@ namespace Elsa.Server.Tests.Features.Workflow.ReturnToActivity
 
             activityDataProvider.Setup(x => x.GetActivityData("456", "123", CancellationToken.None)).ReturnsAsync(dictionary);
             elsaCustomRepository.Setup(x => x.GetQuestionWorkflowInstance("456", CancellationToken.None)).ReturnsAsync(workflowInstance);
-
+            workflowRegistry.Setup(x => x.FindAsync(workflowInstance.WorkflowDefinitionId, VersionOptions.Published, null, CancellationToken.None)).ReturnsAsync((WorkflowBlueprint?)null);
             //Act
             var result = await sut.Handle(returnToActivityCommand, CancellationToken.None);
 

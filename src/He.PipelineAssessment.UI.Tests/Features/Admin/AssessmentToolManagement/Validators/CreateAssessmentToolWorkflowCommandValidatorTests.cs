@@ -69,7 +69,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Assert
             Assert.Single(result.Errors);
-            Assert.Equal("A fund must be assigned to assessment tool workflows that are not marked as Early Stage",
+            Assert.Equal("A fund must be assigned to assessment tool workflows that are not marked as Early Stage.",
                 result.Errors.First().ErrorMessage);
             Assert.Equal("AssessmentFundId", result.Errors.First().PropertyName);
         }
