@@ -11,6 +11,7 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
         public string PreviousActivityType { get; set; } = null!;
 
         public string? ConfirmationTitle { get; set; } = null!;
+        public bool ShowToolName { get; set; } = true;
         public string? ConfirmationText { get; set; } = null!;
         public string? FooterTitle { get; set; } = null!;
         public string? FooterText { get; set; } = null!;
