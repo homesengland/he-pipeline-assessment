@@ -8,6 +8,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
         List<Models.Assessment> AssessmentsToBeAdded(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<SinglePipelineData> sourcSinglePipelineData);
         List<Models.Assessment> AssessmentsToBeRemoved(List<int> sourceAssessmentSpIds, List<int> destinationAssessmentSpIds, List<Models.Assessment> singlePipelineData);
         int UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data);
+
+        int SetAssessmentsAsInvalid(List<Models.Assessment> assessmentsToBeSetAsInvalid);
     }
 
     public class SyncCommandHandlerHelper : ISyncCommandHandlerHelper
@@ -29,7 +31,7 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                 var assessment = new Models.Assessment()
                 {
                     Counterparty = string.IsNullOrEmpty(item.applicant_1) ? "-" : item.applicant_1,
-                    Reference = string.IsNullOrEmpty(item.internal_reference) ? "-" : item.internal_reference,
+                    Reference = (!item.project_identifier.HasValue || item.project_identifier.Value == 0) ? "-" : item.project_identifier.Value.ToString(),
                     SiteName = string.IsNullOrEmpty(item.pipeline_opportunity_site_name)
                         ? "-"
                         : item.pipeline_opportunity_site_name,
@@ -46,7 +48,8 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     LandType = string.IsNullOrEmpty(item.land_type)
                         ? "-"
                         : item.land_type,
-                    SensitiveStatus = item.sensitive_status
+                    SensitiveStatus = item.sensitive_status,
+                    ValidData = true
                 };
 
                 assessmentsToBeAdded.Add(assessment);
@@ -67,6 +70,20 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
             return assessmentsToBeRemoved;
         }
 
+        public int SetAssessmentsAsInvalid(List<Models.Assessment> assessmentsToBeSetAsInvalid)
+        {
+            var count = 0;
+            foreach (var assessment in assessmentsToBeSetAsInvalid)
+            {
+                if (assessment != null)
+                {
+                    assessment.ValidData = false;
+                    count++;
+                }
+            }
+            return count;
+        }
+
         public int UpdateAssessments(List<Models.Assessment> destinationAssessments, List<int> existingAssessments, List<SinglePipelineData> data)
         {
             var count = 0;
@@ -82,9 +99,9 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                         destination.Counterparty = source.applicant_1!;
                         updateFlag = true;
                     }
-                    if (!string.IsNullOrEmpty(source.internal_reference) && destination.Reference != source.internal_reference)
+                    if (source.project_identifier.HasValue && destination.Reference != source.project_identifier.ToString())
                     {
-                        destination.Reference = source.internal_reference!;
+                        destination.Reference = source.project_identifier.ToString()!;
                         updateFlag = true;
                     }
                     if (!string.IsNullOrEmpty(source.pipeline_opportunity_site_name) && destination.SiteName != source.pipeline_opportunity_site_name)
@@ -126,6 +143,10 @@ namespace He.PipelineAssessment.UI.Features.SinglePipeline.Sync
                     {
                         destination.SensitiveStatus = source.sensitive_status!;
                         updateFlag = true;
+                    }
+                    if (destination.HasValidData())
+                    {
+                        destination.ValidData = true;
                     }
                 }
                 if (updateFlag)

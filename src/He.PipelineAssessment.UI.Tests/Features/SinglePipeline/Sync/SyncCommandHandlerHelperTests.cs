@@ -80,7 +80,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             destinationAssessment.SpId = 2;
             destinationAssessment.Counterparty = "Counterparty";
-            destinationAssessment.Reference = "Reference";
+            destinationAssessment.Reference = "12";
             destinationAssessment.SiteName = "SiteName";
             destinationAssessment.ProjectManager = "Project Manager";
             destinationAssessment.ProjectManagerEmail = "ProjectManagerEmail";
@@ -96,7 +96,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             singlePipelineData.sp_id = 2;
             singlePipelineData.applicant_1 = "Counterparty";
-            singlePipelineData.internal_reference = "Reference";
+            singlePipelineData.project_identifier = 12;
             singlePipelineData.pipeline_opportunity_site_name = "SiteName";
             singlePipelineData.project_owner = "Project Manager";
             singlePipelineData.project_owner_email = "ProjectManagerEmail";
@@ -147,7 +147,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             singlePipelineData.sp_id = 2;
             singlePipelineData.applicant_1 = "applicant_1";
-            singlePipelineData.internal_reference = "internal_reference";
+            singlePipelineData.project_identifier = 12;
             singlePipelineData.pipeline_opportunity_site_name = "pipeline_opportunity_site_name";
             singlePipelineData.project_owner = "project_owner";
             singlePipelineData.project_owner_email = "project_owner_email";

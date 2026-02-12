@@ -15,6 +15,10 @@ namespace Elsa.CustomActivities.Activities.CheckYourAnswersScreen
     )]
     public class CheckYourAnswersScreen : Activity
     {
+        [ActivityInput(Label = "Show Assessment Tool Name",
+        Hint = "When enabled, this will show the assessment tool name and stage at the top of the question screen.",
+        DefaultValue = true)]
+        public bool ShowToolName { get; set; } = true;
         [ActivityInput(Hint = "Section title")]
         public string Title { get; set; } = null!;
         [ActivityInput(Hint = "Footer title")]

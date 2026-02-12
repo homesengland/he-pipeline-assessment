@@ -54,7 +54,6 @@ public class RoleValidation : IRoleValidation
         return _userProvider.CheckUserRole(Constants.AppRole.PipelineAdminOperations);
     }
 
-    // PREVIOSLY MARKED AS PRIVATE?
     public bool ValidateForBusinessArea(Assessment? assessment)
     {
         if (assessment != null)

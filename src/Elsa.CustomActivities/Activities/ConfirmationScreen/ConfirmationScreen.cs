@@ -18,6 +18,10 @@ namespace Elsa.CustomActivities.Activities.ConfirmationScreen
     )]
     public class ConfirmationScreen : Activity
     {
+        [ActivityInput(Label = "Show Assessment Tool Name",
+        Hint = "When enabled, this will show the assessment tool name and stage at the top of the question screen.",
+        DefaultValue = true)]
+        public bool ShowToolName { get; set; } = true;
         [ActivityInput(Hint = "Confirmation Title", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]
         public string ConfirmationTitle { get; set; } = null!;
         [ActivityInput(Hint = "Confirmation Text", SupportedSyntaxes = new[] { SyntaxNames.Literal, SyntaxNames.Json, SyntaxNames.JavaScript })]

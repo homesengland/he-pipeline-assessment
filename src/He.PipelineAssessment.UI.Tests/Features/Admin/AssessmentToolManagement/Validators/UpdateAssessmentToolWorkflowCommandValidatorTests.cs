@@ -12,9 +12,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
     {
         [Theory]
         [InlineAutoMoqData("", "The Name cannot be empty")]
-        [InlineAutoMoqData("", "The Name cannot be empty")]
-        [InlineAutoMoqData("Name_that_is_over_100_characters_long.............................................................123", "The length of 'Name' must be 100 characters or fewer. You entered 101 characters.")]
-        public void Should_ReturnValidationMessage_WhenPropertyIsInvalid(
+        [InlineAutoMoqData("Name_that_is_over_100_characters_long.............................................................123", "The length of 'Name' must be 100 characters or fewer. You entered 101 characters.")]        public void Should_ReturnValidationMessage_WhenPropertyIsInvalid(
             string name, 
             string expectedValidationMessage,
             Mock<IAssessmentRepository> repository)
@@ -27,22 +25,105 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var command = new UpdateAssessmentToolWorkflowCommand
             {
                 Name = name,
-                WorkflowDefinitionId = string.Empty
+                WorkflowDefinitionId = string.Empty,
+                IsEarlyStage = false,
+                AssessmentFundId = null // Fund not assigned, should trigger validation
             };
 
             //Act
             var result = validator.Validate(command);
 
             //Assert
-            Assert.Equal(2, result.Errors.Count);
+            Assert.Equal(3, result.Errors.Count);
             Assert.Contains(expectedValidationMessage,
                 result.Errors.Where(x => x.PropertyName == "Name").Select(x => x.ErrorMessage));
             Assert.Contains("The Workflow Definition Id cannot be empty",
                 result.Errors.Where(x => x.PropertyName == "WorkflowDefinitionId").Select(x => x.ErrorMessage));
-            Assert.NotEqual("The Name can be empty",
-                result.Errors.First(x => x.PropertyName == "Name").ErrorMessage);
-            Assert.NotEqual("The Workflow Definition Id can be empty.",
-                result.Errors.First(x => x.PropertyName == "WorkflowDefinitionId").ErrorMessage);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Should_ReturnValidationMessage_WhenFundNotAssignedAndNotEarlyStage(
+            string name,
+            string workflowDefinitionId,
+            Mock<IAssessmentRepository> repository)
+        {
+            //Arrange
+            var validator = new UpdateAssessmentToolWorkflowCommandValidator(repository.Object);
+
+            repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns((AssessmentToolWorkflow?)null);
+
+            var command = new UpdateAssessmentToolWorkflowCommand
+            {
+                Name = name,
+                WorkflowDefinitionId = workflowDefinitionId,
+                IsEarlyStage = false,
+                AssessmentFundId = null // Fund not assigned
+            };
+
+            //Act
+            var result = validator.Validate(command);
+
+            //Assert
+            Assert.Single(result.Errors);
+            Assert.Equal("A fund must be assigned to assessment tool workflows that are not marked as Early Stage.",
+                result.Errors.First().ErrorMessage);
+            Assert.Equal("AssessmentFundId", result.Errors.First().PropertyName);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Should_ReturnNoValidationMessage_WhenFundNotAssignedButIsEarlyStage(
+            string name,
+            string workflowDefinitionId,
+            Mock<IAssessmentRepository> repository)
+        {
+            //Arrange
+            var validator = new UpdateAssessmentToolWorkflowCommandValidator(repository.Object);
+
+            repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns((AssessmentToolWorkflow?)null);
+
+            var command = new UpdateAssessmentToolWorkflowCommand
+            {
+                Name = name,
+                WorkflowDefinitionId = workflowDefinitionId,
+                IsEarlyStage = true, // Early stage workflows don't require fund
+                AssessmentFundId = null
+            };
+
+            //Act
+            var result = validator.Validate(command);
+
+            //Assert
+            Assert.Empty(result.Errors);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public void Should_ReturnNoValidationMessage_WhenFundIsAssignedAndNotEarlyStage(
+            string name,
+            string workflowDefinitionId,
+            int fundId,
+            Mock<IAssessmentRepository> repository)
+        {
+            //Arrange
+            var validator = new UpdateAssessmentToolWorkflowCommandValidator(repository.Object);
+
+            repository.Setup(x => x.GetAssessmentToolWorkflowByDefinitionId(It.IsAny<string>())).Returns((AssessmentToolWorkflow?)null);
+
+            var command = new UpdateAssessmentToolWorkflowCommand
+            {
+                Name = name,
+                WorkflowDefinitionId = workflowDefinitionId,
+                IsEarlyStage = false,
+                AssessmentFundId = fundId // Fund is assigned
+            };
+
+            //Act
+            var result = validator.Validate(command);
+
+            //Assert
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -50,6 +131,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         public void Should_ReturnValidationMessage_WhenAssessmentIdIsNotUnique(
             string name,
             string workflowDefinitionId,
+            int fundId,
             Mock<IAssessmentRepository> repository,
             AssessmentToolWorkflow assessmentToolWorkflow)
         {
@@ -61,7 +143,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var command = new UpdateAssessmentToolWorkflowCommand
             {
                 Name = name,
-                WorkflowDefinitionId = workflowDefinitionId
+                WorkflowDefinitionId = workflowDefinitionId,
+                AssessmentFundId = fundId
             };
 
             //Act
@@ -78,6 +161,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         public void Should_ReturnNoValidationMessage_WhenAssessmentIdIsTheSameAsThatFromRepository(
             string name,
             string workflowDefinitionId,
+            int fundId,
             Mock<IAssessmentRepository> repository,
             AssessmentToolWorkflow assessmentToolWorkflow)
         {
@@ -90,7 +174,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             {
                 Name = name,
                 WorkflowDefinitionId = workflowDefinitionId,
-                Id = assessmentToolWorkflow.Id
+                Id = assessmentToolWorkflow.Id,
+                AssessmentFundId = fundId
             };
 
             //Act
@@ -105,6 +190,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         public void Should_ReturnNoValidationMessage_WhenValidationPasses(
             string name,
             string workflowDefinitionId,
+            int fundId,
             Mock<IAssessmentRepository> repository)
         {
             //Arrange
@@ -115,7 +201,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             var command = new UpdateAssessmentToolWorkflowCommand
             {
                 Name = name,
-                WorkflowDefinitionId = workflowDefinitionId
+                WorkflowDefinitionId = workflowDefinitionId,
+                AssessmentFundId = fundId
             };
 
             //Act
@@ -123,7 +210,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
 
             //Assert
             Assert.Empty(result.Errors);
-
         }
     }
 }

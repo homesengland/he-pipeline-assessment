@@ -18,7 +18,7 @@ namespace He.PipelineAssessment.Models.ViewModels
         public int? NumberOfHomes { get; set; }
         public string? Status { get; set; }
         public string? SensitiveStatus { get; set; }
-
+        public bool ValidData { get; set; }
         public string StatusDisplayTag()
         {
             switch (Status)

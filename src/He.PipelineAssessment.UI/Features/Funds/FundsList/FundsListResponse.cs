@@ -9,6 +9,8 @@ namespace He.PipelineAssessment.UI.Features.Funds.FundsList
         public List<AssessmentFundsDTO> Funds { get; set; } = null!;
 
         // constructor
+        public FundsListResponse() { }
+
         public FundsListResponse(List<AssessmentFund> dbFunds)
         {
             Funds = new List<AssessmentFundsDTO>();

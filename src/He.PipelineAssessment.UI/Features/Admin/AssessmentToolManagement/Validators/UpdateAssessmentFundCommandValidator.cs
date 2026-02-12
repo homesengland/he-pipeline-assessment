@@ -14,9 +14,9 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
             this._assessmentRepository = assessmentRepository;
 
             RuleFor(c => c.Name)
-                .NotEmpty().WithMessage("{PropertyName} cannot be empty.")
-                .Matches("^[a-zA-Z ]+$").WithMessage("{PropertyName} can only contain letters a-z, A-Z, and spaces. Special characters are not allowed.")
-                .MaximumLength(80).WithMessage("{PropertyName} must be at most 80 characters.");
+     .NotEmpty().WithMessage("{PropertyName} cannot be empty.")
+     .Matches("^[a-zA-Z0-9 ]+$").WithMessage("{PropertyName} can only contain letters a-z, A-Z, numbers 0-9, and spaces. Special characters are not allowed.")
+     .MaximumLength(80).WithMessage("{PropertyName} must be at most 80 characters.");
 
             RuleFor(c => c)
                 .Must((c) => BeUnique(c.Name, c.Id))
@@ -24,7 +24,7 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Valid
 
             RuleFor(c => c.Description)
                 .NotEmpty().WithMessage("{PropertyName} cannot be empty")
-                .Matches("^[a-zA-Z ]+$").WithMessage("{PropertyName} can only contain letters a-z, A-Z, and spaces. Special characters are not allowed.")
+                .Matches("^[a-zA-Z0-9 ]+$").WithMessage("{PropertyName} can only contain letters a-z, A-Z, numbers 0-9, and spaces. Special characters are not allowed.")
                 .MaximumLength(160).WithMessage("{PropertyName} must be at most 160 characters.")
                 .WithMessage("The {PropertyName} cannot be empty.");
         }

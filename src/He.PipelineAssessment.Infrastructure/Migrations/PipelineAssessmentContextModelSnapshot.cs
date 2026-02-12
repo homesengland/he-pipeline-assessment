@@ -48,6 +48,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("FundId")
+                        .HasColumnType("int");
+
                     b.Property<decimal?>("FundingAsk")
                         .HasColumnType("decimal(18,2)");
 
@@ -62,6 +65,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastModifiedDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("LatestAssessmentWorkflowToolId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LocalAuthority")
                         .IsRequired()
@@ -112,7 +118,14 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("ValidData")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.HasKey("Id");
+
+                    b.HasIndex("FundId");
 
                     b.HasIndex("SpId")
                         .IsUnique();
@@ -760,6 +773,15 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.ToTable("DataProtectionKeys");
                 });
 
+            modelBuilder.Entity("He.PipelineAssessment.Models.Assessment", b =>
+                {
+                    b.HasOne("He.PipelineAssessment.Models.AssessmentFund", "AssessmentFund")
+                        .WithMany("Assessments")
+                        .HasForeignKey("FundId");
+
+                    b.Navigation("AssessmentFund");
+                });
+
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentIntervention", b =>
                 {
                     b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflowInstance", "AssessmentToolWorkflowInstance")
@@ -849,6 +871,8 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentFund", b =>
                 {
                     b.Navigation("AssessmentToolWorkflows");
+
+                    b.Navigation("Assessments");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentIntervention", b =>

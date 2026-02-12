@@ -60,7 +60,7 @@ namespace He.PipelineAssessment.Data.SinglePipeline
                 "AND sp_type NOT IN ('Place')";
             string orderBy = "esri_id";
             string outFields =
-                "sp_id,internal_reference,pipeline_opportunity_site_name," +
+                "sp_id,internal_reference,project_identifier,pipeline_opportunity_site_name," +
                 "applicant_1," +
                 "project_owner," +
                 "project_owner_email,local_authority,funding_ask," +

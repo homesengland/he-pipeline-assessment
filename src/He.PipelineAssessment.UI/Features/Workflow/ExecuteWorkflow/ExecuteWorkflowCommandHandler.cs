@@ -40,7 +40,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.ExecuteWorkflow
 
             var response = await _elsaServerHttpClient.PostExecuteWorkflow(dto);
 
-            if (response != null)
+            if (response != null && response.Data != null)
             {
                 var result = new LoadQuestionScreenRequest()
                 {
