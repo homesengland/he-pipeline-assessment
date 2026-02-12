@@ -93,6 +93,8 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
 
                             var title = (string?)activityDataDictionary.FirstOrDefault(x => x.Key == "PageTitle").Value;
                             result.Data.PageTitle = title;
+                            var showToolName = (bool?)activityDataDictionary.FirstOrDefault(x => x.Key == "ShowToolName").Value;
+                            result.Data.ShowToolName = showToolName ?? true;
 
                             var elsaActivityAssessmentQuestions =
                                 (AssessmentQuestions?)activityDataDictionary
@@ -119,7 +121,7 @@ namespace Elsa.Server.Features.Workflow.LoadQuestionScreen
                                 }
                                 result.ValidationMessages = MapValidationModelToValidationResults(elsaActivityAssessmentQuestions.Questions);
                             }
-                            else
+                            else 
                             {
                                 _logger.LogError($"Failed to map activity data to Questions WorkflowInstanceId: {activityRequest.WorkflowInstanceId}");
 
