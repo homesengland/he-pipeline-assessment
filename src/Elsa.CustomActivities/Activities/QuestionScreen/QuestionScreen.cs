@@ -30,6 +30,11 @@ namespace Elsa.CustomActivities.Activities.QuestionScreen
             _elsaCustomRepository = elsaCustomRepository;
         }
 
+        [ActivityInput(Label = "Show Assessment Tool Name",
+            Hint = "When enabled, this will show the assessment tool name and stage at the top of the question screen.",
+            DefaultValue = true)]
+        public bool ShowToolName { get; set; } = true;
+
         [ActivityInput]
         public string PageTitle { get; set; } = null!;
 

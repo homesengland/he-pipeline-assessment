@@ -48,6 +48,8 @@ namespace Elsa.Server.Features.Workflow.LoadCheckYourAnswersScreen
 
                     var activityDataDictionary = await _activityDataProvider.GetActivityData(activityScreenRequest.WorkflowInstanceId, activityScreenRequest.ActivityId, cancellationToken);
                     result.Data.PageTitle = (string?)activityDataDictionary.GetData("Title");
+                    var showToolName = (bool?)activityDataDictionary.FirstOrDefault(x => x.Key == "ShowToolName").Value;
+                    result.Data.ShowToolName = showToolName ?? true;
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");
                 }
