@@ -22,7 +22,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number. If none, please enter 0.");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Elsa.CustomWorkflow.Sdk.Tests.Workflow.Validators
 
             //Assert
             result.ShouldNotHaveValidationErrorFor(c => c);
-            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number");
+            result.ShouldHaveValidationErrorFor(c => c.Answers).WithErrorMessage("The answer must be a whole number. If none, please enter 0.");
         }
 
 
