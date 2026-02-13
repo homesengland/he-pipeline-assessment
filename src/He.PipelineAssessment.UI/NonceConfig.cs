@@ -8,6 +8,7 @@ namespace He.PipelineAssessment.UI
     /// </summary>
     public class NonceConfig
     {
+        private const string TableUxSetupKey = "TableUxSetup";
         private const string GovUkSetupKey = "GovUkSetup";
         private const string DataTablesSetupKey = "DataTablesSetup";
         private const string JQuerySetupKey = "JQuerySetup";
@@ -25,6 +26,7 @@ namespace He.PipelineAssessment.UI
             this.Add(DataTablesSetupKey);
             this.Add(JQuerySetupKey);
             this.Add(SiteSetupKey);
+            this.Add(TableUxSetupKey);
         }
 
         /// <summary>
@@ -34,6 +36,7 @@ namespace He.PipelineAssessment.UI
         public string DataTablesSetup => this.Get(DataTablesSetupKey);
         public string JQuerySetup => this.Get(JQuerySetupKey);
         public string SiteSetup => this.Get(SiteSetupKey);
+        public string TableUxSetup => this.Get(TableUxSetupKey);
 
         /// <summary>
         /// Adds a nonce.

@@ -25,10 +25,12 @@ namespace He.PipelineAssessment.UI
         {
             var govUkSetupNonce = $"nonce-{nonceConfig.GovUkSetup}";
             var dataTablesSetupNonce = $"nonce-{nonceConfig.DataTablesSetup}";
+            var tablesUxSetupNonce = $"nonce-{nonceConfig.TableUxSetup}";
+
 
             var connectSrc = $"connect-src 'self';";
             var defaultSrc = $"default-src 'self';";
-            var scriptSrc = $"script-src 'self' '{govUkSetupNonce}' '{dataTablesSetupNonce}' 'unsafe-eval';";
+            var scriptSrc = $"script-src 'self' '{govUkSetupNonce}' '{dataTablesSetupNonce}' '{tablesUxSetupNonce}' 'unsafe-eval';";
             var styleSrcElem = $"style-src-elem 'self';";
             var styleSrc = $"style-src 'self';";
             var imgSrc = $"img-src 'self';";
