@@ -50,6 +50,8 @@
                 {
                     var startRow = a * rowsPerAccordion;
                     var endRow = Math.Min(startRow + rowsPerAccordion, totalRows);
+                    var firstRowText = largestDataTable.Inputs[startRow].InputHeading;
+                    var lastRowText = largestDataTable.Inputs[endRow - 1].InputHeading;
 
                     <div class="govuk-accordion__section">
                         <div class="govuk-accordion__section-header">
@@ -58,7 +60,7 @@
                                         class="govuk-accordion__section-button"
                                         aria-expanded="@(a == 0 ? "true" : "false")"
                                         aria-controls="accordion-content-@a">
-                                    Rows @(startRow + 1) to @(endRow)
+                                    @firstRowText to @lastRowText
                                 </button>
                             </h2>
                         </div>
