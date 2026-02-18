@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -60,7 +60,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -94,7 +94,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadQuestionScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -123,7 +123,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
 
             //Act
@@ -147,7 +147,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadWorkflowActivityRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(false);
 
             //Act
             var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadWorkflowActivityRequest, CancellationToken.None));
@@ -197,7 +197,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
             // User is not admin/PM, but is whitelisted
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(false);
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(assessmentToolWorkflowInstance.AssessmentId))
                 .ReturnsAsync(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId))
@@ -232,7 +232,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadQuestionScreen
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
             // User is not admin/PM and is NOT whitelisted
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(false);
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(assessmentToolWorkflowInstance.AssessmentId))
                 .ReturnsAsync(false);
 

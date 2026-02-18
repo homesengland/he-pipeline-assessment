@@ -37,7 +37,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                 var assessmentWorkflowInstance = await _assessmentRepository.GetAssessmentToolWorkflowInstance(request.WorkflowInstanceId);
 
                 var validateSensitiveStatus =
-                    _roleValidation.ValidateSensitiveRecords(assessmentWorkflowInstance!.Assessment);
+                    _roleValidation.CanViewAssessment(assessmentWorkflowInstance!.Assessment);
 
                 if (!validateSensitiveStatus && assessmentWorkflowInstance.Assessment.IsSensitiveRecord())
                 {

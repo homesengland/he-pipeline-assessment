@@ -32,7 +32,7 @@ namespace He.PipelineAssessment.Infrastructure.Data
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            var userName = _userProvider.GetUserName();
+            var userName = _userProvider.UserName();
 
             if (userName is null)
             {

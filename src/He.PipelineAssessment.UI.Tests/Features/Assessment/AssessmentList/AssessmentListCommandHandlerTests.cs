@@ -163,7 +163,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
                 }
             };
 
-            userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+            userProvider.Setup(x => x.Email()).Returns(userEmail);
             assessmentRepo.Setup(x => x.GetAllSensitiveRecordWhitelistsByEmail(userEmail))
                 .ReturnsAsync(whitelist);
             repo.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
@@ -200,7 +200,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
 
             var emptyWhitelist = new List<SensitiveRecordWhitelist>();
 
-            userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+            userProvider.Setup(x => x.Email()).Returns(userEmail);
             assessmentRepo.Setup(x => x.GetAllSensitiveRecordWhitelistsByEmail(userEmail))
                 .ReturnsAsync(emptyWhitelist);
             repo.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
@@ -232,7 +232,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
             assessments.First().SensitiveStatus = "Sensitive - NDA in place";
             assessments.First().ProjectManager = "other.manager@example.com";
 
-            userProvider.Setup(x => x.GetUserEmail()).Returns((string?)null);
+            userProvider.Setup(x => x.Email()).Returns((string?)null);
             repo.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
 
             //Act
@@ -276,7 +276,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
                 new SensitiveRecordWhitelist { Id = 1, AssessmentId = 1, Email = userEmail }
             };
 
-            userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+            userProvider.Setup(x => x.Email()).Returns(userEmail);
             assessmentRepo.Setup(x => x.GetAllSensitiveRecordWhitelistsByEmail(userEmail))
                 .ReturnsAsync(whitelist);
             repo.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);

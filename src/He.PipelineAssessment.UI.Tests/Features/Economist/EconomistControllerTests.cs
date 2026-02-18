@@ -59,7 +59,7 @@ public class EconomistControllerTests
     EconomistController sut)
     {
         //Arrange
-        userProvider.Setup(x => x.GetUserName()).Returns("economist@test.com");
+        userProvider.Setup(x => x.UserName()).Returns("economist@test.com");
         userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
 
         mediator.Setup(x => x.Send(It.IsAny<EconomistAssessmentListRequest>(), CancellationToken.None))

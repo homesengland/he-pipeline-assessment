@@ -52,16 +52,16 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentList
 
         private async Task<HashSet<int>> GetWhitelistedAssessmentIds()
         {
-            var userEmail = _userProvider.GetUserEmail();
+            var userEmail = _userProvider.Email();
 
             if (string.IsNullOrWhiteSpace(userEmail))
             {
                 return new HashSet<int>();
             }
 
-            var allWhitelists = await _assessmentRepository.GetAllSensitiveRecordWhitelistsByEmail(userEmail);
+            var allWhitelists = await _assessmentRepository.GetAllWhitelistedAssessmentIdsByEmail(userEmail);
 
-            return allWhitelists.Select(w => w.AssessmentId).ToHashSet();
+            return allWhitelists.ToHashSet();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
             httpContextAccessor.SetupGet(accessor => accessor.HttpContext).Returns(context);
 
             //Act
-            var result = sut.GetUserName();
+            var result = sut.UserName();
 
             //Assert
             Assert.NotNull(result);
@@ -47,7 +47,7 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
             httpContextAccessor.SetupGet(accessor => accessor.HttpContext).Returns((HttpContext?)null);
 
             //Act
-            var result = sut.GetUserName();
+            var result = sut.UserName();
 
             //Assert
             Assert.Null(result);
@@ -73,7 +73,7 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
             httpContextAccessor.SetupGet(accessor => accessor.HttpContext).Returns(context);
 
             //Act
-            var result = sut.GetUserEmail();
+            var result = sut.Email();
 
             //Assert
             Assert.NotNull(result);
@@ -90,7 +90,7 @@ namespace He.PipelineAssessment.UI.Tests.Common.Utility
             httpContextAccessor.SetupGet(accessor => accessor.HttpContext).Returns((HttpContext?)null);
 
             //Act
-            var result = sut.GetUserEmail();
+            var result = sut.Email();
 
             //Assert
             Assert.Null(result);

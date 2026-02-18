@@ -82,7 +82,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
@@ -130,7 +130,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
@@ -174,7 +174,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(false);
 
             //Act
             var result = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(request, CancellationToken.None));
@@ -203,7 +203,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
 
@@ -240,7 +240,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
@@ -287,7 +287,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
@@ -330,7 +330,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
@@ -374,7 +374,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
@@ -409,7 +409,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
@@ -445,7 +445,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadConfirmationScree
             assessmentRepository.Setup(x =>
                     x.GetAssessmentToolWorkflowInstance(workflowActivityDataDto.Data.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId,
                 assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 

@@ -11,14 +11,12 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionList
         private readonly IMediator _mediator;
         private readonly ILogger<InterventionController> _logger;
         private readonly IUserProvider _userProvider;
-        private readonly IUserRoleChecker _userRoleChecker;
 
-        public InterventionController(IMediator mediator, ILogger<InterventionController> logger, IUserProvider userProvider, IUserRoleChecker userRoleChecker)
+        public InterventionController(IMediator mediator, ILogger<InterventionController> logger, IUserProvider userProvider)
         {
             _mediator = mediator;
             _logger = logger;
             _userProvider = userProvider;
-            _userRoleChecker = userRoleChecker;
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired)]
@@ -26,8 +24,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionList
         {
             try
             {
-                var username = _userProvider.GetUserName();
-                var canViewSensitiveRecords = _userRoleChecker.IsAdmin();
+                var username = _userProvider.UserName();
+                var canViewSensitiveRecords = _userProvider.IsAdmin();
 
                 var listModel = await _mediator.Send(new InterventionListRequest()
                 {

@@ -19,25 +19,23 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         private readonly IConfiguration _configuration;
         private readonly IUserProvider _userProvider;
         private readonly IRoleValidation _roleValidation;
-        private readonly IUserRoleChecker _userRoleChecker;
 
 
-        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider, IRoleValidation roleValidation, IUserRoleChecker userRoleChecker)
+        public AssessmentController(ILogger<AssessmentController> logger, IMediator mediator, IConfiguration configuration, IUserProvider userProvider, IRoleValidation roleValidation)
         {
             _logger = logger;
             _mediator = mediator;
             _configuration = configuration;
             _userProvider = userProvider;
             _roleValidation = roleValidation;
-            _userRoleChecker = userRoleChecker;
         }
 
         [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired)]
         public async Task<IActionResult> Index()
         {
-            var username = _userProvider.GetUserName();
+            var username = _userProvider.UserName();
 
-            var canViewSensitiveRecords = _userRoleChecker.IsAdmin();
+            var canViewSensitiveRecords = _userProvider.IsAdmin();
             var listModel = await _mediator.Send(new AssessmentListRequest()
             {
                 Username = username,
@@ -53,10 +51,10 @@ namespace He.PipelineAssessment.UI.Features.Assessments
             var overviewModel = await _mediator.Send(new AssessmentSummaryRequest(assessmentid, correlationId));
 
             // Load permissions data
-            var isAdmin = _userRoleChecker.IsAdmin();
-            var currentUsername = _userProvider.GetUserName();
+            var isAdmin = _userProvider.IsAdmin();
+            var currentUsername = _userProvider.UserName();
             var isProjectManager = overviewModel.ProjectManager == currentUsername;
-            var isEconomistAndAssessmentAtEconomistStage = (_userRoleChecker.IsEconomist() && overviewModel.HasCurrentEconomistWorkflow());
+            var isEconomistAndAssessmentAtEconomistStage = (_userProvider.IsEconomist() && overviewModel.HasCurrentEconomistWorkflow());
 
             var isWhitelisted = await _roleValidation.IsUserWhitelistedForSensitiveRecord(assessmentid);
 
@@ -90,8 +88,8 @@ namespace He.PipelineAssessment.UI.Features.Assessments
         {
             var permissionsModel = await _mediator.Send(new SensitiveRecordPermissionsWhitelistRequest(assessmentid));
 
-            var isAdmin = _userRoleChecker.IsAdmin();
-            var currentUsername = _userProvider.GetUserName();
+            var isAdmin = _userProvider.IsAdmin();
+            var currentUsername = _userProvider.UserName();
             var isProjectManager = permissionsModel.AssessmentSummary.ProjectManager == currentUsername;
 
             if (!isAdmin && !isProjectManager)

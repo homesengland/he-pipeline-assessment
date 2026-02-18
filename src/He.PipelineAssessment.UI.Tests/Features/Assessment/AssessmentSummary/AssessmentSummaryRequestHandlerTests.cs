@@ -62,7 +62,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         {
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
-            roleValidation.Setup(x => x.ValidateSensitiveRecordsForProjectManagerAndAdmin(assessment)).Returns(false);
+            roleValidation.Setup(x => x.CanViewAssessment(assessment, true)).Returns(false);
 
             //Act
             var result = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(request, CancellationToken.None));
@@ -88,7 +88,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             //Arrange
             var emptyList = new List<AssessmentStageViewModel>();
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            roleValidation.Setup(x => x.ValidateSensitiveRecordsForProjectManagerAndAdmin(assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessment, true)).Returns(true);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(emptyList);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
             storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
@@ -123,7 +123,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         {
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            roleValidation.Setup(x => x.ValidateSensitiveRecordsForProjectManagerAndAdmin(assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessment, true)).Returns(true);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId))
                 .ReturnsAsync(startableToolViewModels);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
@@ -164,7 +164,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             stages.ForEach(x => x.FirstActivityId = String.Empty);
             stages.ForEach(x => x.FirstActivityType = String.Empty);
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            roleValidation.Setup(x => x.ValidateSensitiveRecordsForProjectManagerAndAdmin(assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessment, true)).Returns(true);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(new List<AssessmentInterventionViewModel>());
@@ -221,7 +221,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             };
             startableToolViewModels.Add(startableToolViewModel);
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
-            roleValidation.Setup(x => x.ValidateSensitiveRecordsForProjectManagerAndAdmin(assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessment, true)).Returns(true);
             storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(startableToolViewModels);
             storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
@@ -266,7 +266,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
             };
             
             assessmentRepository.Setup(x => x.GetAssessment(request.AssessmentId)).ReturnsAsync(assessment);
-            roleValidation.Setup(x => x.ValidateSensitiveRecordsForProjectManagerAndAdmin(assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessment, true)).Returns(true);
             storeProcRepository.Setup(x => x.GetAssessmentStages(request.AssessmentId)).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(request.AssessmentId)).ReturnsAsync(new List<StartableToolViewModel>());
             storeProcRepository.Setup(x => x.GetAssessmentHistory(request.AssessmentId)).ReturnsAsync(historyStages);
@@ -301,7 +301,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         {
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            roleValidation.Setup(x => x.ValidateSensitiveRecordsForProjectManagerAndAdmin(assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessment, true)).Returns(true);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(It.IsAny<int>())).ReturnsAsync(startableTools);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>()))
@@ -334,7 +334,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentSummary
         {
             //Arrange
             assessmentRepository.Setup(x => x.GetAssessment(It.IsAny<int>())).ReturnsAsync(assessment);
-            roleValidation.Setup(x => x.ValidateSensitiveRecordsForProjectManagerAndAdmin(assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessment, true)).Returns(true);
             storeProcRepository.Setup(x => x.GetAssessmentStages(It.IsAny<int>())).ReturnsAsync(stages);
             storeProcRepository.Setup(x => x.GetStartableTools(It.IsAny<int>())).ReturnsAsync(startableTools);
             storeProcRepository.Setup(x => x.GetAssessmentInterventionList(It.IsAny<int>())).ReturnsAsync(interventions);

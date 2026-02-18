@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            userProvider.Setup(x => x.GetUserName()).Returns("admin.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("admin.user@test.com");
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
                 .ReturnsAsync(new List<SensitiveRecordWhitelist>());
             assessmentRepository.Setup(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
@@ -102,7 +102,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns(currentUsername);
+            userProvider.Setup(x => x.UserName()).Returns(currentUsername);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
                 .ReturnsAsync(new List<SensitiveRecordWhitelist>());
             assessmentRepository.Setup(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
@@ -145,7 +145,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns("unauthorized.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("unauthorized.user@test.com");
 
             // Act
             var result = await sut.Add(assessmentId, correlationId, email);
@@ -396,7 +396,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            userProvider.Setup(x => x.GetUserName()).Returns("admin.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("admin.user@test.com");
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
                 .ReturnsAsync(whitelist);
             assessmentRepository.Setup(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
@@ -448,7 +448,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns(currentUsername);
+            userProvider.Setup(x => x.UserName()).Returns(currentUsername);
             assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
                 .ReturnsAsync(whitelist);
             assessmentRepository.Setup(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
@@ -491,7 +491,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(response);
             userRoleChecker .Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns("unauthorized.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("unauthorized.user@test.com");
 
             // Act
             var result = await sut.Remove(id, assessmentId, correlationId);

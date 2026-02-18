@@ -107,7 +107,6 @@ builder.Services.AddScoped<IAdminAssessmentToolWorkflowRepository, AdminAssessme
 builder.Services.AddScoped<ISyncCommandHandlerHelper, SyncCommandHandlerHelper>();
 builder.Services.AddScoped<IAssessmentToolWorkflowInstanceHelpers, AssessmentToolWorkflowInstanceHelpers>();
 builder.Services.AddScoped<IUserProvider, UserProvider>();
-builder.Services.AddScoped<IUserRoleChecker, UserRoleChecker>();
 builder.Services.AddScoped<IRoleValidation, RoleValidation>();
 builder.Services.AddScoped<IErrorHelper, ErrorHelper>();
 builder.Services.AddScoped<IInterventionService, InterventionService>();

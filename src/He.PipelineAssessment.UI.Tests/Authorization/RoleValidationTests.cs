@@ -97,7 +97,7 @@ public class RoleValidationTests
         assessment.ProjectManager = projectManager;
         assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
         userRoleChecker.Setup(x => x.IsProjectManager()).Returns(true);
-        userProvider.Setup(x => x.GetUserName()).Returns(projectManager);
+        userProvider.Setup(x => x.UserName()).Returns(projectManager);
 
         //Act
         var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
@@ -123,7 +123,7 @@ public class RoleValidationTests
                 new SensitiveRecordWhitelist { Id = 1, AssessmentId = assessmentId, Email = userEmail }
             };
 
-        userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+        userProvider.Setup(x => x.Email()).Returns(userEmail);
         assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
 
         //Act
@@ -148,7 +148,7 @@ public class RoleValidationTests
                 new SensitiveRecordWhitelist { Id = 1, AssessmentId = assessmentId, Email = "test.user@homesengland.gov.uk" }
             };
 
-        userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+        userProvider.Setup(x => x.Email()).Returns(userEmail);
         assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
 
         //Act
@@ -173,7 +173,7 @@ public class RoleValidationTests
                 new SensitiveRecordWhitelist { Id = 1, AssessmentId = assessmentId, Email = "other.user@homesengland.gov.uk" }
             };
 
-        userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+        userProvider.Setup(x => x.Email()).Returns(userEmail);
         assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
 
         //Act
@@ -192,7 +192,7 @@ public class RoleValidationTests
         RoleValidation sut)
     {
         //Arrange
-        userProvider.Setup(x => x.GetUserEmail()).Returns((string?)null);
+        userProvider.Setup(x => x.Email()).Returns((string?)null);
 
         //Act
         var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
@@ -211,7 +211,7 @@ public class RoleValidationTests
         RoleValidation sut)
     {
         //Arrange
-        userProvider.Setup(x => x.GetUserEmail()).Returns(string.Empty);
+        userProvider.Setup(x => x.Email()).Returns(string.Empty);
 
         //Act
         var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
@@ -233,7 +233,7 @@ public class RoleValidationTests
         var userEmail = "test.user@homesengland.gov.uk";
         var whitelist = new List<SensitiveRecordWhitelist>();
 
-        userProvider.Setup(x => x.GetUserEmail()).Returns(userEmail);
+        userProvider.Setup(x => x.Email()).Returns(userEmail);
         assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
 
         //Act

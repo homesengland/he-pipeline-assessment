@@ -66,7 +66,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                     if (currentAssessmentToolWorkflowInstance != null && result != null)
                     {
                         var validateSensitiveStatus =
-                            _roleValidation.ValidateSensitiveRecords(currentAssessmentToolWorkflowInstance.Assessment);
+                            _roleValidation.CanViewAssessment(currentAssessmentToolWorkflowInstance.Assessment);
 
                         if (!validateSensitiveStatus && currentAssessmentToolWorkflowInstance.Assessment.IsSensitiveRecord())
                         {
@@ -95,7 +95,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadConfirmationScreen
                             var submittedTime = _dateTimeProvider.UtcNow();
                             currentAssessmentToolWorkflowInstance.Status = AssessmentToolWorkflowInstanceConstants.Submitted;
                             currentAssessmentToolWorkflowInstance.SubmittedDateTime = submittedTime;
-                            currentAssessmentToolWorkflowInstance.SubmittedBy = _userProvider.GetUserName();
+                            currentAssessmentToolWorkflowInstance.SubmittedBy = _userProvider.UserName();
                             await _assessmentRepository.SaveChanges();
 
 

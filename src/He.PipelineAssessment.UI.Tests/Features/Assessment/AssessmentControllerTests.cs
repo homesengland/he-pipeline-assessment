@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None))
                 .ReturnsAsync(summaryResponse);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns("user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
                 .ReturnsAsync(false);
@@ -90,7 +90,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None))
                 .ReturnsAsync(summaryResponse);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns("other.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("other.user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
                 .ReturnsAsync(false);
@@ -129,7 +129,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(permissionsResponse);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            userProvider.Setup(x => x.GetUserName()).Returns("admin.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("admin.user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
                 .ReturnsAsync(false);
@@ -169,7 +169,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(permissionsResponse);
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns(currentUsername);
+            userProvider.Setup(x => x.UserName()).Returns(currentUsername);
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
                 .ReturnsAsync(false);
@@ -258,7 +258,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
                 .ReturnsAsync(permissionsResponse);
 
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns("regular.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("regular.user@test.com");
 
             // User is whitelisted for this assessment
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(assessmentId))
@@ -297,7 +297,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
                 .ReturnsAsync(summaryResponse);
 
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.GetUserName()).Returns("regular.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("regular.user@test.com");
 
             // User is NOT whitelisted for this assessment
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(assessmentId))
@@ -349,7 +349,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
 
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
             userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
-            userProvider.Setup(x => x.GetUserName()).Returns("economist.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("economist.user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
                 .ReturnsAsync(false);
@@ -396,7 +396,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
 
             userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
             userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
-            userProvider.Setup(x => x.GetUserName()).Returns("economist.user@test.com");
+            userProvider.Setup(x => x.UserName()).Returns("economist.user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
                 .ReturnsAsync(false);

@@ -36,14 +36,14 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     throw new ApplicationException($"Assessment with id {request.AssessmentId} not found.");
                 }
 
-                var validateSensitiveStatus = _roleValidation.ValidateSensitiveRecordsForProjectManagerAndAdmin(dbAssessment);
+                var canViewRecord = _roleValidation.CanViewAssessment(dbAssessment, true);
 
-                if (!validateSensitiveStatus && dbAssessment.IsSensitiveRecord())
+                if (!canViewRecord && dbAssessment.IsSensitiveRecord())
                 {
-                    validateSensitiveStatus = await _roleValidation.IsUserWhitelistedForSensitiveRecord(request.AssessmentId);
+                    canViewRecord = await _roleValidation.IsUserWhitelistedForSensitiveRecord(request.AssessmentId);
                 }
 
-                if (!validateSensitiveStatus)
+                if (!canViewRecord)
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }

@@ -9,8 +9,7 @@ public interface IRoleValidation
 {
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
-    bool ValidateSensitiveRecords(Assessment assessment);
-    bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment assessment);
+    bool CanViewAssessment(Assessment assessment, bool includeAdmin = false);
     bool IsAdmin();
     bool IsProjectManagerForAssessment(string? assessmentProjectManager);
     Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId);
@@ -20,14 +19,12 @@ public class RoleValidation : IRoleValidation
     private readonly IAssessmentRepository _assessmentRepository;
     private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
     private readonly IUserProvider _userProvider;
-    private readonly IUserRoleChecker _userRoleChecker;
 
-    public RoleValidation(IAssessmentRepository assessmentRepository, IAdminAssessmentToolRepository adminAssessmentToolRepository, IUserProvider userProvider, IUserRoleChecker userRoleChecker)
+    public RoleValidation(IAssessmentRepository assessmentRepository, IAdminAssessmentToolRepository adminAssessmentToolRepository, IUserProvider userProvider)
     {
         _assessmentRepository = assessmentRepository;
         _adminAssessmentToolRepository = adminAssessmentToolRepository;
         _userProvider = userProvider;
-        _userRoleChecker = userRoleChecker;
     }
     public async Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId)
     {
@@ -35,12 +32,12 @@ public class RoleValidation : IRoleValidation
 
         if (assessmentToolWorkflow != null && assessmentToolWorkflow.IsEconomistWorkflow)
         {
-                bool isEconomistRoleExist = (_userRoleChecker.IsEconomist() || _userRoleChecker.IsAdmin());
+                bool isEconomistRoleExist = (_userProvider.IsEconomist() || _userProvider.IsAdmin());
                 return isEconomistRoleExist;
         }
         var assessment = await _assessmentRepository.GetAssessment(assessmentId);
 
-        var canSeeRecord = ValidateSensitiveRecords(assessment);
+        var canSeeRecord = CanViewAssessment(assessment);
 
         if (!canSeeRecord && assessment != null && assessment.IsSensitiveRecord())
         {
@@ -52,27 +49,17 @@ public class RoleValidation : IRoleValidation
 
     public bool IsAdmin()
     {
-        return _userRoleChecker.IsAdmin();
+        return _userProvider.IsAdmin();
     }
 
     public bool IsProjectManagerForAssessment(string? assessmentProjectManager)
     {
 
-        if (assessmentProjectManager == _userProvider.GetUserName())
+        if (assessmentProjectManager == _userProvider.UserName())
         {
             return true;
         }
         return false;
-    }
-
-    public bool ValidateSensitiveRecords(Assessment? assessment)
-    {
-        return ValidateSensitiveRecordsInternal(assessment, includeAdmin: false);
-    }
-
-    public bool ValidateSensitiveRecordsForProjectManagerAndAdmin(Assessment? assessment)
-    {
-        return ValidateSensitiveRecordsInternal(assessment, includeAdmin: true);
     }
 
     /// <summary>
@@ -82,20 +69,19 @@ public class RoleValidation : IRoleValidation
     /// <returns>True if user's email is in the whitelist, otherwise false</returns>
     public async Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId)
     {
-        var userEmail = _userProvider.GetUserEmail();
+        var userEmail = _userProvider.Email();
 
         if (string.IsNullOrWhiteSpace(userEmail))
         {
             return false;
         }
 
-        var formattedEmail = userEmail.ToLower();
-        var whitelist = await _assessmentRepository.GetSensitiveRecordWhitelist(assessmentId);
-
-        return whitelist.Any(w => w.Email.ToLower() == formattedEmail);
+        bool isOnWhiteList = await _assessmentRepository.IsUserWhitelistedForSensitiveRecord(assessmentId, userEmail);
+        return isOnWhiteList;
+    
     }
 
-    private bool ValidateSensitiveRecordsInternal(Assessment? assessment, bool includeAdmin)
+    public bool CanViewAssessment(Assessment? assessment, bool includeAdmin = false)
     {
         if (assessment == null)
         {
@@ -107,7 +93,7 @@ public class RoleValidation : IRoleValidation
             return true;
         }
 
-        var isProjectManager = assessment.ProjectManager == _userProvider.GetUserName();
+        var isProjectManager = assessment.ProjectManager == _userProvider.UserName();
 
         if (includeAdmin)
         {
