@@ -66,3 +66,69 @@ body {
 .govuk-button__pas-assessment-summary {
     width: 110px !important;
 }
+
+/* Multi-select dropdown styling */
+.custom-multiselect-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-multiselect-toggle .multiselect-value {
+    display: block;
+    line-height: 1.25;
+}
+
+.custom-multiselect-panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 300px;
+    background-color: white;
+    border: 2px solid #0b0c0c;
+    margin-top: 2px;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 15px;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.custom-multiselect-panel .govuk-checkboxes {
+    margin-bottom: 0;
+}
+
+.custom-multiselect-panel .govuk-checkboxes__item {
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+.custom-multiselect-panel .govuk-checkboxes__item:last-child {
+    margin-bottom: 0;
+}
+
+.custom-multiselect-panel .govuk-checkboxes__label {
+    white-space: nowrap;
+}
+
+/* Multi-select dropdown arrow - must be here to override GDS framework */
+div.govuk-select.custom-multiselect-toggle {
+    min-height: 40px;
+    padding-right: 50px !important;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Chevron arrow using CSS borders */
+div.govuk-select.custom-multiselect-toggle::after {
+    content: "";
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 5px;
+    height: 5px;
+    border-right: 3px solid #0b0c0c;
+    border-bottom: 3px solid #0b0c0c;
+    pointer-events: none;
+}

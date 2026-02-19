@@ -24,6 +24,97 @@
             $(".dataTables_filter").children('label').children("input[type='search']").addClass('govuk-input');
             $(".dataTables_filter").children('label').addClass('govuk-label');
 
+            // Handle multi-select columns (Project Manager, Local Authority)
+            this.api()
+                .columns($('[data-multisearchable]'))
+                .every(function () {
+                    var column = this;
+                    var colName = column.header().textContent.replaceAll(/\s/g, '');
+                    var dropdownId = colName + '_dropdown';
+
+                    var label = $('<div class="govuk-input__item"><div id="' + colName + '" class="govuk-form-group"><label class="govuk-label govuk-date-input__label">' + column.header().textContent + '</label></div></div>')
+                        .appendTo('#' + searchElementId);
+
+                    // Wrapper for positioning
+                    var wrapper = $('<div class="custom-multiselect-wrapper"></div>');
+                    
+                    // Create select-styled div
+                    var toggle = $('<div class="govuk-select margin-right-10 custom-multiselect-toggle" id="' + dropdownId + '_toggle" tabindex="0">' +
+                        '<span class="multiselect-value"></span>' +
+                    '</div>');
+
+                    // Create dropdown panel
+                    var panel = $('<div class="custom-multiselect-panel" id="' + dropdownId + '_panel" style="display: none;">' +
+                        '<div class="govuk-checkboxes" data-module="govuk-checkboxes"></div>' +
+                    '</div>');
+
+                    wrapper.append(toggle).append(panel);
+                    label.find('.govuk-form-group').append(wrapper);
+
+                    var checkboxContainer = panel.find('.govuk-checkboxes');
+
+                    // Build checkboxes
+                    column.data().unique().sort().each(function (d, j) {
+                        var dom_nodes = $($.parseHTML(d));
+                        var node = dom_nodes[0];
+                        var value = node?.innerText != null ? node.innerText : d;
+                        
+                        if (value) {
+                            var checkboxId = colName + '_checkbox_' + j;
+                            var checkbox = 
+                                '<div class="govuk-checkboxes__item">' +
+                                    '<input class="govuk-checkboxes__input" id="' + checkboxId + '" type="checkbox" value="' + value + '">' +
+                                    '<label class="govuk-label govuk-checkboxes__label" for="' + checkboxId + '">' + value + '</label>' +
+                                '</div>';
+                            checkboxContainer.append(checkbox);
+                        }
+                    });
+
+                    // Toggle dropdown
+                    toggle.on('click', function (e) {
+                        e.stopPropagation();
+                        var isOpen = panel.is(':visible');
+                        
+                        // Close all dropdowns
+                        $('.custom-multiselect-panel').hide();
+                        
+                        // Toggle this one
+                        if (!isOpen) {
+                            panel.show();
+                        }
+                    });
+
+                    // Update display and filter
+                    function updateSelection() {
+                        var checked = checkboxContainer.find('input:checked');
+                        var count = checked.length;
+                        
+                        toggle.find('.multiselect-value').text(count > 0 ? count + ' selected' : '');
+                        
+                        var selectedValues = [];
+                        checked.each(function () {
+                            selectedValues.push($.fn.dataTable.util.escapeRegex($(this).val()));
+                        });
+
+                        if (selectedValues.length > 0) {
+                            var searchRegex = '^(' + selectedValues.join('|') + ')$';
+                            column.search(searchRegex, true, false).draw();
+                        } else {
+                            column.search('', true, false).draw();
+                        }
+                    }
+
+                    checkboxContainer.on('change', 'input[type="checkbox"]', updateSelection);
+
+                    // Close on outside click
+                    $(document).on('click', function (e) {
+                        if (!$(e.target).closest('#' + dropdownId + '_toggle, #' + dropdownId + '_panel').length) {
+                            panel.hide();
+                        }
+                    });
+                });
+
+            // Handle single-select columns (Status)
             this.api()
                 .columns($('[data-searchable]'))
                 
@@ -46,10 +137,8 @@
                         .unique()
                         .sort()
                         .each(function (d, j) {
-                            //console.log("J", j)
                             var dom_nodes = $($.parseHTML(d));
                             var node = dom_nodes[0];
-                            //console.log("Node", node);
                             var option = document.createElement('option');
                             if (node?.innerText != null) {
                                 option.value = node.innerText;
