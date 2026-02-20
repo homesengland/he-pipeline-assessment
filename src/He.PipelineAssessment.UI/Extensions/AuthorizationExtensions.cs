@@ -1,5 +1,6 @@
 ﻿using He.Identity.Auth0;
 using He.Identity.Mvc;
+using He.PipelineAssessment.Infrastructure;
 using He.PipelineAssessment.UI.Authorization;
 using Microsoft.AspNetCore.Authorization;
 
@@ -53,29 +54,25 @@ namespace He.PipelineAssessment.UI.Extensions
                 .Build();
 
                 options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToPipelineAdminRoleRequired,
-                policy => policy.RequireRole(Constants.AppRole.PipelineAdminOperations));
+                policy => policy.RequireRole(RoleConstants.AppRole.PipelineAdminOperations));
 
                 options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired,
                policy => policy.RequireRole(
-                                Constants.AppRole.PipelineAdminOperations,
-                                Constants.AppRole.PipelineEconomist));
+                                RoleConstants.AppRole.PipelineAdminOperations,
+                                RoleConstants.AppRole.PipelineEconomist));
 
                 options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToPipelineViewAssessmentRoleRequired,
                     policy => policy.RequireRole(
-                                Constants.AppRole.PipelineAssessorMPP,
-                                Constants.AppRole.PipelineAssessorInvestment,
-                                Constants.AppRole.PipelineAssessorDevelopment,
-                                Constants.AppRole.PipelineAdminOperations,
-                                Constants.AppRole.PipelineObserver,
-                                Constants.AppRole.PipelineEconomist));
+                                RoleConstants.AppRole.PipelineProjectManager,
+                                RoleConstants.AppRole.PipelineAdminOperations,
+                                RoleConstants.AppRole.PipelineObserver,
+                                RoleConstants.AppRole.PipelineEconomist));
 
                 options.AddPolicy(Constants.AuthorizationPolicies.AssignmentToWorkflowExecuteRoleRequired,
                    policy => policy.RequireRole(
-                                Constants.AppRole.PipelineAssessorMPP,
-                                Constants.AppRole.PipelineAssessorInvestment,
-                                Constants.AppRole.PipelineAssessorDevelopment,
-                                Constants.AppRole.PipelineAdminOperations,
-                                Constants.AppRole.PipelineEconomist));
+                                RoleConstants.AppRole.PipelineProjectManager,
+                                RoleConstants.AppRole.PipelineAdminOperations,
+                                RoleConstants.AppRole.PipelineEconomist));
             });
         }
     }

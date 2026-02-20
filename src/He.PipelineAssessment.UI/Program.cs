@@ -111,7 +111,6 @@ builder.Services.AddScoped<IRoleValidation, RoleValidation>();
 builder.Services.AddScoped<IErrorHelper, ErrorHelper>();
 builder.Services.AddScoped<IInterventionService, InterventionService>();
 builder.Services.AddScoped<IAssessmentInterventionMapper, AssessmentInterventionMapper>();
-builder.Services.AddScoped<IBusinessAreaValidation, BusinessAreaValidation>();
 
 builder.Services.AddHttpContextAccessor();
 

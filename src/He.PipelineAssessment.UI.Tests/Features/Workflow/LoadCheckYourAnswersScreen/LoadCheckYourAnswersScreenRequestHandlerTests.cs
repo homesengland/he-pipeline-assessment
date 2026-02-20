@@ -28,7 +28,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
                .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
 
             elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
@@ -59,7 +59,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
 
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
 
             //Act
             var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
@@ -106,7 +106,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
               .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(true);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(true);
             roleValidation.Setup(x => x.ValidateRole(assessmentToolWorkflowInstance.AssessmentId, assessmentToolWorkflowInstance.WorkflowDefinitionId)).ReturnsAsync(false);
 
             //Act
@@ -131,13 +131,77 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
             assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
                 .ReturnsAsync(assessmentToolWorkflowInstance);
 
-            roleValidation.Setup(x => x.ValidateSensitiveRecords(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(false);
 
             //Act
             var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
 
             //Assert
             Assert.Equal("You do not have permission to access this resource.", ex.Message);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ReturnsSaveAndContinueCommand_GivenUserIsWhitelistedForSensitiveRecord(
+            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+            WorkflowActivityDataDto workflowActivityDataDto,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadCheckYourAnswersScreenRequestHandler sut)
+        {
+            //Arrange
+            assessmentToolWorkflowInstance.Assessment.SensitiveStatus = "Sensitive - NDA in place";
+
+            elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
+                .ReturnsAsync(workflowActivityDataDto);
+
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            // User is not admin or PM, but is whitelisted
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+            roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(assessmentToolWorkflowInstance.AssessmentId))
+                .ReturnsAsync(true);
+
+            //Act
+            var result = await sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None);
+
+            //Assert
+            Assert.NotNull(result);
+            Assert.True(result!.IsAuthorised);
+            Assert.IsType<QuestionScreenSaveAndContinueCommand>(result);
+            roleValidation.Verify(x => x.IsUserWhitelistedForSensitiveRecord(assessmentToolWorkflowInstance.AssessmentId), Times.Once);
+        }
+
+        [Theory]
+        [AutoMoqData]
+        public async Task Handle_ThrowsUnauthorizedException_GivenUserIsNotWhitelistedForSensitiveRecord(
+            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
+            [Frozen] Mock<IRoleValidation> roleValidation,
+            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+            AssessmentToolWorkflowInstance assessmentToolWorkflowInstance,
+            LoadCheckYourAnswersScreenRequestHandler sut)
+        {
+            //Arrange
+            loadCheckYourAnswersScreenRequest.IsReadOnly = false;
+            assessmentToolWorkflowInstance.Assessment.SensitiveStatus = "Sensitive - NDA in place";
+
+            assessmentRepository.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
+                .ReturnsAsync(assessmentToolWorkflowInstance);
+
+            // User is not admin/PM and is NOT whitelisted
+            roleValidation.Setup(x => x.CanViewAssessment(assessmentToolWorkflowInstance.Assessment)).Returns(false);
+            roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(assessmentToolWorkflowInstance.AssessmentId))
+                .ReturnsAsync(false);
+
+            //Act
+            var ex = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => sut.Handle(loadCheckYourAnswersScreenRequest, CancellationToken.None));
+
+            //Assert
+            Assert.Equal("You do not have permission to access this resource.", ex.Message);
+            roleValidation.Verify(x => x.IsUserWhitelistedForSensitiveRecord(assessmentToolWorkflowInstance.AssessmentId), Times.Once);
         }
     }
 }

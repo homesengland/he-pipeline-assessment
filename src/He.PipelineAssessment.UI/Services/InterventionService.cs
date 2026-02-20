@@ -168,8 +168,8 @@ namespace He.PipelineAssessment.UI.Services
                         $"Unable to create request as an open request already exists for this assessment.");
                 }
 
-                var userName = _userProvider.GetUserName()!;
-                var email = _userProvider.GetUserEmail()!;
+                var userName = _userProvider.UserName()!;
+                var email = _userProvider.Email()!;
                 var adminUserName = request.DecisionType == InterventionDecisionTypes.Override ? userName : null;
                 var adminEmail = request.DecisionType == InterventionDecisionTypes.Override ? email : null;
 

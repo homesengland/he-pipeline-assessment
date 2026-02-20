@@ -21,6 +21,8 @@ namespace He.PipelineAssessment.Infrastructure.Data
         public DbSet<AssessmentToolWorkflow> AssessmentToolWorkflow { get; set; } = default!;
         public DbSet<AssessmentIntervention> AssessmentIntervention { get; set; } = default!;
         public DbSet<TargetAssessmentToolWorkflow> TargetAssessmentToolWorkflow { get; set; } = default!;
+        public DbSet<SensitiveRecordWhitelist> SensitiveRecordWhitelist { get; set; } = default!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,7 +32,7 @@ namespace He.PipelineAssessment.Infrastructure.Data
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
-            var userName = _userProvider.GetUserName();
+            var userName = _userProvider.UserName();
 
             if (userName is null)
             {

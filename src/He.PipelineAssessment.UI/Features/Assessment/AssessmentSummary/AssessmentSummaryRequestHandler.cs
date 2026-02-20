@@ -15,19 +15,16 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
         private readonly IStoredProcedureRepository _storedProcedureRepository;
         private readonly ILogger<AssessmentSummaryRequestHandler> _logger;
         private readonly IRoleValidation _roleValidation;
-        private readonly IBusinessAreaValidation _businessAreaValidation;
 
         public AssessmentSummaryRequestHandler(IAssessmentRepository repository,
                                                ILogger<AssessmentSummaryRequestHandler> logger,
                                                IStoredProcedureRepository storedProcedureRepository, 
-                                               IRoleValidation roleValidation,
-                                               IBusinessAreaValidation businessAreaValidation)
+                                               IRoleValidation roleValidation)
         {
             _repository = repository;
             _logger = logger;
             _storedProcedureRepository = storedProcedureRepository;
             _roleValidation = roleValidation;
-            _businessAreaValidation = businessAreaValidation;
         }
         public async Task<AssessmentSummaryResponse?> Handle(AssessmentSummaryRequest request, CancellationToken cancellationToken)
         {
@@ -39,16 +36,18 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     throw new ApplicationException($"Assessment with id {request.AssessmentId} not found.");
                 }
 
-                var validateSensitiveStatus =
-                    _roleValidation.ValidateSensitiveRecords(dbAssessment);
-                if (!validateSensitiveStatus)
+                var canViewRecord = _roleValidation.CanViewAssessment(dbAssessment, true);
+
+                if (!canViewRecord && dbAssessment.IsSensitiveRecord())
+                {
+                    canViewRecord = await _roleValidation.IsUserWhitelistedForSensitiveRecord(request.AssessmentId);
+                }
+
+                if (!canViewRecord)
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
-                bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
 
-                List<string> businessAreaErrorMessage = new List<string>();
-         
 
                 var assessmentStages = await _storedProcedureRepository.GetAssessmentStages(request.AssessmentId);
                 var startableWorkflows = await _storedProcedureRepository.GetStartableTools(request.AssessmentId);
@@ -80,15 +79,6 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     }
                 }
 
-                if (!hasValidBusinessArea)
-                {
-                    string assessmentToolName = "Early Stage Tools";
-
-                    businessAreaErrorMessage.Add(string.Format("You do not have permission for this opportunity to complete assessments other than the {0}.", assessmentToolName));
-                    businessAreaErrorMessage.Add(string.Format("Please contact a System Administrator to request the correct level of access to complete {0} Assessments", dbAssessment.BusinessArea));
-                
-                }
-
                 var dbHistory = await _storedProcedureRepository.GetAssessmentHistory(request.AssessmentId);
 
                 var stagesHistory = AssessmentSummaryStage(dbHistory).ToList();
@@ -109,6 +99,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     SiteName = dbAssessment.SiteName,
                     CounterParty = dbAssessment.Counterparty,
                     Reference = dbAssessment.Reference,
+                    SpId = dbAssessment.SpId,
                     Stages = stages,
                     StagesHistory = stagesHistory,
                     LocalAuthority = dbAssessment.LocalAuthority,
@@ -116,8 +107,6 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     SensitiveStatus = dbAssessment.SensitiveStatus,
                     Interventions = interventions,
                     BusinessArea = dbAssessment.BusinessArea,
-                    HasValidBusinessArea = hasValidBusinessArea,
-                    BusinessAreaMessage = hasValidBusinessArea ? null : businessAreaErrorMessage
                 };
             }
             catch (UnauthorizedAccessException e)
@@ -130,12 +119,6 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 _logger.LogError(e, e.Message);
                 throw new ApplicationException($"Unable to get the assessment summary. AssessmentId: {request.AssessmentId}");
             }
-        }
-
-        private bool HasValidBusinessArea(string businessArea)
-        {
-            bool hasValidBusinessArea = _roleValidation.IsAdmin() ? true : _roleValidation.ValidateForBusinessArea(businessArea);
-            return hasValidBusinessArea;
         }
 
         private AssessmentSummaryStage AssessmentSummaryStage( string name, int order, bool? isEarlyStage)
@@ -199,6 +182,7 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                         IsFirstWorkflow = item.IsFirstWorkflow,
                         IsVariation = item.IsVariation,
                         IsEarlyStage = item.IsEarlyStage,
+                        IsEconomistWorkflow = item.IsEconomistWorkflow,
                         AssessmentToolWorkflowInstanceId = item.AssessmentToolWorkflowInstanceId,
                         Result = item.Result,
                         SubmittedBy = item.SubmittedBy,

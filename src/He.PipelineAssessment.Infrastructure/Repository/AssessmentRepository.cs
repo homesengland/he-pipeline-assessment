@@ -1,6 +1,7 @@
 ﻿using He.PipelineAssessment.Infrastructure.Data;
 using He.PipelineAssessment.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace He.PipelineAssessment.Infrastructure.Repository
 {
@@ -40,6 +41,14 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<List<InterventionReason>> GetInterventionReasons(bool isVariation = false);
         Task<List<AssessmentIntervention>> GetOpenAssessmentInterventions(int assessmentId);
         Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmendment(int assessmentId, int order);
+        Task<List<SensitiveRecordWhitelist>> GetSensitiveRecordWhitelist(int assessmentId);
+        Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId, string email);
+        Task<List<SensitiveRecordWhitelist>> GetAllSensitiveRecordWhitelistsByEmail(string email);
+        Task<List<int>> GetAllWhitelistedAssessmentIdsByEmail(string email);
+        Task<SensitiveRecordWhitelist?> GetSensitiveRecordWhitelistById(int id);
+        Task<int> CreateSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist);
+        Task<int> DeleteSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist);
+
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -288,6 +297,59 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             context.Set<AssessmentToolInstanceNextWorkflow>().RemoveRange(nextWorkflows);
 
             await context.SaveChangesAsync();
+        }
+
+        public async Task<List<SensitiveRecordWhitelist>> GetSensitiveRecordWhitelist(int assessmentId)
+        {
+            return await context.Set<SensitiveRecordWhitelist>()
+                .Where(x => x.AssessmentId == assessmentId)
+                .OrderByDescending(x => x.CreatedDateTime)
+                .ToListAsync();
+        }
+
+        public async Task<SensitiveRecordWhitelist?> GetSensitiveRecordWhitelistById(int id)
+        {
+            return await context.Set<SensitiveRecordWhitelist>()
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<SensitiveRecordWhitelist>> GetAllSensitiveRecordWhitelistsByEmail(string email)
+        {
+           
+            var formattedEmail = email.ToLower();
+
+            return await context.Set<SensitiveRecordWhitelist>()
+                .Where(x => x.Email.ToLower() == formattedEmail)
+                .ToListAsync();
+        }
+
+        public async Task<int> CreateSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist)
+        {
+            await context.Set<SensitiveRecordWhitelist>().AddAsync(whitelist);
+            return await context.SaveChangesAsync();
+        }
+        public async Task<int>DeleteSensitiveRecordWhitelist(SensitiveRecordWhitelist whitelist)
+        {
+            context.Remove(whitelist);
+            return await SaveChanges();
+        }
+
+        public async Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId, string email)
+        {
+            var normalizedEmail = email.ToLower();
+            return await context.SensitiveRecordWhitelist
+                .Where(x => x.AssessmentId == assessmentId && x.Email.ToLower() == normalizedEmail)
+                .AnyAsync();
+        }
+
+        public async Task<List<int>> GetAllWhitelistedAssessmentIdsByEmail(string email)
+        {
+            email = email.ToLower();
+            List<int> whiteListIds = await context.SensitiveRecordWhitelist
+                .Where(x => x.Email.ToLower() == email)
+                .Select(x => x.AssessmentId)
+                .ToListAsync();
+            return whiteListIds;
         }
     }
 }

@@ -20,8 +20,8 @@ public class EconomistController : BaseController<EconomistController>
     [Authorize(Policy = Constants.AuthorizationPolicies.AssignmentToWorkflowEconomistRoleRequired)]
     public async Task<IActionResult> GetEconomistList()
     {
-        var username = _userProvider.GetUserName();
-        var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+        var username = _userProvider.UserName();
+        var canViewSensitiveRecords = _userProvider.IsEconomist();
 
         var listModel = await _mediator.Send(new EconomistAssessmentListRequest()
         {

@@ -601,8 +601,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
             roleValidation.Setup(x => x.ValidateRole(workflowInstance.AssessmentId, workflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
             assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(true);
             assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(interventions);
-            userProvider.Setup(x => x.GetUserEmail()).Returns(email);
-            userProvider.Setup(x => x.GetUserName()).Returns(userName);
+            userProvider.Setup(x => x.Email()).Returns(email);
+            userProvider.Setup(x => x.UserName()).Returns(userName);
             assessmentRepository.Setup(x => x.GetInterventionReasons(false)).ReturnsAsync(reasons);
             mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, reasons, It.IsAny<DtoConfig>())).Throws(exception);
 
@@ -671,8 +671,8 @@ namespace He.PipelineAssessment.UI.Tests.Services
             roleValidation.Setup(x => x.ValidateRole(workflowInstance.AssessmentId, workflowInstance.WorkflowDefinitionId)).ReturnsAsync(true);
             assessmentToolWorkflowInstanceHelpers.Setup(x => x.IsOrderEqualToLatestSubmittedWorkflowOrder(workflowInstance)).ReturnsAsync(true);
             assessmentRepository.Setup(x => x.GetOpenAssessmentInterventions(workflowInstance.AssessmentId)).ReturnsAsync(interventions);
-            userProvider.Setup(x => x.GetUserEmail()).Returns(email);
-            userProvider.Setup(x => x.GetUserName()).Returns(userName);
+            userProvider.Setup(x => x.Email()).Returns(email);
+            userProvider.Setup(x => x.UserName()).Returns(userName);
             assessmentRepository.Setup(x => x.GetInterventionReasons(false)).ReturnsAsync(reasons);
             mapper.Setup(x => x.AssessmentInterventionDtoFromWorkflowInstance(workflowInstance, reasons, It.IsAny<DtoConfig>())).Returns(dto);
 

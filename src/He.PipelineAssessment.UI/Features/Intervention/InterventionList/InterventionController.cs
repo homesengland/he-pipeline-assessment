@@ -24,8 +24,8 @@ namespace He.PipelineAssessment.UI.Features.Intervention.InterventionList
         {
             try
             {
-                var username = _userProvider.GetUserName();
-                var canViewSensitiveRecords = _userProvider.CheckUserRole(Constants.AppRole.SensitiveRecordsViewer);
+                var username = _userProvider.UserName();
+                var canViewSensitiveRecords = _userProvider.IsAdmin();
 
                 var listModel = await _mediator.Send(new InterventionListRequest()
                 {
