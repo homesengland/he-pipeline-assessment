@@ -1,11 +1,9 @@
 ﻿using AutoFixture.Xunit2;
 using He.PipelineAssessment.Infrastructure;
-using He.PipelineAssessment.Infrastructure.Repository;
-using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Tests.Common;
-using He.PipelineAssessment.UI.Authorization;
-using He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary;
 using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist;
+using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist.AddPermission;
+using He.PipelineAssessment.UI.Features.Assessment.SensitiveRecordPermissionsWhitelist.RemovePermission;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,621 +16,395 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.SensitiveRecordPerm
 {
     public class SensitiveRecordPermissionsWhitelistControllerTests
     {
-        private static void SetupControllerContext(SensitiveRecordPermissionsWhitelistController controller)
+        private static void SetupTempData(SensitiveRecordPermissionsWhitelistController controller)
         {
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             controller.TempData = tempData;
-            controller.ControllerContext = new ControllerContext
-            {
-                HttpContext = httpContext
-            };
         }
 
-        #region Add Tests
+        #region Add Permission Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task Add_ShouldAddPermission_WhenUserIsAdmin(
+        public async Task Add_ReturnsRedirectToAction_WhenPermissionAddedSuccessfully(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string email,
+            string username,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
-            var email = "test.user@homesengland.gov.uk";
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns(username);
+            userProvider.Setup(x => x.IsAdmin()).Returns(true);
 
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var successResponse = new AddSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "other.user@test.com"
-                }
+                IsSuccess = true,
+                SuccessMessage = $"Permission for {email} added successfully"
             };
 
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            userProvider.Setup(x => x.UserName()).Returns("admin.user@test.com");
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
-                .ReturnsAsync(new List<SensitiveRecordWhitelist>());
-            assessmentRepository.Setup(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
-                .ReturnsAsync(1);
+            mediator.Setup(x => x.Send(
+                It.IsAny<AddSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(successResponse);
 
             // Act
             var result = await sut.Add(assessmentId, correlationId, email);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Contains($"Permission for {email} added successfully", sut.TempData["SuccessMessage"]?.ToString());
-            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.Is<SensitiveRecordWhitelist>(
-                w => w.AssessmentId == assessmentId && w.Email == email)), Times.Once);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Summary", redirectResult.ActionName);
+            Assert.Equal("Assessment", redirectResult.ControllerName);
+            Assert.Equal("permissions", redirectResult.Fragment);
+            Assert.Equal(successResponse.SuccessMessage, sut.TempData["SuccessMessage"]);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Add_ShouldAddPermission_WhenUserIsProjectManager(
+        public async Task Add_SetsValidationErrors_WhenEmailValidationFails(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string email,
+            string username,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
-            var email = "test.user@homesengland.gov.uk";
-            var currentUsername = "project.manager@test.com";
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns(username);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
 
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var failureResponse = new AddSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = currentUsername
-                }
+                IsSuccess = false,
+                ErrorMessage = "Invalid email address format",
+                ValidationMessage = "Enter an email address in the correct format such as name@homesengland.gov.uk",
+                EmailValue = email
             };
 
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.UserName()).Returns(currentUsername);
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
-                .ReturnsAsync(new List<SensitiveRecordWhitelist>());
-            assessmentRepository.Setup(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
-                .ReturnsAsync(1);
+            mediator.Setup(x => x.Send(
+                It.IsAny<AddSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(failureResponse);
 
             // Act
             var result = await sut.Add(assessmentId, correlationId, email);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Contains($"Permission for {email} added successfully", sut.TempData["SuccessMessage"]?.ToString());
-            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Once);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(failureResponse.ErrorMessage, sut.TempData["ErrorMessage"]);
+            Assert.Equal(failureResponse.ValidationMessage, sut.TempData["EmailValidationError"]);
+            Assert.Equal(failureResponse.EmailValue, sut.TempData["EmailValue"]);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Add_ShouldRedirectToAccessDenied_WhenUserIsNotAuthorized(
+        public async Task Add_SetsOnlyErrorMessage_WhenValidationMessageIsNull(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string email,
+            string username,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
-            var email = "test.user@homesengland.gov.uk";
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns(username);
+            userProvider.Setup(x => x.IsAdmin()).Returns(true);
 
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var failureResponse = new AddSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "other.user@test.com"
-                }
+                IsSuccess = false,
+                ErrorMessage = "Failed to add permission: Database error",
+                ValidationMessage = null,
+                EmailValue = null
             };
 
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.UserName()).Returns("unauthorized.user@test.com");
+            mediator.Setup(x => x.Send(
+                It.IsAny<AddSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(failureResponse);
 
             // Act
             var result = await sut.Add(assessmentId, correlationId, email);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
-            Assert.Equal("Error", redirectToActionResult.ControllerName);
-            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(failureResponse.ErrorMessage, sut.TempData["ErrorMessage"]);
+            Assert.False(sut.TempData.ContainsKey("EmailValidationError"));
+            Assert.False(sut.TempData.ContainsKey("EmailValue"));
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Add_ShouldReturnError_WhenEmailIsEmpty(
+        public async Task Add_PassesCorrectCommandToMediator(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
+            [Frozen] Mock<IUserProvider> userProvider,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string email,
+            string username,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns(username);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
 
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var successResponse = new AddSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "project.manager@test.com"
-                }
+                IsSuccess = true,
+                SuccessMessage = "Success"
             };
 
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
+            mediator.Setup(x => x.Send(
+                It.IsAny<AddSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(successResponse);
 
             // Act
-            var result = await sut.Add(assessmentId, correlationId, string.Empty);
+            await sut.Add(assessmentId, correlationId, email);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Enter an email address", sut.TempData["ErrorMessage"]);
-            Assert.Equal("Enter an email address", sut.TempData["EmailValidationError"]);
-            Assert.Equal(string.Empty, sut.TempData["EmailValue"]);
-            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
+            mediator.Verify(x => x.Send(
+                It.Is<AddSensitiveRecordPermissionCommand>(cmd =>
+                    cmd.AssessmentId == assessmentId &&
+                    cmd.Email == email &&
+                    cmd.CurrentUsername == username &&
+                    cmd.IsAdmin == false),
+                It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Add_ShouldReturnError_WhenEmailFormatIsInvalid(
+        public async Task Add_HandlesNullEmail_ByPassingEmptyString(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
+            [Frozen] Mock<IUserProvider> userProvider,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string username,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns(username);
+            userProvider.Setup(x => x.IsAdmin()).Returns(true);
 
-            var invalidEmail = "not-an-email";
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var failureResponse = new AddSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "project.manager@test.com"
-                }
+                IsSuccess = false,
+                ErrorMessage = "Enter an email address"
             };
 
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
+            mediator.Setup(x => x.Send(
+                It.IsAny<AddSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(failureResponse);
 
             // Act
-            var result = await sut.Add(assessmentId, correlationId, invalidEmail);
+            await sut.Add(assessmentId, correlationId, null!);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Invalid email address format", sut.TempData["ErrorMessage"]);
-            Assert.Equal("Enter an email address in the correct format such as name@homesengland.gov.uk", sut.TempData["EmailValidationError"]);
-            Assert.Equal(invalidEmail, sut.TempData["EmailValue"]);
-            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
+            mediator.Verify(x => x.Send(
+                It.Is<AddSensitiveRecordPermissionCommand>(cmd =>
+                    cmd.Email == string.Empty),
+                It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Add_ShouldReturnError_WhenEmailDomainIsInvalid(
+        public async Task Add_HandlesNullUsername_ByPassingEmptyString(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
+            [Frozen] Mock<IUserProvider> userProvider,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string email,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns((string?)null);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
 
-            var invalidDomainEmail = "user@gmail.com";
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var successResponse = new AddSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "project.manager@test.com"
-                }
+                IsSuccess = true,
+                SuccessMessage = "Success"
             };
 
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
+            mediator.Setup(x => x.Send(
+                It.IsAny<AddSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(successResponse);
 
             // Act
-            var result = await sut.Add(assessmentId, correlationId, invalidDomainEmail);
+            await sut.Add(assessmentId, correlationId, email);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Email address must be a Homes England email address", sut.TempData["ErrorMessage"]);
-            Assert.Equal("Enter a Homes England email address ending with @homesengland.gov.uk", sut.TempData["EmailValidationError"]);
-            Assert.Equal(invalidDomainEmail, sut.TempData["EmailValue"]);
-            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Add_ShouldReturnError_WhenEmailAlreadyExists(
-            [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
-            int assessmentId,
-            int correlationId)
-        {
-            // Arrange
-            SetupControllerContext(sut);
-            var email = "existing.user@homesengland.gov.uk";
-
-            var response = new SensitiveRecordPermissionsWhitelistResponse
-            {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "project.manager@test.com"
-                }
-            };
-
-            var existingPermissions = new List<SensitiveRecordWhitelist>
-            {
-                new SensitiveRecordWhitelist { Id = 1, AssessmentId = assessmentId, Email = email }
-            };
-
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
-                .ReturnsAsync(existingPermissions);
-
-            // Act
-            var result = await sut.Add(assessmentId, correlationId, email);
-
-            // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal($"{email} is already on the permissions list for this assessment", sut.TempData["ErrorMessage"]);
-            Assert.Equal($"{email} is already on the permissions list for this assessment", sut.TempData["EmailValidationError"]);
-            Assert.Equal(email, sut.TempData["EmailValue"]);
-            assessmentRepository.Verify(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Add_ShouldHandleException_WhenErrorOccurs(
-            [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
-            int assessmentId,
-            int correlationId)
-        {
-            // Arrange
-            SetupControllerContext(sut);
-            var email = "test.user@homesengland.gov.uk";
-
-            var response = new SensitiveRecordPermissionsWhitelistResponse
-            {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "project.manager@test.com"
-                }
-            };
-
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId))
-                .ReturnsAsync(new List<SensitiveRecordWhitelist>());
-            assessmentRepository.Setup(x => x.CreateSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
-                .ThrowsAsync(new Exception("Database error"));
-
-            // Act
-            var result = await sut.Add(assessmentId, correlationId, email);
-
-            // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Contains("Failed to add permission", sut.TempData["ErrorMessage"]?.ToString());
+            mediator.Verify(x => x.Send(
+                It.Is<AddSensitiveRecordPermissionCommand>(cmd =>
+                    cmd.CurrentUsername == string.Empty),
+                It.IsAny<CancellationToken>()), Times.Once);
         }
 
         #endregion
 
-        #region Remove Tests
+        #region Remove Permission Tests
 
         [Theory]
         [AutoMoqData]
-        public async Task Remove_ShouldRemovePermission_WhenUserIsAdmin(
+        public async Task Remove_ReturnsRedirectToAction_WhenPermissionRemovedSuccessfully(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
             int id,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string username,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns(username);
+            userProvider.Setup(x => x.IsAdmin()).Returns(true);
 
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var successResponse = new RemoveSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "other.user@test.com"
-                }
+                IsSuccess = true,
+                SuccessMessage = "Permission removed successfully."
             };
 
-            var whitelist = new SensitiveRecordWhitelist
-            {
-                Id = id,
-                AssessmentId = assessmentId,
-                Email = "test@example.com"
-            };
-
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            userProvider.Setup(x => x.UserName()).Returns("admin.user@test.com");
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
-                .ReturnsAsync(whitelist);
-            assessmentRepository.Setup(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
-                .ReturnsAsync(1);
+            mediator.Setup(x => x.Send(
+                It.IsAny<RemoveSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(successResponse);
 
             // Act
             var result = await sut.Remove(id, assessmentId, correlationId);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Contains($"Permission for {whitelist.Email} removed successfully", sut.TempData["SuccessMessage"]?.ToString());
-            assessmentRepository.Verify(x => x.DeleteSensitiveRecordWhitelist(It.Is<SensitiveRecordWhitelist>(
-                w => w.Id == id)), Times.Once);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Summary", redirectResult.ActionName);
+            Assert.Equal("Assessment", redirectResult.ControllerName);
+            Assert.Equal("permissions", redirectResult.Fragment);
+            Assert.Equal(successResponse.SuccessMessage, sut.TempData["SuccessMessage"]);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Remove_ShouldRemovePermission_WhenUserIsProjectManager(
+        public async Task Remove_SetsErrorMessage_WhenRemovalFails(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
             int id,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string username,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns(username);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
 
-            var currentUsername = "project.manager@test.com";
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var failureResponse = new RemoveSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = currentUsername
-                }
+                IsSuccess = false,
+                ErrorMessage = "Permission not found."
             };
 
-            var whitelist = new SensitiveRecordWhitelist
-            {
-                Id = id,
-                AssessmentId = assessmentId,
-                Email = "test@example.com"
-            };
-
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.UserName()).Returns(currentUsername);
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
-                .ReturnsAsync(whitelist);
-            assessmentRepository.Setup(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
-                .ReturnsAsync(1);
+            mediator.Setup(x => x.Send(
+                It.IsAny<RemoveSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(failureResponse);
 
             // Act
             var result = await sut.Remove(id, assessmentId, correlationId);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Contains($"Permission for {whitelist.Email} removed successfully", sut.TempData["SuccessMessage"]?.ToString());
-            assessmentRepository.Verify(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Once);
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal(failureResponse.ErrorMessage, sut.TempData["ErrorMessage"]);
+            Assert.False(sut.TempData.ContainsKey("SuccessMessage"));
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Remove_ShouldRedirectToAccessDenied_WhenUserIsNotAuthorized(
+        public async Task Remove_PassesCorrectCommandToMediator(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
             int id,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            string username,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns(username);
+            userProvider.Setup(x => x.IsAdmin()).Returns(true);
 
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var successResponse = new RemoveSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "other.user@test.com"
-                }
+                IsSuccess = true,
+                SuccessMessage = "Success"
             };
 
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker .Setup(x => x.IsAdmin()).Returns(false);
-            userProvider.Setup(x => x.UserName()).Returns("unauthorized.user@test.com");
+            mediator.Setup(x => x.Send(
+                It.IsAny<RemoveSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(successResponse);
 
             // Act
-            var result = await sut.Remove(id, assessmentId, correlationId);
+            await sut.Remove(id, assessmentId, correlationId);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("AccessDenied", redirectToActionResult.ActionName);
-            Assert.Equal("Error", redirectToActionResult.ControllerName);
-            assessmentRepository.Verify(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
+            mediator.Verify(x => x.Send(
+                It.Is<RemoveSensitiveRecordPermissionCommand>(cmd =>
+                    cmd.Id == id &&
+                    cmd.AssessmentId == assessmentId &&
+                    cmd.CurrentUsername == username &&
+                    cmd.IsAdmin == true),
+                It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory]
         [AutoMoqData]
-        public async Task Remove_ShouldReturnError_WhenWhitelistEntryNotFound(
+        public async Task Remove_HandlesNullUsername_ByPassingEmptyString(
             [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
+            [Frozen] Mock<IUserProvider> userProvider,
             int id,
             int assessmentId,
-            int correlationId)
+            int correlationId,
+            SensitiveRecordPermissionsWhitelistController sut)
         {
             // Arrange
-            SetupControllerContext(sut);
+            SetupTempData(sut);
+            userProvider.Setup(x => x.UserName()).Returns((string?)null);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
 
-            var response = new SensitiveRecordPermissionsWhitelistResponse
+            var successResponse = new RemoveSensitiveRecordPermissionResponse
             {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "project.manager@test.com"
-                }
+                IsSuccess = true,
+                SuccessMessage = "Success"
             };
 
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
-                .ReturnsAsync((SensitiveRecordWhitelist?)null);
+            mediator.Setup(x => x.Send(
+                It.IsAny<RemoveSensitiveRecordPermissionCommand>(),
+                It.IsAny<CancellationToken>()))
+                .ReturnsAsync(successResponse);
 
             // Act
-            var result = await sut.Remove(id, assessmentId, correlationId);
+            await sut.Remove(id, assessmentId, correlationId);
 
             // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Permission not found.", sut.TempData["ErrorMessage"]);
-            assessmentRepository.Verify(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Remove_ShouldReturnError_WhenWhitelistEntryBelongsToDifferentAssessment(
-            [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
-            int id,
-            int assessmentId,
-            int correlationId)
-        {
-            // Arrange
-            SetupControllerContext(sut);
-
-            var response = new SensitiveRecordPermissionsWhitelistResponse
-            {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "project.manager@test.com"
-                }
-            };
-
-            var whitelist = new SensitiveRecordWhitelist
-            {
-                Id = id,
-                AssessmentId = assessmentId + 999, // Different assessment ID
-                Email = "test@example.com"
-            };
-
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
-                .ReturnsAsync(whitelist);
-
-            // Act
-            var result = await sut.Remove(id, assessmentId, correlationId);
-
-            // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Equal("Invalid permission reference.", sut.TempData["ErrorMessage"]);
-            assessmentRepository.Verify(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()), Times.Never);
-        }
-
-        [Theory]
-        [AutoMoqData]
-        public async Task Remove_ShouldHandleException_WhenErrorOccurs(
-            [Frozen] Mock<IMediator> mediator,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
-            [Frozen] Mock<IAssessmentRepository> assessmentRepository,
-            SensitiveRecordPermissionsWhitelistController sut,
-            int id,
-            int assessmentId,
-            int correlationId)
-        {
-            // Arrange
-            SetupControllerContext(sut);
-
-            var response = new SensitiveRecordPermissionsWhitelistResponse
-            {
-                AssessmentSummary = new AssessmentSummaryResponse
-                {
-                    ProjectManager = "project.manager@test.com"
-                }
-            };
-
-            var whitelist = new SensitiveRecordWhitelist
-            {
-                Id = id,
-                AssessmentId = assessmentId,
-                Email = "test@example.com"
-            };
-
-            mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
-                .ReturnsAsync(response);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
-            assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelistById(id))
-                .ReturnsAsync(whitelist);
-            assessmentRepository.Setup(x => x.DeleteSensitiveRecordWhitelist(It.IsAny<SensitiveRecordWhitelist>()))
-                .ThrowsAsync(new Exception("Database error"));
-
-            // Act
-            var result = await sut.Remove(id, assessmentId, correlationId);
-
-            // Assert
-            var redirectToActionResult = Assert.IsType<RedirectToActionResult>(result);
-            Assert.Equal("Summary", redirectToActionResult.ActionName);
-            Assert.Equal("Assessment", redirectToActionResult.ControllerName);
-            Assert.Contains("Failed to remove permission", sut.TempData["ErrorMessage"]?.ToString());
+            mediator.Verify(x => x.Send(
+                It.Is<RemoveSensitiveRecordPermissionCommand>(cmd =>
+                    cmd.CurrentUsername == string.Empty),
+                It.IsAny<CancellationToken>()), Times.Once);
         }
 
         #endregion

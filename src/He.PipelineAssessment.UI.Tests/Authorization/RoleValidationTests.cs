@@ -15,7 +15,7 @@ public class RoleValidationTests
     [AutoMoqData]
     public async Task RoleValidation_ReturnsTrue_IfEconomistWorkflowAndUserIsEconomist(
         [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-        [Frozen] Mock<IUserRoleChecker> userRoleChecker,
+        [Frozen] Mock<IUserProvider> userProvider,
         AssessmentToolWorkflow assessmentTool,
         string workflowDefinitionId,
         int assessmentId,
@@ -25,7 +25,7 @@ public class RoleValidationTests
         //Arrange
         assessmentTool.IsEconomistWorkflow = true;
         adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
+        userProvider.Setup(x => x.IsEconomist()).Returns(true);
 
         //Act
         var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
@@ -38,7 +38,7 @@ public class RoleValidationTests
     [AutoMoqData]
     public async Task RoleValidation_ReturnsFalse_IfEconomistWorkflowAndUserIsNotEconomist(
         [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-        [Frozen] Mock<IUserRoleChecker> userRoleChecker,
+        [Frozen] Mock<IUserProvider> userProvider,
         AssessmentToolWorkflow assessmentTool,
         string workflowDefinitionId,
         int assessmentId,
@@ -47,7 +47,7 @@ public class RoleValidationTests
         //Arrange
         assessmentTool.IsEconomistWorkflow = true;
         adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        userRoleChecker.Setup(x => x.IsEconomist()).Returns(false);
+        userProvider.Setup(x => x.IsEconomist()).Returns(false);
 
         //Act
         var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
@@ -60,7 +60,7 @@ public class RoleValidationTests
     [AutoMoqData]
     public async Task RoleValidation_ReturnsTrue_IfWorkflowIsEarlyStage(
     [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
-    [Frozen] Mock<IUserRoleChecker> userRoleChecker,
+    [Frozen] Mock<IUserProvider> userProvider,
     AssessmentToolWorkflow assessmentTool,
     string workflowDefinitionId,
     int assessmentId,
@@ -70,7 +70,7 @@ public class RoleValidationTests
         assessmentTool.IsEconomistWorkflow = false;
         assessmentTool.IsEarlyStage = true;
         adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolByWorkflowDefinitionId(workflowDefinitionId)).ReturnsAsync(assessmentTool);
-        userRoleChecker.Setup(x => x.IsProjectManager()).Returns(true);
+        userProvider.Setup(x => x.IsProjectManager()).Returns(true);
 
         //Act
         var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
@@ -84,7 +84,6 @@ public class RoleValidationTests
     public async Task RoleValidation_ReturnsTrue_IfSensitiveRecordAndUserHasNotGotRoleSensitiveRecordViewerButIsProjectManager(
         [Frozen] Mock<IAssessmentRepository> assessmentRepository,
         [Frozen] Mock<IUserProvider> userProvider,
-        [Frozen] Mock<IUserRoleChecker> userRoleChecker,
         Assessment assessment,
         string workflowDefinitionId,
         int assessmentId,
@@ -96,8 +95,8 @@ public class RoleValidationTests
         assessment.BusinessArea = "Development";
         assessment.ProjectManager = projectManager;
         assessmentRepository.Setup(x => x.GetAssessment(assessmentId)).ReturnsAsync(assessment);
-        userRoleChecker.Setup(x => x.IsProjectManager()).Returns(true);
         userProvider.Setup(x => x.UserName()).Returns(projectManager);
+        userProvider.Setup(x => x.IsProjectManager()).Returns(true);
 
         //Act
         var result = await sut.ValidateRole(assessmentId, workflowDefinitionId);
@@ -124,7 +123,7 @@ public class RoleValidationTests
             };
 
         userProvider.Setup(x => x.Email()).Returns(userEmail);
-        assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
+        assessmentRepository.Setup(x => x.IsUserWhitelistedForSensitiveRecord(assessmentId, userEmail)).ReturnsAsync(true);
 
         //Act
         var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);
@@ -149,7 +148,7 @@ public class RoleValidationTests
             };
 
         userProvider.Setup(x => x.Email()).Returns(userEmail);
-        assessmentRepository.Setup(x => x.GetSensitiveRecordWhitelist(assessmentId)).ReturnsAsync(whitelist);
+        assessmentRepository.Setup(x => x.IsUserWhitelistedForSensitiveRecord(assessmentId, userEmail)).ReturnsAsync(true);
 
         //Act
         var result = await sut.IsUserWhitelistedForSensitiveRecord(assessmentId);

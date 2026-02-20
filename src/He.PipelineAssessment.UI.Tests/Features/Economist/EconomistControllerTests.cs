@@ -54,13 +54,12 @@ public class EconomistControllerTests
     public async Task GetEconomistList_ShouldCheckPipelineEconomistRole_GivenUserIsEconomist(
     [Frozen] Mock<IMediator> mediator,
     [Frozen] Mock<IUserProvider> userProvider,
-    [Frozen] Mock<IUserRoleChecker> userRoleChecker,
     List<AssessmentDataViewModel> response,
     EconomistController sut)
     {
         //Arrange
         userProvider.Setup(x => x.UserName()).Returns("economist@test.com");
-        userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
+        userProvider.Setup(x => x.IsEconomist()).Returns(true);
 
         mediator.Setup(x => x.Send(It.IsAny<EconomistAssessmentListRequest>(), CancellationToken.None))
             .ReturnsAsync(response);
@@ -71,7 +70,7 @@ public class EconomistControllerTests
         //Assert
         Assert.NotNull(result);
         Assert.IsType<ViewResult>(result);
-        userRoleChecker.Verify(x => x.IsEconomist(), Times.Once);
+        userProvider.Verify(x => x.IsEconomist(), Times.Once);
         mediator.Verify(x => x.Send(It.Is<EconomistAssessmentListRequest>(r =>
             r.CanViewSensitiveRecords == true &&
             r.Username == "economist@test.com"),

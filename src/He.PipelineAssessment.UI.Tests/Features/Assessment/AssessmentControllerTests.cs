@@ -43,7 +43,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         [AutoMoqData]
         public async Task Summary_ShouldRedirectToAction_GivenNoExceptionsThrow(
            [Frozen] Mock<IMediator> mediator,
-           [Frozen] Mock<IUserRoleChecker> userRoleChecker,
            [Frozen] Mock<IUserProvider> userProvider,
            [Frozen] Mock<IRoleValidation> roleValidation,
            AssessmentSummaryResponse summaryResponse,
@@ -56,7 +55,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
 
             mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None))
                 .ReturnsAsync(summaryResponse);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.UserName()).Returns("user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
@@ -76,7 +75,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Summary_ShouldReturnView_WhenUserIsNotAdminOrProjectManager(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IRoleValidation> roleValidation,
             AssessmentSummaryResponse summaryResponse,
             AssessmentController sut,
@@ -89,7 +87,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
 
             mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None))
                 .ReturnsAsync(summaryResponse);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.UserName()).Returns("other.user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
@@ -112,7 +110,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Summary_ShouldLoadPermissions_WhenUserIsAdmin(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IRoleValidation> roleValidation,
             AssessmentSummaryResponse summaryResponse,
             SensitiveRecordPermissionsWhitelistResponse permissionsResponse,
@@ -128,7 +125,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
                 .ReturnsAsync(summaryResponse);
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(permissionsResponse);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(true);
+            userProvider.Setup(x => x.IsAdmin()).Returns(true);
             userProvider.Setup(x => x.UserName()).Returns("admin.user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
@@ -151,7 +148,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Summary_ShouldLoadPermissions_WhenUserIsProjectManager(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IRoleValidation> roleValidation,
             AssessmentSummaryResponse summaryResponse,
             SensitiveRecordPermissionsWhitelistResponse permissionsResponse,
@@ -168,7 +164,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
                 .ReturnsAsync(summaryResponse);
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(permissionsResponse);
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.UserName()).Returns(currentUsername);
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
@@ -240,7 +236,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Summary_ShouldLoadPermissions_WhenUserIsWhitelisted(
         [Frozen] Mock<IMediator> mediator,
         [Frozen] Mock<IUserProvider> userProvider,
-        [Frozen] Mock<IUserRoleChecker> userRoleChecker,
         [Frozen] Mock<IRoleValidation> roleValidation,
         AssessmentSummaryResponse summaryResponse,
         SensitiveRecordPermissionsWhitelistResponse permissionsResponse,
@@ -257,7 +252,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(permissionsResponse);
 
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.UserName()).Returns("regular.user@test.com");
 
             // User is whitelisted for this assessment
@@ -282,7 +277,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Summary_ShouldNotLoadPermissions_WhenUserIsNotWhitelisted(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IRoleValidation> roleValidation,
             AssessmentSummaryResponse summaryResponse,
             AssessmentController sut,
@@ -296,7 +290,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None))
                 .ReturnsAsync(summaryResponse);
 
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
             userProvider.Setup(x => x.UserName()).Returns("regular.user@test.com");
 
             // User is NOT whitelisted for this assessment
@@ -321,7 +315,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Summary_ShouldLoadPermissions_WhenUserIsEconomistAndAssessmentAtEconomistStage(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IRoleValidation> roleValidation,
             AssessmentSummaryResponse summaryResponse,
             SensitiveRecordPermissionsWhitelistResponse permissionsResponse,
@@ -347,8 +340,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(It.IsAny<SensitiveRecordPermissionsWhitelistRequest>(), CancellationToken.None))
                 .ReturnsAsync(permissionsResponse);
 
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
+            userProvider.Setup(x => x.IsEconomist()).Returns(true);
             userProvider.Setup(x => x.UserName()).Returns("economist.user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))
@@ -371,7 +364,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
         public async Task Summary_ShouldNotLoadPermissions_WhenUserIsEconomistButAssessmentNotAtEconomistStage(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IUserProvider> userProvider,
-            [Frozen] Mock<IUserRoleChecker> userRoleChecker,
             [Frozen] Mock<IRoleValidation> roleValidation,
             AssessmentSummaryResponse summaryResponse,
             AssessmentController sut,
@@ -394,8 +386,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline
             mediator.Setup(x => x.Send(It.IsAny<AssessmentSummaryRequest>(), CancellationToken.None))
                 .ReturnsAsync(summaryResponse);
 
-            userRoleChecker.Setup(x => x.IsAdmin()).Returns(false);
-            userRoleChecker.Setup(x => x.IsEconomist()).Returns(true);
+            userProvider.Setup(x => x.IsAdmin()).Returns(false);
+            userProvider.Setup(x => x.IsEconomist()).Returns(true);
             userProvider.Setup(x => x.UserName()).Returns("economist.user@test.com");
 
             roleValidation.Setup(x => x.IsUserWhitelistedForSensitiveRecord(It.IsAny<int>()))

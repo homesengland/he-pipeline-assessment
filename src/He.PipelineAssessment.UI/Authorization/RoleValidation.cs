@@ -10,6 +10,7 @@ public interface IRoleValidation
     Task<bool> ValidateRole(int assessmentId, string workflowDefinitionId);
 
     bool CanViewAssessment(Assessment assessment, bool includeAdmin = false);
+    bool CanViewAssessment(Assessment assessment);
     bool IsAdmin();
     bool IsProjectManagerForAssessment(string? assessmentProjectManager);
     Task<bool> IsUserWhitelistedForSensitiveRecord(int assessmentId);
@@ -79,6 +80,11 @@ public class RoleValidation : IRoleValidation
         bool isOnWhiteList = await _assessmentRepository.IsUserWhitelistedForSensitiveRecord(assessmentId, userEmail);
         return isOnWhiteList;
     
+    }
+
+    public bool CanViewAssessment(Assessment? assessment)
+    {
+        return CanViewAssessment(assessment, false);
     }
 
     public bool CanViewAssessment(Assessment? assessment, bool includeAdmin = false)

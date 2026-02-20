@@ -15,15 +15,12 @@ public class InterventionControllerTest
     private readonly Mock<IMediator> _mediatorMock;
     private readonly Mock<ILogger<InterventionController>> _loggerMock;
     private readonly Mock<IUserProvider> _userProvider;
-    private readonly Mock<IUserRoleChecker> _userRoleChecker;
 
     public InterventionControllerTest()
     {
         _mediatorMock = new Mock<IMediator>();
         _loggerMock = new Mock<ILogger<InterventionController>>();
         _userProvider = new Mock<IUserProvider>();
-        _userRoleChecker = new Mock<IUserRoleChecker>();
-
     }
 
     [Theory]
@@ -34,7 +31,7 @@ public class InterventionControllerTest
         _mediatorMock.Setup(m => m.Send(It.IsAny<AssessmentInterventionViewModel>(), CancellationToken.None)).ReturnsAsync(assessmentInterventionViewModel);
 
         // Act
-        var interventionController = new InterventionController(_mediatorMock.Object, _loggerMock.Object, _userProvider.Object, _userRoleChecker.Object);
+        var interventionController = new InterventionController(_mediatorMock.Object, _loggerMock.Object, _userProvider.Object);
         var actionResult = await interventionController.Index();
 
         // Assert
@@ -49,7 +46,7 @@ public class InterventionControllerTest
         _mediatorMock.Setup(m => m.Send(It.IsAny<InterventionListRequest>(), CancellationToken.None)).ThrowsAsync(new Exception());
 
         // Act
-        var interventionController = new InterventionController(_mediatorMock.Object, _loggerMock.Object, _userProvider.Object, _userRoleChecker.Object);
+        var interventionController = new InterventionController(_mediatorMock.Object, _loggerMock.Object, _userProvider.Object);
         var actionResult = await interventionController.Index();
 
         // Assert

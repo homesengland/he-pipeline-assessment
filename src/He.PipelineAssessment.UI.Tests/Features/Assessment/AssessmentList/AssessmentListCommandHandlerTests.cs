@@ -6,7 +6,9 @@ using He.PipelineAssessment.Models;
 using He.PipelineAssessment.Models.ViewModels;
 using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Assessment.AssessmentList;
+using Microsoft.AspNetCore.Http;
 using Moq;
+using NuGet.Frameworks;
 using Xunit;
 
 namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
@@ -150,21 +152,17 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
             assessmentListRequest.Username = "different.user@example.com";
 
             var sensitiveAssessment = assessments.First();
-            sensitiveAssessment.SensitiveStatus = "Sensitive - NDA in place";
+            sensitiveAssessment.SensitiveStatus = SensitivityStatus.SensitiveNDA;
             sensitiveAssessment.ProjectManager = "other.manager@example.com";
+            sensitiveAssessment.Id = 1;
 
-            var whitelist = new List<SensitiveRecordWhitelist>
+            var whitelist = new List<int>
             {
-                new SensitiveRecordWhitelist
-                {
-                    Id = 1,
-                    AssessmentId = sensitiveAssessment.Id,
-                    Email = userEmail
-                }
+                1
             };
 
             userProvider.Setup(x => x.Email()).Returns(userEmail);
-            assessmentRepo.Setup(x => x.GetAllSensitiveRecordWhitelistsByEmail(userEmail))
+            assessmentRepo.Setup(x => x.GetAllWhitelistedAssessmentIdsByEmail(userEmail))
                 .ReturnsAsync(whitelist);
             repo.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
 
@@ -175,6 +173,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
             Assert.NotNull(result);
             Assert.NotEmpty(result);
             Assert.Equal(assessments.Count, result.Count);
+            Assert.Equal(1, assessments.Count(x => x.IsSensitiveRecord()));
             Assert.Equal(1, result.Count(x => x.IsSensitiveRecord()));
             Assert.Contains(result, x => x.Id == sensitiveAssessment.Id);
         }
@@ -198,10 +197,10 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
             assessments.First().SensitiveStatus = "Sensitive - NDA in place";
             assessments.First().ProjectManager = "other.manager@example.com";
 
-            var emptyWhitelist = new List<SensitiveRecordWhitelist>();
+            var emptyWhitelist = new List<int>();
 
             userProvider.Setup(x => x.Email()).Returns(userEmail);
-            assessmentRepo.Setup(x => x.GetAllSensitiveRecordWhitelistsByEmail(userEmail))
+            assessmentRepo.Setup(x => x.GetAllWhitelistedAssessmentIdsByEmail(userEmail))
                 .ReturnsAsync(emptyWhitelist);
             repo.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
 
@@ -271,13 +270,13 @@ namespace He.PipelineAssessment.UI.Tests.Features.Assessment.AssessmentList
             assessments[1].Id = 2;
 
             // User is only whitelisted for the first one
-            var whitelist = new List<SensitiveRecordWhitelist>
+            var whitelist = new List<int>
             {
-                new SensitiveRecordWhitelist { Id = 1, AssessmentId = 1, Email = userEmail }
+                1
             };
 
             userProvider.Setup(x => x.Email()).Returns(userEmail);
-            assessmentRepo.Setup(x => x.GetAllSensitiveRecordWhitelistsByEmail(userEmail))
+            assessmentRepo.Setup(x => x.GetAllWhitelistedAssessmentIdsByEmail(userEmail))
                 .ReturnsAsync(whitelist);
             repo.Setup(x => x.GetAssessments()).ReturnsAsync(assessments);
 
