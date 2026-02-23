@@ -15,5 +15,6 @@ namespace He.PipelineAssessment.Models
         public bool IsEarlyStage { get; set; }
         public bool IsDisabled { get; set; }
         public virtual List<AssessmentToolWorkflow>? AssessmentToolWorkflows { get; set; }
+        public virtual List<Assessment>? Assessments { get; set; }
     }
 }

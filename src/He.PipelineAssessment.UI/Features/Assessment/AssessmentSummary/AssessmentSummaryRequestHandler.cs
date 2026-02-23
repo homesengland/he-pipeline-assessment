@@ -45,6 +45,10 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 {
                     throw new UnauthorizedAccessException("You do not have permission to access this resource.");
                 }
+                if (!dbAssessment.ValidData)
+                {
+                    throw new InvalidOperationException($"This assessment does not have the required minimum data to proceed. Please update the project data in TSP or contact PAS support.");
+                }
                 bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
 
                 List<string> businessAreaErrorMessage = new List<string>();
@@ -109,10 +113,12 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                     SiteName = dbAssessment.SiteName,
                     CounterParty = dbAssessment.Counterparty,
                     Reference = dbAssessment.Reference,
+                    SpId = dbAssessment.SpId,
                     Stages = stages,
                     StagesHistory = stagesHistory,
                     LocalAuthority = dbAssessment.LocalAuthority,
                     ProjectManager = dbAssessment.ProjectManager,
+                    SensitiveStatus = dbAssessment.SensitiveStatus,
                     Interventions = interventions,
                     BusinessArea = dbAssessment.BusinessArea,
                     HasValidBusinessArea = hasValidBusinessArea,
@@ -123,6 +129,11 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
             {
                 _logger.LogError(e, e.Message);
                 throw;
+            }
+            catch (InvalidOperationException e)
+            {
+                _logger.LogError(e, e.Message);
+                throw new InvalidOperationException(e.Message);
             }
             catch (Exception e)
             {

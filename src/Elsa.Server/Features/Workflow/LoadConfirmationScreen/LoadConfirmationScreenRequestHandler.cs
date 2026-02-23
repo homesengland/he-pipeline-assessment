@@ -53,6 +53,8 @@ namespace Elsa.Server.Features.Workflow.LoadConfirmationScreen
 
                     var activityDataDictionary = await _activityDataProvider.GetActivityData(request.WorkflowInstanceId, request.ActivityId, cancellationToken);
                     result.Data.ConfirmationTitle = (string?)activityDataDictionary.GetData("ConfirmationTitle");
+                    var showToolName = (bool?)activityDataDictionary.FirstOrDefault(x => x.Key == "ShowToolName").Value;
+                    result.Data.ShowToolName = showToolName ?? true;
                     result.Data.ConfirmationText = (string?)activityDataDictionary.GetData("ConfirmationText");
                     result.Data.FooterTitle = (string?)activityDataDictionary.GetData("FooterTitle");
                     result.Data.FooterText = (string?)activityDataDictionary.GetData("FooterText");

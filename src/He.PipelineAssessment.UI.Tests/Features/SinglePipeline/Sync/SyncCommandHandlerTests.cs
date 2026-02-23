@@ -121,6 +121,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             syncCommandHandlerHelper.Setup(x => x.AssessmentsToBeAdded(sourceAssessmentSpIds, destinationAssessmentSpIds, singlePipelineDataResponse)).Returns(assessmentsTobeAdded);
 
             syncCommandHandlerHelper.Setup(x => x.AssessmentsToBeRemoved(sourceAssessmentSpIds, destinationAssessmentSpIdsThatHaveNotBeganAssessment, assessments)).Returns(assessmentsToRemove);
+            syncCommandHandlerHelper.Setup(x => x.SetAssessmentsAsInvalid(assessmentsToRemove)).Returns(2);
 
             var existingAssessments = destinationAssessmentSpIds.Intersect(sourceAssessmentSpIds).ToList();
 
@@ -131,7 +132,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             //Assert
             assessmentRepository.Verify(x => x.CreateAssessments(assessmentsTobeAdded), Times.Once);
-            assessmentRepository.Verify(x => x.RemoveAssesments(assessmentsToRemove), Times.Once);
+            assessmentRepository.Verify(x => x.SaveChanges(), Times.Exactly(2));
             Assert.NotNull(result);
             Assert.IsType<SyncModel>(result);
             Assert.Equal(assessmentsTobeAdded.Count, result.NewAssessmentCount);

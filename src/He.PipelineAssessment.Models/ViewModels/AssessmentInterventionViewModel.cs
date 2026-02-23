@@ -6,6 +6,7 @@ public class AssessmentInterventionViewModel : AuditableEntityViewModel
 {
     public int Id { get; set; }
     public string Reference { get; set; } = null!;
+    public int SpId { get; set; }
     public string WorkflowName { get; set; } = null!;
     public string RequestedBy { get; set; } = null!; 
     public string? Administrator { get; set; }
@@ -13,6 +14,7 @@ public class AssessmentInterventionViewModel : AuditableEntityViewModel
     public string DecisionType { get; set; } = null!;
     public string? SensitiveStatus { get; set; } = null!;
     public string ProjectManager { get; set; } = null!;
+    public bool ValidData { get; set; }
 
     public string StatusDisplayTag()
     {

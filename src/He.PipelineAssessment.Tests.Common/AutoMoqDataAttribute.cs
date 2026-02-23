@@ -2,6 +2,7 @@ using AutoFixture;
 using AutoFixture.AutoMoq;
 using AutoFixture.Kernel;
 using AutoFixture.Xunit2;
+using He.PipelineAssessment.UI.Tests.Common.Utility;
 using Microsoft.AspNetCore.Mvc;
 
 namespace He.PipelineAssessment.Tests.Common
@@ -12,6 +13,7 @@ namespace He.PipelineAssessment.Tests.Common
             base(() => new Fixture()
                 .Customize(new AutoMoqCustomization())
                 .Customize(new OmitOnRecursionFixtureCustomization())
+                .Customize(new ValidAssessmentCustomization())
                 .Customize(new AspNetCustomization()))
         {
         }
