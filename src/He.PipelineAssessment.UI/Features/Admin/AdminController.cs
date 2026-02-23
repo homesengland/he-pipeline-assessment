@@ -54,7 +54,6 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return View();
         }
 
-        //Get all assessment-tools 
         [HttpGet]
         public async Task<IActionResult> AssessmentTool()
         {
@@ -62,7 +61,6 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return View("AssessmentTool", assessmentTools);
         }
 
-        //Get all assessment-tools 
         [HttpGet]
         public async Task<IActionResult> AssessmentToolWorkflow(int assessmentToolId)
         {
@@ -70,7 +68,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return View("AssessmentToolWorkflow", assessmentToolsWorkflows);
         }
 
-        //get an assessment tool 
+
         [HttpGet]
         public async Task<IActionResult> GetAssessmentToolById(int assessmentToolId)
         {
@@ -96,8 +94,9 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return Task.FromResult<IActionResult>(View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto));
         }
 
-        //Create an assessment tool
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAssessmentTool(CreateAssessmentToolDto createAssessmentToolDto)
         {
             var validationResult = await _createAssessmentToolCommandValidator.ValidateAsync(createAssessmentToolDto.CreateAssessmentToolCommand);
@@ -113,8 +112,9 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
-        //Create an assessment tool workflow
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
             var validationResult = await _createAssessmentToolWorkflowCommandValidator.ValidateAsync(createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand);
@@ -142,8 +142,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return View("LoadAssessmentFund", assessmentFundsDTO);
         }
         
-        // create an assessment fund
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
         {
             var createAssessmentFundCommandDTO = new CreateAssessmentFundDto
@@ -169,8 +169,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
-        //update an assessment tool
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAssessmentTool(UpdateAssessmentToolDto updateAssessmentToolDto)
         {
             if (updateAssessmentToolDto.UpdateAssessmentToolCommand.Id == 0)
@@ -200,8 +200,9 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
-        //update an assessment tool workflow
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAssessmentToolWorkflow(UpdateAssessmentToolWorkflowDto updateAssessmentToolWorkflowDto)
         {
             if (updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Id == 0)
@@ -234,8 +235,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
 
         }
 
-        //delete an assessment tool 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAssessmentTool(int assessmentToolId)
         {
             await _mediator.Send(new DeleteAssessmentToolCommand(assessmentToolId));
@@ -243,8 +244,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return RedirectToAction("AssessmentTool");
         }
 
-        //delete an assessment tool workflow
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAssessmentToolWorkflow(int assessmentToolWorkflowId, int assessmentToolId)
         {
 
@@ -253,7 +254,6 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId });
         }
 
-        // display all available funds
         [HttpGet]
         public async Task<IActionResult> AssessmentFunds()
         {
@@ -262,8 +262,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return View("AssessmentFunds", response);
         }
 
-        // update an assessment fund
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
         {
             var updateAssessmentFundCommandDTO = new UpdateAssessmentFundCommandDTO
@@ -305,8 +305,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
-        // Delete an assessment fund
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAssessmentFund(AssessmentFundsDTO assessmentFundsDTO) 
         {
             var id = assessmentFundsDTO.Id ?? 0;
