@@ -1,9 +1,13 @@
 ﻿using AutoFixture.Xunit2;
-using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.Models;
+using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
+using He.PipelineAssessment.UI.Features.Funds.FundsList;
+using He.PipelineAssessment.UI.Features.Funds.ViewModels;
+using MediatR;
+using Microsoft.AspNetCore.Components.Forms;
 using Moq;
 using Xunit;
 using AssessmentToolWorkflowDto = He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows.AssessmentToolWorkflowDto;
@@ -36,14 +40,19 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         [AutoMoqData]
         public async Task Handle_Should_ReturnObjectWithWorkflows_WhenAssessmentToolHasNoWorkflows(
             [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
+            [Frozen] Mock<IMediator> mediator,
             AssessmentToolWorkflowQuery request,
             AssessmentTool assessmentTool,
+            FundsListResponse fundOptions,
             AssessmentToolWorkflowRequestHandler sut
         )
         {
             //Arrange  
             assessmentTool.AssessmentToolWorkflows = null;
-            adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolById(request.AssessmentToolId)).ReturnsAsync(assessmentTool);
+            adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolById(request.AssessmentToolId))
+                .ReturnsAsync(assessmentTool);
+
+           mediator.Setup(x => x.Send(It.IsAny<FundsListRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(fundOptions);
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);
@@ -59,9 +68,11 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
         public async Task Handle_Should_ReturnObjectWithWorkflows_WhenAssessmentToolHasWorkflows(
             [Frozen] Mock<IAdminAssessmentToolRepository> adminAssessmentToolRepository,
             [Frozen] Mock<IAssessmentToolMapper> assessmentToolMapper,
+            [Frozen] Mock<IMediator> mediator,
             AssessmentToolWorkflowQuery request,
             AssessmentTool assessmentTool,
             List<AssessmentToolWorkflowDto> assessmentToolWorkflowDtos,
+            FundsListResponse fundOptions,
             AssessmentToolWorkflowRequestHandler sut
         )
         {
@@ -69,6 +80,9 @@ namespace He.PipelineAssessment.UI.Tests.Features.Admin.AssessmentToolManagement
             adminAssessmentToolRepository.Setup(x => x.GetAssessmentToolById(request.AssessmentToolId)).ReturnsAsync(assessmentTool);
             assessmentToolMapper.Setup(x => x.AssessmentToolWorkflowsToAssessmentToolDto(It.IsAny<List<AssessmentToolWorkflow>>()))
                 .Returns(assessmentToolWorkflowDtos);
+
+            mediator.Setup(x => x.Send(It.IsAny<FundsListRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(fundOptions);
+
 
             //Act
             var result = await sut.Handle(request, CancellationToken.None);

@@ -24,6 +24,12 @@ namespace He.PipelineAssessment.Models
         public string? SensitiveStatus { get; set; }
         [DefaultValue(true)]
         public bool ValidData { get; set; } = true;
+        public int? FundId { get; set; }
+
+        //Corresponds to the most recently completed AssessmentToolWorkflow's Id.
+        public int? LatestAssessmentWorkflowToolId { get; set; }
+
+        public virtual AssessmentFund? AssessmentFund { get; set; }
 
         public bool IsSensitiveRecord()
         {

@@ -27,19 +27,33 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         Task<List<AssessmentToolWorkflowInstance>> GetLastInstancesByStatus(int assessmentId, string status);
         Task<List<AssessmentToolInstanceNextWorkflow>> GetLastNextWorkflows(int assessmentId);
 
-
         Task DeleteSubsequentNextWorkflows(AssessmentToolInstanceNextWorkflow? nextWorkflow);
         Task DeleteAllNextWorkflows(int assessmentId);
         Task DeleteAllNextWorkflowsByOrder(int assessmentId, int order);
         Task<int> DeleteNextWorkflow(AssessmentToolInstanceNextWorkflow nextWorkflow);
 
         Task<int> SaveChanges();
-
         AssessmentToolWorkflow? GetAssessmentToolWorkflowByDefinitionId(string workflowDefinitionId);
         Task<int> DeleteIntervention(AssessmentIntervention intervention);
         Task<List<InterventionReason>> GetInterventionReasons(bool isVariation = false);
         Task<List<AssessmentIntervention>> GetOpenAssessmentInterventions(int assessmentId);
         Task<List<AssessmentToolWorkflowInstance>> GetWorkflowInstancesToDeleteForAmendment(int assessmentId, int order);
+        
+        Task <List<AssessmentFund>> GetAllFunds();
+        Task SaveFund(List<AssessmentFund> funds);
+        Task DeleteFund(int FundId);
+
+        Task<AssessmentFund?> GetAssessmentFundById(int fundId);
+
+        Task<int> UpdateAssessmentFund(AssessmentFund fund);
+
+        Task<int> DeleteAssessmentFund(AssessmentFund fund);
+
+        Task<int> CreateAssessmentFund(AssessmentFund fund);
+
+        Task<int?> GetCurrentWorkflowFundId(int assessmentId);
+
+        Task<int?> GetLatestCompletedWorkflowId(int assessmentId);
     }
 
     public class AssessmentRepository : IAssessmentRepository
@@ -288,6 +302,86 @@ namespace He.PipelineAssessment.Infrastructure.Repository
             context.Set<AssessmentToolInstanceNextWorkflow>().RemoveRange(nextWorkflows);
 
             await context.SaveChangesAsync();
+        }
+        
+        public async Task<List<AssessmentFund>> GetAllFunds()
+        {
+            return await context.Set<AssessmentFund>().ToListAsync();
+        }
+
+        public async Task SaveFund(List<AssessmentFund> funds)
+        {
+            foreach (var fund in funds)
+            {
+                if (fund.Id == 0)
+                {
+                    context.Set<AssessmentFund>().Add(fund);
+                }
+                else if (fund.Id != 0)
+                {
+                    context.Set<AssessmentFund>().Update(fund);
+                }
+                 await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteFund(int FundId)
+        {
+            AssessmentFund? fundToBeDeleted = await context.Set<AssessmentFund>()
+                .FirstOrDefaultAsync(fund => fund.Id == FundId);
+
+            if (fundToBeDeleted != null)
+            {
+                fundToBeDeleted.IsDisabled = true;
+                context.Set<AssessmentFund>().Update(fundToBeDeleted);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<AssessmentFund?> GetAssessmentFundById(int id)
+        {
+            return await context.Set<AssessmentFund>().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<int> UpdateAssessmentFund(AssessmentFund fund)
+        {
+            context.Set<AssessmentFund>().Update(fund);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteAssessmentFund(AssessmentFund fund)
+        {
+            context.Set<AssessmentFund>().Remove(fund);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> CreateAssessmentFund(AssessmentFund fund)
+        {
+            await context.Set<AssessmentFund>().AddAsync(fund);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<int?> GetCurrentWorkflowFundId(int assessmentId)
+        {
+            return await context.Set<AssessmentToolWorkflowInstance>()
+                .Where(x => x.AssessmentId == assessmentId
+                         && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedRollBack
+                         && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendOverrides
+                         && x.Status != AssessmentToolWorkflowInstanceConstants.SuspendedAmendment)
+                .OrderByDescending(x => x.CreatedDateTime)
+                .Select(x => x.AssessmentToolWorkflow.AssessmentFundId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<int?> GetLatestCompletedWorkflowId(int assessmentId)
+        {
+            return await context.Set<AssessmentToolWorkflowInstance>()
+                .Where(x => x.AssessmentId == assessmentId
+                         && x.Status == AssessmentToolWorkflowInstanceConstants.Submitted
+                         && x.SubmittedDateTime != null)
+                .OrderByDescending(x => x.SubmittedDateTime)
+                .Select(x => x.AssessmentToolWorkflowId)
+                .FirstOrDefaultAsync();
         }
     }
 }

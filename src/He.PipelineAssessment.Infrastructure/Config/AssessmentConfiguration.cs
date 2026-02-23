@@ -53,6 +53,10 @@ namespace He.PipelineAssessment.Infrastructure.Config
 
             builder.Property(x => x.ValidData)
                 .HasDefaultValue(true);
-                }
+
+            builder.HasOne(x => x.AssessmentFund)
+                .WithMany(x => x.Assessments)
+                .HasForeignKey(x => x.FundId);
+        }
     }
 }
