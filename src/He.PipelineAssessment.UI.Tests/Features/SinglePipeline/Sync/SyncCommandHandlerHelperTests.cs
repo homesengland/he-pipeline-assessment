@@ -90,6 +90,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.BusinessArea = "Land";
             destinationAssessment.LandType = "Greenfield";
             destinationAssessment.SensitiveStatus = "Sensitive";
+            destinationAssessment.ProjectIdentifier = "12";
+            destinationAssessment.InternalReference = "InternalRef123";
 
             var destinationAssessments = new List<Models.Assessment>();
             destinationAssessments.Add(destinationAssessment);
@@ -106,6 +108,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.sp_business_area = "Land";
             singlePipelineData.land_type = "Greenfield";
             singlePipelineData.sensitive_status = "Sensitive";
+            singlePipelineData.internal_reference = "InternalRef123";
 
             var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
@@ -140,6 +143,8 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.BusinessArea = "Land";
             destinationAssessment.LandType = "Greenfield";
             destinationAssessment.SensitiveStatus = null;
+            destinationAssessment.ProjectIdentifier = "99";
+            destinationAssessment.InternalReference = "OldInternalRef";
 
 
             var destinationAssessments = new List<Models.Assessment>();
@@ -157,6 +162,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.sp_business_area = "Investment";
             singlePipelineData.land_type = "Brownfield";
             singlePipelineData.sensitive_status = "Sensitive";
+            singlePipelineData.internal_reference = "NewInternalRef";
 
            var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
