@@ -34,7 +34,7 @@
     "async-mutex": "^0.4.0",
     "construe": "^0.4.1",
     "el-transition": "^0.0.7",
-    "eslint": "^9.31.0",
+    "eslint": "^9.39.3",
     "lodash": "^4.17.23",
     "micromatch": "^4.0.8",
     "sortablejs": "^1.15.0",
@@ -57,7 +57,9 @@
     "workbox-build": "^7.3.0"
   },
   "overrides": {
-    "js-yaml": ">=4.1.1"
+    "js-yaml": ">=4.1.1",
+    "ajv": ">=8.18.0",
+    "minimatch":  ">=10.2.3"
   },
   "license": "MIT",
   "jest-junit": {
