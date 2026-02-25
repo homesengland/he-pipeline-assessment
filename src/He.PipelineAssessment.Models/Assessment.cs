@@ -24,7 +24,6 @@ namespace He.PipelineAssessment.Models
         public string? SensitiveStatus { get; set; }
         [DefaultValue(true)]
         public bool ValidData { get; set; } = true;
-        public string? ProjectIdentifier { get; set; }
         public string? InternalReference { get; set; }
 
         public bool IsSensitiveRecord()

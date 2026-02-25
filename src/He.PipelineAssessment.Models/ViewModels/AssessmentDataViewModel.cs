@@ -19,7 +19,6 @@ namespace He.PipelineAssessment.Models.ViewModels
         public string? Status { get; set; }
         public string? SensitiveStatus { get; set; }
         public bool ValidData { get; set; }
-        public string? ProjectIdentifier { get; set; }
         public string? InternalReference { get; set; }
         public string StatusDisplayTag()
         {

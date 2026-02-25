@@ -14,12 +14,6 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
         {
 
             migrationBuilder.AddColumn<string>(
-                name: "ProjectIdentifier",
-                table: "Assessment",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
                 name: "InternalReference",
                 table: "Assessment",
                 type: "nvarchar(max)",
@@ -43,6 +37,10 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "InternalReference",
+                table: "Assessment");
+
             var dropGetAssessments = "DROP PROC GetAssessments";
             migrationBuilder.Sql(dropGetAssessments);
         }

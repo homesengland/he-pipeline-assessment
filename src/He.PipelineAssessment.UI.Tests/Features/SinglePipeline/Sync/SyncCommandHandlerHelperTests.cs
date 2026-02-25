@@ -90,7 +90,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.BusinessArea = "Land";
             destinationAssessment.LandType = "Greenfield";
             destinationAssessment.SensitiveStatus = "Sensitive";
-            destinationAssessment.ProjectIdentifier = "12";
             destinationAssessment.InternalReference = "InternalRef123";
 
             var destinationAssessments = new List<Models.Assessment>();
@@ -133,7 +132,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             destinationAssessment.SpId = 2;
             destinationAssessment.Counterparty = "Counterparty";
-            destinationAssessment.Reference = "Reference";
+            destinationAssessment.Reference = "99";
             destinationAssessment.SiteName = "SiteName";
             destinationAssessment.ProjectManager = "Project Manager";
             destinationAssessment.ProjectManagerEmail = "ProjectManagerEmail";
@@ -143,7 +142,6 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.BusinessArea = "Land";
             destinationAssessment.LandType = "Greenfield";
             destinationAssessment.SensitiveStatus = null;
-            destinationAssessment.ProjectIdentifier = "99";
             destinationAssessment.InternalReference = "OldInternalRef";
 
 

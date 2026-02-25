@@ -15,7 +15,6 @@ BEGIN
 	[CreatedDateTime],
 	[ValidData],
 	[SensitiveStatus],
-	[ProjectIdentifier],
 	[InternalReference],
 	(
 		SELECT TOP 1 [LastModifiedDateTime] 
