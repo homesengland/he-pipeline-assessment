@@ -90,6 +90,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.BusinessArea = "Land";
             destinationAssessment.LandType = "Greenfield";
             destinationAssessment.SensitiveStatus = "Sensitive";
+            destinationAssessment.InternalReference = "InternalRef123";
 
             var destinationAssessments = new List<Models.Assessment>();
             destinationAssessments.Add(destinationAssessment);
@@ -106,6 +107,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.sp_business_area = "Land";
             singlePipelineData.land_type = "Greenfield";
             singlePipelineData.sensitive_status = "Sensitive";
+            singlePipelineData.internal_reference = "InternalRef123";
 
             var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
@@ -130,7 +132,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
 
             destinationAssessment.SpId = 2;
             destinationAssessment.Counterparty = "Counterparty";
-            destinationAssessment.Reference = "Reference";
+            destinationAssessment.Reference = "99";
             destinationAssessment.SiteName = "SiteName";
             destinationAssessment.ProjectManager = "Project Manager";
             destinationAssessment.ProjectManagerEmail = "ProjectManagerEmail";
@@ -140,6 +142,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             destinationAssessment.BusinessArea = "Land";
             destinationAssessment.LandType = "Greenfield";
             destinationAssessment.SensitiveStatus = null;
+            destinationAssessment.InternalReference = "OldInternalRef";
 
 
             var destinationAssessments = new List<Models.Assessment>();
@@ -157,6 +160,7 @@ namespace He.PipelineAssessment.UI.Tests.Features.SinglePipeline.Sync
             singlePipelineData.sp_business_area = "Investment";
             singlePipelineData.land_type = "Brownfield";
             singlePipelineData.sensitive_status = "Sensitive";
+            singlePipelineData.internal_reference = "NewInternalRef";
 
            var singlePipelineDataList = new List<SinglePipelineData>();
             singlePipelineDataList.Add(singlePipelineData);
