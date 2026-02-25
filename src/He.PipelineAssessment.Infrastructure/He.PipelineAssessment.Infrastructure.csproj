@@ -108,6 +108,7 @@
     <EmbeddedResource Include="Migrations\20251212121754_AddValidDataToGetAssessmentSP\GetInterventionList.sql" />
     <EmbeddedResource Include="Migrations\20260122141647_UpdateSPsToReturnSpIdForInterventions\GetAssessmentInterventionListByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20260122141647_UpdateSPsToReturnSpIdForInterventions\GetInterventionList.sql" />
+    <EmbeddedResource Include="Migrations\20260223134239_AddPcsAndInternalReferenceToAssessment\GetAssessments.sql" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

@@ -16,7 +16,7 @@
 
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">SP ID</th>
+                <th scope="col" class="govuk-table__header">Prospect ID</th>
                 <th scope="col" class="govuk-table__header">Project</th>
                 <th scope="col" class="govuk-table__header">Partner</th>
                 <th scope="col" class="govuk-table__header">Local Authority</th>
@@ -25,6 +25,8 @@
                 <th scope="col" class="govuk-table__header" data-searchable="true">Project Manager</th>
                 <th scope="col" class="govuk-table__header">Last Updated</th>
                 <th scope="col" class="govuk-table__header" data-searchable="true">Status</th>
+                <th scope="col" class="govuk-table__header" style="display:none;">PCS Reference</th>
+                <th scope="col" class="govuk-table__header" style="display:none;">Internal Reference</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -43,6 +45,8 @@
                     <td class="govuk-table__cell">@assessment.ProjectManager</td>
                     <td class="govuk-table__cell"> <span hidden>@lastModifiedDate</span> @lastModified </td>
                     <td class="govuk-table__cell"><strong class="govuk-tag govuk-tag--@assessment.StatusDisplayTag()">@assessment.Status</strong></td>
+                    <td class="govuk-table__cell" style="display:none;">@assessment.Reference</td>
+                    <td class="govuk-table__cell" style="display:none;">@assessment.InternalReference</td>
                 </tr>
             }
         </tbody>
