@@ -1,4 +1,5 @@
 ﻿using AutoFixture.Xunit2;
+using Azure.Core;
 using Elsa.CustomWorkflow.Sdk.HttpClients;
 using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using He.PipelineAssessment.Infrastructure.Repository;
@@ -7,6 +8,7 @@ using He.PipelineAssessment.Tests.Common;
 using He.PipelineAssessment.UI.Authorization;
 using He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen;
 using He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContinue;
+using Microsoft.AspNetCore.Identity;
 using Moq;
 using Xunit;
 
@@ -77,10 +79,23 @@ namespace He.PipelineAssessment.UI.Tests.Features.Workflow.LoadCheckYourAnswersS
         [AutoMoqData]
         public async Task Handle_ThrowsApplicationException_GivenErrorsEncountered(
            [Frozen] Mock<IElsaServerHttpClient> elsaServerHttpClient,
+           [Frozen] Mock<IRoleValidation> roleValidation,
+           [Frozen] Mock<IAssessmentRepository> repo,
            LoadCheckYourAnswersScreenRequest loadCheckYourAnswersScreenRequest,
+           AssessmentToolWorkflowInstance instance,
            LoadCheckYourAnswersScreenRequestHandler sut)
         {
             //Arrange
+            loadCheckYourAnswersScreenRequest.IsReadOnly = false;
+            repo.Setup(x => x.GetAssessmentToolWorkflowInstance(loadCheckYourAnswersScreenRequest.WorkflowInstanceId))
+                .ReturnsAsync(instance);
+            
+            roleValidation.Setup(x => x.ValidateSensitiveRecords(instance.Assessment))
+                .Returns(true);
+            
+            roleValidation.Setup(x => x.ValidateRole(instance.AssessmentId, instance.WorkflowDefinitionId))
+                .ReturnsAsync(true);
+            
             elsaServerHttpClient.Setup(x => x.LoadCheckYourAnswersScreen(It.IsAny<LoadWorkflowActivityDto>()))
                 .Throws(new Exception("There is an issue"));
 

@@ -48,6 +48,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("FundId")
+                        .HasColumnType("int");
+
                     b.Property<decimal?>("FundingAsk")
                         .HasColumnType("decimal(18,2)");
 
@@ -62,6 +65,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
                     b.Property<DateTime?>("LastModifiedDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("LatestAssessmentWorkflowToolId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LocalAuthority")
                         .IsRequired()
@@ -119,6 +125,8 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FundId");
+
                     b.HasIndex("SpId")
                         .IsUnique();
 
@@ -127,6 +135,70 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.ToTable(tb => tb.IsTemporal(ttb =>
                             {
                                 ttb.UseHistoryTable("AssessmentHistory");
+                                ttb
+                                    .HasPeriodStart("PeriodStart")
+                                    .HasColumnName("PeriodStart");
+                                ttb
+                                    .HasPeriodEnd("PeriodEnd")
+                                    .HasColumnName("PeriodEnd");
+                            }));
+                });
+
+            modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentFund", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEarlyStage")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodEnd");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("PeriodStart");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AssessmentFund");
+
+                    b.ToTable(tb => tb.IsTemporal(ttb =>
+                            {
+                                ttb.UseHistoryTable("AssessmentFundHistory");
                                 ttb
                                     .HasPeriodStart("PeriodStart")
                                     .HasColumnName("PeriodStart");
@@ -380,6 +452,9 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AssessmentFundId")
+                        .HasColumnType("int");
+
                     b.Property<int>("AssessmentToolId")
                         .HasColumnType("int");
 
@@ -447,6 +522,8 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AssessmentFundId");
 
                     b.HasIndex("AssessmentToolId");
 
@@ -696,6 +773,15 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
                     b.ToTable("DataProtectionKeys");
                 });
 
+            modelBuilder.Entity("He.PipelineAssessment.Models.Assessment", b =>
+                {
+                    b.HasOne("He.PipelineAssessment.Models.AssessmentFund", "AssessmentFund")
+                        .WithMany("Assessments")
+                        .HasForeignKey("FundId");
+
+                    b.Navigation("AssessmentFund");
+                });
+
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentIntervention", b =>
                 {
                     b.HasOne("He.PipelineAssessment.Models.AssessmentToolWorkflowInstance", "AssessmentToolWorkflowInstance")
@@ -726,11 +812,17 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentToolWorkflow", b =>
                 {
+                    b.HasOne("He.PipelineAssessment.Models.AssessmentFund", "AssessmentFund")
+                        .WithMany("AssessmentToolWorkflows")
+                        .HasForeignKey("AssessmentFundId");
+
                     b.HasOne("He.PipelineAssessment.Models.AssessmentTool", "AssessmentTool")
                         .WithMany("AssessmentToolWorkflows")
                         .HasForeignKey("AssessmentToolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("AssessmentFund");
 
                     b.Navigation("AssessmentTool");
                 });
@@ -774,6 +866,13 @@ namespace He.PipelineAssessment.Infrastructure.Migrations
             modelBuilder.Entity("He.PipelineAssessment.Models.Assessment", b =>
                 {
                     b.Navigation("AssessmentToolWorkflowInstances");
+                });
+
+            modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentFund", b =>
+                {
+                    b.Navigation("AssessmentToolWorkflows");
+
+                    b.Navigation("Assessments");
                 });
 
             modelBuilder.Entity("He.PipelineAssessment.Models.AssessmentIntervention", b =>

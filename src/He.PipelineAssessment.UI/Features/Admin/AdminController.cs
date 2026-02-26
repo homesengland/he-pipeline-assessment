@@ -1,13 +1,20 @@
 ﻿using FluentValidation;
+using He.PipelineAssessment.Models;
 using He.PipelineAssessment.UI.Authorization;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.CreateAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.DeleteAssessmentToolWorkflow;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentFund;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentTool;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Commands.UpdateAssessmentToolWorkflowCommand;
+using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentFunds;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentTools;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows;
+using He.PipelineAssessment.UI.Features.Funds.FundsList;
+using He.PipelineAssessment.UI.Features.Funds.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,12 +28,16 @@ namespace He.PipelineAssessment.UI.Features.Admin
         private readonly IValidator<UpdateAssessmentToolCommand> _updateAssessmentToolCommandValidator;
         private readonly IValidator<UpdateAssessmentToolWorkflowCommand> _updateAssessmentToolWorkflowCommandValidator;
         private readonly IValidator<CreateAssessmentToolWorkflowCommand> _createAssessmentToolWorkflowCommandValidator;
+        private readonly IValidator<CreateAssessmentFundCommand> _createAssessmentFundCommandValidator;
+        private readonly IValidator<UpdateAssessmentFundCommand> _updateAssessmentFundCommandValidator;
 
         public AdminController(
             IValidator<CreateAssessmentToolCommand> createAssessmentToolCommandValidator,
             IValidator<CreateAssessmentToolWorkflowCommand> createAssessmentToolWorkflowCommandValidator,
             IValidator<UpdateAssessmentToolCommand> updateAssessmentToolCommandValidator,
             IValidator<UpdateAssessmentToolWorkflowCommand> updateAssessmentToolWorkflowCommandValidator,
+            IValidator<CreateAssessmentFundCommand> createAssessmentFundCommandValidator,
+            IValidator<UpdateAssessmentFundCommand> updateAssessmentFundCommandValidator,
             IMediator mediator,
             ILogger<AdminController> logger) : base(mediator, logger)
         {
@@ -34,6 +45,8 @@ namespace He.PipelineAssessment.UI.Features.Admin
             _updateAssessmentToolCommandValidator = updateAssessmentToolCommandValidator;
             _updateAssessmentToolWorkflowCommandValidator = updateAssessmentToolWorkflowCommandValidator;
             _createAssessmentToolCommandValidator = createAssessmentToolCommandValidator;
+            _createAssessmentFundCommandValidator = createAssessmentFundCommandValidator;
+            _updateAssessmentFundCommandValidator = updateAssessmentFundCommandValidator;
         }
 
         public IActionResult Index()
@@ -41,16 +54,13 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return View();
         }
 
-        //Get all assessment-tools 
         [HttpGet]
         public async Task<IActionResult> AssessmentTool()
         {
             var assessmentTools = await _mediator.Send(new AssessmentToolQuery());
-
             return View("AssessmentTool", assessmentTools);
         }
 
-        //Get all assessment-tools 
         [HttpGet]
         public async Task<IActionResult> AssessmentToolWorkflow(int assessmentToolId)
         {
@@ -58,7 +68,7 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return View("AssessmentToolWorkflow", assessmentToolsWorkflows);
         }
 
-        //get an assessment tool 
+
         [HttpGet]
         public async Task<IActionResult> GetAssessmentToolById(int assessmentToolId)
         {
@@ -76,11 +86,17 @@ namespace He.PipelineAssessment.UI.Features.Admin
         [HttpGet]
         public Task<IActionResult> LoadAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
+            if (createAssessmentToolWorkflowDto.FundsDropDownListOptions == null || !createAssessmentToolWorkflowDto.FundsDropDownListOptions.Any())
+            {
+                var fundsList =  _mediator.Send(new FundsListRequest()).Result;
+                createAssessmentToolWorkflowDto.FundsDropDownListOptions = fundsList.Funds;
+            }
             return Task.FromResult<IActionResult>(View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto));
         }
 
-        //Create an assessment tool
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAssessmentTool(CreateAssessmentToolDto createAssessmentToolDto)
         {
             var validationResult = await _createAssessmentToolCommandValidator.ValidateAsync(createAssessmentToolDto.CreateAssessmentToolCommand);
@@ -96,8 +112,9 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
-        //Create an assessment tool workflow
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateAssessmentToolWorkflow(CreateAssessmentToolWorkflowDto createAssessmentToolWorkflowDto)
         {
             var validationResult = await _createAssessmentToolWorkflowCommandValidator.ValidateAsync(createAssessmentToolWorkflowDto.CreateAssessmentToolWorkflowCommand);
@@ -108,13 +125,52 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
             else
             {
+                if (createAssessmentToolWorkflowDto.FundsDropDownListOptions == null || !createAssessmentToolWorkflowDto.FundsDropDownListOptions.Any())
+                {
+                    var fundsList = _mediator.Send(new FundsListRequest()).Result;
+                    createAssessmentToolWorkflowDto.FundsDropDownListOptions = fundsList.Funds;
+                }
                 createAssessmentToolWorkflowDto.ValidationResult = validationResult;
                 return View("LoadAssessmentToolWorkflow", createAssessmentToolWorkflowDto);
             }
         }
 
-        //update an assessment tool
+        [HttpGet]
+        public IActionResult LoadAssessmentFund()
+        {
+            var assessmentFundsDTO = new AssessmentFundsDTO();
+            return View("LoadAssessmentFund", assessmentFundsDTO);
+        }
+        
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
+        {
+            var createAssessmentFundCommandDTO = new CreateAssessmentFundDto
+            {
+                CreateAssessmentFundCommand = new CreateAssessmentFundCommand
+                {
+                    Name = assessmentFundsDTO.Name,
+                    Description = assessmentFundsDTO.Description,
+                    IsEarlyStage = assessmentFundsDTO.IsEarlyStage,
+                    IsDisabled = assessmentFundsDTO.IsDisabled
+                }
+            };
+            var validationResult = await _createAssessmentFundCommandValidator.ValidateAsync(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
+            if (validationResult.IsValid)
+            {
+                await _mediator.Send(createAssessmentFundCommandDTO.CreateAssessmentFundCommand);
+                return RedirectToAction("AssessmentFunds");
+            }
+            else
+            {
+                assessmentFundsDTO.ValidationResult = validationResult;
+                return View("LoadAssessmentFund", assessmentFundsDTO);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAssessmentTool(UpdateAssessmentToolDto updateAssessmentToolDto)
         {
             if (updateAssessmentToolDto.UpdateAssessmentToolCommand.Id == 0)
@@ -144,8 +200,9 @@ namespace He.PipelineAssessment.UI.Features.Admin
             }
         }
 
-        //update an assessment tool workflow
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateAssessmentToolWorkflow(UpdateAssessmentToolWorkflowDto updateAssessmentToolWorkflowDto)
         {
             if (updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Id == 0)
@@ -171,14 +228,15 @@ namespace He.PipelineAssessment.UI.Features.Admin
                     validatedAssessmentToolWorkflow.ValidationResult = validationResult;
                     validatedAssessmentToolWorkflow.Name = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.Name;
                     validatedAssessmentToolWorkflow.WorkflowDefinitionId = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.WorkflowDefinitionId;
+                    validatedAssessmentToolWorkflow.AssessmentFundId = updateAssessmentToolWorkflowDto.UpdateAssessmentToolWorkflowCommand.AssessmentFundId;
                 }
                 return View("AssessmentToolWorkflow", assessmentToolWorkflowList);
             }
 
         }
 
-        //delete an assessment tool 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAssessmentTool(int assessmentToolId)
         {
             await _mediator.Send(new DeleteAssessmentToolCommand(assessmentToolId));
@@ -186,14 +244,75 @@ namespace He.PipelineAssessment.UI.Features.Admin
             return RedirectToAction("AssessmentTool");
         }
 
-        //delete an assessment tool workflow
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAssessmentToolWorkflow(int assessmentToolWorkflowId, int assessmentToolId)
         {
 
             await _mediator.Send(new DeleteAssessmentToolWorkflowCommand(assessmentToolWorkflowId));
 
             return RedirectToAction("AssessmentToolWorkflow", new { assessmentToolId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AssessmentFunds()
+        {
+            FundsListResponse response = await _mediator.Send(new FundsListRequest());
+
+            return View("AssessmentFunds", response);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAssessmentFund(AssessmentFundsDTO assessmentFundsDTO)
+        {
+            var updateAssessmentFundCommandDTO = new UpdateAssessmentFundCommandDTO
+            {
+                UpdateAssessmentFundCommand = new UpdateAssessmentFundCommand
+                {
+                    Id = assessmentFundsDTO.Id ?? 0,
+                    Name = assessmentFundsDTO.Name,
+                    Description = assessmentFundsDTO.Description,
+                    IsEarlyStage = assessmentFundsDTO.IsEarlyStage,
+                    IsDisabled = assessmentFundsDTO.IsDisabled
+                }
+            };
+             if (updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id == 0)
+                {
+                    return RedirectToAction("Index", "Error", new { message = "Bad request. No Assessment Fund Id provided." });
+                }
+
+             var validationResult = await _updateAssessmentFundCommandValidator.ValidateAsync(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
+            if (validationResult.IsValid)
+            {
+                await _mediator.Send(updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand);
+                return RedirectToAction("AssessmentFunds");
+            }
+            else
+            { 
+                var fundsList = await _mediator.Send(new FundsListRequest());
+                var validatedFund = fundsList.Funds.FirstOrDefault(x =>
+                    x.Id == updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Id);
+                if (validatedFund != null)
+                {
+                    validatedFund.ValidationResult = validationResult;
+                    validatedFund.Name = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Name;
+                    validatedFund.Description = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.Description;
+                    validatedFund.IsEarlyStage = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsEarlyStage;
+                    validatedFund.IsDisabled = updateAssessmentFundCommandDTO.UpdateAssessmentFundCommand.IsDisabled;
+                }
+                return View("AssessmentFunds", fundsList);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAssessmentFund(AssessmentFundsDTO assessmentFundsDTO) 
+        {
+            var id = assessmentFundsDTO.Id ?? 0;
+
+            await _mediator.Send(new DeleteAssessmentFundCommand(id));
+            return RedirectToAction("AssessmentFunds");
         }
     }
 }
