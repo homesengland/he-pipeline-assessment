@@ -12,6 +12,7 @@
             { "width": "10%", "targets": 6 },
             { "width": "10%", "targets": 7 },
             { "width": "10%", "targets": 8 },
+            { "visible": false, "targets": [9, 10] }
         ],
         "oLanguage": {
             "sSearch": "Search"
