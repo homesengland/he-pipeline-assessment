@@ -39,6 +39,8 @@
                 <th scope="col" class="govuk-table__header">Created</th>
                 <th scope="col" class="govuk-table__header">Last Updated</th>
                 <th scope="col" class="govuk-table__header" data-searchable="true">Decision Type</th>
+                <th scope="col" class="govuk-table__header" style="display:none;">PCS Reference</th>
+                <th scope="col" class="govuk-table__header" style="display:none;">Internal Reference</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -74,6 +76,8 @@
                     <td class="govuk-table__cell"> <span hidden>@createdDate</span> @created </td>
                     <td class="govuk-table__cell"> <span hidden>@lastModifiedDate</span> @lastModified </td>
                     <td class="govuk-table__cell">@intervention.DecisionType</td>
+                    <td class="govuk-table__cell" style="display:none;">@intervention.Reference</td>
+                    <td class="govuk-table__cell" style="display:none;">@intervention.InternalReference</td>
                 </tr>
             }
         </tbody>
