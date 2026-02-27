@@ -109,7 +109,7 @@
     <EmbeddedResource Include="Migrations\20260122141647_UpdateSPsToReturnSpIdForInterventions\GetAssessmentInterventionListByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20260122141647_UpdateSPsToReturnSpIdForInterventions\GetInterventionList.sql" />
     <EmbeddedResource Include="Migrations\20260223134239_AddPcsAndInternalReferenceToAssessment\GetAssessments.sql" />
-    <EmbeddedResource Include="Migrations\20260227112015_AddingSearchFieldsToInterventionList\GetAssessmentInterventionListByAssessmentId.sql" />
+    <EmbeddedResource Include="Migrations\20260227143016_AddingInternalReferencetoInterventionListQuery\GetAssessmentInterventionListByAssessmentId.sql" />
     <EmbeddedResource Include="Migrations\20260227112015_AddingSearchFieldsToInterventionList\GetInterventionList.sql" />
     <EmbeddedResource Include="Migrations\20260226125640_UpdatingGetEconomistAssessmentsStoredProcedureToIncludeInternalReference\GetEconomistAssessments.sql" />
   </ItemGroup>
