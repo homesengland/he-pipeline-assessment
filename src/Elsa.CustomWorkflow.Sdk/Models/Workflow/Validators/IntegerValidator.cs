@@ -6,13 +6,13 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
     {
         public IntegerValidator()
         {
-            RuleFor(x => x.Answers).NotEmpty().WithMessage("The answer must be a whole number")
+            RuleFor(x => x.Answers).NotEmpty().WithMessage("The answer must be a whole number. If none, please enter 0.")
                 .DependentRules(
                     () =>
                     {
-                        RuleForEach(x => x.Answers).NotEmpty().WithMessage("The answer must be a whole number");
+                        RuleForEach(x => x.Answers).NotEmpty().WithMessage("The answer must be a whole number. If none, please enter 0.");
                         RuleForEach(x => x.Answers).Must(answer => answer != null && !string.IsNullOrEmpty(answer.AnswerText))
-                            .WithMessage("The answer must be a whole number").DependentRules(() =>
+                            .WithMessage("The answer must be a whole number. If none, please enter 0.").DependentRules(() =>
                                 RuleForEach(x => x.Answers).Must(answer =>
                                 {
                                     if (answer.AnswerText == "0")
