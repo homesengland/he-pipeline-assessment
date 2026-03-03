@@ -24,7 +24,7 @@ namespace Elsa.CustomWorkflow.Sdk.Models.Workflow.Validators
                                     var isNumeric = int.TryParse(answerText, out _);
                                     return isNumeric;
 
-                                }).WithMessage((question, answer) => $"The answer {answer.AnswerText} must be a whole number"));
+                                }).WithMessage((question, answer) => $"The answer {answer.AnswerText} must be a whole number. If none, please enter 0"));
                     }
                 );
         }
