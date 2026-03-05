@@ -54,6 +54,7 @@ builder.Services.AddHttpClient("DataDictionaryClient", client =>
 
 builder.Services.AddScoped<IElsaServerHttpClient, ElsaServerHttpClient>();
 builder.Services.AddScoped<IDataDictionaryHttpClient, DataDictionaryHttpClient>();
+builder.Services.AddScoped<IGlobalVariableHttpClient, GlobalVariableHttpClient>();
 
 // For Authentication
 builder.AddCustomAuth0Configuration();

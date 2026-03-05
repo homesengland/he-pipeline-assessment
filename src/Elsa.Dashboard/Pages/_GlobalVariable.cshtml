@@ -13,7 +13,7 @@
             <div class="govuk-grid-column-two-thirds">
             </div>
             <div class="govuk-grid-column-one-third pull-right">
-                <a asp-page="/_CreateDataDictionaryGroup" class="govuk-link pull-right">Add Data Dictionary Group</a>
+                <a asp-page="/_CreateGlobalVariableGroup" class="govuk-link pull-right">Add Global Variable Group</a>
             </div>
         </div>
         <ul class="govuk-tabs__list">
@@ -29,7 +29,7 @@
             </li>
         </ul>
         <div class="govuk-tabs__panel" id="group-list">
-            <h2 class="govuk-heading-l">Data Dictionary Groups</h2>
+            <h2 class="govuk-heading-l">Global Variable Groups</h2>
     <table class="govuk-table" id="assessmentGroupTable">
 
         <thead class="govuk-table__head">
@@ -46,7 +46,7 @@
             {
 
                 <tr class="govuk-table__row">
-                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryGroup" asp-route-group="@group.Id" class="govuk-link">@group.Name</a></td>
+                                <td class="govuk-table__cell"><a asp-page="/_GlobalVariableGroup" asp-route-group="@group.Id" class="govuk-link">@group.Name</a></td>
                                 <td class="govuk-table__cell">@group.GlobalVariableList.Count()</td>
                     <td class="govuk-table__cell">False</td>
                 </tr>
@@ -55,7 +55,7 @@
                         @foreach (var group in Model.GlobalVariableGroup.Where(x => x.IsArchived))
             {
                 <tr class="govuk-table__row">
-                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryGroup" asp-route-group="@group.Id" class="govuk-link">@group.Name</a></td>
+                                <td class="govuk-table__cell"><a asp-page="/_GlobalVariableGroup" asp-route-group="@group.Id" class="govuk-link">@group.Name</a></td>
                                 <td class="govuk-table__cell">@group.GlobalVariableList.Count()</td>
                     <td class="govuk-table__cell">True</td>
                 </tr>
@@ -67,7 +67,7 @@
     </table>
     </div>
         <div class="govuk-tabs__panel" id="item-list">
-            <h2 class="govuk-heading-l">Data Dictionary Records</h2>
+            <h2 class="govuk-heading-l">Global Variable Records</h2>
             <table class="govuk-table" id="assessmentListTable">
 
                 <thead class="govuk-table__head">
@@ -85,10 +85,10 @@
                         {
 
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryRecord" asp-route-group="@record.GlobalVariableGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
+                                <td class="govuk-table__cell"><a asp-page="/GlobalVariableInstance" asp-route-group="@record.GlobalVariableGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
                                 <td class="govuk-table__cell">@record.Value</td>
                                 <td class="govuk-table__cell">
-                                    <a asp-page="/_DataDictionaryGroup" asp-route-group="@record.GlobalVariableGroupId" class="">@record.Group.Name</a>
+                                    <a asp-page="/_GlobalVariableGroup" asp-route-group="@record.GlobalVariableGroupId" class="">@record.Group.Name</a>
                                 </td>
                                 <td class="govuk-table__cell">False</td>
                             </tr>
@@ -97,10 +97,10 @@
                         @foreach (var record in recordList.Where(x => x.IsArchived).ToList())
                         {
                             <tr class="govuk-table__row">
-                                <td class="govuk-table__cell"><a asp-page="/_DataDictionaryRecord" asp-route-group="@record.GlobalVariableGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
+                                <td class="govuk-table__cell"><a asp-page="/_GlobalVariableInstance" asp-route-group="@record.GlobalVariableGroupId" asp-route-record="@record.Id" class="govuk-link">@record.Name</a></td>
                                 <td class="govuk-table__cell">@record.Value</td>
                                 <td class="govuk-table__cell">
-                                    <a asp-page="/_DataDictionaryGroup" asp-route-group="@record.GlobalVariableGroupId" class="">@record.Group.Name</a>
+                                    <a asp-page="/_GlobalVariableGroup" asp-route-group="@record.GlobalVariableGroupId" class="">@record.Group.Name</a>
                                 </td>
                                 <td class="govuk-table__cell">True</td>
                             </tr>

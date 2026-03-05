@@ -36,6 +36,8 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task<List<PotScoreOption>> GetPotScoreOptionsAsync(CancellationToken cancellationToken = default);
         Task<List<DataDictionary>> GetDataDictionaryListAsync(bool includeArchived = false, CancellationToken cancellationToken = default);
         Task<List<DataDictionaryGroup>> GetDataDictionaryGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default);
+        Task<List<GlobalVariable>> GetGlobalVariableListAsync(bool includeArchived = false, CancellationToken cancellationToken = default);
+        Task<List<GlobalVariableGroup>> GetGlobalVariableGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default);
         Task CreateQuestionWorkflowInstance(QuestionWorkflowInstance questionWorkflowInstance, CancellationToken cancellationToken = default);
         Task<QuestionWorkflowInstance?> GetQuestionWorkflowInstance(string workflowInstanceId, CancellationToken cancellationToken = default);
         Task<List<QuestionWorkflowInstance>> GetQuestionWorkflowInstancesByName(string correlationId, string name, CancellationToken cancellationToken = default);

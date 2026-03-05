@@ -14,11 +14,11 @@ namespace Elsa.Dashboard.Pages
   public class GlobalVariableModel : PageModel
   {
     public string _serverUrl { get; set; }
-    private IDataDictionaryHttpClient _client { get; set; }
+    private IGlobalVariableHttpClient _client { get; set; }
     private ILogger<ElsaDashboardLoader> _logger { get; set; }
     public List<GlobalVariableGroup>? GlobalVariableGroup { get; set; }
 
-    public GlobalVariableModel(IDataDictionaryHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger)
+    public GlobalVariableModel(IGlobalVariableHttpClient client, IOptions<Urls> options, ILogger<ElsaDashboardLoader> logger)
     {
       _serverUrl = options.Value.ElsaServer ?? string.Empty;
       _client = client;
@@ -42,25 +42,13 @@ namespace Elsa.Dashboard.Pages
 
     private async Task LoadGlobalVariable(string url)
     {
-      string? result = await _client.LoadDataDictionary(_serverUrl, true);
+      string? result = await _client.LoadGlobalVariable(_serverUrl, true);
       Dictionary<string, string>? dict = JsonSerializer.Deserialize<Dictionary<string, string>>(result!);
       if (dict != null)
       {
         if (dict.TryGetValue("Dictionary", out string? response))
         {
-          Dictionary = JsonSerializer.Deserialize<List<GlobalVariableGroup>>(response);
-        }
-      }
-
-    private async Task LoadDataDictionary(string url)
-    {
-      string? result = await _client.LoadDataDictionary(_serverUrl, true);
-      Dictionary<string, string>? dict = JsonSerializer.Deserialize<Dictionary<string, string>>(result!);
-      if (dict != null)
-      {
-        if (dict.TryGetValue("Dictionary", out string? response))
-        {
-          Dictionary = JsonSerializer.Deserialize<List<DataDictionaryGroup>>(response);
+          GlobalVariableGroup = JsonSerializer.Deserialize<List<GlobalVariableGroup>>(response);
         }
       }
     }

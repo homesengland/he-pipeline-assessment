@@ -167,6 +167,36 @@ namespace Elsa.CustomInfrastructure.Data.Repository
 
         }
 
+        public async Task<List<GlobalVariable>> GetGlobalVariableListAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
+        {
+            if (!includeArchived)
+            {
+                var result = await _dbContext.Set<GlobalVariable>().Include(x => x.Group).Where(x => !x.IsArchived).ToListAsync(cancellationToken);
+                return result;
+            }
+            else
+            {
+                var result = await _dbContext.Set<GlobalVariable>().Include(x => x.Group).ToListAsync(cancellationToken);
+                return result;
+            }
+
+        }
+
+        public async Task<List<GlobalVariableGroup>> GetGlobalVariableGroupsAsync(bool includeArchived = false, CancellationToken cancellationToken = default)
+        {
+            var result = new List<GlobalVariableGroup>();
+            if (!includeArchived)
+            {
+                result = await _dbContext.Set<GlobalVariableGroup>().Include(x => x.GlobalVariableList.Where(x => !x.IsArchived)).Where(x => !x.IsArchived).ToListAsync(cancellationToken);
+            }
+            else
+            {
+                result = await _dbContext.Set<GlobalVariableGroup>().Include(x => x.GlobalVariableList).ToListAsync(cancellationToken);
+            }
+            return result;
+
+        }
+
         public async Task CreateQuestionWorkflowInstance(QuestionWorkflowInstance questionWorkflowInstance, CancellationToken cancellationToken = default)
         {
             await _dbContext.AddAsync(questionWorkflowInstance, cancellationToken);

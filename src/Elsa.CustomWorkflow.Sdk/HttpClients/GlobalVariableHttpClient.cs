@@ -54,8 +54,26 @@ namespace Elsa.CustomWorkflow.Sdk.HttpClients
 
         public async Task<string?> LoadGlobalVariable(string elsaServer, bool includeArchived = false)
         {
-            //TODO
-            return "";
+            string data;
+            string uri = includeArchived ? "globalvariable/archived" : "globalvariable";
+            string fullUri = $"{elsaServer}/activities/{uri}?" + "t=" + DateTime.UtcNow.Ticks;
+            var client = _httpClientFactory.CreateClient("GlobalVariableClient");
+            AddAccessTokenToRequest(client);
+            using (var response = await client
+                       .GetAsync(fullUri)
+                       .ConfigureAwait(false))
+            {
+                data = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"StatusCode='{response.StatusCode}'," +
+                                     $"\n Message= '{data}'," +
+                                     $"\n Url='{fullUri}'");
+
+                    return default;
+                }
+            }
+            return data;
         }
 
         public async Task<string?> LoadGlobalVariableGroup(string elsaServer, int groupId)

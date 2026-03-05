@@ -1,6 +1,7 @@
 ﻿using Elsa.CustomActivities.Describers;
 using Elsa.Server.Features.Activities.CustomActivityProperties;
 using Elsa.Server.Features.Activities.DataDictionaryProvider;
+using Elsa.Server.Features.Activities.GlobalVariableProvider;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace Elsa.Server.Features.Activities
             {
                 Dictionary<string, string> results = await _mediator.Send(new CustomPropertyCommand());
                 return Ok(results);
-                
+
             }
             catch (Exception e)
             {
@@ -38,7 +39,7 @@ namespace Elsa.Server.Features.Activities
         {
             try
             {
-                string results = await _mediator.Send(new DataDictionaryCommand() { IncludeArchived = false});
+                string results = await _mediator.Send(new DataDictionaryCommand() { IncludeArchived = false });
                 return Ok(results);
 
             }
@@ -56,6 +57,34 @@ namespace Elsa.Server.Features.Activities
                 string results = await _mediator.Send(new DataDictionaryCommand() { IncludeArchived = true });
                 return Ok(results);
 
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
+
+        [HttpGet("globalvariable")]
+        public async Task<IActionResult> GetGlobalVariable()
+        {
+            try
+            {
+                string results = await _mediator.Send(new GlobalVariableCommand() { IncludeArchived = false });
+                return Ok(results);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e);
+            }
+        }
+
+        [HttpGet("globalvariable/archived")]
+        public async Task<IActionResult> GetArchivedGlobalVariable()
+        {
+            try
+            {
+                string results = await _mediator.Send(new GlobalVariableCommand() { IncludeArchived = true });
+                return Ok(results);
             }
             catch (Exception e)
             {
