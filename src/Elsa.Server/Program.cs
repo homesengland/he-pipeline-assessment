@@ -3,12 +3,17 @@ using Elsa.CustomActivities.Activities.CheckYourAnswersScreen;
 using Elsa.CustomActivities.Activities.ConfirmationScreen;
 using Elsa.CustomActivities.Activities.FinishWorkflow;
 using Elsa.CustomActivities.Activities.HousingNeed;
+using Elsa.CustomActivities.Activities.LandValuesDataSource;
 using Elsa.CustomActivities.Activities.PCSProfileDataSource;
 using Elsa.CustomActivities.Activities.QuestionScreen;
+using Elsa.CustomActivities.Activities.RegionalFigsDataSource;
+using Elsa.CustomActivities.Activities.RegionalIPUDataSource;
+using Elsa.CustomActivities.Activities.ReturnToActivity;
 using Elsa.CustomActivities.Activities.RunEconomicCalculations;
 using Elsa.CustomActivities.Activities.Scoring;
 using Elsa.CustomActivities.Activities.Shared;
 using Elsa.CustomActivities.Activities.SinglePipelineDataSource;
+using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
 using Elsa.CustomActivities.Activities.VFMDataSource;
 using Elsa.CustomActivities.Describers;
 using Elsa.CustomActivities.Handlers;
@@ -17,39 +22,36 @@ using Elsa.CustomActivities.Handlers.Syntax;
 using Elsa.CustomActivities.Providers;
 using Elsa.CustomInfrastructure.Data;
 using Elsa.CustomInfrastructure.Data.Repository;
+using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
 using Elsa.CustomWorkflow.Sdk.Extensions;
+using Elsa.CustomWorkflow.Sdk.GlobalVariableHelpers;
+using Elsa.CustomWorkflow.Sdk.Models.Workflow;
 using Elsa.CustomWorkflow.Sdk.Providers;
 using Elsa.Expressions;
 using Elsa.Persistence.EntityFramework.SqlServer;
 using Elsa.Providers.Workflows;
 using Elsa.Runtime;
+using Elsa.Server.DataDictionaryAccessors;
 using Elsa.Server.Extensions;
+using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
+using Elsa.Server.GlobalVariableAccessors;
 using Elsa.Server.Helpers;
+using Elsa.Server.Mappers;
 using Elsa.Server.Middleware;
 using Elsa.Server.Providers;
 using Elsa.Server.Services;
 using Elsa.Server.StartupTasks;
+using Elsa.Server.Stores.Cache;
 using Elsa.Services;
+using Elsa.Services.Workflows;
+using FluentValidation;
 using He.PipelineAssessment.Data.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Elsa.Services.Workflows;
-using Elsa.Server.Mappers;
-using Elsa.CustomActivities.Activities.RegionalIPUDataSource;
-using Elsa.CustomActivities.Activities.RegionalFigsDataSource;
-using FluentValidation;
-using Elsa.CustomWorkflow.Sdk.Models.Workflow;
-using Elsa.Server.Features.Workflow.QuestionScreenValidateAndSave;
-using Elsa.CustomActivities.Activities.LandValuesDataSource;
-using Elsa.CustomActivities.Activities.SinglePipelineExtendedDataSource;
-using Elsa.CustomActivities.Activities.ReturnToActivity;
-using Elsa.CustomWorkflow.Sdk.DataDictionaryHelpers;
-using Elsa.Server.DataDictionaryAccessors;
-using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
-using Elsa.Server.Stores.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
 var elsaConnectionString = builder.Configuration.GetConnectionString("Elsa");
@@ -128,10 +130,12 @@ builder.Services.AddDataProtection().PersistKeysToDbContext<ElsaCustomContext>()
 if (useCache)
 {
     builder.Services.AddScoped<IDataDictionaryIntellisenseAccessor, CachedDataDictionaryIntellisenseAccessor>();
+    builder.Services.AddScoped<IGlobalVariableIntellisenseAccessor, CachedGlobalVariableIntellisenseAccessor>();
 }
 else
 {
     builder.Services.AddScoped<IDataDictionaryIntellisenseAccessor, DataDictionaryIntellisenseAccessor>();
+    builder.Services.AddScoped<IGlobalVariableIntellisenseAccessor, GlobalVariableIntellisenseAccessor>();
 }
 // Elsa API endpoints.
 builder.Services.AddElsaApiEndpoints();

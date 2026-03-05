@@ -47,6 +47,8 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task ArchiveQuestions(string[] requestWorkflowInstanceIds, CancellationToken cancellationToken = default);
         Task<int> CreateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken);
         Task<int> CreateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken);
+        Task<int> CreateGlobalVariableGroup(GlobalVariableGroup group, CancellationToken cancellationToken);
+        Task<int> CreateGlobalVariableItem(GlobalVariable item, CancellationToken cancellationToken);
         Task UpdateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken);
         Task UpdateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken);
         Task ArchiveDataDictionaryItem(int id, bool isArchived, CancellationToken cancellationToken);

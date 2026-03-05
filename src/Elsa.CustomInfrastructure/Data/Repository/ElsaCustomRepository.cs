@@ -313,6 +313,20 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             return item.Id;
         }
 
+        public async Task<int> CreateGlobalVariableGroup(GlobalVariableGroup group, CancellationToken cancellationToken = default)
+        {
+            await _dbContext.AddAsync(group, cancellationToken);
+            await SaveChanges(cancellationToken);
+            return group.Id;
+        }
+
+        public async Task<int> CreateGlobalVariableItem(GlobalVariable item, CancellationToken cancellationToken)
+        {
+            await _dbContext.AddAsync(item, cancellationToken);
+            await SaveChanges(cancellationToken);
+            return item.Id;
+        }
+
         public async Task UpdateDataDictionaryGroup(DataDictionaryGroup group, CancellationToken cancellationToken)
         {
             _dbContext.Set<DataDictionaryGroup>().Update(group);
