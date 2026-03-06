@@ -2,6 +2,7 @@
 using Elsa.ActivityResults;
 using Elsa.Attributes;
 using Elsa.CustomActivities.Constants;
+using Elsa.CustomInfrastructure.Data.Repository;
 using Elsa.Expressions;
 using Elsa.Services;
 using Elsa.Services.Models;
@@ -15,6 +16,11 @@ Outcomes = new[] { OutcomeNames.Done }
 )]
     public class SetVariables : Activity
     {
+        private readonly IElsaCustomRepository _elsaCustomRepository;
+        public SetVariables(IElsaCustomRepository elsaCustomRepository)
+        {
+            _elsaCustomRepository = elsaCustomRepository;
+        }
 
         protected override async ValueTask<IActivityExecutionResult> OnExecuteAsync(ActivityExecutionContext context)
         {

@@ -4,17 +4,17 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Elsa.CustomInfrastructure.Config
 {
-    public class GlobalVariableConfig : IEntityTypeConfiguration<GlobalVariable>
+    public class VariableGroupConfig : IEntityTypeConfiguration<VariableGroup>
     {
-        public void Configure(EntityTypeBuilder<GlobalVariable> builder)
+        public void Configure(EntityTypeBuilder<VariableGroup> builder)
         {
             builder.ToTable(x => x.IsTemporal());
             builder.HasKey(x => x.Id);
             builder.Property(p => p.Id).HasColumnOrder(0).UseIdentityColumn();
             builder.Property(p => p.Name).HasMaxLength(EntityConfigurationConstants.MaxLength).IsRequired();
             builder.Property(p => p.Description).HasMaxLength(EntityConfigurationConstants.MaxLength);
-            builder.Property(p => p.Value).HasMaxLength(EntityConfigurationConstants.DataDictionaryTypeMaxLength).IsRequired();
-            builder.HasOne(x => x.Group).WithMany(x => x.GlobalVariableList).HasForeignKey(x => x.GlobalVariableGroupId);
+            builder.Property(p => p.Type).HasMaxLength(EntityConfigurationConstants.DataDictionaryTypeMaxLength).IsRequired();
+            builder.HasMany(x => x.Variables).WithOne(x => x.Group).HasForeignKey(x => x.VariableGroupId);
         }
     }
 }
