@@ -28,6 +28,7 @@
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is last?</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is ammendable?</th>
                 <th scope="col" class="govuk-table__header govuk-!-width-one-fifth">Is early stage?</th>
+                <th scope="col" class="govuk-table__header" data-searchable="true">Fund</th>
                 <th scope="col" class="govuk-table__header">Update</th>
                 <th scope="col" class="govuk-table__header">Delete</th>
             </tr>
@@ -138,7 +139,7 @@
                                     </div>
                             </div>
                         </td>
-                                 <td class="govuk-table__cell">
+                            <td class="govuk-table__cell">
                                 <div class="govuk-radios--inline govuk-radios--small">
                                     <div class="govuk-radios__item radio-no-margin">
                                         @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEarlyStage", "True", assessmentToolWorkflow.IsEarlyStage, new { @class = "govuk-radios__input" })
@@ -148,8 +149,18 @@
                                         @Html.RadioButton("UpdateAssessmentToolWorkflowCommand.IsEarlyStage", "False", !assessmentToolWorkflow.IsEarlyStage, new { @class = "govuk-radios__input" })
                                         <label class="govuk-label govuk-radios__label" for="@assessmentToolWorkflow.IsEarlyStage">No</label>
                                     </div>
+                                </div>
+                            </td>
+
+                           var enabledFunds = Model.FundsDropDownListOptions.Where(f => !f.IsDisabled).ToList(); 
+                           
+                        <td class="govuk-table__cell">
+                            <div class="govuk-form-group">
+                                    @Html.DropDownList("UpdateAssessmentToolWorkflowCommand.AssessmentFundId", new SelectList(enabledFunds, "Id", "Name", assessmentToolWorkflow.AssessmentFundId), "Select Fund", new { @class = "govuk-select" })
                             </div>
                         </td>
+
+
                         <td class="govuk-table__cell">
                             @Html.AntiForgeryToken()
                             @Html.Hidden("UpdateAssessmentToolWorkflowCommand.Id", assessmentToolWorkflow.Id)

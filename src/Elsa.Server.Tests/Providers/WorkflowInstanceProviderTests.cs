@@ -40,12 +40,19 @@ namespace Elsa.Server.Tests.Providers
         [AutoMoqData]
         public async Task
         GetWorkflowInstance_ThrowsException_WhenWorkflowInstanceNotFound(
+        [Frozen] Mock<IWorkflowInstanceStore> store,
         string workflowInstanceId,
         CancellationToken cancellationToken,
         WorkflowInstanceProvider sut)
         {
+            // Arrange
+            // ✅ Use It.IsAny<> to match any specification instance
+            store.Setup(x => x.FindAsync(It.IsAny<WorkflowInstanceIdSpecification>(), cancellationToken))
+                .ReturnsAsync((WorkflowInstance?)null);
+    
             //Act
-            var exception = await Assert.ThrowsAsync<Exception>(() => sut.GetWorkflowInstance(workflowInstanceId, cancellationToken));
+            var exception = await Assert.ThrowsAsync<Exception>(() => 
+                sut.GetWorkflowInstance(workflowInstanceId, cancellationToken));
 
             //Assert
             Assert.Equal($"Cannot find workflow for workflowId {workflowInstanceId}.", exception.Message);

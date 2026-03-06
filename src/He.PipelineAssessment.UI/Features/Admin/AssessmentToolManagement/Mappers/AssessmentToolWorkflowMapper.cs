@@ -23,7 +23,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappe
                 Name = assessmentToolWorkflowCommand.Name,
                 IsVariation = assessmentToolWorkflowCommand.IsVariation,
                 IsEarlyStage = assessmentToolWorkflowCommand.IsEarlyStage,
-                IsLast = assessmentToolWorkflowCommand.IsLast
+                IsLast = assessmentToolWorkflowCommand.IsLast,
+                AssessmentFundId = assessmentToolWorkflowCommand.AssessmentFundId
             };
         }
     }

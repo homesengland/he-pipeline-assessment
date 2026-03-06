@@ -1,5 +1,6 @@
 ﻿using He.PipelineAssessment.Infrastructure.Repository;
 using He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Mappers;
+using He.PipelineAssessment.UI.Features.Funds.FundsList;
 using MediatR;
 
 namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queries.GetAssessmentToolWorkflows
@@ -8,11 +9,14 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
     {
         private readonly IAdminAssessmentToolRepository _adminAssessmentToolRepository;
         private readonly IAssessmentToolMapper _assessmentToolMapper;
+        private readonly IMediator _mediator;
 
-        public AssessmentToolWorkflowRequestHandler(IAdminAssessmentToolRepository adminAssessmentToolRepository, IAssessmentToolMapper assessmentToolMapper)
+       public AssessmentToolWorkflowRequestHandler(IAdminAssessmentToolRepository adminAssessmentToolRepository, IAssessmentToolMapper assessmentToolMapper, IMediator mediator)
+        //public AssessmentToolWorkflowRequestHandler(IAdminAssessmentToolRepository adminAssessmentToolRepository, IAssessmentToolMapper assessmentToolMapper)
         {
             _adminAssessmentToolRepository = adminAssessmentToolRepository;
             _assessmentToolMapper = assessmentToolMapper;
+            _mediator = mediator;
         }
 
         public async Task<AssessmentToolWorkflowListDto> Handle(AssessmentToolWorkflowQuery query, CancellationToken cancellationToken)
@@ -30,6 +34,9 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
                 assessmentToolWorkflowListDto.AssessmentToolWorkflowDtos = _assessmentToolMapper.AssessmentToolWorkflowsToAssessmentToolDto(entity.AssessmentToolWorkflows.ToList());
 
             }
+            var allFunds = await _mediator.Send(new FundsListRequest());
+
+            assessmentToolWorkflowListDto.FundsDropDownListOptions = allFunds.Funds.Where(f => !f.IsDisabled).ToList();
 
             return assessmentToolWorkflowListDto;
         }

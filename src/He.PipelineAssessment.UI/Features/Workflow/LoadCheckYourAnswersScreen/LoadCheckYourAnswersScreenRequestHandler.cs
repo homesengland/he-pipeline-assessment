@@ -57,7 +57,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.LoadCheckYourAnswersScreen
                     ActivityType = ActivityTypeConstants.CheckYourAnswersScreen
                 });
 
-                if (response != null)
+                if (response != null && response.Data != null)
                 {
                     string jsonResponse = JsonSerializer.Serialize(response);
                     QuestionScreenSaveAndContinueCommand? result = JsonSerializer.Deserialize<QuestionScreenSaveAndContinueCommand>(jsonResponse);

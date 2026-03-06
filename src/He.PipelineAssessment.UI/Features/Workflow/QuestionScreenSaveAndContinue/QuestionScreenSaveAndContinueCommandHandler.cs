@@ -35,7 +35,7 @@ namespace He.PipelineAssessment.UI.Features.Workflow.QuestionScreenSaveAndContin
 
                 var response = await _elsaServerHttpClient.QuestionScreenSaveAndValidate(request);
 
-                if (response != null)
+                if (response != null && response.Data != null)
                 {
                     QuestionScreenSaveAndContinueCommandResponse result = new QuestionScreenSaveAndContinueCommandResponse()
                     {

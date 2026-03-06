@@ -53,13 +53,13 @@ namespace Elsa.Server.Tests.Features.Activities.DataDictionaryProvider
         [Theory]
         [AutoMoqData]
         public async Task Handle_ReturnsEmptyDictionary_GivenExceptionIsThrown(
-            [Frozen] Mock<ICustomPropertyDescriber> propertyDescriber,
+            [Frozen] Mock<IElsaCustomRepository> repo,
             DataDictionaryCommand command,
             Exception e,
             DataDictionaryCommandHandler sut)
         {
             //Arrange
-            propertyDescriber.Setup(x => x.DescribeInputProperties(typeof(Question))).Throws(e);
+            repo.Setup(x => x.GetDataDictionaryGroupsAsync(It.IsAny<bool>(), It.IsAny<CancellationToken>())).Throws(e);
 
             //Act
             var result = await sut.Handle(command, CancellationToken.None);

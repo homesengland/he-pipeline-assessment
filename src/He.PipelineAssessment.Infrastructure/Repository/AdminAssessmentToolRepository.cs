@@ -29,7 +29,7 @@ namespace He.PipelineAssessment.Infrastructure.Repository
         public async Task<IEnumerable<AssessmentTool>> GetAssessmentTools()
         {
             return await _context.Set<AssessmentTool>().Where(x => x.Status != AssessmentToolStatus.Deleted)
-                .Include(a => a.AssessmentToolWorkflows!.Where(w=>w.Status != AssessmentToolStatus.Deleted)).OrderBy(x => x.Order).ToListAsync();
+                .Include(a => a.AssessmentToolWorkflows!.Where(w => w.Status != AssessmentToolStatus.Deleted)).OrderBy(x => x.Order).ToListAsync();
         }
 
         public async Task<AssessmentTool?> GetAssessmentToolById(int assessmentToolId)

@@ -30,6 +30,8 @@ namespace He.PipelineAssessment.UI.Features.Admin.AssessmentToolManagement.Queri
         public bool IsVariation { get; set; }
         public bool IsEarlyStage { get; set; }
         public bool IsLast { get; set; }
+        public int? AssessmentFundId { get; set; }
+
     }
 
 }

@@ -26,26 +26,31 @@ namespace Elsa.CustomActivities.Activities.RunEconomicCalculations
 
             var result = await base.OnExecuteAsync(context);
 
+            ProcessWorkflowOutput(context);
+
+
+
+
+            return result;
+        }
+
+        public void ProcessWorkflowOutput(ActivityExecutionContext? context = null)
+        {
             var outputWorkflow = Output?.WorkflowOutput;
 
             if (outputWorkflow != null)
             {
                 StringScoreOutput = (string)outputWorkflow;
-                context.JournalData.Add("StringScoreOutput", StringScoreOutput);
+                context?.JournalData.Add("StringScoreOutput", StringScoreOutput);
 
                 decimal numericScore = 0;
-                var canParse = decimal.TryParse(StringScoreOutput,out numericScore);
+                var canParse = decimal.TryParse(StringScoreOutput, out numericScore);
                 if (canParse)
                 {
                     NumericScoreOutput = numericScore;
-                    context.JournalData.Add("NumericScoreOutput", NumericScoreOutput);
+                    context?.JournalData.Add("NumericScoreOutput", NumericScoreOutput);
                 }
             }
-
-            
-
-
-            return result;
         }
     }
 }
