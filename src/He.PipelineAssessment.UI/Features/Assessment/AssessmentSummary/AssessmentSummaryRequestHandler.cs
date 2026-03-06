@@ -47,7 +47,8 @@ namespace He.PipelineAssessment.UI.Features.Assessment.AssessmentSummary
                 }
                 if (!dbAssessment.ValidData)
                 {
-                    throw new InvalidOperationException($"This assessment does not have the required minimum data to proceed. Please update the project data in TSP or contact PAS support.");
+                    throw new InvalidOperationException($"This assessment does not have the required minimum data to proceed. Please update the project data in TSP or The Prospect Tool." +
+                        $" Alternatively you can contact the PAS support team via: PipelineManagement@homesengland.gov.uk or the Pipeline Support Teams channel.");
                 }
                 bool hasValidBusinessArea = HasValidBusinessArea(dbAssessment.BusinessArea);
 
