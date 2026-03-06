@@ -87,7 +87,11 @@ export interface MonacoValueChangedArgs {
   markers: Array<any>;
 }
 
-export interface SwitchCase {
+export interface SwitchCase extends KeyValuePair {
+
+}
+
+export interface KeyValuePair {
   name: string;
   expressions?: Map<string>;
   syntax?: string;

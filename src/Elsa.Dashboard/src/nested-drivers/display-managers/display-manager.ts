@@ -23,6 +23,7 @@ import { HeWeightedCheckboxDriver } from "../he-weighted-checkbox-driver";
 import { HeNumericDriver } from "../he-numeric-driver";
 import { HeTextGroupDriver } from "../he-text-group-driver";
 import { HeValidationDriver } from "../he-validation-driver"
+import { HeSetVariableDriver } from "../he-set-variable-driver";
 
 
 export interface HePropertyDisplayDriver {
@@ -55,6 +56,7 @@ export class DefaultDriversFactory {
     this.drivers["he-numeric"] = new HeNumericDriver();
     this.drivers["he-text-group"] = new HeTextGroupDriver();
     this.drivers["he-validation-property"] = new HeValidationDriver();
+    this.drivers["he-set-variable"] = new HeSetVariableDriver();
   }
   drivers: Dictionary<HePropertyDisplayDriver> = {};
 }

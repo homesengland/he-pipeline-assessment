@@ -49,5 +49,6 @@ namespace Elsa.CustomInfrastructure.Data.Repository
         Task UpdateDataDictionaryItem(DataDictionary item, CancellationToken cancellationToken);
         Task ArchiveDataDictionaryItem(int id, bool isArchived, CancellationToken cancellationToken);
         Task ArchiveDataDictionaryGroup(int id, bool isArchived, CancellationToken cancellationToken);
+        Task SetVariableInstances(int spId, List<GlobalVariable> globalVariables, CancellationToken cancellationToken = default);
     }
 }

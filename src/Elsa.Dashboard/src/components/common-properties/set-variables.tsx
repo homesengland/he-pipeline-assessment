@@ -1,0 +1,201 @@
+import { Component, h, Prop, State } from '@stencil/core';
+import {
+  ActivityDefinitionProperty,
+  ActivityModel,
+  ActivityPropertyDescriptor,
+  HTMLElsaExpressionEditorElement,
+  HTMLElsaMultiExpressionEditorElement,
+  IntellisenseContext,
+} from "../../models/elsa-interfaces";
+import { mapSyntaxToLanguage, parseJson } from "../../utils/utils";
+import { KeyValuePair } from "../../models/elsa-interfaces";
+import { IconProvider } from "../providers/icon-provider/icon-provider";
+import PlusIcon from '../../icons/plus_icon';
+import TrashCanIcon from '../../icons/trash-can';
+import { SyntaxNames } from '../../constants/constants';
+
+@Component({
+  tag: 'set-variables-property',
+  shadow: false,
+})
+
+export class SetVariablesActivityProperty {
+
+  @Prop() activityModel: ActivityModel;
+  @Prop() propertyDescriptor: ActivityPropertyDescriptor;
+  @Prop() propertyModel: ActivityDefinitionProperty;
+  @State() variables: Array<KeyValuePair> = [];
+  @State() iconProvider = new IconProvider();
+
+  @State() switchTextHeight: string = "";
+
+  @State() editorHeight: string = "2.75em"
+
+  supportedSyntaxes: Array<string> = [SyntaxNames.JavaScript, SyntaxNames.Liquid];
+  multiExpressionEditor: HTMLElsaMultiExpressionEditorElement;
+  syntaxSwitchCount: number = 0;
+
+  async componentWillLoad() {
+    const propertyModel = this.propertyModel;
+    const variablesJson = propertyModel.expressions['Switch']
+    this.variables = parseJson(variablesJson) || [];
+  }
+
+  updatePropertyModel() {
+    this.propertyModel.expressions['Switch'] = JSON.stringify(this.variables);
+    this.multiExpressionEditor.expressions[SyntaxNames.Json] = JSON.stringify(this.variables, null, 2);
+  }
+
+  onDefaultSyntaxValueChanged(e: CustomEvent) {
+    this.variables = e.detail;
+  }
+
+  onAddVariableClick() {
+    const caseName = `Case ${this.variables.length + 1}`;
+    const newCase = { name: caseName, syntax: SyntaxNames.JavaScript, expressions: { [SyntaxNames.JavaScript]: '' } };
+    this.variables = [...this.variables, newCase];
+    this.updatePropertyModel();
+  }
+
+  onDeleteVariableClick(variable: KeyValuePair) {
+    this.variables = this.variables.filter(x => x != variable);
+    this.updatePropertyModel();
+  }
+
+  onVariableNameChanged(e: Event, variable: KeyValuePair) {
+    variable.name = (e.currentTarget as HTMLInputElement).value.trim();
+    this.updatePropertyModel();
+  }
+
+  onVariableExpressionChanged(e: CustomEvent<string>, variable: KeyValuePair) {
+    variable.expressions[variable.syntax] = e.detail;
+    this.updatePropertyModel();
+  }
+
+  onVariablesyntaxChanged(e: Event, variable: KeyValuePair, expressionEditor: HTMLElsaExpressionEditorElement) {
+    const select = e.currentTarget as HTMLSelectElement;
+    variable.syntax = select.value;
+    expressionEditor.language = mapSyntaxToLanguage(variable.syntax);
+    this.updatePropertyModel();
+  }
+
+  onMultiExpressionEditorValueChanged(e: CustomEvent<string>) {
+    const json = e.detail;
+    const parsed = parseJson(json);
+
+    if (!parsed)
+      return;
+
+    if (!Array.isArray(parsed))
+      return;
+
+    this.propertyModel.expressions[SyntaxNames.Switch] = json;
+    this.variables = parsed;
+  }
+
+  onMultiExpressionEditorSyntaxChanged(e: CustomEvent<string>) {
+    e = e;
+    this.syntaxSwitchCount++;
+  }
+
+  render() {
+    const variables = this.variables;
+    const supportedSyntaxes = this.supportedSyntaxes;
+    const json = JSON.stringify(variables, null, 2);
+
+    const renderCaseEditor = (variable: KeyValuePair, index: number) => {
+      const expression = variable.expressions[variable.syntax];
+      const syntax = variable.syntax;
+      const monacoLanguage = mapSyntaxToLanguage(syntax);
+      let expressionEditor = null;
+
+      return (
+        <tr key={`case-${index}`}>
+          <td class="elsa-py-2 elsa-pr-5">
+            <input type="text" value={variable.name} onChange={e => this.onVariableNameChanged(e, variable)}
+              class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-block elsa-w-full elsa-min-w-0 elsa-rounded-md sm:elsa-text-sm elsa-border-gray-300" />
+          </td>
+          <td class="elsa-py-2 pl-5">
+
+            <div class="elsa-mt-1 elsa-relative elsa-rounded-md elsa-shadow-sm elsa-text-box">
+              <he-expression-editor
+                key={`expression-editor-${index}-${this.syntaxSwitchCount}`}
+                ref={el => expressionEditor = el}
+                expression={expression}
+                language={monacoLanguage}
+                single-line={false}
+                editorHeight={this.editorHeight}
+                padding="elsa-pt-1.5 elsa-pl-1 elsa-pr-28"
+                serverUrl="https://localhost:7227"
+                onExpressionChanged={e => this.onVariableExpressionChanged(e, variable)}
+              />
+              <div class="elsa-absolute elsa-inset-y-0 elsa-right-0 elsa-flex elsa-items-center elsa-select">
+                <select onChange={e => this.onVariablesyntaxChanged(e, variable, expressionEditor)}
+                  class="focus:elsa-ring-blue-500 focus:elsa-border-blue-500 elsa-h-full elsa-py-0 elsa-pl-2 elsa-pr-7 elsa-border-transparent elsa-bg-transparent elsa-text-gray-500 sm:elsa-text-sm elsa-rounded-md elsa-select">
+                  {supportedSyntaxes.map(supportedSyntax => {
+                    const selected = supportedSyntax == syntax;
+                    return <option selected={selected}>{supportedSyntax}</option>;
+                  })}
+                </select>
+              </div>
+            </div>
+          </td>
+          <td class="elsa-pt-1 elsa-pr-2 elsa-text-right">
+            <button type="button" onClick={() => this.onDeleteVariableClick(variable)}
+              class="elsa-h-5 elsa-w-5 elsa-mx-auto elsa-outline-none focus:elsa-outline-none">
+              <TrashCanIcon options={this.iconProvider.getOptions()}></TrashCanIcon>
+            </button>
+          </td>
+        </tr>
+      );
+    };
+
+    const context: IntellisenseContext = {
+      activityTypeName: this.activityModel.type,
+      propertyName: this.propertyDescriptor.name
+    };
+
+    return (
+      <div>
+
+        <elsa-multi-expression-editor
+          ref={el => this.multiExpressionEditor = el}
+          label={this.propertyDescriptor.label}
+          defaultSyntax={SyntaxNames.Json}
+          supportedSyntaxes={[SyntaxNames.Json]}
+          context={context}
+          expressions={{ 'Json': json }}
+          editor-height="20rem"
+          onExpressionChanged={e => this.onMultiExpressionEditorValueChanged(e)}
+          onSyntaxChanged={e => this.onMultiExpressionEditorSyntaxChanged(e)}
+        >
+
+          <table class="elsa-min-w-full elsa-divide-y elsa-divide-gray-200">
+            <thead class="elsa-bg-gray-50">
+              <tr>
+                <th
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-3/12">Name
+                </th>
+                <th
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-tracking-wider elsa-w-8/12">Expression
+                </th>
+                <th
+                  class="elsa-px-6 elsa-py-3 elsa-text-left elsa-text-xs elsa-font-medium elsa-text-gray-500 elsa-text-right elsa-tracking-wider elsa-w-1/12">
+
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {variables.map(renderCaseEditor)}
+            </tbody>
+          </table>
+          <button type="button" onClick={() => this.onAddVariableClick()}
+            class="elsa-inline-flex elsa-items-center elsa-px-4 elsa-py-2 elsa-border elsa-border-transparent elsa-shadow-sm elsa-text-sm elsa-font-medium elsa-rounded-md elsa-text-white elsa-bg-blue-600 hover:elsa-bg-blue-700 focus:elsa-outline-none focus:elsa-ring-2 focus:elsa-ring-offset-2 focus:elsa-ring-blue-500 elsa-mt-2">
+            <PlusIcon options={this.iconProvider.getOptions()}></PlusIcon>
+            Add Case
+          </button>
+        </elsa-multi-expression-editor>
+      </div>
+    );
+  }
+}

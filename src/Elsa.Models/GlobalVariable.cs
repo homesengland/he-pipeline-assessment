@@ -1,16 +1,24 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Elsa.CustomModels
+namespace Elsa.CustomModels;
+
+public class GlobalVariable
 {
-    public class GlobalVariable : AuditableEntity
+    public int VariableId { get; set; }
+    public string InstanceValue { get; set; } = null!;
+
+    public GlobalVariable(int id, string value)
     {
-        public int Id { get; set; }
-        public int GlobalVariableGroupId { get; set; }
-        [JsonIgnore]
-        public GlobalVariableGroup Group { get; set; } = null!;
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
-        public string? Value { get; set; }
-        public bool IsArchived { get; set; } = false;
+        VariableId = id;
+        InstanceValue = value;
+    }
+
+    public GlobalVariable()
+    {
+
     }
 }
