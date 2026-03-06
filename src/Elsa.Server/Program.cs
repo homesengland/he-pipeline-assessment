@@ -103,6 +103,7 @@ builder.Services
         .AddActivity<RegionalIPUDataSource>()
         .AddActivity<RegionalFigsDataSource>()
         .AddActivity<ReturnToActivity>()
+        .AddActivity<SetVariable>()
         .AddConsoleActivities()
     );
 

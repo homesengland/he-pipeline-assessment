@@ -307,5 +307,56 @@ namespace Elsa.CustomInfrastructure.Data.Repository
             }
             await SaveChanges(cancellationToken);
         }
+
+        public async Task SetVariableInstances(int spId, List<GlobalVariable> globalVariables, CancellationToken cancellationToken = default)
+        {
+            if (globalVariables == null || !globalVariables.Any())
+            {
+                return;
+            }
+
+            var variableIds = globalVariables.Select(gv => gv.VariableId).Distinct().ToList();
+
+            // Single optimized query: Get ALL data needed in one round-trip
+            // Fetch existing instances AND validate variables simultaneously
+            var existingDbVariables = await _dbContext.Set<VariableInstance>()
+                .Where(x => x.SpId == spId && variableIds.Contains(x.VariableId))
+                .ToListAsync(cancellationToken);
+
+
+            var newInstances = variableIds.Except(existingDbVariables.Select(x => x.VariableId)).ToList();
+            var existingInstances = existingDbVariables.Where(x => !newInstances.Contains(x.VariableId)).ToDictionary(x => x.VariableId, x => x);
+            // Collect new instances for bulk insert
+            var instancesToAdd = new List<VariableInstance>();
+
+            foreach (var globalVariable in globalVariables)
+            {
+                if (existingInstances.TryGetValue(globalVariable.VariableId, out var existingInstance))
+                {
+                    // Update existing - EF tracks changes automatically
+                    existingInstance.Value = globalVariable.InstanceValue;
+                    existingInstance.LastModifiedDateTime = DateTime.UtcNow;
+                }
+                else
+                {
+                    // Collect new instance for bulk insert
+                    instancesToAdd.Add(new VariableInstance
+                    {
+                        SpId = spId,
+                        VariableId = globalVariable.VariableId,
+                        Value = globalVariable.InstanceValue,
+                        CreatedDateTime = DateTime.UtcNow
+                    });
+                }
+            }
+            // Bulk add all new instances at once
+            if (instancesToAdd.Any())
+            {
+                await _dbContext.AddRangeAsync(instancesToAdd, cancellationToken);
+            }
+
+            // Single SaveChanges for all updates and inserts
+            await SaveChanges(cancellationToken);
+        }
     }
 }

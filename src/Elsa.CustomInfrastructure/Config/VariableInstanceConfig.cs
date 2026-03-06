@@ -9,11 +9,18 @@ namespace Elsa.CustomInfrastructure.Config
         public void Configure(EntityTypeBuilder<VariableInstance> builder)
         {
             builder.ToTable(x => x.IsTemporal());
-            builder.HasKey(x => x.Id);
-            builder.Property(p => p.Id).HasColumnOrder(0).UseIdentityColumn();
+
+            // Configure composite primary key
+            builder.HasKey(x => new { x.SpId, x.VariableId });
+
+            builder.Property(p => p.SpId).HasColumnOrder(0);
+            builder.Property(p => p.VariableId).HasColumnOrder(1);
             builder.Property(p => p.Value).IsRequired();
             builder.Property(p => p.LastUpdatedBy);
-            builder.HasOne(x => x.Variable).WithMany(x => x.VariableInstances).HasForeignKey(x => x.VariableId);
+
+            builder.HasOne(x => x.Variable)
+                .WithMany(x => x.VariableInstances)
+                .HasForeignKey(x => x.VariableId);
         }
     }
 }

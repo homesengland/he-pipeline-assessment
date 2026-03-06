@@ -4,7 +4,7 @@ namespace Elsa.CustomModels
 {
     public class VariableInstance : AuditableEntity
     {
-        public int Id { get; set; }
+        // Removed: public int Id { get; set; }
         public int SpId { get; set; }
         public int VariableId { get; set; }
         public string? Value { get; set; }
